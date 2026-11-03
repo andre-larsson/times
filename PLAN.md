@@ -200,12 +200,10 @@ Dark mode inverts the paper but keeps the section colors.
 - **The paper:** the repo **`times`** shows up at **`a403.space/times/`**. No DNS changes and no `CNAME` file.
 - **Paths:** all URLs are built from `site.base_path: /times/`. The full `site.url` is only for canonical links and the feed.
 - **Last step:** once it's verified live, link it from the root launcher and redeploy the root site.
-- **HTTPS is broken on `a403.space` (found 2026-11-03).** GitHub never issued a certificate for the domain
-  (`https_certificate: null`), so `https://a403.space/...` shows a `*.github.io` certificate and browsers
-  warn. DNS is correct (four GitHub A records, `www` CNAME). Fix before go-live: in the root repo's Pages
-  settings, remove and re-add the custom domain, wait for the certificate, then tick "Enforce HTTPS". Until
-  then the site works over `http://`. Page links are relative to `/times/`, so only the feed's absolute URLs
-  depend on it.
+- **HTTPS: fixed 2026-11-03.** GitHub had never issued a certificate for `a403.space` (DNS was fine: four
+  A and four AAAA records to GitHub, `www` CNAME, no CAA). Removing and re-adding the custom domain on the
+  root repo triggered Let's Encrypt; the certificate (a403.space + www) was approved within a minute and
+  "Enforce HTTPS" is on. GitHub renews it automatically.
 
 ## API credits and budget
 
@@ -527,8 +525,8 @@ The real file is in the repo; this is its shape.
    - `generate --mode links` builds a complete paper; `generate` does the due check and writes
      `GITHUB_OUTPUT` and a source-status table to the Actions step summary.
    - Both workflows written. 18 offline tests.
-   - **Left:** run IsThereAnyDeal with a real key (until then deals come from Steam specials), and the
-     "Check sources" run from an Actions runner, which needs the GitHub repo.
+   - Checked from an Actions runner on 2026-11-03: every source answers.
+   - **Left:** run IsThereAnyDeal with a real key (until then deals come from Steam specials).
 
    *Done when* `generate --mode links` produces a real, useful paper with no AI. (It does: a real links
    edition rendered and reviewed on desktop and phone on 2026-11-03.)
@@ -539,12 +537,13 @@ The real file is in the repo; this is its shape.
    - `usage.json` matches the Console's Cost page;
    - forced failures produce correct `reduced`, `partial` and `links` editions.
 
-4. **Go live**
-   - Fix HTTPS for `a403.space` (see *Hosting*).
+4. **Go live** (partly done 2026-11-03: repo public, Pages on, HTTPS fixed, the links edition is live at
+   https://a403.space/times/ and publishes itself every morning)
+   - ✅ Fix HTTPS for `a403.space` (see *Hosting*).
    - Create the Console workspace ($25 limit) and its key. Register an IsThereAnyDeal app for its key.
-   - `gh repo create andre-larsson/times --public --source . --push`.
-   - Enable Pages (`build_type=workflow`) and add the `ANTHROPIC_API_KEY` and `ITAD_API_KEY` secrets.
-   - Run "Check sources", then trigger Edition with `mode=links`, then `mode=full`.
+   - ✅ `gh repo create andre-larsson/times --public`, pushed.
+   - ✅ Enable Pages (`build_type=workflow`). Add the `ANTHROPIC_API_KEY` and `ITAD_API_KEY` secrets.
+   - ✅ Run "Check sources" and Edition with `mode=links`. After phase 3: `mode=full`.
    - Verify `https://a403.space/times/`, then link it from the root launcher.
 
    *Done when* the next 06:30 edition publishes by itself.
