@@ -1,0 +1,868 @@
+{
+ "edition_id": "2026-11-03",
+ "generated_at": "2026-11-03T16:14:46.091956+00:00",
+ "mode": "links",
+ "reason": "requested links",
+ "llm": {
+  "estimated_usd": 0
+ },
+ "stories": [],
+ "links": [
+  {
+   "section": "tech",
+   "title": "OpenAI introduces program to reduce AI data center energy demand during peak hours — company testing Grid Protectors Program system in Georgia",
+   "url": "https://www.tomshardware.com/tech-industry/data-centers/openai-introduces-program-to-reduce-ai-data-center-energy-demand-during-peak-hours-company-testing-grid-protectors-program-system-in-georgia",
+   "source": "Tom's Hardware",
+   "published_at": "2026-11-03T15:56:51+00:00",
+   "excerpt": "The Grid Protectors Program applies load shedding, a technique in use since the 1970s, to data centers.",
+   "rank": 1.0
+  },
+  {
+   "section": "tech",
+   "title": "Intel 14A moves closer to production as PDK 0.9 becomes available — plans to release PDK 1.0 in the first quarter of 2027",
+   "url": "https://www.tomshardware.com/tech-industry/semiconductors/intel-14a-moves-closer-to-production-as-pdk-0-9-becomes-available-process-design-kit-gives-developers-important-production-milestone-ahead-of-1-0-in-2027",
+   "source": "Tom's Hardware",
+   "published_at": "2026-11-03T15:20:27+00:00",
+   "excerpt": "Intel says its next-generation process technology is reaching expected performance and yield maturity.",
+   "rank": 0.978
+  },
+  {
+   "section": "tech",
+   "title": "8 converted jet engines are powering xAI data centers as companies look for new energy sources",
+   "url": "https://www.tomshardware.com/tech-industry/data-centers/elon-musks-xai-installs-eight-converted-jet-engines-to-power-mississippi-data-center-permits-allow-25-percent-higher-limit-for-pollutants-concerns-raised-over-carbon-monoxide",
+   "source": "Tom's Hardware",
+   "published_at": "2026-11-03T15:02:09+00:00",
+   "excerpt": "A Mississippi xAI data center is using eight converted jet engine turbines as a power source despite the known health risks of the carbon monoxide and volatile organic compounds they produce.",
+   "rank": 0.967
+  },
+  {
+   "section": "tech",
+   "title": "Apple faces unprecedented memory cost increases as RAM prices continue to surge, manufacturing bill climbs by $33 billion",
+   "url": "https://www.tomshardware.com/pc-components/dram/apple-faces-unprecedented-memory-cost-increases-as-ram-prices-continue-to-surge-manufacturing-bill-climbs-by-usd33-billion-rising-component-expenses-threaten-margins-through-the-holiday-quarter-and-into-2027",
+   "source": "Tom's Hardware",
+   "published_at": "2026-11-03T14:28:59+00:00",
+   "excerpt": "Samsung, SK hynix, and Micron are facing strong demand for memory from AI data centers, prompting manufacturers to prioritize higher-margin server products and high-bandwidth memory.",
+   "rank": 0.948
+  },
+  {
+   "section": "ai",
+   "title": "Hackers are using 'LLMjacking attacks' to hijack company AI usage and run up huge cloud bills",
+   "url": "https://www.techradar.com/pro/security/hackers-are-using-llmjacking-attacks-to-hijack-company-ai-usage-and-run-up-huge-cloud-bills",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T15:25:00+00:00",
+   "excerpt": "Businesses can run up $100,000 bills in minutes when hackers gain access to their API keys.",
+   "rank": 0.784
+  },
+  {
+   "section": "tech",
+   "title": "The 2026 Apple iPad mini Is an Enigma Wrapped in OLED",
+   "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1qbG1ISG1iVXZ1N3RwYTRsQTVMZWd0M0VweEtQcmdFZVZIa214c3lhdXBNemh5UEItQ19NVmV0VmVLSDJoVEo0ZEszSktUaDJ3YXlqR1hvd1hMYk92Rno0?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-03T14:18:35+00:00",
+   "excerpt": "",
+   "rank": 0.753
+  },
+  {
+   "section": "ai",
+   "title": "'Traditional cyber defenses alone are no longer sufficient': OpenAI is raising its bug bounty rewards for security researchers as AI attack worries grow",
+   "url": "https://www.techradar.com/pro/security/traditional-cyber-defenses-alone-are-no-longer-sufficient-openai-is-raising-its-bug-bounty-rewards-for-security-researchers-as-ai-attack-worries-grow",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T14:15:00+00:00",
+   "excerpt": "OpenAI is partnering with a third party to investigate its own platform and infrastructure's security. Bug bounties are also increasing.",
+   "rank": 0.752
+  },
+  {
+   "section": "ai",
+   "title": "Apple just confirmed Siri AI will have usage limits",
+   "url": "https://www.techradar.com/ai-platforms-assistants/apple-intelligence/apple-just-confirmed-siri-ai-will-have-usage-limits-so-how-much-of-its-new-ai-will-you-actually-get-for-free",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T14:11:37+00:00",
+   "excerpt": "Apple executives have confirmed that Siri AI usage limits are on the horizon, but you'll be able to pay for expanded access",
+   "rank": 0.75
+  },
+  {
+   "section": "tech",
+   "title": "I've spent a week with Apple's new iPad mini, and the OLED upgrade is everything I'd hoped for",
+   "url": "https://www.techradar.com/tablets/ipad-mini/ipad-mini-a20-pro-review",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T14:00:00+00:00",
+   "excerpt": "I've spent a week testing Apple's latest iPad mini, and its long-awaited OLED upgrade makes a world of difference.",
+   "rank": 0.745
+  },
+  {
+   "section": "tech",
+   "title": "As Digital Storefronts Vanish, Modders Are Doing the Job Sony and Microsoft Refuse to Do",
+   "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQcVQzZ3pIcWFpVFR6OElvWW1ZQnR3QXRtMXZIU1k0WC1pU2FZZDdTajN4eHRYMFRkdTF3RTRELWtCc0pzalJaSU9Rb2M2UFJnT2FlNGxWa1hUbEU4aUxVNEZBTV9JMEx5TmVEYmJCMnVEZXNJeklGRjI0eDdrM2FZTnVBLWNkY05TS3h6NXc5bFo4QTZCRExqZWJQLUhzc2JXLTFYWTdPbjBlU0xGZXktTWdGSDRkYk40?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-03T13:35:09+00:00",
+   "excerpt": "",
+   "rank": 0.734
+  },
+  {
+   "section": "ai",
+   "title": "AI Built a Photoshop Clone in 24 Hours. Is This Piracy, Plagiarism, or Progress?",
+   "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPdXNheHNUUllseDlKUUt0dkZLTGdSeldHWm5kdkItcGFEMVZ5OWwyYmRLVXlwSjVSbGNBQVVLZkZxOENqTlhRaHZlSGVsTUstaURiQU1Xam5pZkwxSEcwbGo4Z3A4RGFjdElENWdRVW1nd3pvWWlhS21KOWJSbEgtYUVMVVRUMzlaeFRRRTlJZnBkTGZOWXVDM0pMeW43Q3o1bmVrQXo1QTZWTWc?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-03T13:27:38+00:00",
+   "excerpt": "",
+   "rank": 0.731
+  },
+  {
+   "section": "tech",
+   "title": "Apple's CEO John Ternus warns RAM cost increases are now 'unprecedented'",
+   "url": "https://www.techradar.com/computing/memory/apples-ceo-john-ternus-warns-ram-cost-increases-are-now-unprecedented-and-it-makes-me-fear-the-worst-for-further-mac-price-hikes",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T13:04:36+00:00",
+   "excerpt": "Ternus has added to the chorus of warnings on the RAM crisis, cautioning that 'memory pricing right now is unprecedented' — and I fear the worst for 2027.",
+   "rank": 0.721
+  },
+  {
+   "section": "tech",
+   "title": "Reddit is challenging Australia’s ‘inept’ social media ban for under-16s",
+   "url": "https://www.techradar.com/computing/social-media/reddit-attacks-australias-inept-social-media-ban-as-the-government-says-its-pushing-back-against-sustained-ideological-attack",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T12:53:47+00:00",
+   "excerpt": "Reddit is challenging Australia’s social media ban and trying to overturn it in court.",
+   "rank": 0.716
+  },
+  {
+   "section": "ai",
+   "title": "Apple Is Making It Harder for Kids to Find Dating Apps, AI Companions",
+   "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxONkxaeXJERjJweEtXcWZ1bVBUdWtaNUlOdG16LTdsS1JaRnpWaExQLVVfcFZncnR3WFJFZ3AxTHdLTk90N0VHRDRIZ3BieFdaT2hHZnJCTVRYRnd0ZWpDMnJpVHVYLW1Vcm1zWm5haUhUYjFDdndKM2lmc25VNW10SEJfZS0tX2k5d3c5Vm5DOHhXTXF4czZPSWxaWV9RUS03cDB0WW1HbFlSRmVJ?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-03T12:50:01+00:00",
+   "excerpt": "",
+   "rank": 0.715
+  },
+  {
+   "section": "tech",
+   "title": "'Not Sustainable.' Starlink Users Compare Dynamic Pricing to Being Held Hostage",
+   "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxORml2QzVyTTlOQkxYYTNaSm4xU0hOYy1iaG5KajQtNmFtVWpMUlAyY3VoM1FtQlZCM2J4ZHBjNmVZWExQallSb3NDUy1NMVJKS1kxUEUzdjRuMkE4RVBEM0lCOUdlUXFtZS1DTzZhOExyZ0FYTHk3R1BBbWFTejlMVDIwc3VVdW4zR0VpLU1wNDd1UXBRUjBHaWhWRmU4NDBwQk5nY1V3?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-03T11:08:06+00:00",
+   "excerpt": "",
+   "rank": 0.675
+  },
+  {
+   "section": "ai",
+   "title": "ChatGPT's Work and Chat Tabs Are Merging Into a 'Unified' AI Tool",
+   "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPMGdHQ1dRWHVPV2d5dU5laS1tWGZaLUw1cTg4cElkS29Fc2lsbHY1NWN0TkVKaUJGdWFYRFF4b1JqbFkyZ3NucGUwSFRpUXA3dlFwbVVaSmctVUFuYS1XaHg5ZkphVDJrdEE4OTlZemNqeHVPSE8xY1Bsd3BHNGZOQllEc01DMDBJZElNb2M4YUtnNkE?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-03T11:00:04+00:00",
+   "excerpt": "",
+   "rank": 0.672
+  },
+  {
+   "section": "tech",
+   "title": "When money appears out of nowhere: How small businesses can spot and stop payment scams",
+   "url": "https://www.techradar.com/pro/security/when-money-appears-out-of-nowhere-how-small-businesses-can-spot-and-stop-payment-scams",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T10:56:45+00:00",
+   "excerpt": "Make sure your business stays safe from payment threats with these top tips.",
+   "rank": 0.67
+  },
+  {
+   "section": "tech",
+   "title": "Apple's HomeView Ultra With Robotic Arm Tipped to Launch in 2028 at $1,000",
+   "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNOG9nRWZ1dW8zakplbHFfNFZlSTBUeG9sY1Q3WVVWT1VuaW91cS0xaVVHVUgwWG41SnpRdmxPRWRKbmZ4aXoyZHdvU2U4cGtHbjRWNlphT1IybFdGM3FzMEVfT2d2eHhJbDc0LWlSRy1nT09sUTVKd1U2bXZNZzEtdjg1MmJGUlJPeFFickxHUkg0V1NCTUZ5bFNyclNXZDQ?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-03T09:43:19+00:00",
+   "excerpt": "",
+   "rank": 0.644
+  },
+  {
+   "section": "ai",
+   "title": "OpenAI's shared ChatGPT limits could frustrate users",
+   "url": "https://www.techradar.com/ai-platforms-assistants/worst-decision-ever-by-openai-chatgpts-new-usage-limits-may-test-subscribers-patience",
+   "source": "TechRadar",
+   "published_at": "2026-11-03T09:26:56+00:00",
+   "excerpt": "OpenAI's plan to combine ChatGPT and Codex usage limits could make subscriptions more confusing and potentially less valuable",
+   "rank": 0.638
+  },
+  {
+   "section": "ai",
+   "title": "Coming in 2027: Apple’s $1,000 home robot for FaceTime and switching on lights",
+   "url": "https://arstechnica.com/apple/2026/11/apples-roaming-home-robot-may-do-facetime-switch-lights-on-and-yell-at-your-cat/",
+   "source": "Ars Technica",
+   "published_at": "2026-11-02T18:32:21+00:00",
+   "excerpt": "Apple robot backed by CEO John Ternus may have hefty price tag and limited uses.",
+   "rank": 0.596
+  },
+  {
+   "section": "ai",
+   "title": "Claude’s new rules against game cloning won’t stop the AI copying boom",
+   "url": "https://arstechnica.com/ai/2026/11/claudes-new-rules-against-game-cloning-wont-stop-the-ai-copying-boom/",
+   "source": "Ars Technica",
+   "published_at": "2026-11-02T18:05:31+00:00",
+   "excerpt": "The tsunami of imitators is way bigger than any one model maker can stem.",
+   "rank": 0.59
+  },
+  {
+   "section": "ai",
+   "title": "Spotify Wants to Let Subscribers Remix Songs With AI, for a Price",
+   "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOcl80Wk44b080UDM5alJFVGtPZ2JxTTVETEFZYzEwOEVoQmVUQXVJTGQtWDdzY1djUnVyMWl3bWlhcDVqMjVCTkRqOHhEU3YzYWhVZnhvS1hadWZNTWY5RjAyOElFYS1odDc1RjhnWlVqMC1GQnMxWW5NU2p4M0dzQ1FhMFc0eVpCOEs5MkFjbVZqTW8tMjU3eXN2X1VwRmxpUk5XVS13OEQwclBscWdTZE5UazFGZTRnWXZZ?oc=5",
+   "source": "PCMag",
+   "published_at": "2026-11-02T04:28:53+00:00",
+   "excerpt": "",
+   "rank": 0.35
+  }
+ ],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "Astra can read and write weights to improve Qwen",
+   "url": "https://rikiyat.github.io/blog/weight-space-programming/",
+   "points": 2886,
+   "comments": 869,
+   "comments_url": "https://news.ycombinator.com/item?id=50341174"
+  },
+  {
+   "rank": 2,
+   "title": "The 'Astra can read and write weights to improve Qwen' post is misleading",
+   "url": "https://honnibal.dev/blog/astra-read-write-misleading",
+   "points": 559,
+   "comments": 130,
+   "comments_url": "https://news.ycombinator.com/item?id=50351111"
+  },
+  {
+   "rank": 3,
+   "title": "Show HN: Hacker Times, a New York Times-inspired version of Hacker News",
+   "url": "https://hackertimes.ca/",
+   "points": 410,
+   "comments": 128,
+   "comments_url": "https://news.ycombinator.com/item?id=50346981"
+  },
+  {
+   "rank": 4,
+   "title": "DiscImageStudio: burn visible artwork onto CDs, DVDs and Blu-ray discs",
+   "url": "https://github.com/JiaFeiMiao-K-Cat/DiscImageStudio",
+   "points": 318,
+   "comments": 71,
+   "comments_url": "https://news.ycombinator.com/item?id=50346849"
+  },
+  {
+   "rank": 5,
+   "title": "Could a modern chess engine on a Pentium have defeated Kasparov in 1996?",
+   "url": "https://nicholas.carlini.com/writing/2026/algorithmic-improvements-chess.html",
+   "points": 227,
+   "comments": 114,
+   "comments_url": "https://news.ycombinator.com/item?id=50349276"
+  },
+  {
+   "rank": 6,
+   "title": "Nvidia – open-source auto-ontology",
+   "url": "https://github.com/NVIDIA/auto-ontology",
+   "points": 227,
+   "comments": 84,
+   "comments_url": "https://news.ycombinator.com/item?id=50348962"
+  },
+  {
+   "rank": 7,
+   "title": "Toit v2.0.0",
+   "url": "https://toit.io/blog/toit-v2-0-0/",
+   "points": 180,
+   "comments": 61,
+   "comments_url": "https://news.ycombinator.com/item?id=50321605"
+  },
+  {
+   "rank": 8,
+   "title": "Just a little AI resistance, as a treat",
+   "url": "https://shkspr.mobi/blog/2026/11/just-a-little-ai-resistance-as-a-treat/",
+   "points": 142,
+   "comments": 82,
+   "comments_url": "https://news.ycombinator.com/item?id=50352257"
+  },
+  {
+   "rank": 9,
+   "title": "Life with Down Syndrome",
+   "url": "https://www.esquire.com/news-politics/a74031571/life-with-down-syndrome/",
+   "points": 112,
+   "comments": 68,
+   "comments_url": "https://news.ycombinator.com/item?id=50327088"
+  },
+  {
+   "rank": 10,
+   "title": "Fujifilm to boost tape production 5x as AI fuels archiving demand",
+   "url": "https://arstechnica.com/gadgets/2026/10/fujifilm-to-boost-tape-production-5x-as-ai-fuels-archiving-demand/",
+   "points": 106,
+   "comments": 39,
+   "comments_url": "https://news.ycombinator.com/item?id=50336918"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "Phantom Blade Zero",
+    "appid": 4115450,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4115450/7f882f889630270d3d3fb93825ac6f55b55e7a6c/header.jpg?t=1793261976",
+    "store_url": "https://store.steampowered.com/app/4115450/",
+    "price": 59.99,
+    "currency": "EUR",
+    "blurb": "S-GAME presents Phantom Blade Zero, a fusion of classic Wuxia storytelling and exhilarating action powered by…",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Phantom%20Blade%20Zero/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Probably Stolen - Cyberpunk Shopkeeper Sim",
+    "appid": 4348910,
+    "release_date": "2026-10-28",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4348910/b241a3bc1cb144e70a4840157e127212738ea5b3/header_alt_assets_3.jpg?t=1793711740",
+    "store_url": "https://store.steampowered.com/app/4348910/",
+    "price": 17.99,
+    "currency": "EUR",
+    "blurb": "Probably Stolen is a cyberpunk shopkeeping simulator set in a dystopian space station.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Probably%20Stolen%20-%20Cyberpunk%20Shopkeeper%20Sim/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Deadly Days: Roadtrip",
+    "appid": 3026450,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026450/aa28ee2993252e3f93edda9835367e0e277f953e/header_alt_assets_6.jpg?t=1793282351",
+    "store_url": "https://store.steampowered.com/app/3026450/",
+    "price": 9.74,
+    "currency": "EUR",
+    "blurb": "Loot, shoot, and mow down zombie hordes in this bullet heaven fever dream.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Deadly%20Days%3A%20Roadtrip/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Queen's Domain",
+    "appid": 1799840,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1799840/1a209734951f53b019ec9fa03f835def14f2a968/header.jpg?t=1793628353",
+    "store_url": "https://store.steampowered.com/app/1799840/",
+    "price": 16.56,
+    "currency": "EUR",
+    "blurb": "A retro-fantasy action RPG with brutal combat and traversal-focused exploration.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Queen%27s%20Domain/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Can 'Em All",
+    "appid": 5133900,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5133900/19aa14ebe3720e02f7f8c720abbf9749cf36967f/header.jpg?t=1793384095",
+    "store_url": "https://store.steampowered.com/app/5133900/",
+    "price": 6.29,
+    "currency": "EUR",
+    "blurb": "A juicy first-person incremental game about turning cute creatures into cans.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Can%20%27Em%20All/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Nomad Drive",
+    "appid": 2223980,
+    "release_date": "2026-10-27",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2223980/433d5727162af686f0e7d56de539f8476fb0cf0e/header.jpg?t=1793667805",
+    "store_url": "https://store.steampowered.com/app/2223980/",
+    "price": 13.04,
+    "currency": "EUR",
+    "blurb": "Repair your rundown RV and hit the road solo or in 1–4 player co-op through a procedurally generated…",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/Nomad%20Drive/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Terrible Lizards",
+    "appid": 2920220,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2920220/4b19bf2cbb1c1ef26cc0e898fc6e727776845b73/header.jpg?t=1793292736",
+    "store_url": "https://store.steampowered.com/app/2920220/",
+    "price": 20.39,
+    "currency": "EUR",
+    "blurb": "Terrible Lizards is a horror parkour game set against the backdrop of an old Route 66 attraction… with…",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Terrible%20Lizards/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Rip It! Card Collector",
+    "appid": 5088440,
+    "release_date": "2026-10-30",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5088440/c954ef40e8f93cc628fa4993b038ee2e021cdeb7/header_alt_assets_1.jpg?t=1793381531",
+    "store_url": "https://store.steampowered.com/app/5088440/",
+    "price": 6.11,
+    "currency": "EUR",
+    "blurb": "A single-player incremental game where you rip boosters and collect cards to complete the ultimate…",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Rip%20It%21%20Card%20Collector/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "The Wolf Among Us Remastered",
+    "appid": 3884860,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3884860/80ddd096b6fdd5ab25162251bee4131c78cdf351/header.jpg?t=1793636108",
+    "store_url": "https://store.steampowered.com/app/3884860/",
+    "price": 20.39,
+    "currency": "EUR",
+    "blurb": "A dark detective thriller where folklore is real, violence is chilling, and every choice has consequences.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/The%20Wolf%20Among%20Us%20Remastered/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-missil-croc-2-kingdom-of-the-gobbos",
+    "game": "Croc 2: Kingdom of the Gobbos",
+    "outlet": "MISSIL",
+    "score": "5/10",
+    "verdict": "",
+    "url": "https://missil.se/spelrecensioner/croc-2-kingdom-of-the-gobbos/",
+    "published_at": "2026-11-03T15:02:41+00:00"
+   },
+   {
+    "id": "r-pc-gamer-enshrouded-1-0",
+    "game": "Enshrouded 1.0",
+    "outlet": "PC Gamer",
+    "score": "",
+    "verdict": "The fog of war clears around Embervale, revealing a survival crafting masterpiece.",
+    "url": "https://www.pcgamer.com/games/survival-crafting/enshrouded-1-0-review/",
+    "published_at": "2026-11-02T21:47:58+00:00"
+   },
+   {
+    "id": "r-rps-reviews-virtue-and-a-sledgehammer",
+    "game": "Virtue and a Sledgehammer",
+    "outlet": "Rock Paper Shotgun",
+    "score": "",
+    "verdict": "A haunting sci-fi drama about breaking walls, AI faces, and your heart",
+    "url": "https://www.rockpapershotgun.com/virtue-and-a-sledgehammer-review",
+    "published_at": "2026-10-27T16:00:00+00:00"
+   }
+  ],
+  "console_spotlight": [
+   {
+    "game": "gta 6",
+    "platforms": [],
+    "headline": "GTA 6 digital pre-loads for PS5 and Xbox will begin 9 days early and require a whopping 212GB of free space",
+    "summary": "Rockstar Games has announced the file size for Grand Theft Auto 6 and the dates for when players can pre-load their game depending on their edition.",
+    "sources": [
+     {
+      "name": "TechRadar",
+      "url": "https://www.techradar.com/gaming/gta-6-digital-pre-loads-for-ps5-and-xbox-will-begin-9-days-early-and-require-a-whopping-212gb-of-free-space"
+     }
+    ]
+   }
+  ],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Emberville",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-07",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2295170/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   },
+   {
+    "game": "Family Time",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-03-31",
+    "date_precision": "quarter",
+    "url": "https://store.steampowered.com/app/5072600/"
+   }
+  ],
+  "watch": [
+   {
+    "channel": "gameranx",
+    "title": "20 Video Game Trends That Are MAKING A COMEBACK",
+    "url": "https://www.youtube.com/watch?v=c0-SqRB6oL4",
+    "thumbnail": "https://i4.ytimg.com/vi/c0-SqRB6oL4/hqdefault.jpg",
+    "blurb": "Not everything in the video game world is bad news.",
+    "published_at": "2026-11-02T17:34:20+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "Godzilla: Destroy All Monsters Melee Remastered Review - A Classic Returns!",
+    "url": "https://www.youtube.com/watch?v=7-mM-aJvVJk",
+    "thumbnail": "https://i4.ytimg.com/vi/7-mM-aJvVJk/hqdefault.jpg",
+    "blurb": "Godzilla is back in this remastered edition of Godzilla: Destory All Monsters Melee!",
+    "published_at": "2026-11-02T14:00:01+00:00"
+   },
+   {
+    "channel": "gameranx",
+    "title": "20 Legendary Games That AGED LIKE MILK",
+    "url": "https://www.youtube.com/watch?v=ubo9bTtWnKo",
+    "thumbnail": "https://i2.ytimg.com/vi/ubo9bTtWnKo/hqdefault.jpg",
+    "blurb": "Some legendary games just don’t hold up for younger players.",
+    "published_at": "2026-11-01T16:30:43+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "I Found 50 NEW Indie Games You Should Grab This Week!",
+    "url": "https://www.youtube.com/watch?v=1Kb80Ax3ayQ",
+    "thumbnail": "https://i2.ytimg.com/vi/1Kb80Ax3ayQ/hqdefault.jpg",
+    "blurb": "I have once again found the 50 best new indie and AA games releasing this week, so you don't have to sift through the trenches!",
+    "published_at": "2026-11-01T13:30:22+00:00"
+   }
+  ],
+  "news": [
+   {
+    "headline": "The Elder Scrolls 6: Sentinel is finally made official",
+    "summary": "The long-awaited title of the next Elder Scrolls game was revealed in a video marking Bethesda Softworks' 40th anniversary.",
+    "url": "https://www.pcgamer.com/games/the-elder-scrolls/the-elder-scrolls-6-sentinel-is-finally-made-official/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Here's the WoW: Forever release time for your region",
+    "summary": "Step back into classic Azeroth.",
+    "url": "https://www.pcgamer.com/games/world-of-warcraft/forever-release-date-launch-times/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "I'm sad that the Like A Dragon creator's new studio is closing, but I wish their now-cancelled debut Gang of Dragon wasn't just LAD again",
+    "summary": "Less than a year after the announcement of their first game, and only four years after the studio's creation, Gang of Dragon developers Nagoshi Studio have been dissolved by a shareholders' resolution (thanks, Gematsu…",
+    "url": "https://www.rockpapershotgun.com/im-sad-that-the-like-a-dragon-creators-new-studio-is-closing-but-i-wish-their-now-cancelled-debut-gang-of-dragon-wasnt-just-lad-again",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "2 of my favorite studios are teaming up for their first-ever showcase this week, and have a Steam sale going right now",
+    "summary": "Rusty Lake and Amanita Design are like my own personal videogame Hart Foundation.",
+    "url": "https://www.pcgamer.com/games/adventure/2-of-my-favorite-studios-are-teaming-up-for-their-first-ever-showcase-this-week-and-have-a-steam-sale-going-right-now/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Mike Flanagan thinks 'Warhammer is a fascinating world' but can't tell us anything else about the upcoming Warhammer 40,000 project because 'Henry Cavill would be furious'",
+    "summary": "Give me blood, give me gore, give me Space Marines.",
+    "url": "https://www.pcgamer.com/movies-tv/mike-flanagan-thinks-warhammer-is-a-fascinating-world-but-cant-tell-us-anything-else-about-the-upcoming-warhammer-40-000-project-because-henry-cavill-would-be-furious/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Workers & Resources: Soviet Republic's next DLC is set to expand the city building sim into the one place not corrupted by capitalism: SPACE",
+    "summary": "Following not the inherent liberal capitalistic framework of city builders like SimCity but instead a revolutionary (sorry) interpretation of planning and logistical simulation that prioritises centralisation and minute…",
+    "url": "https://www.rockpapershotgun.com/workers-resources-soviet-republics-next-dlc-is-set-to-expand-the-city-building-sim-into-the-one-place-not-corrupted-by-capitalism-space",
+    "source": "Rock Paper Shotgun"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-03T16:14:46.091956+00:00",
+  "featured": [],
+  "more": [
+   {
+    "game": "Rust",
+    "shop": "Steam",
+    "price": 19.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-09T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/252490/"
+   },
+   {
+    "game": "No Man's Sky",
+    "shop": "Steam",
+    "price": 23.59,
+    "regular": 58.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": false,
+    "expires": "2026-11-09T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/275850/"
+   },
+   {
+    "game": "Grand Theft Auto V Enhanced",
+    "shop": "Steam",
+    "price": 14.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-05T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/3240220/"
+   },
+   {
+    "game": "Borderlands 2",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/49520/"
+   },
+   {
+    "game": "Resident Evil 4",
+    "shop": "Steam",
+    "price": 9.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 75,
+    "lowest_ever": false,
+    "expires": "2026-11-03T18:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/2050650/"
+   },
+   {
+    "game": "Assassin's Creed® Odyssey",
+    "shop": "Steam",
+    "price": 11.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 80,
+    "lowest_ever": false,
+    "expires": "2026-11-10T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/812140/"
+   },
+   {
+    "game": "Resident Evil 2",
+    "shop": "Steam",
+    "price": 7.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 80,
+    "lowest_ever": false,
+    "expires": "2026-11-03T18:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/883710/"
+   },
+   {
+    "game": "Teardown",
+    "shop": "Steam",
+    "price": 14.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-08T13:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/1167630/"
+   },
+   {
+    "game": "Borderlands 3",
+    "shop": "Steam",
+    "price": 5.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/397540/"
+   },
+   {
+    "game": "Frostpunk",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-14T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/323190/"
+   }
+  ],
+  "source": "steam"
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 297,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 7,
+   "ms": 99,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 19,
+   "ms": 292,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 292,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 14,
+   "ms": 1765,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 413,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 60,
+   "ms": 173,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 91,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 243,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 38,
+   "ms": 447,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": true,
+   "count": 15,
+   "ms": 54,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": true,
+   "count": 10,
+   "ms": 17,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 742,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 430,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam specials",
+   "ok": true,
+   "count": 100,
+   "ms": 440,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal",
+   "ok": false,
+   "count": 0,
+   "ms": 0,
+   "error": "ITAD_API_KEY not set; using Steam specials",
+   "skipped": true
+  }
+ ]
+}
