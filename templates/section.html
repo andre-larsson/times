@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}{{ section.name }} · {{ site.title }}{% endblock %}
+
+{% block main %}
+<header class="section-hero sec-{{ section.slug }}">
+  <div class="wrap">
+    <h1 class="section-title">{{ section.name }}</h1>
+    <p class="section-blurb">{{ section.blurb }}</p>
+  </div>
+</header>
+
+<div class="wrap front sec-{{ section.slug }}">
+  <div class="front-main">
+    {% if stories %}
+    {% set top = stories[0] %}
+    <article class="featured featured--top sec-{{ top.section }}">
+      {{ m.kicker(top) }}
+      <h2 class="hl hl-lg"><a class="hl-link" href="{{ top | article_url }}">{{ top.headline }}</a></h2>
+      {% if top.dek %}<p class="dek dek--sm">{{ top.dek }}</p>{% endif %}
+      {{ m.story_meta(top) }}
+    </article>
+    {% if stories | length > 1 %}
+    <div class="teaser-grid teaser-grid--section">
+      {% for s in stories[1:] %}{{ m.teaser(s, 'md') }}{% endfor %}
+    </div>
+    {% endif %}
+    {% elif links %}
+    <p class="notice">No stories have been written for {{ section.name }} yet. Here are today's top links.</p>
+    <ul class="link-list">{% for l in links %}{{ m.link_item(l) }}{% endfor %}</ul>
+    {% else %}
+    <p class="empty">Nothing here yet. The next edition arrives at 06:30.</p>
+    {% endif %}
+  </div>
+
+  {% if briefs %}
+  <aside class="rail" aria-label="In brief">
+    <section>
+      {{ m.block_head('In brief') }}
+      <ol class="latest-list">{% for s in briefs %}{{ m.brief_item(s) }}{% endfor %}</ol>
+    </section>
+  </aside>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}Deals · {{ site.title }}{% endblock %}
+
+{% block main %}
+<section class="band band--deals band--page sec-deals" aria-labelledby="deals-title">
+  <div class="wrap">
+    <div class="band-head">
+      <h1 class="band-title" id="deals-title">Deals</h1>
+      <p class="band-sub">{{ section.blurb }}{% if deals.checked_at %} Prices checked {{ deals.checked_at | date_short }} at {{ deals.checked_at | time }}; they change.{% endif %}</p>
+    </div>
+    {% if deals and (deals.featured or deals.more) %}
+      {% include "partials/deals_blocks.html" %}
+    {% else %}
+      <p class="empty">No deals worth recommending today.</p>
+    {% endif %}
+
+    {% if still_active %}
+    <section class="more-deals more-deals--earlier" aria-label="Earlier picks still running">
+      <h3 class="sub-head">Earlier picks, still running</h3>
+      <ul class="deal-list">{% for d in still_active %}{{ m.deal_row(d) }}{% endfor %}</ul>
+    </section>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

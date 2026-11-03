@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}Gaming · {{ site.title }}{% endblock %}
+
+{% block main %}
+<section class="band band--gaming band--page sec-gaming" aria-labelledby="gaming-title">
+  <div class="wrap">
+    <div class="band-head">
+      <h1 class="band-title" id="gaming-title">Gaming</h1>
+      <p class="band-sub">{{ section.blurb }}</p>
+    </div>
+    {% if gaming %}
+      {% with full = true %}{% include "partials/gaming_blocks.html" %}{% endwith %}
+      {% if earlier_reviews %}
+      <section class="gaming-earlier" aria-label="Earlier reviews">
+        <h3 class="sub-head">Earlier reviews</h3>
+        <ul class="review-list review-list--columns">
+          {% for r in earlier_reviews %}{{ m.review_item(r) }}{% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+    {% else %}
+      <p class="empty">No gaming coverage yet. The next edition arrives at 06:30.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

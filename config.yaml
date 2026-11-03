@@ -1,0 +1,107 @@
+# The 403 Times: every tuning knob lives here.
+# Phase 1 (design) uses `site`, `schedule.timezone` and `sections`; the rest is wired up in later phases.
+
+site:
+  title: "The 403 Times"
+  tagline: "Access Granted"
+  description: "A personal AI newspaper: AI, tech, PC gaming and deals, written by Claude from the linked sources."
+  url: "https://a403.space/times/"
+  base_path: "/times/"
+  language: en
+  images:
+    news_preview_images: false        # news stories use typographic covers; games/videos use store/YouTube art
+
+schedule:
+  timezone: "Europe/Stockholm"
+  editions: ["06:30"]                 # one morning edition; add slots for more
+
+sections:
+  - { slug: ai,     name: AI,     blurb: "Models, research, tools and the policy that matters." }
+  - { slug: tech,   name: Tech,   blurb: "Developer news, open source, security and hardware." }
+  - { slug: gaming, name: Gaming, blurb: "PC first. Consoles when it's big." }
+  - { slug: deals,  name: Deals,  blurb: "Shopping advice, not ads." }
+
+edition:
+  featured: { min: 1, max: 3,   words: 350, max_sources: 3, min_newsworthiness: 4.5 }
+  medium:   { min: 3, max: 6,   words: 130, min_newsworthiness: 3.5 }
+  briefs:   { min: 10, max: 20, words: 35,  min_newsworthiness: 2.5 }
+  # min is a soft target: the editor goes below it rather than print weak stories (featured always ≥ 1)
+
+gaming:
+  new_on_pc:         { min: 3, max: 10, window_days: 7 }
+  reviews:           { min: 3, max: 10, window_days: 3 }
+  console_spotlight: { max: 3, min_notability: 4.5 }
+  coming_soon:       { max: 8, horizon_days: 180 }
+  watch:             { max: 4 }
+  news:              { max: 6 }
+
+deals:
+  country: SE
+  featured: { min: 1, max: 2 }
+  more:     { min: 5, max: 10 }
+  min_cut_pct: 50
+  near_low_pct: 10                    # within 10% of the lowest price ever
+  min_steam_rating: "Very Positive"
+
+search:
+  depth: light                        # off | light | normal | deep
+  discovery_every_days: 1
+  candidates_scored: 300
+  max_item_age_hours: 36
+  max_fulltext_chars: 12000
+
+models:
+  triage:   claude-haiku-5-5
+  editor:   claude-opus-5-5
+  featured: claude-opus-5-5
+  medium:   claude-opus-5-5
+  briefs:   claude-opus-5-5
+  gaming:   claude-opus-5-5
+  deals:    claude-opus-5-5
+  discover: claude-opus-5-5
+  probe:    claude-haiku-5-5
+
+budget:
+  monthly_usd: 20                     # paced over the calendar month, like the Console workspace spend limit
+  pace_allowance_usd: 2
+  per_run_usd: 1.25
+  when_over_pace: reduced             # reduced | links | skip
+
+llm:
+  when_unavailable: links             # links | skip
+
+interests: |
+  AI: model releases, research that matters, AI developer tools and agents, policy with real impact.
+      Skip hype, listicles and routine funding news.
+  Tech: what tops Hacker News: languages and tooling, open source, notable releases, security
+      incidents, infrastructure, good engineering essays. Major hardware news (CPUs, GPUs, PC parts).
+      Skip buying guides and affiliate roundups.
+  Gaming: PC first: notable new PC games and how reviewers received them. Consoles only for the
+      biggest releases (GTA VI-class). Indie gems. Significant industry news. Skip rumors.
+  Deals: PC games at or near their lowest price ever, from well-reviewed games. Shopping advice, not ads.
+
+sources:
+  hackernews: { front_page: true, min_points: 100 }
+  feeds:
+    - { name: Ars Technica,           url: "https://feeds.arstechnica.com/arstechnica/index",  sections: [ai, tech] }
+    - { name: TechRadar,              url: "https://www.techradar.com/feeds.xml",              sections: [ai, tech] }
+    - { name: Tom's Hardware,         url: "https://www.tomshardware.com/feeds.xml",           sections: [tech] }
+    - { name: MISSIL,                 url: "https://www.missil.se/feed/",                      sections: [gaming], language: sv }
+    - { name: PC Gamer,               url: "https://www.pcgamer.com/feeds.xml",                sections: [gaming, tech] }
+    - { name: Rock Paper Shotgun,     url: "https://www.rockpapershotgun.com/feed",            sections: [gaming] }
+    - { name: RPS Reviews,            url: "https://www.rockpapershotgun.com/feed/reviews",    sections: [gaming], kind: reviews }
+    - { name: RPS Deals,              url: "https://www.rockpapershotgun.com/feed/deals",      sections: [deals] }
+    - { name: I Dream of Indie Games, url: "https://www.idreamofindie.com/blog-feed.xml",       sections: [gaming], kind: reviews }
+  google_news:
+    - { name: PCMag, query: "pcmag.com when:2d", sections: [tech, ai] }   # direct feed is bot-blocked
+  youtube:
+    - { name: gameranx,               channel_id: "UCNvzD7Z-g64bPXxGzaQaa4g" }
+    - { name: I Dream of Indie Games, channel_id: "UC_HX1n5iojK-xjy9WxfxXhg" }
+  steam: { cc: se, lists: [new_releases, top_sellers, coming_soon, specials] }
+  itad:  { enabled: true }            # needs the ITAD_API_KEY secret
+
+pricing:                              # USD per million tokens (Nov 2026)
+  claude-opus-5-5:   { input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00 }
+  claude-sonnet-5-5: { input: 2.00, output: 10.00, cache_read: 0.10, cache_write_5m: 2.50 }
+  claude-haiku-5-5:  { input: 0.10, output: 0.50,  cache_read: 0.01, cache_write_5m: 0.125 }
+  web_search_per_1000: 10.00

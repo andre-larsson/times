@@ -1,0 +1,33 @@
+{% import "macros.html" as m with context %}
+<div class="deals-grid">
+  {% if deals.featured %}
+  <div class="dotd-stack">
+    {% for d in deals.featured %}
+    <article class="dotd">
+      <span class="kicker">Deal of the day</span>
+      <h3 class="hl hl-lg"><a class="hl-link" href="{{ d.url }}">{{ d.headline or d.game }}</a></h3>
+      <div class="dotd-price">
+        {{ m.price(d, 'lg') }}
+        {{ m.verdict(d.verdict) }}
+      </div>
+      <p class="meta">
+        <span>{{ d.game }} on {{ d.shop }}</span>
+        {% if d.steam_rating %}<span class="meta-sep" aria-hidden="true">·</span>{{ m.rating(d.steam_rating) }}{% endif %}
+        {% if d.expires %}<span class="meta-sep" aria-hidden="true">·</span><span>Ends {{ d.expires | date_short }}</span>{% endif %}
+      </p>
+      {% for p in d.body | paragraphs %}<p class="dotd-text">{{ p }}</p>{% endfor %}
+      <a class="btn" href="{{ d.url }}">Go to {{ d.shop }} →</a>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if deals.more %}
+  <section class="more-deals" aria-label="More deals">
+    <h3 class="sub-head">More deals</h3>
+    <ul class="deal-list">
+      {% for d in deals.more %}{{ m.deal_row(d) }}{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</div>

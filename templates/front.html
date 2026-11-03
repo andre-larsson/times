@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}{% if archived %}{{ edition.generated_at | date_long }} · {% endif %}{{ site.title }} · {{ site.tagline }}{% endblock %}
+{% block body_class %}page-front{% endblock %}
+
+{% block main %}
+<h1 class="visually-hidden">{{ site.title }}: {{ edition | edition_name }}, {{ edition.generated_at | date_long }}</h1>
+
+{% if archived %}
+<div class="wrap">
+  <p class="notice notice--quiet">Archived edition from {{ edition.generated_at | date_long }}. <a href="{{ url('') }}">Go to today's paper →</a></p>
+</div>
+{% endif %}
+
+{% if edition.mode == 'links' %}
+  {% include "partials/front_links.html" %}
+{% else %}
+  {% if edition.mode in ('reduced', 'partial') %}
+  <div class="wrap">
+    <p class="notice">{% if edition.mode == 'reduced' %}A thinner paper today: the budget guard trimmed this edition to stay on pace.{% else %}Part of today's paper couldn't be written, so some sections show plain links.{% endif %}</p>
+  </div>
+  {% endif %}
+
+  <div class="wrap front">
+    <div class="front-main">
+      {% if lead %}
+      <article class="lead sec-{{ lead.section }}">
+        <a class="lead-cover" href="{{ lead | article_url }}" tabindex="-1" aria-hidden="true">{{ m.cover(lead, 'lg') }}</a>
+        <div class="lead-text">
+          {{ m.kicker(lead) }}
+          <h2 class="hl hl-xl"><a class="hl-link" href="{{ lead | article_url }}">{{ lead.headline }}</a></h2>
+          {% if lead.dek %}<p class="dek">{{ lead.dek }}</p>{% endif %}
+          {{ m.story_meta(lead) }}
+        </div>
+      </article>
+      {% endif %}
+
+      {% if featured_rest %}
+      <div class="featured-row">
+        {% for s in featured_rest %}
+        <article class="featured sec-{{ s.section }}">
+          {{ m.kicker(s) }}
+          <h2 class="hl hl-lg"><a class="hl-link" href="{{ s | article_url }}">{{ s.headline }}</a></h2>
+          {% if s.dek %}<p class="dek dek--sm">{{ s.dek }}</p>{% endif %}
+          {{ m.story_meta(s) }}
+        </article>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if medium %}
+      <section class="top-stories" aria-label="Top stories">
+        {{ m.block_head('Top stories') }}
+        <div class="teaser-grid">
+          {% for s in medium %}{{ m.teaser(s, 'md') }}{% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {% if hn_top %}
+      <section class="sec-tech" aria-label="Top on Hacker News">
+        {{ m.block_head('Top on Hacker News', 'Ranked by points') }}
+        {{ m.hn_list(hn_top, cols=true) }}
+      </section>
+      {% endif %}
+    </div>
+
+    {% if briefs %}
+    <aside class="rail" aria-label="Latest news in brief">
+      <section>
+        {{ m.block_head('Latest', 'In brief') }}
+        <ol class="latest-list">
+          {% for s in briefs %}{{ m.brief_item(s) }}{% endfor %}
+        </ol>
+      </section>
+    </aside>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if gaming %}
+<section class="band band--gaming sec-gaming" aria-label="Gaming">
+  <div class="wrap">
+    <div class="band-head">
+      <h2 class="band-title"><a href="{{ url('gaming/') }}">Gaming</a></h2>
+      <p class="band-sub">{{ sections.gaming.blurb }}</p>
+    </div>
+    {% with full = false %}{% include "partials/gaming_blocks.html" %}{% endwith %}
+  </div>
+</section>
+{% endif %}
+
+{% if deals and (deals.featured or deals.more) %}
+<section class="band band--deals sec-deals" aria-label="Deals">
+  <div class="wrap">
+    <div class="band-head">
+      <h2 class="band-title"><a href="{{ url('deals/') }}">Deals</a></h2>
+      <p class="band-sub">{{ sections.deals.blurb }} Prices checked {{ deals.checked_at | time }}; they change.</p>
+    </div>
+    {% include "partials/deals_blocks.html" %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

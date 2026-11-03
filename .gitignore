@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Build output (rendered on every deploy, never committed)
+_site/
+
+# Local secrets and editor noise
+.env
+.env.*
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}{{ story.headline }} · {{ site.title }}{% endblock %}
+{% block description %}{{ story.dek or site.description }}{% endblock %}
+
+{% block main %}
+<article class="article wrap sec-{{ story.section }}">
+  <header class="article-head">
+    {{ m.kicker(story) }}
+    <h1 class="hl hl-article">{{ story.headline }}</h1>
+    {% if story.dek %}<p class="dek">{{ story.dek }}</p>{% endif %}
+    <p class="byline">
+      <span>By Claude (AI)</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <span>Sources: {{ m.source_names(story, 3) }}</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <time datetime="{{ edition.generated_at | iso }}">{{ edition.generated_at | date_long }}</time>
+    </p>
+  </header>
+
+  <div class="article-grid">
+    <div class="article-main">
+      {% if story.tier == 'featured' %}{{ m.cover(story, 'md') }}{% endif %}
+
+      <div class="article-body">
+        {% for p in story.body | paragraphs %}<p>{{ p }}</p>{% endfor %}
+      </div>
+
+      {% if story.key_points %}
+      <aside class="factbox" aria-label="Key points">
+        <h2 class="factbox-title">Key points</h2>
+        <ul>{% for k in story.key_points %}<li>{{ k }}</li>{% endfor %}</ul>
+      </aside>
+      {% endif %}
+
+      {% if story.why_it_matters %}
+      <aside class="why" aria-label="Why it matters">
+        <h2 class="why-title">Why it matters</h2>
+        <p>{{ story.why_it_matters }}</p>
+      </aside>
+      {% endif %}
+
+      <section class="sources" aria-label="Sources">
+        <h2 class="sources-title">Sources</h2>
+        <ul class="sources-list">
+          {% for src in story.sources or [] %}
+          <li><a href="{{ src.url }}">{{ src.title or src.name }}</a> <span class="meta">{{ src.name }} · {{ src.url | domain }}</span></li>
+          {% endfor %}
+          {% if story.hn %}
+          <li><a href="{{ story.hn.url }}">Hacker News discussion</a> <span class="meta">{{ story.hn.points | num }} points · {{ story.hn.comments | num }} comments</span></li>
+          {% endif %}
+        </ul>
+        {% if story.sources %}
+        <a class="btn btn--primary" href="{{ story.sources[0].url }}">Read the original at {{ story.sources[0].name }} →</a>
+        {% endif %}
+        <p class="disclaimer">This story was written by Claude (AI) from the sources above. It may contain mistakes; the originals are the authority.</p>
+      </section>
+    </div>
+
+    <aside class="rail" aria-label="More news">
+      {% if related %}
+      <section>
+        {{ m.block_head('More ' ~ section_name(story.section), '', url(story.section ~ '/')) }}
+        <div class="rail-teasers">{% for s in related %}{{ m.teaser(s, 'sm', false) }}{% endfor %}</div>
+      </section>
+      {% endif %}
+      {% if briefs %}
+      <section>
+        {{ m.block_head('Latest') }}
+        <ol class="latest-list">{% for s in briefs[:6] %}{{ m.brief_item(s) }}{% endfor %}</ol>
+      </section>
+      {% endif %}
+    </aside>
+  </div>
+</article>
+{% endblock %}

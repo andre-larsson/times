@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found · {{ site.title }}{% endblock %}
+
+{% block main %}
+<div class="wrap not-found">
+  <p class="not-found-code" aria-hidden="true">403</p>
+  <h1 class="hl hl-lg">You're allowed in, but this page doesn't exist.</h1>
+  <p>It may have moved, or the link was wrong. Today's paper is still on the front page.</p>
+  <a class="btn btn--primary" href="{{ url('') }}">Go to the front page →</a>
+</div>
+{% endblock %}

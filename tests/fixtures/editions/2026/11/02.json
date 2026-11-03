@@ -1,0 +1,58 @@
+{
+  "edition_id": "2026-11-02",
+  "generated_at": "2026-11-02T05:30:00Z",
+  "mode": "links",
+  "sample": true,
+  "llm": { "estimated_usd": 0 },
+  "stories": [],
+  "links": [
+    { "section": "ai", "title": "Lumen Labs previews a reasoning model for on-device use", "url": "https://example.com/byte-ledger/lumen-device", "source": "The Byte Ledger", "published_at": "2026-11-02T04:40:00Z",
+      "excerpt": "The model is designed to run on recent phones and laptops without a network connection.", "rank": 0.91 },
+    { "section": "ai", "title": "Why benchmark scores keep going up while users shrug", "url": "https://example.com/kernel-post/benchmarks", "source": "Kernel Post", "published_at": "2026-11-02T03:15:00Z",
+      "excerpt": "An analysis of 30 popular benchmarks finds most are saturated or leaked into training data.", "rank": 0.84 },
+    { "section": "ai", "title": "Open-source speech model gets real-time Swedish support", "url": "https://example.com/circuit-weekly/speech-sv", "source": "Circuit Weekly", "published_at": "2026-11-02T01:50:00Z",
+      "excerpt": "Version 3 adds twelve languages and cuts latency to under 200 milliseconds.", "rank": 0.77 },
+    { "section": "ai", "title": "AI coding assistant adds team-wide memory", "url": "https://example.com/byte-ledger/assistant-memory", "source": "The Byte Ledger", "published_at": "2026-11-01T22:05:00Z",
+      "excerpt": "Teams can share conventions and past decisions, which the assistant uses in suggestions.", "rank": 0.7 },
+    { "section": "tech", "title": "Linux 7.1 released with a new scheduler", "url": "https://example.com/kernel-post/linux-7-1", "source": "Kernel Post", "published_at": "2026-11-02T04:00:00Z",
+      "excerpt": "The release also drops support for several 20-year-old network drivers.", "rank": 0.88 },
+    { "section": "tech", "title": "Arcwave R9 reviews go live Tuesday, retailers say", "url": "https://example.com/circuit-weekly/r9-date", "source": "Circuit Weekly", "published_at": "2026-11-02T02:30:00Z",
+      "excerpt": "Listings suggest a lower launch price than the previous generation.", "rank": 0.8 },
+    { "section": "tech", "title": "Static site generators are having a moment again", "url": "https://example.com/blog/ssg-moment", "source": "Hacker News", "published_at": "2026-11-01T23:10:00Z",
+      "excerpt": "Why a growing number of teams are moving documentation and blogs back to plain HTML.", "rank": 0.74 },
+    { "section": "tech", "title": "Major CDN rolls out post-quantum TLS by default", "url": "https://example.com/byte-ledger/pq-tls", "source": "The Byte Ledger", "published_at": "2026-11-01T20:45:00Z",
+      "excerpt": "Connections from up-to-date browsers now use a hybrid key exchange.", "rank": 0.69 }
+  ],
+  "hn_top": [
+    { "rank": 1, "title": "Linux 7.1", "url": "https://example.com/kernel-post/linux-7-1", "points": 1204, "comments": 530, "comments_url": "https://example.com/hn/item/11" },
+    { "rank": 2, "title": "Static site generators are having a moment again", "url": "https://example.com/blog/ssg-moment", "points": 760, "comments": 402, "comments_url": "https://example.com/hn/item/12" },
+    { "rank": 3, "title": "Show HN: A tiny search engine for my bookmarks", "url": "https://example.com/bookmarks", "points": 512, "comments": 133, "comments_url": "https://example.com/hn/item/13" },
+    { "rank": 4, "title": "Why benchmark scores keep going up while users shrug", "url": "https://example.com/kernel-post/benchmarks", "points": 488, "comments": 290, "comments_url": "https://example.com/hn/item/14" },
+    { "rank": 5, "title": "The economics of running your own mail server in 2026", "url": "https://example.com/blog/mail-server", "points": 301, "comments": 244, "comments_url": "https://example.com/hn/item/15" }
+  ],
+  "gaming": {
+    "new_on_pc": [
+      { "title": "Starfall Tactics", "release_date": "2026-10-28", "steam_rating": "Mostly Positive", "image": "", "store_url": "https://example.com/steam/starfall-tactics" },
+      { "title": "Deep Shift Salvage", "release_date": "2026-10-29", "steam_rating": "Very Positive", "image": "", "store_url": "https://example.com/steam/deep-shift-salvage" },
+      { "title": "Hollow Lantern", "release_date": "2026-10-30", "steam_rating": "Very Positive", "image": "", "store_url": "https://example.com/steam/hollow-lantern" },
+      { "title": "Ashen Rails", "release_date": "2026-10-31", "steam_rating": "Mixed", "image": "", "store_url": "https://example.com/steam/ashen-rails" }
+    ],
+    "reviews": [
+      { "id": "r20", "game": "Starfall Tactics", "outlet": "Pixel Courier", "score": "3/5", "url": "https://example.com/pixel-courier/starfall" },
+      { "id": "r21", "game": "Glasswing Courier (preview)", "outlet": "Save Point Weekly", "score": "", "url": "https://example.com/savepoint/glasswing-preview" }
+    ],
+    "coming_soon": [
+      { "game": "Glasswing Courier", "platforms": ["pc"], "date": "2026-11-12", "date_precision": "day", "url": "https://example.com/steam/glasswing" },
+      { "game": "Orbital Freight Co. 2", "platforms": ["pc"], "date": "2026-11-19", "date_precision": "day", "url": "https://example.com/steam/orbital-2" }
+    ]
+  },
+  "deals": {
+    "checked_at": "2026-11-02T05:30:00Z",
+    "featured": [],
+    "more": [
+      { "game": "Copperline", "shop": "GOG", "price": 4.99, "regular": 19.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-09T12:00:00Z", "steam_rating": "Very Positive", "url": "https://example.com/gog/copperline" },
+      { "game": "Garden Wars", "shop": "Humble Store", "price": 3.74, "regular": 14.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-07T18:00:00Z", "steam_rating": "Very Positive", "url": "https://example.com/humble/garden-wars" },
+      { "game": "Second Dawn", "shop": "Epic", "price": 17.99, "regular": 59.99, "currency": "EUR", "cut": 70, "lowest_ever": true, "expires": "2026-11-05T16:00:00Z", "steam_rating": "Very Positive", "url": "https://example.com/epic/second-dawn" }
+    ]
+  }
+}

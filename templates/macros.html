@@ -1,0 +1,157 @@
+{# ── Shared building blocks ─────────────────────────────────────────────── #}
+
+{% macro kicker(s) -%}
+<span class="kicker-row">
+  {%- if s.breaking %}<span class="kicker kicker--breaking">Breaking</span>{% endif -%}
+  <span class="kicker">{{ s.kicker or section_name(s.section) }}</span>
+</span>
+{%- endmacro %}
+
+{% macro source_names(s, limit=2) -%}
+{%- set names = (s.sources or []) | map(attribute='name') | list -%}
+{{ names[:limit] | join(', ') }}{% if names | length > limit %} +{{ names | length - limit }}{% endif %}
+{%- endmacro %}
+
+{% macro story_meta(s, show_hn=true) -%}
+<p class="meta">
+  <span>{{ source_names(s) }}</span>
+  {%- if show_hn and s.hn and s.hn.points %}
+  <span class="meta-sep" aria-hidden="true">·</span><a class="meta-link" href="{{ s.hn.url }}">HN {{ s.hn.points | num }} points</a>
+  {%- endif %}
+</p>
+{%- endmacro %}
+
+{% macro cover(s, size='lg') -%}
+<figure class="cover cover--{{ size }}">
+  {%- if s.cover and s.cover.figure %}
+  <span class="cover-figure">{{ s.cover.figure }}</span>
+  {%- if s.cover.caption %}<figcaption class="cover-caption">{{ s.cover.caption }}</figcaption>{% endif %}
+  {%- else %}
+  <span class="cover-figure cover-figure--word">{{ s.kicker or section_name(s.section) }}</span>
+  {%- endif %}
+  <span class="cover-mark" aria-hidden="true">The 403 Times</span>
+</figure>
+{%- endmacro %}
+
+{% macro teaser(s, size='md', summary=true) -%}
+<article class="teaser teaser--{{ size }} sec-{{ s.section }}">
+  {{ kicker(s) }}
+  <h3 class="hl hl-{{ size }}"><a class="hl-link" href="{{ s | article_url }}">{{ s.headline }}</a></h3>
+  {%- if summary and (s.dek or s.body) %}
+  <p class="teaser-text">{{ s.dek or (s.body | paragraphs | first) }}</p>
+  {%- endif %}
+  {{ story_meta(s) }}
+</article>
+{%- endmacro %}
+
+{% macro brief_item(s, show_time=true) -%}
+<li class="latest-item sec-{{ s.section }}">
+  <p class="latest-line">
+    {%- if show_time and s.published_at %}<time class="latest-time" datetime="{{ s.published_at | iso }}">{{ s.published_at | time }}</time>{% endif -%}
+    <span class="latest-tag">{{ s.kicker or section_name(s.section) }}</span>
+  </p>
+  <a class="latest-text" href="{{ s | article_url }}">{{ s.headline }}</a>
+  {%- if s.body %}<p class="latest-sub">{{ s.body }} <span class="latest-source">{{ source_names(s, 1) }}</span></p>{% endif %}
+</li>
+{%- endmacro %}
+
+{% macro hn_list(items, limit=10, cols=false) -%}
+{%- set rows = ((items[:limit] | length) / 2) | round(0, 'ceil') | int -%}
+<ol class="hn-list{% if cols %} hn-list--cols{% endif %}" style="--rows: {{ rows }}">
+  {%- for it in items[:limit] %}
+  <li class="hn-item{% if cols and loop.index == rows + 1 %} hn-item--colstart{% endif %}">
+    <span class="hn-rank" aria-hidden="true">{{ loop.index }}</span>
+    <div>
+      <a class="hn-title" href="{{ it.url }}">{{ it.title }}</a>
+      <p class="meta"><span>{{ it.points | num }} points</span><span class="meta-sep" aria-hidden="true">·</span><a class="meta-link" href="{{ it.comments_url }}">{{ it.comments | num }} comments</a>{% if it.url %}<span class="meta-sep" aria-hidden="true">·</span><span>{{ it.url | domain }}</span>{% endif %}</p>
+    </div>
+  </li>
+  {%- endfor %}
+</ol>
+{%- endmacro %}
+
+{% macro block_head(title, sub='', href='') -%}
+<div class="block-head">
+  <h2 class="block-title">{% if href %}<a href="{{ href }}">{{ title }}</a>{% else %}{{ title }}{% endif %}</h2>
+  {%- if sub %}<p class="block-sub">{{ sub }}</p>{% endif %}
+</div>
+{%- endmacro %}
+
+{# ── Gaming ─────────────────────────────────────────────────────────────── #}
+
+{% macro art(title, image='', ratio='capsule') -%}
+<div class="art art--{{ ratio }}">
+  {%- if image %}<img src="{{ image }}" alt="" loading="lazy" decoding="async">
+  {%- else %}<span class="art-fallback" aria-hidden="true">{% if ratio != 'video' %}{{ title | first | upper }}{% endif %}</span>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro rating(text) -%}
+{%- if text %}<span class="rating rating--{{ text | rating_class }}">{{ text }}</span>{% endif %}
+{%- endmacro %}
+
+{% macro game_card(g) -%}
+<article class="game-card">
+  <a href="{{ g.store_url }}" tabindex="-1" aria-hidden="true">{{ art(g.title, g.image) }}</a>
+  <h4 class="game-title"><a href="{{ g.store_url }}">{{ g.title }}</a></h4>
+  <p class="meta"><span>{{ g.release_date | date_when }}</span>{% if g.price %}<span class="meta-sep" aria-hidden="true">·</span><span>{{ g.price | money(g.currency or 'EUR') }}</span>{% endif %}</p>
+  {{ rating(g.steam_rating) }}
+  {%- if g.blurb %}<p class="game-blurb">{{ g.blurb }}</p>{% endif %}
+  <p class="game-links">
+    <a href="{{ g.store_url }}">Steam →</a>
+    {%- if g.metacritic_search %}<a href="{{ g.metacritic_search }}">Metacritic →</a>{% endif %}
+    {%- for r in g.reviews or [] %}<a href="{{ r.url }}">{{ r.outlet }} {{ r.score }}</a>{% endfor %}
+  </p>
+</article>
+{%- endmacro %}
+
+{% macro review_item(r) -%}
+<li class="review">
+  <span class="score{% if r.score and r.score | length > 5 %} score--word{% endif %}">{{ r.score or '–' }}</span>
+  <div class="review-body">
+    <a class="review-game" href="{{ r.url }}">{{ r.game }}</a>
+    <span class="review-outlet">{{ r.outlet }}</span>
+    {%- if r.verdict %}<p class="review-verdict">{{ r.verdict }}</p>{% endif %}
+  </div>
+</li>
+{%- endmacro %}
+
+{% macro platforms(list) -%}
+<span class="chips">{% for p in list or [] %}<span class="chip">{{ {'pc': 'PC', 'ps5': 'PS5', 'xbox': 'Xbox', 'switch': 'Switch', 'switch2': 'Switch 2'}.get(p, p) }}</span>{% endfor %}</span>
+{%- endmacro %}
+
+{# ── Deals ──────────────────────────────────────────────────────────────── #}
+
+{% macro verdict(v) -%}
+{%- if v in verdicts %}<span class="verdict verdict--{{ v }}"><span aria-hidden="true">{{ verdicts[v][0] }}</span> {{ verdicts[v][1] }}</span>{% endif %}
+{%- endmacro %}
+
+{% macro price(d, size='lg') -%}
+<div class="price price--{{ size }}">
+  <span class="price-now">{{ d.price | money(d.currency or 'EUR') }}</span>
+  {%- if d.regular %}<s class="price-was"><span class="visually-hidden">Regular price </span>{{ d.regular | money(d.currency or 'EUR') }}</s>{% endif %}
+  {%- if d.cut %}<span class="price-cut">−{{ d.cut }}%</span>{% endif %}
+  {%- if d.lowest_ever %}<span class="price-low">Lowest ever</span>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro deal_row(d) -%}
+<li class="deal-row">
+  <div class="deal-main">
+    <a class="deal-name" href="{{ d.url }}">{{ d.game }}</a>
+    <p class="meta"><span>{{ d.shop }}</span>{% if d.steam_rating %}<span class="meta-sep" aria-hidden="true">·</span>{{ rating(d.steam_rating) }}{% endif %}{% if d.expires %}<span class="meta-sep" aria-hidden="true">·</span><span>Ends {{ d.expires | date_short }}</span>{% endif %}</p>
+    {%- if d.advice %}<p class="deal-advice">{{ verdict(d.verdict) }} {{ d.advice }}</p>{% endif %}
+  </div>
+  {{ price(d, 'sm') }}
+</li>
+{%- endmacro %}
+
+{# ── Links edition ──────────────────────────────────────────────────────── #}
+
+{% macro link_item(l) -%}
+<li class="link-item">
+  <a class="hl hl-sm hl-link" href="{{ l.url }}">{{ l.title }}</a>
+  <p class="meta"><span>{{ l.source }}</span>{% if l.published_at %}<span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ l.published_at | iso }}">{{ l.published_at | time }}</time>{% endif %}</p>
+  {%- if l.excerpt %}<p class="link-excerpt">{{ l.excerpt }}</p>{% endif %}
+</li>
+{%- endmacro %}

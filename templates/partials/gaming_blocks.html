@@ -1,0 +1,86 @@
+{% import "macros.html" as m with context %}
+{% set n_games = 10 if full else 6 %}
+{% set n_reviews = 10 if full else 6 %}
+<div class="gaming-grid">
+  {% if gaming.new_on_pc %}
+  <section class="gaming-new" aria-label="New on PC">
+    <h3 class="sub-head">New on PC</h3>
+    <div class="game-grid">
+      {% for g in gaming.new_on_pc[:n_games] %}{{ m.game_card(g) }}{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if gaming.reviews %}
+  <section class="gaming-reviews" aria-label="Reviews">
+    <h3 class="sub-head">Reviews</h3>
+    <ul class="review-list">
+      {% for r in gaming.reviews[:n_reviews] %}{{ m.review_item(r) }}{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <div class="gaming-row">
+    {% if gaming.console_spotlight %}
+    <section class="gaming-spotlight" aria-label="Console spotlight">
+      <h3 class="sub-head">Console spotlight</h3>
+      {% for c in gaming.console_spotlight %}
+      <article class="spotlight">
+        {{ m.platforms(c.platforms) }}
+        <h4 class="hl hl-sm">{% if c.sources %}<a class="hl-link" href="{{ c.sources[0].url }}">{{ c.headline }}</a>{% else %}{{ c.headline }}{% endif %}</h4>
+        {% if c.summary %}<p class="spotlight-text">{{ c.summary }}</p>{% endif %}
+        {% if c.sources %}<p class="meta">{{ m.source_names(c) }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if gaming.coming_soon %}
+    <section class="gaming-soon" aria-label="Coming soon">
+      <h3 class="sub-head">Coming soon</h3>
+      <ul class="soon-list">
+        {% for c in gaming.coming_soon[:(12 if full else 6)] %}
+        <li class="soon-item">
+          <span class="soon-date">{{ c.date | date_when(c.date_precision or 'day') }}</span>
+          <span class="soon-game">{% if c.url %}<a href="{{ c.url }}">{{ c.game }}</a>{% else %}{{ c.game }}{% endif %}</span>
+          {{ m.platforms(c.platforms) }}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    {% if gaming.watch %}
+    <section class="gaming-watch" aria-label="Watch">
+      <h3 class="sub-head">Watch</h3>
+      <ul class="watch-list">
+        {% for v in gaming.watch[:4] %}
+        <li class="watch-item">
+          <a class="watch-thumb" href="{{ v.url }}" tabindex="-1" aria-hidden="true">{{ m.art(v.title, v.thumbnail, 'video') }}<span class="play"></span></a>
+          <div>
+            <span class="watch-channel">{{ v.channel }}</span>
+            <a class="watch-title" href="{{ v.url }}">{{ v.title }}</a>
+            {% if v.blurb %}<p class="watch-blurb">{{ v.blurb }}</p>{% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+  </div>
+
+  {% if gaming.news %}
+  <section class="gaming-news" aria-label="Gaming news">
+    <h3 class="sub-head">Gaming news</h3>
+    <ul class="news-list">
+      {% for n in gaming.news[:6] %}
+      <li class="news-item">
+        <a class="news-headline" href="{{ n.url }}">{{ n.headline }}</a>
+        {% if n.summary %}<p class="news-text">{{ n.summary }}</p>{% endif %}
+        {% if n.source %}<p class="meta">{{ n.source }}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</div>

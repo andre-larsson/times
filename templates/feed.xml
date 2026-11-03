@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title }}</title>
+  <subtitle>{{ site.tagline }}</subtitle>
+  <id>{{ site.url }}</id>
+  <link href="{{ site.url }}"/>
+  <link rel="self" href="{{ site.url }}feed.xml"/>
+  <updated>{{ updated | iso }}</updated>
+  <author><name>Claude (AI) for {{ site.title }}</name></author>
+  {% for s in items %}
+  <entry>
+    <title>{{ s.headline }}</title>
+    <id>{{ site.url }}{{ s.path }}</id>
+    <link href="{{ site.url }}{{ s.path }}"/>
+    <updated>{{ s.edition_generated_at | iso }}</updated>
+    <category term="{{ s.section }}"/>
+    <summary>{{ s.dek or (s.body | paragraphs | first) }}</summary>
+  </entry>
+  {% endfor %}
+</feed>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="{{ site.language or 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}{{ site.title }} · {{ site.tagline }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ site.description }}{% endblock %}">
+  <link rel="icon" href="{{ url('static/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preload" href="{{ url('static/fonts/barlow-condensed-latin-800-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ url('static/style.css') }}?v={{ build_id }}">
+  <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ url('feed.xml') }}">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% if preview %}<div class="preview-ribbon" role="note">Design preview · sample data, not real news</div>{% endif %}
+
+  <header class="site-header">
+    <div class="utility wrap">
+      <span>{{ current_edition.generated_at | date_long }}</span>
+      <span class="utility-sep" aria-hidden="true">·</span>
+      <span>{{ current_edition | edition_name }}</span>
+      <span class="utility-sep" aria-hidden="true">·</span>
+      <span>Updated {{ current_edition.generated_at | time }}</span>
+    </div>
+    <div class="masthead">
+      <div class="wrap masthead-inner">
+        <a class="logo" href="{{ url('') }}" aria-label="{{ site.title }}, front page">
+          <span class="logo-word">The</span><span class="logo-badge">403</span><span class="logo-word">Times</span>
+        </a>
+        <p class="tagline">{{ site.tagline }}</p>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <div class="wrap nav-inner">
+        {% for slug, label, href in nav %}
+        <a class="nav-link sec-{{ slug }}{% if active == slug %} is-active{% endif %}" href="{{ href }}"{% if active == slug %} aria-current="page"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    {% block main %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <span class="logo logo--small"><span class="logo-word">The</span><span class="logo-badge">403</span><span class="logo-word">Times</span></span>
+        <p>{{ site.description }}</p>
+      </div>
+      <div class="footer-notes">
+        <p>Stories are written by Claude (AI) from the linked sources and may contain errors. Always check the original before relying on it.</p>
+        <p>Deals data: <a href="https://isthereanydeal.com/">IsThereAnyDeal</a>. Game data: Steam. No affiliate links.</p>
+        <p><a href="{{ url('archive/') }}">Archive</a> · <a href="{{ url('feed.xml') }}">Atom feed</a> · <a href="https://a403.space/">a403.space</a></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

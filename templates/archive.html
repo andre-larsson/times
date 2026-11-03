@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Archive · {{ site.title }}{% endblock %}
+
+{% block main %}
+<header class="section-hero sec-archive">
+  <div class="wrap">
+    <h1 class="section-title">Archive</h1>
+    <p class="section-blurb">Every edition of {{ site.title }}, newest first.</p>
+  </div>
+</header>
+
+<div class="wrap archive">
+  <ol class="archive-list">
+    {% for row in summaries %}
+    {% set ed = row.edition %}
+    <li class="archive-item">
+      <a class="archive-date" href="{{ url('archive/' ~ ed.edition_id ~ '/') }}">{{ ed.generated_at | date_long }}</a>
+      <span class="mode mode--{{ ed.mode }}">{{ {'full': 'Full edition', 'reduced': 'Reduced', 'partial': 'Partial', 'links': 'Links edition'}.get(ed.mode, ed.mode) }}</span>
+      <span class="meta">
+        {% if row.counts.featured or row.counts.medium or row.counts.brief %}
+        {{ row.counts.featured }} featured · {{ row.counts.medium }} stories · {{ row.counts.brief }} briefs
+        {% else %}
+        {{ row.links }} links
+        {% endif %}
+      </span>
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+{% endblock %}

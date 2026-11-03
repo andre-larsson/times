@@ -1,0 +1,26 @@
+{% import "macros.html" as m with context %}
+<div class="wrap">
+  <p class="notice"><strong>Links edition.</strong> AI stories are paused today, so these are the top headlines from our sources, ranked automatically. Full stories return with the next regular edition.</p>
+</div>
+<div class="wrap front front--links">
+  <div class="front-main links-columns">
+    {% for slug in ('ai', 'tech') %}
+    {% if links_by_section[slug] %}
+    <section class="sec-{{ slug }}" aria-label="{{ section_name(slug) }}">
+      {{ m.block_head(section_name(slug), 'Top links', url(slug ~ '/')) }}
+      <ul class="link-list">
+        {% for l in links_by_section[slug][:12] %}{{ m.link_item(l) }}{% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% if hn_top %}
+  <aside class="rail sec-tech" aria-label="Hacker News">
+    <section>
+      {{ m.block_head('Top on Hacker News') }}
+      {{ m.hn_list(hn_top) }}
+    </section>
+  </aside>
+  {% endif %}
+</div>
