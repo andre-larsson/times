@@ -37,7 +37,10 @@ uv run python -m newsroom serve --data-dir _work/data                   # previe
 passed without one; that is what the hourly workflow runs. Local test runs should use
 `--data-dir _work/data` (git-ignored); `data/` is where the workflow commits real editions.
 
-Environment: `ITAD_API_KEY` (IsThereAnyDeal; optional) and, from phase 3, `ANTHROPIC_API_KEY`.
+Keys: `ANTHROPIC_API_KEY` (from phase 3) and `ITAD_API_KEY` (optional). Locally, put them in `.env` in
+the project folder (git-ignored, `KEY=value` lines); `python -m newsroom` loads it and never overrides
+variables that are already set. Don't export the Anthropic key from your shell profile: Claude Code
+would pick it up and bill its own usage to it. In GitHub Actions they are repository secrets.
 
 ## Layout
 

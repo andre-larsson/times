@@ -8,6 +8,7 @@ from pathlib import Path
 
 from . import ROOT
 from .config import load_config
+from .env import load_dotenv
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -42,6 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     src_p.add_argument("--dump", type=Path, help="write everything fetched to this JSON file")
 
     args = parser.parse_args(argv)
+    load_dotenv()                     # local runs: keys from the git-ignored .env
     cfg = load_config()
 
     if args.command in ("render", "serve"):

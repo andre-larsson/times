@@ -264,3 +264,18 @@ def test_render_before_first_edition(tmp_path):
     pages = build(load_config(), tmp_path / "no-data", tmp_path / "site")
     assert pages == 2
     assert "presses are warming up" in (tmp_path / "site" / "index.html").read_text()
+
+
+def test_dotenv_loader(tmp_path, monkeypatch):
+    from newsroom.env import load_dotenv
+
+    env = tmp_path / ".env"
+    env.write_text('# comment\nexport FAKE_ONE="quoted value"\nFAKE_TWO=plain\nFAKE_THREE=from-file\nnot a line\n')
+    monkeypatch.delenv("FAKE_ONE", raising=False)
+    monkeypatch.delenv("FAKE_TWO", raising=False)
+    monkeypatch.setenv("FAKE_THREE", "from-environment")
+    assert load_dotenv(env) == ["FAKE_ONE", "FAKE_TWO"]
+    import os
+    assert os.environ["FAKE_ONE"] == "quoted value" and os.environ["FAKE_TWO"] == "plain"
+    assert os.environ["FAKE_THREE"] == "from-environment"          # real env vars win
+    assert load_dotenv(tmp_path / "missing.env") == []

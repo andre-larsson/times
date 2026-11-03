@@ -13,6 +13,6 @@
 - Base path: all URLs come from `site.base_path` (/times/) via the `url()` template global. Never hard-code paths.
 - Design system lives in static/style.css tokens (colors, spacing scale, type). Reuse tokens; don't add one-off values.
 - Sample data in tests/fixtures/ must stay clearly fictional (made-up names, example.com links).
-- Never commit secrets (ANTHROPIC_API_KEY, ITAD_API_KEY live in GitHub Actions secrets), _site/, or .env files.
+- Never commit secrets (ANTHROPIC_API_KEY, ITAD_API_KEY live in GitHub Actions secrets and, locally, in the git-ignored .env that `newsroom/env.py` loads), _site/, or .env files. Never print key values; check presence or prefix only.
 - Deployment (from phase 4): .github/workflows/edition.yml → actions/deploy-pages; verify the live URL after pushing, then link it from the root site andre-larsson.github.io. Pin actions to release commit SHAs at least two weeks old.
 </INSTRUCTIONS>
