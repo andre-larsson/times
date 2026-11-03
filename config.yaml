@@ -1,6 +1,5 @@
 # The 403 Times: every tuning knob lives here.
-# Used so far: site, schedule, sections, gaming, deals, search.max_item_age_hours, llm, links, sources.
-# models, budget, edition tiers and interests are wired up in phase 3.
+# search.depth and search.discovery_every_days arrive with discovery (phase 5); everything else is live.
 
 site:
   title: "The 403 Times"
@@ -73,6 +72,14 @@ budget:
 
 llm:
   when_unavailable: links             # links | skip
+  backend: api                        # api | claude-code (local development only: runs `claude -p` on your
+                                      #   Claude subscription; refused in GitHub Actions). Also: --llm, $NEWSROOM_LLM
+  parallel: 3                         # Claude calls at once
+  max_candidates: 150                 # rule-ranked items sent to triage
+  triage_chunk: 60                    # items per triage call
+  timeout_seconds: 240
+  reduced: { featured_max: 1, medium_max: 3 }
+  max_tokens: { triage: 12000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000 }
 
 links:                                # the no-AI links edition
   per_section: 12                     # AI and Tech headline lists

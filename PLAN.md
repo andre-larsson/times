@@ -21,7 +21,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Look | **Tabloid-style news site**, inspired by Swedish evening papers like Expressen but **not a copy**: own logo, colors, fonts and layout |
 | Language | **English** (Swedish sources such as MISSIL are summarized in English) |
 | Build / hosting | GitHub Actions → GitHub Pages (`actions/deploy-pages`) |
-| AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile** |
+| AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
 | Budget | **~$20/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $25 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -532,6 +532,27 @@ The real file is in the repo; this is its shape.
    edition rendered and reviewed on desktop and phone on 2026-11-03.)
 
 3. **Claude: triage, editor, writers, deals advice, budget, preflight and fallback** (local, cents)
+   - **Built 2026-11-03** on branch `phase-3-claude` (not merged: merging makes the daily run spend credits).
+   - `llm.py`: one structured-output call path with two backends.
+     - `api` (production): `anthropic` SDK, `output_config.format` JSON schema, cached system prompt,
+       cost from the price table, credit/spend-limit/auth errors classified as fatal.
+     - `claude-code` (local development, decided 2026-11-03): `claude -p --json-schema --system-prompt
+       --tools "" --strict-mcp-config --setting-sources "" --no-session-persistence`, run in an empty temp
+       dir with `ANTHROPIC_API_KEY` stripped, so it runs on the Claude subscription. It refuses to run in
+       GitHub Actions and aborts if Claude Code reports an API key as its auth source. Its calls are
+       logged with their API-equivalent cost but don't count against the monthly budget.
+   - `preflight.py`: key → budget pace → probe (one tiny Haiku call) → mode. Forced `full`/`reduced`
+     skip pacing but not the monthly cap.
+   - `ai_edition.py`: rule-ranked unseen candidates → Haiku triage in parallel chunks (keep, section,
+     kicker, newsworthiness, event key, English title) → Opus editor (tiers within config limits, lead,
+     angles, source ids, aware of the last two editions) → full text via trafilatura → writers in
+     parallel (featured, medium, one briefs call, one gaming call, one deals call) → assembly.
+     Triage or editor failure → links edition. Writer failure or a stop (credit error, per-run cap,
+     two failures in a row) → `partial`: unwritten stories become plain briefs from the source
+     headline, gaming and deals keep their rule-based blocks.
+   - `seen.json` (14 days) and `usage.json` (per month, per run, per task, with tokens) in `data/`.
+   - Prompts in `prompts/`: a shared style guide (house style, accuracy rules, prompt-injection rule)
+     plus one file per task. 28 offline tests, including every fallback path with a fake Claude.
    *Done when*:
    - a real full edition has a sensible tier split;
    - `usage.json` matches the Console's Cost page;

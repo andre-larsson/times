@@ -204,7 +204,7 @@ class SiteBuilder:
     def front_context(self, edition: dict[str, Any]) -> dict[str, Any]:
         stories = edition.get("stories", [])
         featured = sorted((s for s in stories if s["tier"] == "featured"),
-                          key=lambda s: -s.get("newsworthiness", 0))
+                          key=lambda s: (not s.get("lead"), -s.get("newsworthiness", 0)))
         briefs = sorted((s for s in stories if s["tier"] == "brief"),
                         key=lambda s: s.get("published_at") or "", reverse=True)
         gaming = link_reviews(edition.get("gaming") or {})

@@ -47,7 +47,7 @@
 {% macro brief_item(s, show_time=true) -%}
 <li class="latest-item sec-{{ s.section }}">
   <p class="latest-line">
-    {%- if show_time and s.published_at %}<time class="latest-time" datetime="{{ s.published_at | iso }}">{{ s.published_at | time }}</time>{% endif -%}
+    {%- if show_time and s.published_at %}<time class="latest-time" datetime="{{ s.published_at | iso }}">{{ s.published_at | when }}</time>{% endif -%}
     <span class="latest-tag">{{ s.kicker or section_name(s.section) }}</span>
   </p>
   <a class="latest-text" href="{{ s | article_url }}">{{ s.headline }}</a>

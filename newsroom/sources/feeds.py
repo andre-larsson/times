@@ -151,6 +151,6 @@ def fetch_youtube(client: Client, cfg: dict[str, Any]) -> list[Item]:
             source=cfg["name"], title=plain(e.get("title")), url=link, published_at=_published(e),
             kind="video", sections=["gaming"], image=thumbs[0].get("url", ""),
             extra={"channel": cfg["name"], "blurb": first_sentence(e.get("summary")),
-                   "views": int(stats.get("views") or 0)},
+                   "description": plain(e.get("summary"))[:600], "views": int(stats.get("views") or 0)},
         ))
     return items

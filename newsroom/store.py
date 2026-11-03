@@ -35,3 +35,18 @@ def save_edition(data_dir: Path, edition: dict[str, Any]) -> Path:
     tmp.write_text(json.dumps(edition, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     tmp.replace(path)
     return path
+
+
+def recent_headlines(data_dir: Path, exclude: str = "", count: int = 2) -> list[dict[str, Any]]:
+    """Headlines of the last few editions, so the editor can avoid repeating yesterday's stories."""
+    files = sorted((data_dir / "editions").rglob("*.json"))[-(count + 2):] if (data_dir / "editions").exists() else []
+    out = []
+    for p in reversed(files):
+        ed = json.loads(p.read_text(encoding="utf-8"))
+        if ed.get("edition_id") == exclude:
+            continue
+        heads = [s["headline"] for s in ed.get("stories", [])] or [l["title"] for l in ed.get("links", [])]
+        out.append({"edition_id": ed["edition_id"], "headlines": heads[:30]})
+        if len(out) >= count:
+            break
+    return out

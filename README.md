@@ -13,7 +13,9 @@ See [PLAN.md](PLAN.md) for the full design: sources, budget, run modes, phases.
 - **Phase 2 (real sources and the no-AI "links edition"): built.** Every source is fetched and ranked by
   rules; `generate --mode links` makes a complete paper. Waiting on an IsThereAnyDeal key (deals come
   from Steam specials until then) and a source check from a GitHub runner.
-- Next: phase 3 (Claude writes the stories), then phase 4 (go live).
+- **Phase 3 (Claude writes the paper): in progress.** Triage (Haiku), editor and writers (Opus), budget
+  pacing, the pre-run check and the partial/links fallbacks.
+- Live since 2026-11-03 as a links edition at <https://a403.space/times/>.
 
 ## Run it locally
 
@@ -31,7 +33,15 @@ uv run python -m newsroom serve --fixtures --front 2026-11-02   # the no-AI "lin
 uv run python -m newsroom sources                # fetch every source once, print a status table
 uv run python -m newsroom generate --mode links --data-dir _work/data   # build today's links edition
 uv run python -m newsroom serve --data-dir _work/data                   # preview it
+
+# Claude-written editions
+uv run python -m newsroom generate --mode full --llm claude-code --data-dir _work/data   # on your Claude subscription
+uv run python -m newsroom generate --mode full --data-dir _work/data                     # on the API key (costs credits)
 ```
+
+`--llm claude-code` runs each Claude call through `claude -p` (Claude Code in print mode) with no tools,
+no MCP servers and no project context, on your Claude subscription instead of API credits. It is for
+local development only and refuses to run in GitHub Actions; the workflow always uses the API.
 
 `generate` without `--mode` (= `auto`) only builds an edition when a slot in `schedule.editions` has
 passed without one; that is what the hourly workflow runs. Local test runs should use
@@ -50,9 +60,14 @@ newsroom/            Python package: `python -m newsroom <command>`
   sources/           fetchers: RSS feeds, Google News, YouTube, Hacker News, Steam, IsThereAnyDeal
   rank.py            rule-based sections, junk filters, same-story clustering, scoring
   links.py           the links edition (and the gaming/deals blocks)
-  generate.py        due check → mode → fetch → build → save; GitHub Actions outputs
+  generate.py        due check → pre-run check → fetch → build → save; GitHub Actions outputs
+  preflight.py       picks full / reduced / links / skip (key, budget pace, credit probe)
+  ai_edition.py      triage → editor → full text → writers → assembly, with partial fallbacks
+  desk.py, llm.py    the Claude tasks and schemas; the API and claude-code backends, cost tally
+  budget.py          data/usage.json and monthly pacing
   render.py          edition JSON → static HTML in _site/
   serve.py           local preview server under the /times/ base path
+prompts/             style guide and per-task instructions for Claude
 templates/           Jinja2 templates (front, section, gaming, deals, article, archive, 404, feed)
 static/              style.css, favicon, self-hosted fonts (SIL Open Font License)
 tests/fixtures/      sample editions and feeds (made-up names; links go to example.com)

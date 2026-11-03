@@ -247,8 +247,6 @@ def test_generate_modes(tmp_path, fake_fetch):
     skipped = gen.generate(cfg, data, "skip", now=NOW, env={}, client=fake_fetch)
     assert not skipped.published
 
-    with_key = gen.generate(cfg, data, "full", now=NOW, env={"ANTHROPIC_API_KEY": "x"}, client=fake_fetch)
-    assert with_key.mode == "links" and "phase 3" in with_key.reason
 
 
 def test_generate_keeps_previous_when_sources_fail(tmp_path, monkeypatch):

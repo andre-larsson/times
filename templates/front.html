@@ -71,7 +71,7 @@
       <section>
         {{ m.block_head('Latest', 'In brief') }}
         <ol class="latest-list">
-          {% for s in briefs %}{{ m.brief_item(s) }}{% endfor %}
+          {% for s in briefs[:12] %}{{ m.brief_item(s) }}{% endfor %}
         </ol>
       </section>
     </aside>

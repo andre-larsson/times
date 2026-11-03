@@ -9,9 +9,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from . import schedule, store
+from typing import Callable
+
+from . import ai_edition, budget, preflight, schedule, store
+from . import seen as seen_store
 from .http import Client
 from .links import build_links_edition
+from .llm import LLM, Tally
 from .sources import Harvest, fetch_all
 
 MODES = ("auto", "full", "reduced", "links", "skip")
@@ -26,28 +30,20 @@ class Result:
     edition_id: str = ""
     path: Path | None = None
     harvest: Harvest | None = None
-
-
-def resolve_mode(requested: str, cfg: dict[str, Any], env: dict[str, str]) -> tuple[str, str]:
-    """The pre-run check (PLAN.md, 'Run modes'). AI modes arrive in phase 3; until then every
-    AI request falls back to `llm.when_unavailable`."""
-    fallback = (cfg.get("llm") or {}).get("when_unavailable", "links")
-    if requested in ("links", "skip"):
-        return requested, f"requested {requested}"
-    if not env.get("ANTHROPIC_API_KEY"):
-        return fallback, "no ANTHROPIC_API_KEY"
-    return fallback, "AI writing not built yet (phase 3)"
+    llm: dict[str, Any] | None = None
 
 
 def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
              now: dt.datetime | None = None, env: dict[str, str] | None = None,
-             client: Client | None = None) -> Result:
+             client: Client | None = None, backend: str | None = None,
+             llm_factory: Callable[..., LLM] = LLM) -> Result:
     if requested not in MODES:
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
     now = now or dt.datetime.now(dt.timezone.utc)
     env = dict(os.environ) if env is None else env
     sched = cfg["schedule"]
     tz, slots = sched["timezone"], sched["editions"]
+    llm_cfg = cfg.get("llm") or {}
 
     if requested == "auto":
         if not schedule.is_due(now, tz, slots, store.last_generated_at(data_dir)):
@@ -57,34 +53,64 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
         slot = schedule.forced_slot(now, tz, slots)
     edition_id = schedule.edition_id(slot, slots)
 
-    mode, reason = resolve_mode(requested, cfg, env)
+    backend = backend or env.get("NEWSROOM_LLM") or llm_cfg.get("backend", "api")
+    tally = Tally(per_run_usd=float((cfg.get("budget") or {}).get("per_run_usd", 1.25)))
+    llm = llm_factory(cfg, backend, tally, env)
+    mode, reason = preflight.resolve(requested, cfg, env, llm, budget.load_usage(data_dir), now)
+    fallback = llm_cfg.get("when_unavailable", "links")
+
     if mode == "skip":
-        return Result(False, "skip", reason, edition_id)
+        budget.record_run(data_dir, now, edition_id, "skip", backend, tally)
+        return Result(False, "skip", reason, edition_id, llm=tally.summary())
 
     own_client = client is None
     client = client or Client()
     try:
         harvest = fetch_all(cfg, client, now, itad_key=env.get("ITAD_API_KEY") or None)
+        previous = store.latest_edition(data_dir)
+        if previous and previous.get("edition_id") == edition_id:
+            previous = None                  # replacing today's edition: don't dedupe against it
+        seen = seen_store.load(data_dir)
+        edition = None
+        if mode in preflight.AI_MODES:
+            try:
+                result = ai_edition.build(cfg, harvest, edition_id, mode, llm, client, seen,
+                                          store.recent_headlines(data_dir, exclude=edition_id))
+                edition = result.edition
+                seen_store.mark(seen, result.seen_urls, now)
+            except ai_edition.AIUnavailable as exc:
+                mode, reason = fallback, f"AI unavailable: {exc}"
+        if edition is None and mode == "links":
+            edition = build_links_edition(cfg, harvest, edition_id, previous=previous, reason=reason)
     finally:
         if own_client:
             client.__exit__(None, None, None)
 
-    previous = store.latest_edition(data_dir)
-    if previous and previous.get("edition_id") == edition_id:
-        previous = None                      # replacing today's edition: don't dedupe against it
-    edition = build_links_edition(cfg, harvest, edition_id, previous=previous, reason=reason)
-
-    if len(edition["links"]) + len(edition["hn_top"]) < MIN_LINKS_TO_PUBLISH:
-        return Result(False, mode, "too few items fetched; kept the previous edition", edition_id,
-                      harvest=harvest)
+    budget.record_run(data_dir, now, edition_id, edition["mode"] if edition else mode, backend, tally)
+    if edition is None:                      # fallback was "skip"
+        return Result(False, mode, reason, edition_id, harvest=harvest, llm=tally.summary())
+    if edition["mode"] != "links":
+        reason = edition.get("reason") or reason
+    items = len(edition["stories"]) + len(edition["links"]) + len(edition["hn_top"])
+    if items < MIN_LINKS_TO_PUBLISH:
+        return Result(False, edition["mode"], "too few items fetched; kept the previous edition", edition_id,
+                      harvest=harvest, llm=tally.summary())
     path = store.save_edition(data_dir, edition)
-    return Result(True, mode, reason, edition_id, path, harvest)
+    seen_store.save(data_dir, seen, now)
+    return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary())
 
 
 def report(result: Result) -> str:
     """Plain-text summary for the console and the Actions step summary."""
     lines = [f"Edition {result.edition_id or '-'}: {'published' if result.published else 'not published'} "
              f"(mode {result.mode}; {result.reason})"]
+    if result.llm and result.llm.get("calls"):
+        l = result.llm
+        lines.append(f"Claude: {l['calls']} calls, ${l['usd']:.4f} charged, ${l['equivalent_usd']:.4f} API-equivalent"
+                     + (f"; stopped: {l['stopped']}" if l.get("stopped") else ""))
+        for task, t in l.get("by_task", {}).items():
+            lines.append(f"  {task}: {t['calls']} calls, ${t['equivalent_usd']:.4f}"
+                         + (f", {t['failed']} failed" if t["failed"] else ""))
     if result.harvest:
         lines.append("")
         lines.append("| Source | Status | Items | ms |")
