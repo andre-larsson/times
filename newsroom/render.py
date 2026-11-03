@@ -90,7 +90,7 @@ class SiteBuilder:
         self.env.globals.update(
             url=self.url, site=self.site, sections=self.sections, nav=nav, preview=preview,
             section_name=self.section_name, build_id=hashlib.sha1(css).hexdigest()[:8],
-            verdicts=VERDICTS,
+            verdicts=VERDICTS, edition_time=(cfg["schedule"].get("editions") or [""])[0],
         )
         self.env.filters.update(
             local=self.local, date_long=self.date_long, date_short=self.date_short,
@@ -238,7 +238,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
 
     if not editions:                  # before the first edition: a placeholder, so deploys still work
         placeholder = {"current_edition": {"generated_at": b.now.isoformat()}}
-        b.write("", "empty.html", active="front", first_slot=cfg["schedule"]["editions"][0], **placeholder)
+        b.write("", "empty.html", active="front", **placeholder)
         b.write("404.html", "404.html", active="", **placeholder)
         return b.pages
 
