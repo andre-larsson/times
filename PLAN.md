@@ -544,7 +544,7 @@ The real file is in the repo; this is its shape.
    - ✅ `gh repo create andre-larsson/times --public`, pushed.
    - ✅ Enable Pages (`build_type=workflow`). Add the `ANTHROPIC_API_KEY` and `ITAD_API_KEY` secrets.
    - ✅ Run "Check sources" and Edition with `mode=links`. After phase 3: `mode=full`.
-   - Verify `https://a403.space/times/`, then link it from the root launcher.
+   - ✅ Verify `https://a403.space/times/`, then link it from the root launcher (done 2026-11-03).
 
    *Done when* the next 06:30 edition publishes by itself.
 
