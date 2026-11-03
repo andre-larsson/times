@@ -79,7 +79,7 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
         "hn_points": (c.hn or {}).get("points"), "also_covered_by": sorted({a.source for a in c.also}),
         "rule_section": c.section,
     } for cid, c in by_id.items()]
-    chunk = int(llm_cfg.get("triage_chunk", 60))
+    chunk = int(llm_cfg.get("triage_chunk", 40))
     chunks = [rows[i:i + chunk] for i in range(0, len(rows), chunk)]
     triaged: dict[str, dict[str, Any]] = {}
     for result in _parallel(llm_cfg, [lambda ch=ch: desk.triage(llm, cfg, ch) for ch in chunks]):

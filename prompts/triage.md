@@ -22,4 +22,5 @@ For every candidate, return:
   Hacker News points and several outlets covering it are signals, not rules.
 - event: a short lowercase key for the underlying story, e.g. "kestrel-2-release". Give the same key
   to every candidate that covers the same event, so they can be merged.
-- title_en: the headline in English (translate non-English headlines; otherwise copy it).
+- title_en: an English translation of a non-English headline. For English headlines return ""
+  (don't copy them; the output must stay short).

@@ -76,10 +76,10 @@ llm:
                                       #   Claude subscription; refused in GitHub Actions). Also: --llm, $NEWSROOM_LLM
   parallel: 3                         # Claude calls at once
   max_candidates: 150                 # rule-ranked items sent to triage
-  triage_chunk: 60                    # items per triage call
+  triage_chunk: 40                    # items per triage call (structured output from Haiku runs ~1 token per character)
   timeout_seconds: 240
   reduced: { featured_max: 1, medium_max: 3 }
-  max_tokens: { triage: 12000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000 }
+  max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000 }
 
 links:                                # the no-AI links edition
   per_section: 12                     # AI and Tech headline lists
