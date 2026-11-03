@@ -106,8 +106,8 @@
 {%- endmacro %}
 
 {% macro review_item(r) -%}
-<li class="review">
-  <span class="score{% if r.score and r.score | length > 5 %} score--word{% endif %}">{{ r.score or '–' }}</span>
+<li class="review{% if not r.score %} review--unscored{% endif %}">
+  {%- if r.score %}<span class="score{% if r.score | length > 5 %} score--word{% endif %}">{{ r.score }}</span>{% endif %}
   <div class="review-body">
     <a class="review-game" href="{{ r.url }}">{{ r.game }}</a>
     <span class="review-outlet">{{ r.outlet }}</span>
@@ -151,7 +151,12 @@
 {% macro link_item(l) -%}
 <li class="link-item">
   <a class="hl hl-sm hl-link" href="{{ l.url }}">{{ l.title }}</a>
-  <p class="meta"><span>{{ l.source }}</span>{% if l.published_at %}<span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ l.published_at | iso }}">{{ l.published_at | time }}</time>{% endif %}</p>
+  <p class="meta">
+    <span>{{ l.source }}</span>
+    {%- for a in l.also or [] %}, <a class="meta-link" href="{{ a.url }}">{{ a.name }}</a>{% endfor %}
+    {%- if l.published_at %}<span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ l.published_at | iso }}">{{ l.published_at | when }}</time>{% endif %}
+    {%- if l.hn and l.hn.points %}<span class="meta-sep" aria-hidden="true">·</span><a class="meta-link" href="{{ l.hn.url }}">HN {{ l.hn.points | num }} points</a>{% endif %}
+  </p>
   {%- if l.excerpt %}<p class="link-excerpt">{{ l.excerpt }}</p>{% endif %}
 </li>
 {%- endmacro %}

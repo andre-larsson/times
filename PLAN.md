@@ -24,20 +24,21 @@ links back to them. One edition every morning, paid for with the API credits inc
 | AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile** |
 | Budget | **~$20/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $25 |
 | No budget or credits | **Links edition** (default) or skip |
-| Code / storage | Python 3.12 + Jinja2. JSON in `data/` committed to the repo; HTML never committed |
+| Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
 
 ## Sources
 
-Checked on 2026-11-03 from my home connection. Phase 2 re-checks them from GitHub Actions, whose
-datacenter IPs some sites treat differently.
+Checked on 2026-11-03 from my home connection; all fetch in about 5 seconds (`python -m newsroom sources`).
+The manual **Check sources** workflow re-checks them from GitHub Actions, whose datacenter IPs some sites
+treat differently.
 
 ### AI and Tech
 
 | Source | How | Status |
 |---|---|---|
-| **Hacker News** | Algolia API (`front_page`, with points and comments) | ✅ |
-| **Ars Technica** | `feeds.arstechnica.com/arstechnica/index` | ✅ |
-| **TechRadar** | `techradar.com/feeds.xml` (lots of buying guides; triage drops the "best X" pages) | ✅ |
+| **Hacker News** | Algolia API (`front_page`, with points and comments); top 10 by points form the HN list | ✅ |
+| **Ars Technica** | `feeds.arstechnica.com/arstechnica/index`. Science, Space, Cars, Health and Culture are skipped (first category) | ✅ |
+| **TechRadar** | `techradar.com/feeds.xml`. Deals, buying guides and most of TechRadar Pro (B2B columns) are filtered by URL path; Pro security news stays | ✅ |
 | **Tom's Hardware** | `tomshardware.com/feeds.xml` | ✅ |
 | **PCMag** | Direct feed blocked by bot protection (403). Use **Google News search for pcmag.com** instead: headline + short excerpt, so mostly briefs | ⚠️ workaround |
 | Extras for AI depth (optional) | Simon Willison's Weblog, Hugging Face blog, OpenAI / Google DeepMind blogs, Lobsters, LWN | to check |
@@ -49,13 +50,13 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **MISSIL** (missil.se) | RSS `missil.se/feed` (Swedish → summarized in English) | ✅ |
+| **MISSIL** (missil.se) | RSS `missil.se/feed` (Swedish → summarized in English). Reviews (`/spelrecensioner/`) carry a score ("Betyg 5 av 10"); film news and blogs skipped. Links edition: reviews only | ✅ |
 | **PC Gamer** | RSS `pcgamer.com/feeds.xml`; reviews recognized by their `…-review/` URLs | ✅ |
-| **Rock Paper Shotgun** | RSS `/feed`, **`/feed/reviews`**, **`/feed/deals`** | ✅ |
+| **Rock Paper Shotgun** | RSS `/feed` and **`/feed/reviews`** (the "Bestest Bests" tag becomes the score badge). `/feed/deals` dropped: mostly hardware, often weeks old | ✅ |
 | **gameranx** | YouTube channel RSS (no API key needed) | ✅ |
-| **I Dream of Indie Games** | YouTube channel RSS (`UC_HX1n5iojK-xjy9WxfxXhg`) + **written reviews** from `idreamofindie.com/blog-feed.xml` | ✅ |
+| **I Dream of Indie Games** | YouTube channel RSS (`UC_HX1n5iojK-xjy9WxfxXhg`; Shorts skipped) + **written reviews** from `idreamofindie.com/blog-feed.xml` (posts are infrequent) | ✅ |
 | Twitch (both channels) | Not used: live streams aren't news, and their YouTube uploads cover the same content | — |
-| **Steam store data** | Public store JSON: new releases (30), top sellers, coming soon, specials, plus Steam user ratings. Unofficial but widely used | ✅ |
+| **Steam store data** | Store search in JSON mode for app lists (**popular new releases** by date, **most wishlisted**, **popular specials**), then `IStoreBrowseService/GetItems` for release dates, user-review labels, prices and art, 50 apps per call. No key. (The older `appreviews` endpoint now redirects to the store front, and `featuredcategories` only lists the newest, mostly unknown, releases.) Unofficial but widely used | ✅ |
 | **Metacritic** | Feed removed ("410 Gone"), no public API, and scraping would go against its terms. **Link out only:** a "Metacritic →" search link per game | ❌ link only |
 | OpenCritic (optional) | Has an API with a key; terms and limits to check in phase 2. Would add aggregate scores | to check |
 
@@ -63,9 +64,8 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **IsThereAnyDeal** | Official API (`/deals/v2`). Free key by registering an app at isthereanydeal.com; personal and public use allowed; 1000 requests per 5 minutes. Gives price, regular price, discount %, historical low, shop, expiry. Credited on the page | ✅ |
-| Rock Paper Shotgun deals | `/feed/deals` (editors' picks, as context) | ✅ |
-| Steam specials | Store JSON (cross-check) | ✅ |
+| **IsThereAnyDeal** | Official API (`/deals/v2` with a JSON filter: cut ≥ 50%, within 10% of the historical low, games only, Steam ≥ 80% with ≥ 500 reviews; then `/games/info/v2` for Steam rating and Metascore). Free key by registering an app at isthereanydeal.com; personal and public use allowed; 1000 requests per 5 minutes. Store links: Steam's own page for Steam deals, otherwise the ITAD game page (no affiliate redirects). Credited on the page. **Coded from the API spec; not yet run with a real key** | ⏳ key needed |
+| Steam specials | Popular games on sale. **Fallback** when there's no ITAD key: same cut and rating filters, but no lowest-ever data | ✅ |
 
 ### Draft interests (editable)
 
@@ -200,7 +200,12 @@ Dark mode inverts the paper but keeps the section colors.
 - **The paper:** the repo **`times`** shows up at **`a403.space/times/`**. No DNS changes and no `CNAME` file.
 - **Paths:** all URLs are built from `site.base_path: /times/`. The full `site.url` is only for canonical links and the feed.
 - **Last step:** once it's verified live, link it from the root launcher and redeploy the root site.
-- **Optional:** turn on "Enforce HTTPS" for `a403.space` in the root repo's Pages settings. It's off at the moment.
+- **HTTPS is broken on `a403.space` (found 2026-11-03).** GitHub never issued a certificate for the domain
+  (`https_certificate: null`), so `https://a403.space/...` shows a `*.github.io` certificate and browsers
+  warn. DNS is correct (four GitHub A records, `www` CNAME). Fix before go-live: in the root repo's Pages
+  settings, remove and re-add the custom domain, wait for the certificate, then tick "Enforce HTTPS". Until
+  then the site works over `http://`. Page links are relative to `/times/`, so only the feed's absolute URLs
+  depend on it.
 
 ## API credits and budget
 
@@ -282,7 +287,7 @@ marked `partial`.
 | `full` | The whole paper |
 | `reduced` | No discovery; featured max 1, medium max 3; briefs, gaming and deals as usual |
 | `partial` | Whatever finished, plus links |
-| `links` | No AI. Rule-ranked headlines per section, the HN top list, gaming lists from Steam and the feeds, a deals table from IsThereAnyDeal, and the banner "Links edition: AI stories paused" |
+| `links` | No AI. Rule-ranked headlines per section (max 4 per source, nothing repeated from the previous edition), the HN top list, gaming lists from Steam and the feeds, a deals table from IsThereAnyDeal (or Steam specials), and the banner "Links edition: AI stories paused". Not published if fewer than 5 items came back (sources down): the last edition stays |
 | `skip` | Nothing. The site keeps the last edition |
 
 ## Architecture
@@ -322,10 +327,13 @@ data, and writing calls get no tools.
 times/
 ├── PLAN.md  README.md  AGENTS.md  pyproject.toml  config.yaml
 ├── newsroom/
-│   ├── __main__.py           # preflight | generate [--mode] | render [--fixtures] | (--limit N)
-│   ├── config.py  schedule.py  budget.py  preflight.py
-│   ├── sources/              # rss.py, hackernews.py, google_news.py, youtube.py, steam.py, itad.py
-│   ├── rank.py  dedupe.py  extract.py  watchlist.py
+│   ├── __main__.py           # generate [--mode] | sources | render/serve [--fixtures] [--data-dir]
+│   ├── config.py  schedule.py  store.py  http.py  text.py
+│   ├── generate.py           # due check, mode, fetch → build → save, Actions outputs
+│   ├── sources/              # feeds.py (RSS, Google News, YouTube), hackernews.py, steam.py, itad.py
+│   ├── rank.py               # sections, junk filter, clustering (dedupe), scoring
+│   ├── links.py              # the links edition, and the gaming/deals blocks AI modes fall back to
+│   ├── budget.py  preflight.py  extract.py  watchlist.py      (phase 3)
 │   ├── llm.py                # anthropic client, structured outputs, cost tally, error classes
 │   ├── discover.py  triage.py  editor.py
 │   ├── writers.py            # featured / medium / briefs / gaming / deals prompts + schemas
@@ -334,11 +342,14 @@ times/
 ├── templates/                # base, front, section, gaming, deals, article, archive, 404, feed.xml
 ├── static/                   # style.css, fonts/ (self-hosted, open-licensed), logo.svg
 ├── data/  seen.json  usage.json  games_watchlist.json  editions/2026/11/03.json
-├── tests/
-└── .github/workflows/edition.yml
+├── tests/                    # fixtures/ (fictional editions and feeds), test_render.py, test_pipeline.py
+└── .github/workflows/        # edition.yml, sources.yml
 ```
 
 ## config.yaml (shape)
+
+The real `config.yaml` is the reference and has more knobs (per-feed filters, links-edition settings,
+ITAD filters). This is the planning shape.
 
 ```yaml
 site:
@@ -478,66 +489,26 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 - Footer: "Written by Claude from the linked sources; may contain errors. Deals data: IsThereAnyDeal."
 - 404 page: "403: you're allowed in, but this page doesn't exist."
 
-## Workflow: `.github/workflows/edition.yml` (sketch)
+## Workflow: `.github/workflows/edition.yml`
 
-```yaml
-on:
-  schedule: [{ cron: "17 * * * *" }]      # hourly check; config.yaml decides whether an edition is due
-  workflow_dispatch:
-    inputs:
-      mode: { type: choice, options: [auto, full, reduced, links, skip], default: auto }
-  push:
-    branches: [main]
-    paths: ["newsroom/**", "prompts/**", "templates/**", "static/**", "config.yaml"]
+The real file is in the repo; this is its shape.
 
-permissions: { contents: write, pages: write, id-token: write, actions: write }
-concurrency: { group: edition, cancel-in-progress: false }
+| Trigger | What runs |
+|---|---|
+| `schedule: "35 * * * *"` (hourly) | `generate` checks whether a slot in `schedule.editions` (Stockholm time) has passed without an edition. Usually not, and the run ends in seconds. At :35 the 06:30 slot is caught at 06:35, plus GitHub's usual cron delay |
+| `workflow_dispatch` with `mode` | `auto` behaves like the schedule; `full`, `reduced`, `links` or `skip` force a run now and replace today's edition |
+| `push` to `main` touching code, templates, static files or config | Skips `generate`; tests, renders and redeploys |
 
-jobs:
-  generate:
-    if: github.event_name != 'push'
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    outputs:
-      published: ${{ steps.gen.outputs.published }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
-      - id: gen
-        run: uv run python -m newsroom generate --mode "${{ inputs.mode || 'auto' }}"
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          ITAD_API_KEY: ${{ secrets.ITAD_API_KEY }}
-      - if: steps.gen.outputs.published == 'true'
-        run: |
-          git config user.name  "edition-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data && git commit -m "Edition $(date -u +%F)" && git push
-      - run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/edition.yml/enable"
-        env: { GH_TOKEN: "${{ github.token }}" }
-
-  deploy:
-    needs: generate
-    if: ${{ !failure() && !cancelled() && (github.event_name == 'push' || needs.generate.outputs.published == 'true') }}
-    runs-on: ubuntu-latest
-    environment: { name: github-pages, url: "${{ steps.pages.outputs.page_url }}" }
-    steps:
-      - uses: actions/checkout@v4
-        with: { ref: main }
-      - uses: astral-sh/setup-uv@v6
-      - run: uv run python -m newsroom render
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: _site }
-      - id: pages
-        uses: actions/deploy-pages@v4
-```
-
-Notes:
-- The hourly check catches up after late or dropped cron runs.
-- Runs where nothing is due finish in seconds, which is free on a public repo.
+- **generate job** (`contents: write`, `actions: write`): runs `newsroom generate`, commits `data/` when
+  published (`git pull --rebase` on a race), and when a slot was due calls the workflow `enable` endpoint
+  (keep-alive against the 60-day auto-disable).
+- **deploy job** (`pages: write`, `id-token: write`): checks out `main` (so it includes the new edition),
+  runs `pytest`, renders, uploads and deploys to Pages. Before the first edition, a placeholder page renders.
 - Pushes made with `GITHUB_TOKEN` don't trigger workflows, so there are no loops.
-- The `enable` call guards against the 60-day auto-disable. No dummy commits.
-- Action versions get pinned when the repo is scaffolded.
+- Actions are pinned to commit SHAs of releases at least two weeks old: checkout v7.0.1, setup-uv v10.3.0,
+  upload-pages-artifact v5.0.0, deploy-pages v5.0.1.
+- **`.github/workflows/sources.yml`**: a manual "Check sources" run that fetches every source once and
+  writes the status table to the run summary.
 
 ## Phases
 
@@ -548,11 +519,19 @@ Notes:
 
    *Done when* the fixtures look like a real tabloid news site on desktop and phone.
 
-2. **Sources, ranking and the links edition** (local, $0)
-   - All the sources above, including Steam, IsThereAnyDeal (needs the free key) and the YouTube feeds.
-   - Re-check them from an Actions runner.
+2. **Sources, ranking and the links edition** (local, $0). ✅ **Built 2026-11-03**, two checks left.
+   - Fetchers for every source: HN, eight feeds, PCMag via Google News, both YouTube channels, Steam
+     (three lists) and IsThereAnyDeal. A failing source is reported and skipped, never fatal.
+   - Rule-based ranking (`rank.py`): section assignment (AI keywords, categories and URL paths), junk and
+     shopping filters, gadget-review penalty, same-story clustering, recency + HN points + source weight.
+   - `generate --mode links` builds a complete paper; `generate` does the due check and writes
+     `GITHUB_OUTPUT` and a source-status table to the Actions step summary.
+   - Both workflows written. 18 offline tests.
+   - **Left:** run IsThereAnyDeal with a real key (until then deals come from Steam specials), and the
+     "Check sources" run from an Actions runner, which needs the GitHub repo.
 
-   *Done when* `generate --mode links` produces a real, useful paper with no AI.
+   *Done when* `generate --mode links` produces a real, useful paper with no AI. (It does: a real links
+   edition rendered and reviewed on desktop and phone on 2026-11-03.)
 
 3. **Claude: triage, editor, writers, deals advice, budget, preflight and fallback** (local, cents)
    *Done when*:
@@ -561,10 +540,11 @@ Notes:
    - forced failures produce correct `reduced`, `partial` and `links` editions.
 
 4. **Go live**
+   - Fix HTTPS for `a403.space` (see *Hosting*).
    - Create the Console workspace ($25 limit) and its key. Register an IsThereAnyDeal app for its key.
    - `gh repo create andre-larsson/times --public --source . --push`.
    - Enable Pages (`build_type=workflow`) and add the `ANTHROPIC_API_KEY` and `ITAD_API_KEY` secrets.
-   - Trigger with `mode=links`, then `mode=full`.
+   - Run "Check sources", then trigger Edition with `mode=links`, then `mode=full`.
    - Verify `https://a403.space/times/`, then link it from the root launcher.
 
    *Done when* the next 06:30 edition publishes by itself.

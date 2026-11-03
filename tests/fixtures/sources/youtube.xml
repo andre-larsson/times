@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+  <title>Save Point Weekly (sample)</title>
+  <entry>
+    <yt:videoId>AAAAAAAAAAA</yt:videoId>
+    <title>10 New Indie Games You Missed This Week</title>
+    <link rel="alternate" href="https://example.com/watch?v=AAAAAAAAAAA"/>
+    <published>2026-11-02T15:00:00+00:00</published>
+    <media:group>
+      <media:title>10 New Indie Games You Missed This Week</media:title>
+      <media:thumbnail url="https://example.com/vi/AAAAAAAAAAA/hqdefault.jpg" width="480" height="360"/>
+      <media:description>Ten small games worth a look. Subscribe: https://example.com/sub</media:description>
+    </media:group>
+  </entry>
+  <entry>
+    <yt:videoId>BBBBBBBBBBB</yt:videoId>
+    <title>This tiny horror game got me</title>
+    <link rel="alternate" href="https://example.com/shorts/BBBBBBBBBBB"/>
+    <published>2026-11-02T12:00:00+00:00</published>
+    <media:group>
+      <media:thumbnail url="https://example.com/vi/BBBBBBBBBBB/hqdefault.jpg" width="480" height="360"/>
+      <media:description>#shorts</media:description>
+    </media:group>
+  </entry>
+</feed>

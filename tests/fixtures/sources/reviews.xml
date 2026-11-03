@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<channel>
+  <title>Pixel Courier reviews (sample)</title>
+  <link>https://example.com/pixel-courier/</link>
+  <item>
+    <title>Hollow Lantern review – a lighthouse puzzler that earns its gloom</title>
+    <link>https://example.com/pixel-courier/hollow-lantern-review</link>
+    <pubDate>Tue, 03 Nov 2026 10:00:00 +0000</pubDate>
+    <category>Puzzle</category><category>Bestest Bests</category>
+    <description>&lt;img src="https://example.com/img.jpg" /&gt; &lt;p&gt;It starts with a storm and never lets up.&lt;/p&gt;</description>
+  </item>
+  <item>
+    <title>Arcwave Pocket handheld review - fast, loud and expensive</title>
+    <link>https://example.com/pixel-courier/arcwave-pocket-review</link>
+    <pubDate>Mon, 02 Nov 2026 09:00:00 +0000</pubDate>
+    <category>Hardware</category>
+    <description>A handheld PC with a big fan.</description>
+  </item>
+  <item>
+    <title>Copperline</title>
+    <link>https://example.com/spelkoll/spelrecensioner/copperline/</link>
+    <pubDate>Sun, 01 Nov 2026 12:00:00 +0000</pubDate>
+    <category>SPELRECENSION</category>
+    <description>Ett mysigt tågspel.</description>
+    <content:encoded>&lt;p&gt;Långt test.&lt;/p&gt;&lt;p&gt;Betyg 8 av 10 – Mycket bra&lt;/p&gt;</content:encoded>
+  </item>
+  <item>
+    <title>After 300 hours in Deep Shift Salvage, I finally get it</title>
+    <link>https://example.com/pixel-courier/deep-shift-salvage-review</link>
+    <pubDate>Sun, 01 Nov 2026 08:00:00 +0000</pubDate>
+    <description>A diary, not a review.</description>
+  </item>
+</channel>
+</rss>

@@ -96,7 +96,7 @@ class SiteBuilder:
             local=self.local, date_long=self.date_long, date_short=self.date_short,
             date_when=self.date_when, time=self.time, iso=self.iso, num=self.num, money=self.money,
             paragraphs=self.paragraphs, domain=self.domain, rating_class=self.rating_class,
-            edition_name=self.edition_name, article_url=self.article_url,
+            edition_name=self.edition_name, article_url=self.article_url, when=self.when,
         )
 
     # urls and names
@@ -126,12 +126,14 @@ class SiteBuilder:
         return f"{d.day} {d:%b}" if d else ""
 
     def date_when(self, value: Any, precision: str = "day") -> str:
-        """Release dates: '14 Nov', 'Nov 2026', '2027'."""
+        """Release dates: '14 Nov', 'Nov 2026', 'Q1 2027', '2027'."""
         if not value:
             return "TBA"
         d = dt.date.fromisoformat(str(value)[:10])
         if precision == "year":
             return str(d.year)
+        if precision == "quarter":
+            return f"Q{(d.month - 1) // 3 + 1} {d.year}"
         if precision == "month":
             return f"{d:%b %Y}"
         return f"{d.day} {d:%b}"
@@ -139,6 +141,13 @@ class SiteBuilder:
     def time(self, value: Any) -> str:
         d = self.local(value)
         return f"{d:%H:%M}" if d else ""
+
+    def when(self, value: Any) -> str:
+        """'14:20' for today (local), '2 Nov 22:05' for anything older."""
+        d = self.local(value)
+        if not d:
+            return ""
+        return f"{d:%H:%M}" if d.date() == self.now.astimezone(self.tz).date() else f"{d.day} {d:%b} {d:%H:%M}"
 
     def iso(self, value: Any) -> str:
         ts = parse_ts(value)
@@ -217,9 +226,7 @@ class SiteBuilder:
 
 def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
           front_edition: str | None = None, preview: bool = False) -> int:
-    editions = load_editions(data_dir)
-    if not editions:
-        raise SystemExit(f"No editions found in {data_dir / 'editions'}")
+    editions = load_editions(data_dir) if (data_dir / "editions").exists() else []
 
     _guard_out_dir(out_dir)
     if out_dir.exists():
@@ -228,6 +235,12 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     shutil.copytree(ROOT / "static", out_dir / "static")
 
     b = SiteBuilder(cfg, out_dir, preview)
+
+    if not editions:                  # before the first edition: a placeholder, so deploys still work
+        placeholder = {"current_edition": {"generated_at": b.now.isoformat()}}
+        b.write("", "empty.html", active="front", first_slot=cfg["schedule"]["editions"][0], **placeholder)
+        b.write("404.html", "404.html", active="", **placeholder)
+        return b.pages
 
     for ed in editions:
         for s in ed.get("stories", []):

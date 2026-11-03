@@ -9,36 +9,52 @@ See [PLAN.md](PLAN.md) for the full design: sources, budget, run modes, phases.
 
 ## Status
 
-- **Phase 1 (design with sample data): done.** Templates, styles, the renderer and tests work against
-  the sample editions in `tests/fixtures/`.
-- Next: phase 2 (real sources and the no-AI "links edition"), then phase 3 (Claude).
+- **Phase 1 (design with sample data): done.** Templates, styles, the renderer and tests.
+- **Phase 2 (real sources and the no-AI "links edition"): built.** Every source is fetched and ranked by
+  rules; `generate --mode links` makes a complete paper. Waiting on an IsThereAnyDeal key (deals come
+  from Steam specials until then) and a source check from a GitHub runner.
+- Next: phase 3 (Claude writes the stories), then phase 4 (go live).
 
 ## Run it locally
 
 Requires [uv](https://docs.astral.sh/uv/).
 
 ```bash
-uv sync                                        # install dependencies
-uv run python -m newsroom serve --fixtures     # render the sample editions and preview at http://127.0.0.1:8403/times/
-uv run python -m newsroom render --fixtures    # render only, into _site/
-uv run python -m newsroom serve --fixtures --front 2026-11-02   # preview the no-AI "links edition"
-uv run pytest                                  # smoke tests: pages exist, internal links resolve, feed is valid
+uv sync                                          # install dependencies
+uv run pytest                                    # offline tests: parsing, ranking, schedule, rendering, links
+
+# sample data (fictional)
+uv run python -m newsroom serve --fixtures       # preview at http://127.0.0.1:8403/times/
+uv run python -m newsroom serve --fixtures --front 2026-11-02   # the no-AI "links edition" layout
+
+# real data
+uv run python -m newsroom sources                # fetch every source once, print a status table
+uv run python -m newsroom generate --mode links --data-dir _work/data   # build today's links edition
+uv run python -m newsroom serve --data-dir _work/data                   # preview it
 ```
 
-Without `--fixtures`, the commands read real editions from `data/editions/` (written by the pipeline
-from phase 2 on).
+`generate` without `--mode` (= `auto`) only builds an edition when a slot in `schedule.editions` has
+passed without one; that is what the hourly workflow runs. Local test runs should use
+`--data-dir _work/data` (git-ignored); `data/` is where the workflow commits real editions.
+
+Environment: `ITAD_API_KEY` (IsThereAnyDeal; optional) and, from phase 3, `ANTHROPIC_API_KEY`.
 
 ## Layout
 
 ```
-config.yaml          every tuning knob: schedule, story counts, sources, models, budget
+config.yaml          every tuning knob: schedule, story counts, sources and filters, models, budget
 newsroom/            Python package: `python -m newsroom <command>`
+  sources/           fetchers: RSS feeds, Google News, YouTube, Hacker News, Steam, IsThereAnyDeal
+  rank.py            rule-based sections, junk filters, same-story clustering, scoring
+  links.py           the links edition (and the gaming/deals blocks)
+  generate.py        due check → mode → fetch → build → save; GitHub Actions outputs
   render.py          edition JSON → static HTML in _site/
   serve.py           local preview server under the /times/ base path
 templates/           Jinja2 templates (front, section, gaming, deals, article, archive, 404, feed)
 static/              style.css, favicon, self-hosted fonts (SIL Open Font License)
-tests/fixtures/      sample editions (made-up companies, games and outlets; links go to example.com)
-data/                real editions, committed by the pipeline (from phase 2)
+tests/fixtures/      sample editions and feeds (made-up names; links go to example.com)
+data/                real editions, committed by the workflow
+.github/workflows/   edition.yml (hourly check, generate, deploy), sources.yml (manual source check)
 ```
 
 ## Design notes
@@ -47,5 +63,5 @@ data/                real editions, committed by the pipeline (from phase 2)
   column) with its own identity: black masthead, the amber "403" badge, Barlow Condensed headlines and
   Source Serif 4 for body text.
 - News stories have no photos; the lead gets a typographic cover showing the story's key figure.
-  Games and videos will use Steam and YouTube images.
+  Games use Steam art and videos use YouTube thumbnails (hotlinked).
 - Light and dark mode follow the system setting. Every page is `noindex`.

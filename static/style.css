@@ -415,7 +415,8 @@ h1, h2, h3, h4 { margin: 0; }
 @media (min-width: 1024px) {
   .gaming-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--s-6); }
   .gaming-row, .gaming-news, .gaming-earlier { grid-column: 1 / -1; }
-  .gaming-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* one equal column per block present (spotlight is often empty) */
+  .gaming-row { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
 }
 .gaming-earlier { margin-top: var(--s-6); }
 
@@ -427,6 +428,15 @@ h1, h2, h3, h4 { margin: 0; }
 .game-links { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); font: 600 0.8125rem/1.6 var(--font-ui); }
 .game-links a { color: var(--sec-ink); }
 .game-links a:hover { text-decoration: underline; }
+@media (max-width: 479px) {
+  /* phones: compact rows (art left, text right) instead of a long stack of full-width cards */
+  .game-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  .game-card { display: grid; grid-template-columns: 40% minmax(0, 1fr); column-gap: var(--s-3); row-gap: var(--s-1); align-content: start; }
+  .game-card > :first-child { grid-row: 1 / span 6; align-self: start; }
+  .game-card > :not(:first-child) { grid-column: 2; }
+  .game-title { font-size: 1.1875rem; }
+  .game-blurb { display: none; }
+}
 
 .art { position: relative; overflow: hidden; background: var(--paper-2); }
 .art--capsule { aspect-ratio: 460 / 215; }
@@ -449,6 +459,7 @@ h1, h2, h3, h4 { margin: 0; }
   padding-block: var(--s-3); border-top: 1px solid var(--rule);
 }
 .review:first-child { border-top: 0; padding-top: 0; }
+.review--unscored { grid-template-columns: minmax(0, 1fr); }
 .score {
   display: grid; place-items: center; min-height: 3rem; padding: 4px;
   background: var(--sec-soft); color: var(--sec-ink); border: 1px solid color-mix(in srgb, var(--sec) 45%, transparent);
@@ -552,6 +563,12 @@ h1, h2, h3, h4 { margin: 0; }
   padding-block: var(--s-3); border-top: 1px solid var(--rule);
 }
 .deal-row:first-child { border-top: 0; padding-top: 0; }
+@media (min-width: 1024px) {
+  /* links edition: no deal of the day, so the list takes the full width in two columns */
+  .deals-grid--list { grid-template-columns: none; }
+  .deals-grid--list .deal-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-6); }
+  .deals-grid--list .deal-row:nth-child(2) { border-top: 0; padding-top: 0; }
+}
 .deal-main { display: grid; gap: 2px; align-content: start; }
 .deal-name { font: 800 1.25rem/1.1 var(--font-head); }
 .deal-name:hover { text-decoration: underline; }

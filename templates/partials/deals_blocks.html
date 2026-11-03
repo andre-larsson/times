@@ -1,5 +1,5 @@
 {% import "macros.html" as m with context %}
-<div class="deals-grid">
+<div class="deals-grid{% if not deals.featured %} deals-grid--list{% endif %}">
   {% if deals.featured %}
   <div class="dotd-stack">
     {% for d in deals.featured %}

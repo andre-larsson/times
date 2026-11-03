@@ -1,5 +1,6 @@
 # The 403 Times: every tuning knob lives here.
-# Phase 1 (design) uses `site`, `schedule.timezone` and `sections`; the rest is wired up in later phases.
+# Used so far: site, schedule, sections, gaming, deals, search.max_item_age_hours, llm, links, sources.
+# models, budget, edition tiers and interests are wired up in phase 3.
 
 site:
   title: "The 403 Times"
@@ -28,11 +29,14 @@ edition:
   # min is a soft target: the editor goes below it rather than print weak stories (featured always ≥ 1)
 
 gaming:
-  new_on_pc:         { min: 3, max: 10, window_days: 7 }
-  reviews:           { min: 3, max: 10, window_days: 3 }
-  console_spotlight: { max: 3, min_notability: 4.5 }
-  coming_soon:       { max: 8, horizon_days: 180 }
-  watch:             { max: 4 }
+  new_on_pc:         { min: 3, max: 9, window_days: 7, min_reviews: 50 }     # Steam user reviews = popularity
+  reviews:           { min: 3, max: 10, window_days: 3, fill_days: 14 }     # quiet days: fill from 14 days
+  console_spotlight:
+    max: 3
+    min_notability: 4.5
+    watch: ["GTA 6", "GTA VI", "Grand Theft Auto VI", "Ocarina of Time"]   # links edition: rule-based spotlight
+  coming_soon:       { max: 8, horizon_days: 180 }                          # Steam's most-wishlisted, by date
+  watch:             { max: 4, window_days: 7 }
   news:              { max: 6 }
 
 deals:
@@ -70,6 +74,12 @@ budget:
 llm:
   when_unavailable: links             # links | skip
 
+links:                                # the no-AI links edition
+  per_section: 12                     # AI and Tech headline lists
+  max_per_source: 4                   # per section, so one busy feed can't fill it
+  hn_top: 10
+  languages: [en]                     # headlines in other languages only feed reviews (and AI modes)
+
 interests: |
   AI: model releases, research that matters, AI developer tools and agents, policy with real impact.
       Skip hype, listicles and routine funding news.
@@ -81,24 +91,39 @@ interests: |
   Deals: PC games at or near their lowest price ever, from well-reviewed games. Shopping advice, not ads.
 
 sources:
+  # weight scales a source's headlines in the rule-based ranking (1.0 = normal)
+  # skip_categories matches a feed item's first category; skip_paths matches its URL (keep_paths wins)
   hackernews: { front_page: true, min_points: 100 }
   feeds:
-    - { name: Ars Technica,           url: "https://feeds.arstechnica.com/arstechnica/index",  sections: [ai, tech] }
-    - { name: TechRadar,              url: "https://www.techradar.com/feeds.xml",              sections: [ai, tech] }
-    - { name: Tom's Hardware,         url: "https://www.tomshardware.com/feeds.xml",           sections: [tech] }
-    - { name: MISSIL,                 url: "https://www.missil.se/feed/",                      sections: [gaming], language: sv }
-    - { name: PC Gamer,               url: "https://www.pcgamer.com/feeds.xml",                sections: [gaming, tech] }
-    - { name: Rock Paper Shotgun,     url: "https://www.rockpapershotgun.com/feed",            sections: [gaming] }
-    - { name: RPS Reviews,            url: "https://www.rockpapershotgun.com/feed/reviews",    sections: [gaming], kind: reviews }
-    - { name: RPS Deals,              url: "https://www.rockpapershotgun.com/feed/deals",      sections: [deals] }
-    - { name: I Dream of Indie Games, url: "https://www.idreamofindie.com/blog-feed.xml",       sections: [gaming], kind: reviews }
+    - { name: Ars Technica,  url: "https://feeds.arstechnica.com/arstechnica/index", sections: [ai, tech], weight: 1.1,
+        skip_categories: [Science, Space, Cars, Health, Culture] }
+    - { name: TechRadar,     url: "https://www.techradar.com/feeds.xml", sections: [ai, tech], weight: 0.8,
+        skip_paths: [/seasonal-sales/, /deals/, /best/, /vpn/, /entertainment/, /home/, /health-fitness/,
+                     /audio/, /pro/], keep_paths: [/pro/security/] }       # TechRadar Pro is mostly B2B columns
+    - { name: Tom's Hardware, url: "https://www.tomshardware.com/feeds.xml", sections: [tech], weight: 1.0,
+        skip_paths: [/deals/, /best-picks/] }
+    - { name: MISSIL,        url: "https://www.missil.se/feed/", sections: [gaming], language: sv,
+        reviews_url: "/spelrecensioner/", title_is_game: true, skip_categories: [FILMNYHET, Petters blogg] }
+    - { name: PC Gamer,      url: "https://www.pcgamer.com/feeds.xml", sections: [gaming, tech],
+        reviews_url: "-review/?$", skip_paths: [/deals/] }
+    - { name: Rock Paper Shotgun, url: "https://www.rockpapershotgun.com/feed", sections: [gaming],
+        skip_paths: [-deals-, /deals] }
+    - { name: RPS Reviews,   url: "https://www.rockpapershotgun.com/feed/reviews", sections: [gaming], kind: reviews }
+    - { name: I Dream of Indie Games, url: "https://www.idreamofindie.com/blog-feed.xml", sections: [gaming], kind: reviews }
+    # RPS deals (/feed/deals) is mostly hardware and often weeks old; IsThereAnyDeal covers game deals
   google_news:
-    - { name: PCMag, query: "pcmag.com when:2d", sections: [tech, ai] }   # direct feed is bot-blocked
+    - { name: PCMag, query: "pcmag.com when:2d", domain: pcmag.com, sections: [tech, ai], weight: 0.8 }   # direct feed is bot-blocked
   youtube:
     - { name: gameranx,               channel_id: "UCNvzD7Z-g64bPXxGzaQaa4g" }
     - { name: I Dream of Indie Games, channel_id: "UC_HX1n5iojK-xjy9WxfxXhg" }
-  steam: { cc: se, lists: [new_releases, top_sellers, coming_soon, specials] }
-  itad:  { enabled: true }            # needs the ITAD_API_KEY secret
+  steam: { cc: se, lists: [new_releases, coming_soon, specials] }   # popular new · most wishlisted · popular on sale
+  itad:                               # needs the ITAD_API_KEY secret; without it deals come from Steam specials
+    enabled: true
+    sort: "-cut"
+    limit: 100
+    min_steam_percent: 80
+    min_steam_reviews: 500
+    info_limit: 25                    # games to look up for ratings and Metascore
 
 pricing:                              # USD per million tokens (Nov 2026)
   claude-opus-5-5:   { input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00 }
