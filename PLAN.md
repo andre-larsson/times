@@ -532,7 +532,15 @@ The real file is in the repo; this is its shape.
    edition rendered and reviewed on desktop and phone on 2026-11-03.)
 
 3. **Claude: triage, editor, writers, deals advice, budget, preflight and fallback** (local, cents)
-   - **Built 2026-11-03** on branch `phase-3-claude` (not merged: merging makes the daily run spend credits).
+   - ✅ **Done and merged 2026-11-03.** Daily editions are written by Claude on the API from the next
+     07:45 slot. API test run: 14 calls, 1 min 52 s, **$0.398** (usage.json), i.e. about $12/month at one
+     edition a day. Claude Code runs of the same edition report ~$0.66–0.70 API-equivalent; the subscription
+     path carries extra overhead, so it overstates real API cost.
+   - Found in the API test: structured output from Haiku runs about one token per character, so a 60-item
+     triage batch hit the 12k limit. Now 40-item batches, `title_en` only for non-English headlines, 16k
+     limit (a batch uses ~7.5k).
+   - Open: confirm the Console's Cost page matches usage.json (it still showed $0.00 shortly after the
+     run, which is expected reporting lag).
    - `llm.py`: one structured-output call path with two backends.
      - `api` (production): `anthropic` SDK, `output_config.format` JSON schema, cached system prompt,
        cost from the price table, credit/spend-limit/auth errors classified as fatal.

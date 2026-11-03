@@ -13,9 +13,11 @@ See [PLAN.md](PLAN.md) for the full design: sources, budget, run modes, phases.
 - **Phase 2 (real sources and the no-AI "links edition"): built.** Every source is fetched and ranked by
   rules; `generate --mode links` makes a complete paper. Waiting on an IsThereAnyDeal key (deals come
   from Steam specials until then) and a source check from a GitHub runner.
-- **Phase 3 (Claude writes the paper): in progress.** Triage (Haiku), editor and writers (Opus), budget
-  pacing, the pre-run check and the partial/links fallbacks.
-- Live since 2026-11-03 as a links edition at <https://a403.space/times/>.
+- **Phase 3 (Claude writes the paper): done.** Triage (Haiku), editor and writers (Opus), budget pacing,
+  the pre-run check and the partial/links fallbacks. About $0.40 per edition on the API.
+- Live at <https://a403.space/times/>: a links edition since 2026-11-03, Claude-written from the next
+  07:45 edition.
+- Next: phase 5 (discovery via web search) and tuning.
 
 ## Run it locally
 
