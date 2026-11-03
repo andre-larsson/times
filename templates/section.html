@@ -30,7 +30,7 @@
     <p class="notice">No stories have been written for {{ section.name }} yet. Here are today's top links.</p>
     <ul class="link-list">{% for l in links %}{{ m.link_item(l) }}{% endfor %}</ul>
     {% else %}
-    <p class="empty">Nothing here yet. The next edition arrives at 06:30.</p>
+    <p class="empty">Nothing here yet. The next edition arrives at {{ edition_time }}.</p>
     {% endif %}
   </div>
 

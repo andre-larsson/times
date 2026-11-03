@@ -19,7 +19,7 @@ from newsroom.text import canonical_url, excerpt, first_sentence
 
 FIX = Path(__file__).parent / "fixtures" / "sources"
 UTC = dt.timezone.utc
-NOW = dt.datetime(2026, 11, 3, 5, 40, tzinfo=UTC)          # 06:40 in Stockholm
+NOW = dt.datetime(2026, 11, 3, 6, 55, tzinfo=UTC)          # 07:55 in Stockholm
 
 
 class FakeClient:

@@ -1,6 +1,6 @@
 # The 403 Times: generate the daily edition and publish the site to GitHub Pages.
 #
-# - schedule: an hourly check; config.yaml (schedule.editions, Stockholm time) decides whether an
+# - schedule: an hourly check at :50 (just after the 07:45 slot); config.yaml (schedule.editions, Stockholm time) decides whether an
 #   edition is due, so runs that find nothing to do finish in seconds.
 # - workflow_dispatch: "Run workflow" button; any mode other than auto forces a run now.
 # - push to main (code, templates, config): re-render and redeploy without a new edition.
@@ -10,7 +10,7 @@ name: Edition
 
 on:
   schedule:
-    - cron: "35 * * * *"
+    - cron: "50 * * * *"
   workflow_dispatch:
     inputs:
       mode:
