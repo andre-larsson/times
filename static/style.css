@@ -606,7 +606,7 @@ h1, h2, h3, h4 { margin: 0; }
 .article-body p + p { margin-top: 1.05em; }
 .article-body p:first-child::first-line { font-weight: 650; }
 
-.factbox { margin-top: var(--s-6); background: var(--sec-soft); border-top: 4px solid var(--sec); padding: var(--s-4) var(--s-5) var(--s-5); }
+.factbox { margin-bottom: var(--s-5); background: var(--sec-soft); border-top: 4px solid var(--sec); padding: var(--s-4) var(--s-5) var(--s-5); }
 .factbox-title, .why-title, .sources-title {
   font: 800 1.125rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.05em; color: var(--sec-ink);
   margin-bottom: var(--s-3);

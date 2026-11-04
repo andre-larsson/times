@@ -23,16 +23,16 @@
     <div class="article-main">
       {% if story.tier == 'featured' %}{{ m.cover(story, 'md') }}{% endif %}
 
-      <div class="article-body">
-        {% for p in story.body | paragraphs %}<p>{{ p }}</p>{% endfor %}
-      </div>
-
       {% if story.key_points %}
       <aside class="factbox" aria-label="Key points">
         <h2 class="factbox-title">Key points</h2>
         <ul>{% for k in story.key_points %}<li>{{ k }}</li>{% endfor %}</ul>
       </aside>
       {% endif %}
+
+      <div class="article-body">
+        {% for p in story.body | paragraphs %}<p>{{ p }}</p>{% endfor %}
+      </div>
 
       {% if story.why_it_matters %}
       <aside class="why" aria-label="Why it matters">
