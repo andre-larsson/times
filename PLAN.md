@@ -262,7 +262,7 @@ Prices: Opus 5.5 is $4 in / $20 out per million tokens; Haiku 5.5 is $0.10 / $0.
 
 ## Run modes and the pre-run check
 
-GitHub runs the workflow hourly. Each run starts with `newsroom preflight`:
+GitHub runs the workflow every 15 minutes. Each run starts with `newsroom preflight`:
 
 ```
 1. Due?          the latest slot in schedule.editions (Stockholm time) is newer than the last
@@ -291,7 +291,7 @@ marked `partial`.
 ## Architecture
 
 ```
-GitHub Actions (hourly check; "Run workflow" button with an optional mode)
+GitHub Actions (15-minute check; "Run workflow" button with an optional mode)
 │
 ├─ job: generate ─────────────────────────────────────────────────────────────
 │   0. preflight  due? → mode
@@ -493,7 +493,7 @@ The real file is in the repo; this is its shape.
 
 | Trigger | What runs |
 |---|---|
-| `schedule: "50 * * * *"` (hourly) | `generate` checks whether a slot in `schedule.editions` (Stockholm time) has passed without an edition. Usually not, and the run ends in seconds. At :50 the 07:45 slot is caught at 07:50, plus GitHub's usual cron delay (moved from 06:30 on 2026-11-03) |
+| `schedule: "5,20,35,50 * * * *"` (every 15 min) | `generate` checks whether a slot in `schedule.editions` (Stockholm time) has passed without an edition. Usually not, and the run ends in seconds. At :50 the 07:45 slot is caught at 07:50, plus GitHub's usual cron delay; if GitHub drops that tick, the next one catches up. Was hourly until 2026-11-04, when GitHub ran only 2 of the first 16 hourly ticks and the morning edition never ran (public repo, so the extra runs are free) |
 | `workflow_dispatch` with `mode` | `auto` behaves like the schedule; `full`, `reduced`, `links` or `skip` force a run now and replace today's edition |
 | `push` to `main` touching code, templates, static files or config | Skips `generate`; tests, renders and redeploys |
 
@@ -601,7 +601,7 @@ The real file is in the repo; this is its shape.
 | Prompt injection from fetched pages | Writing calls have no tools; JSON-schema outputs; sources always linked |
 | Key secrets in a public repo | Not exposed to fork PRs; no `pull_request` trigger; Anthropic workspace capped at $25 |
 | Copyright | Summaries in my own words; briefs from short excerpts; store and YouTube images only (v1); `noindex` |
-| Late or dropped cron runs, 60-day auto-disable | Hourly due-check; data commits + enable call; Pi as last resort |
+| Late or dropped cron runs, 60-day auto-disable | Due-check every 15 minutes (catches up on a dropped tick); data commits + enable call; Pi as last resort |
 
 ## Open decisions
 

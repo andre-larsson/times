@@ -1,7 +1,10 @@
 # The 403 Times: generate the daily edition and publish the site to GitHub Pages.
 #
-# - schedule: an hourly check at :50 (just after the 07:45 slot); config.yaml (schedule.editions, Stockholm time) decides whether an
-#   edition is due, so runs that find nothing to do finish in seconds.
+# - schedule: a check every 15 minutes (:05/:20/:35/:50; :50 is just after the 07:45 slot); config.yaml
+#   (schedule.editions, Stockholm time) decides whether an edition is due, so runs that find nothing to do
+#   finish in seconds. GitHub delays and drops scheduled runs (14 of the first 16 hourly ticks never ran,
+#   including the 07:50 one on 2026-11-04); any later tick catches up, so more ticks = fewer missed mornings.
+#   The repo is public, so the extra runs cost no Actions minutes.
 # - workflow_dispatch: "Run workflow" button; any mode other than auto forces a run now.
 # - push to main (code, templates, config): re-render and redeploy without a new edition.
 # Pushes made with GITHUB_TOKEN (the data commits below) don't trigger workflows, so no loops.
@@ -10,7 +13,7 @@ name: Edition
 
 on:
   schedule:
-    - cron: "50 * * * *"
+    - cron: "5,20,35,50 * * * *"
   workflow_dispatch:
     inputs:
       mode:
