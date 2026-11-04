@@ -46,7 +46,7 @@ no MCP servers and no project context, on your Claude subscription instead of AP
 local development only and refuses to run in GitHub Actions; the workflow always uses the API.
 
 `generate` without `--mode` (= `auto`) only builds an edition when a slot in `schedule.editions` has
-passed without one; that is what the scheduled workflow (every 15 minutes) runs. Local test runs should use
+passed without one; that is what the hourly workflow runs. Local test runs should use
 `--data-dir _work/data` (git-ignored); `data/` is where the workflow commits real editions.
 
 Keys: `ANTHROPIC_API_KEY` (from phase 3) and `ITAD_API_KEY` (optional). Locally, put them in `.env` in
@@ -74,7 +74,7 @@ templates/           Jinja2 templates (front, section, gaming, deals, article, a
 static/              style.css, favicon, self-hosted fonts (SIL Open Font License)
 tests/fixtures/      sample editions and feeds (made-up names; links go to example.com)
 data/                real editions, committed by the workflow
-.github/workflows/   edition.yml (15-minute check, generate, deploy), sources.yml (manual source check)
+.github/workflows/   edition.yml (hourly check, generate, deploy), sources.yml (manual source check)
 ```
 
 ## Design notes
