@@ -1,0 +1,1436 @@
+{
+ "edition_id": "2026-11-04",
+ "generated_at": "2026-11-04T18:15:30.109715+00:00",
+ "mode": "full",
+ "reason": "",
+ "llm": {
+  "backend": "api",
+  "usd": 0.629479,
+  "equivalent_usd": 0.629479,
+  "calls": 18,
+  "by_task": {
+   "probe": {
+    "calls": 1,
+    "usd": 2.5e-05,
+    "equivalent_usd": 2.5e-05,
+    "failed": 0
+   },
+   "triage": {
+    "calls": 4,
+    "usd": 0.01429,
+    "equivalent_usd": 0.01429,
+    "failed": 0
+   },
+   "editor": {
+    "calls": 1,
+    "usd": 0.100551,
+    "equivalent_usd": 0.100551,
+    "failed": 0
+   },
+   "featured": {
+    "calls": 3,
+    "usd": 0.153323,
+    "equivalent_usd": 0.153323,
+    "failed": 0
+   },
+   "medium": {
+    "calls": 6,
+    "usd": 0.149947,
+    "equivalent_usd": 0.149947,
+    "failed": 0
+   },
+   "deals": {
+    "calls": 1,
+    "usd": 0.040954,
+    "equivalent_usd": 0.040954,
+    "failed": 0
+   },
+   "briefs": {
+    "calls": 1,
+    "usd": 0.07198,
+    "equivalent_usd": 0.07198,
+    "failed": 0
+   },
+   "gaming": {
+    "calls": 1,
+    "usd": 0.098409,
+    "equivalent_usd": 0.098409,
+    "failed": 0
+   }
+  },
+  "stopped": "",
+  "estimated_usd": 0.629479
+ },
+ "stories": [
+  {
+   "slug": "north-korean-hackers-spent-months-inside-binance-before-6-3b",
+   "section": "tech",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-04T16:06:03+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Binance says hackers who stole billions in crypto spent months planning heist",
+     "url": "https://arstechnica.com/information-technology/2026/11/binance-says-hackers-who-stole-billions-in-crypto-spent-months-planning-heist/"
+    },
+    {
+     "name": "Tom's Hardware",
+     "title": "Binance heist began with fake job interviews and a malicious Homebrew download",
+     "url": "https://www.tomshardware.com/tech-industry/cryptocurrency/binance-heist-began-with-fake-job-interviews-and-a-malicious-homebrew-download-attackers-used-adulterated-software-and-social-engineering-to-gain-access-to-billions-in-assets"
+    },
+    {
+     "name": "PC Gamer",
+     "title": "Users pull $3.6 bn from Binance as it reopens following $6.3 billion mega-hack - FBI says North Korean hacking group 'TraderTraitor' to blame, North Korea says nuh-uh",
+     "url": "https://www.pcgamer.com/software/security/users-pull-usd3-6-bn-from-binance-as-it-reopens-following-usd6-3-billion-mega-hack-fbi-says-north-korean-hacking-group-tradertraitor-to-blame-north-korea-says-nuh-uh/"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Security",
+   "headline": "North Korean hackers spent months inside Binance before $6.3B theft",
+   "dek": "Binance says fake job interviews, a tampered Homebrew download and compromised internal AI tooling set up the largest crypto theft attempt on record.",
+   "body": "Binance says the attackers who targeted $6.34 billion in cryptocurrency spent months inside its systems before draining five hot wallets. A November 3 report from the exchange describes social engineering through fake recruitment interviews, malicious software downloads, compromised internal AI tooling and infected engineer laptops. \"It was not a single isolated breach or a simple phishing incident,\" Binance said. Ars Technica calls the $6.34 billion the biggest sum ever targeted in a crypto theft.\n\nThe first known compromise came in June, according to Tom's Hardware. An engineer on Binance's Wallet DevOps team searched for a popular AI coding tool and downloaded a tampered Homebrew installation. Binance detected the activity, replaced the device and rotated credentials. By then, the attackers had learned the engineer's role and identified colleagues on the wallet infrastructure team.\n\nIn September, a fake recruiter posing as a project director contacted another engineer through a legitimate job platform. Two interviews followed, one with a supposed HR representative on live video and one with a fake CEO. The engineer was then asked to download a coding assignment onto his work computer. Its malicious code ran during setup and replaced a component of the Python version-management tool \"pvenv\" with a version that could run commands and talk to an attacker server. Endpoint security did not catch it. On October 20, the attackers used those machines and an internal AI tool to take over two wallet engineers' devices. They also found a container deployment token on the June victim's computer. On October 29, stolen credentials let them deploy a container and run a script that reached Binance's internal wallet signing service. That allowed transactions outside the normal withdrawal process.\n\nThe FBI attributed the theft to North Korea on November 1, naming the activity \"TraderTraitor.\" PC Gamer reports the FBI has seen the group converting stolen crypto into Ether. Pyongyang denies involvement. Kim Yo Jong, Kim Jong Un's sister, called it a \"sinister attempt\" to damage the country's reputation, PC Gamer reports.\n\nBinance says it has frozen or intercepted about $2.85 billion and has covered the remaining loss. When it reopened on November 1, customers withdrew $4.649 billion in under 10 hours while depositing roughly $1 billion, according to PC Gamer. Net outflows reached about $5 billion by November 3, though deposits have since started to outpace withdrawals.",
+   "key_points": [
+    "Attack began in June with a tampered Homebrew download",
+    "Fake job interview planted malware disguised as a coding assignment",
+    "FBI blames North Korea's TraderTraitor; Pyongyang denies it",
+    "About $2.85 billion frozen; heavy withdrawals after reopening"
+   ],
+   "breaking": false,
+   "why_it_matters": "The entry points were everyday developer habits: grabbing a package manager from a search result and running a take-home coding test. Any engineer with access to production tooling is a target.",
+   "cover": {
+    "style": "type",
+    "figure": "$6.34B",
+    "caption": "Crypto targeted in the Binance heist, the largest on record"
+   },
+   "id": "s1",
+   "lead": true
+  },
+  {
+   "slug": "php-maintainers-knew-of-now-exploited-bug-two-years-before-f",
+   "section": "tech",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-04T12:30:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "PHP vulnerability post-mortem reveals bug was known two years ago — Small team of maintainers knew of the issue before it was made public, as new PHP2Shell chained exploit ravages servers",
+     "url": "https://www.tomshardware.com/tech-industry/cyber-security/php-vulnerability-post-mortem-reveals-bug-was-known-two-years-ago-small-team-of-maintainers-knew-of-the-issue-before-it-was-made-public-as-new-php2shell-chained-exploit-ravages-servers"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Security",
+   "headline": "PHP maintainers knew of now-exploited bug two years before fix",
+   "dek": "A PHP Foundation post-mortem admits the delay as the PHP2Shell exploit hits servers and Censys counts about 29 million installs still exposed.",
+   "body": "The PHP Foundation knew about a critical flaw in the PHP engine for two years before it became public, according to the foundation's post-mortem reported by Tom's Hardware. The bug, surfaced the week of October 19 when OpenAI's GPT 5.6-Sol found critical vulnerabilities in PHP, is now being exploited in the wild through a chained attack called PHP2Shell.\n\nThe root cause is an old design choice in PHP's error handling. When a process runs out of memory, the engine calls the C function longjmp() to jump straight to cleanup code. If that happens mid-way through building a data structure, half-built data stays on the heap. The cleanup code then acts on those leftover bytes, and a crafted web request can turn that into remote code execution with PHP's permissions. Attackers need to know the exact PHP version and build, which has led many sysadmins to hide version numbers.\n\nThe post-mortem says the team did not initially see the issue as urgent and went back and forth on a fix that would keep third-party extensions compatible. The foundation admitted management mistakes. It runs on one full-time employee and 14 part-time contractors. Tom's Hardware ties the timing to AI agents that have sped up bug hunting, making the usual 90-day disclosure window far less meaningful.\n\nThe exposure is large. PHP runs around 70 percent of websites, and 73 percent of PHP installs were on end-of-life versions when the bug went public. Censys initially counted about 45.7 million vulnerable installs out of 119 million. That has fallen to around 29 million, roughly 1 million a day, but 62 percent of servers Censys checks no longer report a version, and backported fixes may not change version numbers, so the real total is unclear.\n\nAttacks are underway. One campaign chained PHP2Shell with the Fragnesia (Dirty Frag) flaw to gain kernel-level access to 25 servers seemingly linked to the U.S. government. BitSight recorded many intrusion attempts as of October 29 but found no off-the-shelf exploit package on dark web forums, suggesting targeted campaigns for now.\n\nPatches cover maintained branches 8.1 through 8.5, with source patches published back to 7.4. Debian developer Ondřej Surý offers packages for PHP 5.6 to 8.1, CloudLinux and AlmaLinux have backports, and Ubuntu Pro and Zend reach as far back as 5.5. Cloudflare and Fastly have added PHP2Shell detection to their WAF rulesets.",
+   "key_points": [
+    "PHP Foundation knew of the flaw for two years before disclosure",
+    "PHP2Shell exploit enables remote code execution via an out-of-memory longjmp bug",
+    "Censys counts about 29 million vulnerable installs, down from 45.7 million",
+    "Patches and backports available from 8.5 down to 5.5 via vendors"
+   ],
+   "breaking": false,
+   "why_it_matters": "If you run PHP anywhere, including on a NAS or network appliance, update now or get a backport: hiding your version number is not a fix. It is also a stark case of critical open source running on a skeleton crew while AI speeds up bug discovery.",
+   "cover": {
+    "style": "type",
+    "figure": "29M",
+    "caption": "PHP installs still vulnerable, according to Censys"
+   },
+   "id": "s2"
+  },
+  {
+   "slug": "google-s-gemini-4-carbon-edges-claude-opus-5-5-for-top-ai-ra",
+   "section": "ai",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-03T13:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Google reveals new Gemini 4 Carbon AI model, narrowly beating Claude Opus 5.5",
+     "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/google-reveals-new-gemini-4-carbon-ai-model-narrowly-beating-claude-opus-5-5-frontier-ai-model-is-also-the-least-likely-to-hallucinate-benchmarks-claim"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Models",
+   "headline": "Google's Gemini 4 Carbon edges Claude Opus 5.5 for top AI ranking",
+   "dek": "The new model leads Artificial Analysis' Intelligence Index by one point and posts the best hallucination score, but developers will have to wait.",
+   "body": "Google's new Gemini 4 Carbon is the highest-ranked AI model on Artificial Analysis' Intelligence Index V5, Tom's Hardware reports. It scores 59, one point ahead of Anthropic's Claude Opus 5.5 and two points ahead of OpenAI's GPT-6 Astra. It takes first place in four of the index's nine evaluations.\n\nThe gap widens further down the table. Carbon sits nine points ahead of Meta's Muse Wonder Full and 10 ahead of Claude Fable 5.1. It also leads Artificial Analysis' AA-Omniscience v1.1 test, which tracks hallucinations and knowledge recall, with a score of 54 on a scale from -100 to +100. Tom's Hardware notes that this margin is often significant, but also that a best-in-class 54 shows frontier models are still far from consistently reliable.\n\nCost is part of the pitch. Per task on the Intelligence Index, Carbon comes in slightly cheaper than Gemini 3.8 Flash, several dollars cheaper than Claude Opus 5.5 or Sonnet 5.5, and not far off half the price of Claude Fable 5.1 at $12.99. It still costs more than OpenAI's GPT 5 Astra, about six times as much as GPT 6.1 Sol and about 13 times as much as the open-weight DeepSeek V4.1 Flash 1017, which scores only 32. Arena.ai puts Carbon at the top of its Pareto frontier at the expensive end, while Chinese open-weight models such as GLM 5.3-Flash and DeepSeek V4 Pro lead at lower prices.\n\nCarbon is not best at everything. Artificial Analysis says it trails Claude Code with Opus 5.5 at programming and falls behind Grok 4.7, Muse Wonder and Kimi K3.1 Pro on knowledge work.\n\nAccess is limited for now. Google is releasing Carbon first to cyber defenders through its Fairwind program and says it is taking part in the U.S. government's voluntary pre-release testing process. It wants to refine guardrails before opening the model to developers and has not given a date for wider availability.\n\nGoogle also makes several safety claims: that Carbon blocked every attack in the Gray Swan Indirect Prompt Injection benchmark, cuts unsupported claims twice as much as Gemini 4 Argon, released two weeks earlier, and reduces model overreach by 26 percent.",
+   "key_points": [
+    "Gemini 4 Carbon scores 59 on Intelligence Index V5, one point over Opus 5.5",
+    "Tops AA-Omniscience hallucination test with 54 on a -100 to +100 scale",
+    "Trails Claude Code with Opus 5.5 at programming",
+    "Initial access limited to cyber defenders via Google's Fairwind program"
+   ],
+   "breaking": false,
+   "why_it_matters": "Carbon offers top-tier scores at a lower per-task cost than Anthropic's flagships, but developers cannot use it yet, and Claude still leads for coding.",
+   "cover": {
+    "style": "type",
+    "figure": "1 pt",
+    "caption": "Gemini 4 Carbon's lead over Claude Opus 5.5 on Intelligence Index V5"
+   },
+   "id": "s3"
+  },
+  {
+   "slug": "google-shuts-down-backdoor-in-1-3-million-certified-android",
+   "section": "tech",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-04T11:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Certified Android TV manufacturer put unauthorized backdoor in 1.3 million set-top boxes, Google reveals",
+     "url": "https://www.tomshardware.com/tech-industry/cyber-security/certified-android-tv-manufacturer-put-unauthorized-backdoor-in-set-top-boxes-google-reveals-oem-sold-access-to-criminal-affiliates-for-1-3-million-devices-used-massive-network-as-botnet-for-ad-fraud-residential-proxy"
+    },
+    {
+     "name": "Ars Technica",
+     "title": "Google dismantles botnet secretly running on 1.3 million Android TV boxes",
+     "url": "https://arstechnica.com/google/2026/11/google-dismantles-botnet-secretly-running-on-1-3-million-android-tv-boxes/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Google shuts down backdoor in 1.3 million certified Android TV boxes",
+   "dek": "Shenzhen maker Videostrong sold access to criminal affiliates for ad fraud and proxies, and Google has banned it from preloading Google apps.",
+   "body": "Google has dismantled a botnet called x.cpe that ran on more than 1.3 million Google-certified Android TV boxes, and has cut ties with their maker. According to Google's Threat Intelligence Group, Shenzhen-based Videostrong Technology deliberately built in a backdoor and sold access to criminal affiliates, loading their malware onto devices. Google says this was not a rogue insider or an oversight, and has banned Videostrong from making devices with preloaded Google apps.\n\nThe boxes, mostly sold under the MECOOL brand, passed certification because a stub app, x.cpe or com.oemservice, fetched malware only after setup, Ars Technica reports. It disabled Play Protect. Most infected boxes ran residential proxies or ad fraud modules. Operators could also run terminal commands, capture screens and probe local networks.\n\nThe malware grew into a three-stage design in 2024, Google says. Because Android is open source, Videostrong could keep using it.",
+   "key_points": [
+    "Google's x.cpe takedown covered more than 1.3 million certified Android TV boxes, mostly MECOOL-branded.",
+    "Videostrong sold backdoor access to affiliates for ad fraud, residential proxies and malware installs.",
+    "Google has banned Videostrong from shipping devices with preloaded Google apps."
+   ],
+   "id": "s4"
+  },
+  {
+   "slug": "nvidia-reportedly-caps-cloud-operators-chinese-business-at-4",
+   "section": "ai",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-03T13:31:11+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nvidia tells data center operators to limit business from Chinese customers with new global restrictions, report claims",
+     "url": "https://www.tomshardware.com/tech-industry/data-centers/nvidia-tells-data-center-operators-to-limit-business-from-chinese-customers-with-new-global-restrictions-report-claims-allegedly-restricted-to-49-percent-of-the-total-ensuring-51-percent-are-non-chinese-outfits"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Export Controls",
+   "headline": "Nvidia reportedly caps cloud operators' Chinese business at 49 percent",
+   "dek": "The Financial Times reports the rule applies to data centers worldwide and covers only new contracts, not existing Nvidia hardware leases.",
+   "body": "Nvidia has told data center operators that use its hardware to keep Chinese customers below half of their business, according to a Financial Times report cited by Tom's Hardware. Operators selling services to Chinese companies would have to track that share and hold it to 49 percent, with at least 51 percent coming from non-Chinese customers.\n\nThe policy applies globally, not just to data centers in Asia, and covers only new and future contracts. The FT says Nvidia's sales force and regional teams passed it on verbally, with no official documentation. In a statement, Nvidia said current U.S. policy \"encourages\" cloud providers to build on American infrastructure and accept business from \"everywhere they can.\"\n\nThe move comes amid U.S.-China tension over AI. Nvidia can sell only to whitelisted companies, which has fed a black market for its chips, Tom's Hardware notes.",
+   "key_points": [
+    "Data center operators would be limited to 49 percent of business from Chinese customers, per the FT.",
+    "The reported rule applies worldwide but only to new and future contracts.",
+    "Nvidia reportedly communicated the policy through sales teams, not official documentation."
+   ],
+   "id": "s5"
+  },
+  {
+   "slug": "encrypted-firmware-throttles-nvidia-rtx-spark-laptops-on-lin",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-04T08:46:29+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Nvidia RTX Spark encrypted firmware slows inference speed to 35% on Linux",
+     "url": "https://www.mindstudio.ai/blog/linux-nvidia-rtx-spark-laptop"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50362905",
+    "points": 462,
+    "comments": 200
+   },
+   "tier": "medium",
+   "kicker": "Hardware",
+   "headline": "Encrypted firmware throttles Nvidia RTX Spark laptops on Linux",
+   "dek": "Plugged in, the GPU stalls near 780 MHz under Linux versus about 2.2 GHz on Windows, cutting a 120B model's speed roughly fivefold.",
+   "body": "Linux runs on Nvidia's RTX Spark laptops, but plugging one into wall power locks the GPU near 780 MHz, according to a widely discussed MindStudio test of the MSI Prestige N16 Flip AI Plus. Windows runs the same chip at about 2.2 GHz. On GPT-OSS-120B, Windows hit 65.4 tokens per second, WSL 65.1 and native Linux just 13.9.\n\nMindStudio traces the slowdown to a Windows-only component, the Nvidia Platform Controllers and Framework, which splits power between CPU and GPU. Its firmware power table is encrypted, and only the Windows driver can decrypt it. Disabling the controller in Windows reproduced the same roughly 786 MHz clock. On battery, Linux performed close to Windows.\n\nWSL is the practical workaround for now. A real fix depends on Nvidia porting the power logic to its Linux driver.",
+   "key_points": [
+    "Native Linux managed 13.9 tokens per second on GPT-OSS-120B, versus 65.4 on Windows and 65.1 in WSL.",
+    "The cause is an encrypted power table that only Nvidia's Windows driver can read, MindStudio reports.",
+    "The throttling appears on wall power; on battery, Linux performance is comparable to Windows."
+   ],
+   "id": "s6"
+  },
+  {
+   "slug": "moonshot-releases-open-weights-for-kimi-k3-1-pro",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-04T15:30:30+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Kimi K3.1 Pro model weights are out",
+     "url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50366999",
+    "points": 153,
+    "comments": 28
+   },
+   "tier": "medium",
+   "kicker": "Open weights",
+   "headline": "Moonshot releases open weights for Kimi K3.1 Pro",
+   "dek": "The 3T-class multimodal agentic model brings a 1-million-token context window and swaps in DeepSeek-style sparse attention for long inputs.",
+   "body": "Moonshot AI has published the weights for Kimi K3.1 Pro on Hugging Face. The company calls it an open-weight, natively multimodal agentic model and its most capable 3T-class model to date. The release reached 153 points on Hacker News.\n\nK3.1 Pro is post-trained from Kimi K3 with large-scale joint reinforcement learning across hundreds of domains. It has a 1-million-token context window. Moonshot says it improves coding, 3D creation, financial research and factual accuracy. Architecturally, it replaces K3's full-attention Gated MLA layers with Gated DeepSeek Sparse Attention for more efficient long-context work. Many of its benchmark runs used Anthropic's Claude Code harness.\n\nThe model is also available through Moonshot's API with OpenAI- and Anthropic-compatible endpoints. Reasoning effort can be set to low, high or max, with max as the default. It ships under a custom Kimi K3.1 Pro License.",
+   "key_points": [
+    "Kimi K3.1 Pro is a 3T-class open-weight multimodal model with a 1-million-token context window.",
+    "It replaces full-attention Gated MLA layers with Gated DeepSeek Sparse Attention.",
+    "The API offers OpenAI- and Anthropic-compatible endpoints, with reasoning effort set to low, high or max."
+   ],
+   "id": "s7"
+  },
+  {
+   "slug": "blackx-bootkit-infects-fully-patched-windows-machines",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-03T16:03:13+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "UEFI bootkit infected fully patched Windows machines. Is Microsoft to blame?",
+     "url": "https://arstechnica.com/security/2026/11/uefi-bootkit-infected-fully-patched-windows-machines-is-microsoft-to-blame/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "BlackX bootkit infects fully patched Windows machines",
+   "dek": "The UEFI malware abuses the same Secure Boot bypass as 2023's BlackLotus, despite victims installing every Microsoft fix, Ars Technica reports.",
+   "body": "A UEFI bootkit tracked as BlackX infected organizations whose Windows machines had every relevant Microsoft patch installed, Ars Technica reports. The outlet asks whether Microsoft is to blame.\n\nLike BlackLotus, which in 2023 became the first publicly documented in-the-wild bootkit to bypass Secure Boot on fully updated Windows 11, BlackX exploits \"Baton Drop\" (CVE-2022-21894). The logic flaw in the Windows boot manager lets attackers bypass Secure Boot and, under certain conditions, extract BitLocker keys. Microsoft fixed it in 2022 but did not revoke trust in the certificate that signed older, vulnerable boot managers.\n\nUpdates in 2023 and 2024 added a new certificate and a way to revoke the old one. BlackX victims had installed both. Bootkits run before Windows fully loads, ahead of many security defenses.",
+   "key_points": [
+    "BlackX infected organizations that had installed all of Microsoft's related Secure Boot patches, according to Ars Technica.",
+    "It exploits Baton Drop (CVE-2022-21894), the boot manager flaw BlackLotus used in 2023.",
+    "Microsoft patched the flaw in 2022 and issued certificate updates in 2023 and 2024."
+   ],
+   "id": "s8"
+  },
+  {
+   "slug": "amd-guides-to-17-billion-quarter-set-to-outsell-intel-for-fi",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T11:15:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "AMD expects to outsell Intel in Q4 for the first time in history",
+     "url": "https://www.tomshardware.com/pc-components/cpus/amd-expects-to-outsell-intel-in-q4-for-the-first-time-in-history-usd17b-guidance-would-exceed-intels-projections"
+    },
+    {
+     "name": "PC Gamer",
+     "title": "AMD says it's going to beat Intel in total revenue for the very first time by the end of 2026",
+     "url": "https://www.pcgamer.com/hardware/processors/amd-says-its-going-to-beat-intel-in-total-revenue-for-the-very-first-time-by-the-end-of-2026/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50367125",
+    "points": 198,
+    "comments": 65
+   },
+   "tier": "medium",
+   "kicker": "Chips",
+   "headline": "AMD guides to $17 billion quarter, set to outsell Intel for first time",
+   "dek": "Record Q3 revenue of $13.4 billion, powered by Epyc and Instinct demand, puts AMD's Q4 forecast above Intel's $15 to $16 billion guidance.",
+   "body": "AMD expects fourth-quarter revenue of about $17 billion, plus or minus 3 percent. If it hits that number, it will outsell Intel for the first time in history. Intel has guided to $15 billion to $16 billion, citing weak PC demand and capacity constraints. At the midpoints, AMD would lead by roughly $1.5 billion, Tom's Hardware notes.\n\nThe forecast came with record third-quarter results. Revenue reached $13.38 billion, up from $9.25 billion a year earlier, and net income rose 95 percent to $2.43 billion. Data center sales nearly doubled to $8.55 billion, now 64 percent of revenue, on Epyc CPUs and the Instinct MI455X launch.\n\nThe PC side is weaker. Gaming revenue fell to $773 million, and AMD expects Client and Gaming to shrink more than 20 percent sequentially in Q4 as memory prices bite.",
+   "key_points": [
+    "AMD guides Q4 2026 revenue to about $17 billion, versus Intel's $15 billion to $16 billion forecast.",
+    "Q3 revenue hit a record $13.38 billion; data center sales rose 97 percent to $8.55 billion.",
+    "AMD expects data center to exceed 80 percent of revenue in 2027 and plans for a double-digit drop in PC shipments."
+   ],
+   "id": "s9"
+  },
+  {
+   "slug": "nvidia-can-fill-only-1-of-china-s-70b-ai-chip-order-report-s",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-04T12:15:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nvidia can only fulfill 1% of China’s massive $70 billion GPU order for AI chips, report claims — supply constraints choke export-friendly RTX Pro 5500 deliveries despite huge demand",
+     "url": "https://www.tomshardware.com/pc-components/gpus/nvidia-can-only-fulfill-1-percent-of-chinas-massive-usd70-billion-gpu-order-for-ai-chips-report-claims-supply-constraints-choke-export-friendly-rtx-pro-5500-deliveries-despite-huge-demand"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "Nvidia can fill only 1% of China's $70B AI chip order, report says",
+   "body": "Tom's Hardware reports supply constraints are choking deliveries of the export-friendly RTX Pro 5500 to major Chinese companies despite huge demand.",
+   "id": "s10"
+  },
+  {
+   "slug": "smugglers-use-customs-loophole-to-move-banned-hbm-from-korea",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-03T12:04:32+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "AI chip smugglers exploit trade control loophole to bring banned HBM from South Korea into China",
+     "url": "https://www.tomshardware.com/tech-industry/semiconductors/ai-chip-smugglers-exploit-trade-control-loophole-to-bring-banned-hbm-from-south-korea-into-china-expensive-memory-chips-packaged-with-cheap-unsanctioned-processors-to-become-legal-exports"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Export controls",
+   "headline": "Smugglers use customs loophole to move banned HBM from Korea to China",
+   "body": "Customs checks only a server's processor specs, so smugglers pair high-end memory chips with low-end processors to get them through, Tom's Hardware reports.",
+   "id": "s11"
+  },
+  {
+   "slug": "team-group-ceo-says-memory-crunch-will-get-worse-next-year",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T15:28:30+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Team Group CEO warns memory crisis could reach point where 'even money can't buy goods' — will get worse next year, with 'no downward trend in price whatsoever'",
+     "url": "https://www.tomshardware.com/pc-components/dram/team-group-ceo-warns-memory-crisis-could-reach-point-where-even-money-cant-buy-goods-will-get-worse-next-year-with-no-downward-trend-in-price-whatsoever"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Memory",
+   "headline": "Team Group CEO says memory crunch will get worse next year",
+   "body": "Chen Ching-wen told the company's earnings call he sees no downward trend in prices and warned of a point where \"even money can't buy goods.\"",
+   "id": "s12"
+  },
+  {
+   "slug": "nintendo-rom-supplier-macronix-reportedly-quits-to-chase-ai",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T17:10:59+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nintendo ROM chip supplier Macronix quits to focus on chips for AI data centers, reports indicate",
+     "url": "https://www.tomshardware.com/video-games/nintendo/nintendo-rom-chip-supplier-macronix-quits-to-focus-on-chips-for-ai-data-centers-game-key-cards-may-be-more-available-as-large-game-storage-chips-become-more-expensive"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "Nintendo ROM supplier Macronix reportedly quits to chase AI demand",
+   "body": "Macronix is shutting down its ROM business to shift manufacturing to the NOR and NAND flash chips the AI industry wants, according to reports.",
+   "id": "s13"
+  },
+  {
+   "slug": "micron-lays-out-dram-and-nand-roadmap-with-high-na-euv-and-c",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T14:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Micron details ambitious DRAM and NAND roadmap — 3D NAND, High-NA EUV, new materials, and custom silicon makes a comeback",
+     "url": "https://www.tomshardware.com/pc-components/dram/micron-details-ambitious-dram-and-nand-roadmap-3d-nand-high-na-euv-new-materials-and-custom-silicon-makes-a-comeback"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Memory",
+   "headline": "Micron lays out DRAM and NAND roadmap with High-NA EUV and custom memory",
+   "body": "Micron expects custom memory types to go mainstream as AI developers hit the limits of current solutions, alongside new materials and 3D NAND advances.",
+   "id": "s14"
+  },
+  {
+   "slug": "msecure-tells-users-to-change-passwords-after-database-copy",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T14:20:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Top password manager mSecure tells users to change passwords immediately",
+     "url": "https://www.techradar.com/pro/security/top-password-manager-msecure-tells-users-to-change-passwords-immediately"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "mSecure tells users to change passwords after database copy is stolen",
+   "body": "A copy of an encrypted database was taken, and users synced with the password manager's cloud service may be at risk, TechRadar reports.",
+   "id": "s15"
+  },
+  {
+   "slug": "singapore-airlines-says-46-000-booking-records-hit-in-amadeu",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T16:10:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Singapore Airlines says 46,000 booking records hit following Amadeus breach",
+     "url": "https://www.techradar.com/pro/security/singapore-airlines-says-46-000-booking-records-hit-following-amadeus-breach"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Singapore Airlines says 46,000 booking records hit in Amadeus breach",
+   "body": "The supply-chain incident at Amadeus is spreading to affect a growing number of airlines.",
+   "id": "s16"
+  },
+  {
+   "slug": "suspected-hackers-target-french-blood-bank-freezers",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T12:35:24+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Hackers target French blood banks in latest freezer attack amid UK warnings",
+     "url": "https://www.techradar.com/computing/cybercrime/hackers-target-french-blood-banks-in-latest-freezer-attack-as-uk-cybersecurity-chief-warns-of-sliding-doors-moment-for-unprecedented-threat"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Suspected hackers target French blood bank freezers",
+   "body": "TechRadar reports the attack on blood supplies used in medical procedures is the latest freezer attack and comes amid warnings in the UK.",
+   "id": "s17"
+  },
+  {
+   "slug": "kitty-0-50-released",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T08:57:10+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Kitty 0.50",
+     "url": "https://sw.kovidgoyal.net/kitty/changelog/#"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50362980",
+    "points": 309,
+    "comments": 198
+   },
+   "tier": "brief",
+   "kicker": "Open source",
+   "headline": "Kitty 0.50 released",
+   "body": "",
+   "id": "s18"
+  },
+  {
+   "slug": "synaptics-appears-to-use-legal-threats-to-block-open-source",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T11:14:12+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Synaptics Appears to Use Legal Threats to Block Open-Source DisplayLink Driver",
+     "url": "https://www.phoronix.com/news/Synaptics-Blocks-Vino-Driver"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50363968",
+    "points": 151,
+    "comments": 62
+   },
+   "tier": "brief",
+   "kicker": "Open source",
+   "headline": "Synaptics appears to use legal threats to block open-source DisplayLink driver",
+   "body": "",
+   "id": "s19"
+  },
+  {
+   "slug": "ai-is-forcing-a-payoff-of-40-years-of-technical-debt-essay-a",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T11:52:17+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "AI is forcing us to pay off 40 years of technical debt",
+     "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50364336",
+    "points": 716,
+    "comments": 447
+   },
+   "tier": "brief",
+   "kicker": "Analysis",
+   "headline": "AI is forcing a payoff of 40 years of technical debt, essay argues",
+   "body": "",
+   "id": "s20"
+  },
+  {
+   "slug": "a-deep-dive-into-the-internals-of-postgresql",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-03T21:51:06+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "The Internals of PostgreSQL",
+     "url": "https://www.interdb.jp/pg/index.html"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50358702",
+    "points": 350,
+    "comments": 29
+   },
+   "tier": "brief",
+   "kicker": "Engineering",
+   "headline": "A deep dive into the internals of PostgreSQL",
+   "body": "",
+   "id": "s21"
+  },
+  {
+   "slug": "voters-reject-ai-data-centers-across-45-midterm-ballot-measu",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T13:13:32+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "AI data centers comprehensively defeated at US midterm elections — 45 measures put on the ballot as Americans overwhelmingly vote against developments",
+     "url": "https://www.tomshardware.com/tech-industry/data-centers/ai-data-centers-comprehensively-defeated-at-us-midterm-elections-45-measures-put-on-the-ballot-as-americans-overwhelmingly-vote-against-developments"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Voters reject AI data centers across 45 midterm ballot measures",
+   "body": "Several counties put data center development on the ballot, and most voters opposed projects in their county, Tom's Hardware reports.",
+   "id": "s22"
+  },
+  {
+   "slug": "nyt-sues-brave-demands-end-to-paywall-blocker-and-ai-deals",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-03T18:30:27+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "NYT demands Brave shut down its paywall blocker and end deals with AI firms",
+     "url": "https://arstechnica.com/tech-policy/2026/11/nyt-demands-brave-shut-down-its-paywall-blocker-and-end-deals-with-ai-firms/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Lawsuit",
+   "headline": "NYT sues Brave, demands end to paywall blocker and AI deals",
+   "body": "The lawsuit calls Brave a \"supplier, dealer, and distributor\" of stolen news content, Ars Technica reports.",
+   "id": "s23"
+  },
+  {
+   "slug": "stringman-is-an-800-open-source-room-scale-gripper-robot",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-03T16:47:29+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Stringman, an $800 open-source room scale gripper robot",
+     "url": "https://neufangled.com/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50354358",
+    "points": 751,
+    "comments": 228
+   },
+   "tier": "brief",
+   "kicker": "Hardware",
+   "headline": "Stringman is an $800 open-source room-scale gripper robot",
+   "body": "",
+   "id": "s24"
+  },
+  {
+   "slug": "incident-hits-pull-requests-git-operations-and-issues",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T10:00:06+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Incident with Pull Requests, Git Operations and Issues",
+     "url": "https://www.githubstatus.com/incidents/smtdswd1h2w4"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50363378",
+    "points": 212,
+    "comments": 110
+   },
+   "tier": "brief",
+   "kicker": "Infrastructure",
+   "headline": "Incident hits pull requests, Git operations and issues",
+   "body": "",
+   "id": "s25"
+  },
+  {
+   "slug": "spacex-teams-with-qualcomm-to-build-starlink-mobile-5g-netwo",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T18:07:10+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "SpaceX joins forces with Qualcomm to build Starlink Mobile 5G network",
+     "url": "https://www.techradar.com/phones/network-providers/spacex-and-qualcomm-join-forces-to-build-starlink-mobile-5g-network-but-elon-musks-bold-plan-to-disrupt-the-entire-industry-could-take-several-years"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Telecom",
+   "headline": "SpaceX teams with Qualcomm to build Starlink Mobile 5G network",
+   "body": "Qualcomm becomes Starlink Mobile's base station partner, but the network still needs more spectrum and towers, TechRadar reports.",
+   "id": "s26"
+  },
+  {
+   "slug": "google-lets-schools-skip-ai-tools-only-if-they-give-up-searc",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-03T17:54:43+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Google will let schools skip AI tools, but they have to give up search, too",
+     "url": "https://arstechnica.com/ai/2026/11/google-will-let-schools-skip-ai-tools-but-they-have-to-give-up-search-too/"
+    },
+    {
+     "name": "TechRadar",
+     "title": "Google won't let schools that opt-out of AI use search",
+     "url": "https://www.techradar.com/ai-platforms-assistants/search-and-ai-are-deeply-integrated-google-says-schools-cant-have-search-without-ai-and-that-should-worry-the-rest-of-us"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Education",
+   "headline": "Google lets schools skip AI tools only if they give up search too",
+   "body": "Google is offering schools AI tools that it says don't give away the answers.",
+   "id": "s27"
+  },
+  {
+   "slug": "cloudflare-doubles-dns-build-speed-and-cuts-ram-use-by-85",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Cloudflare engineers optimize DNS build services for twice the speed and 85% lower RAM usage",
+     "url": "https://www.tomshardware.com/networking/cloudflare-engineers-optimize-dns-build-services-for-twice-the-speed-and-85-percent-lower-ram-usage-finer-grained-processes-only-do-work-and-data-movement-thats-needed"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Dev",
+   "headline": "Cloudflare doubles DNS build speed and cuts RAM use by 85%",
+   "body": "",
+   "id": "s28"
+  },
+  {
+   "slug": "the-lost-malloc",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T07:37:30+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "The lost malloc()",
+     "url": "https://napcakes.nekoweb.org/posts/malloc/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50362466",
+    "points": 129,
+    "comments": 51
+   },
+   "tier": "brief",
+   "kicker": "Essay",
+   "headline": "The lost malloc()",
+   "body": "",
+   "id": "s29"
+  }
+ ],
+ "links": [],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "Stringman, an $800 open-source room scale gripper robot",
+   "url": "https://neufangled.com/",
+   "points": 751,
+   "comments": 228,
+   "comments_url": "https://news.ycombinator.com/item?id=50354358"
+  },
+  {
+   "rank": 2,
+   "title": "AI is forcing us to pay off 40 years of technical debt",
+   "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability",
+   "points": 716,
+   "comments": 447,
+   "comments_url": "https://news.ycombinator.com/item?id=50364336"
+  },
+  {
+   "rank": 3,
+   "title": "Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)",
+   "url": "https://news.ycombinator.com/item?id=50363461",
+   "points": 475,
+   "comments": 124,
+   "comments_url": "https://news.ycombinator.com/item?id=50363461"
+  },
+  {
+   "rank": 4,
+   "title": "Nvidia RTX Spark encrypted firmware slows inference speed to 35% on Linux",
+   "url": "https://www.mindstudio.ai/blog/linux-nvidia-rtx-spark-laptop",
+   "points": 462,
+   "comments": 200,
+   "comments_url": "https://news.ycombinator.com/item?id=50362905"
+  },
+  {
+   "rank": 5,
+   "title": "Show HN: HackerTV – HN's most-recommended Youtube videos as 24/7 TV channels",
+   "url": "https://hackertv.org",
+   "points": 428,
+   "comments": 79,
+   "comments_url": "https://news.ycombinator.com/item?id=50346755"
+  },
+  {
+   "rank": 6,
+   "title": "Jelly Sheet",
+   "url": "https://mrdoob.github.io/codevember-2026/01/",
+   "points": 403,
+   "comments": 104,
+   "comments_url": "https://news.ycombinator.com/item?id=50361268"
+  },
+  {
+   "rank": 7,
+   "title": "North Korean fake job interview led to $6.3B Binance heist",
+   "url": "https://www.theregister.com/security/2026/11/03/north-korean-fake-job-interview-led-to-63b-binance-heist/5307398",
+   "points": 365,
+   "comments": 224,
+   "comments_url": "https://news.ycombinator.com/item?id=50365755"
+  },
+  {
+   "rank": 8,
+   "title": "The Internals of PostgreSQL",
+   "url": "https://www.interdb.jp/pg/index.html",
+   "points": 350,
+   "comments": 29,
+   "comments_url": "https://news.ycombinator.com/item?id=50358702"
+  },
+  {
+   "rank": 9,
+   "title": "Kitty 0.50",
+   "url": "https://sw.kovidgoyal.net/kitty/changelog/#",
+   "points": 309,
+   "comments": 198,
+   "comments_url": "https://news.ycombinator.com/item?id=50362980"
+  },
+  {
+   "rank": 10,
+   "title": "Incident with Pull Requests, Git Operations and Issues",
+   "url": "https://www.githubstatus.com/incidents/smtdswd1h2w4",
+   "points": 212,
+   "comments": 110,
+   "comments_url": "https://news.ycombinator.com/item?id=50363378"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "Phantom Blade Zero",
+    "appid": 4115450,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4115450/7f882f889630270d3d3fb93825ac6f55b55e7a6c/header.jpg?t=1793261976",
+    "store_url": "https://store.steampowered.com/app/4115450/",
+    "price": 59.99,
+    "currency": "EUR",
+    "blurb": "S-GAME's Unreal Engine 5 Wuxia action game about a warrior with 66 days to live. Very Positive across 71,381 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Phantom%20Blade%20Zero/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Probably Stolen - Cyberpunk Shopkeeper Sim",
+    "appid": 4348910,
+    "release_date": "2026-10-28",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4348910/b241a3bc1cb144e70a4840157e127212738ea5b3/header_alt_assets_3.jpg?t=1793801444",
+    "store_url": "https://store.steampowered.com/app/4348910/",
+    "price": 17.99,
+    "currency": "EUR",
+    "blurb": "Cyberpunk shopkeeping sim on a dystopian space station, full of smuggling and faction deals. Overwhelmingly Positive from 8,821 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Probably%20Stolen%20-%20Cyberpunk%20Shopkeeper%20Sim/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Lightyear Frontier",
+    "appid": 1677110,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1677110/f4aec944f634f189990fe69e6d353b5609787955/header_alt_assets_7.jpg?t=1793811955",
+    "store_url": "https://store.steampowered.com/app/1677110/",
+    "price": 23.99,
+    "currency": "EUR",
+    "blurb": "Relaxed open-world farming where a mech does the heavy lifting, with co-op for four. Very Positive, 4,357 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Lightyear%20Frontier/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Dungeon Rampage Remastered",
+    "appid": 3053950,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3053950/eac09ebd91ad5af0c09404e715ea7672c2404120/header_alt_assets_2.jpg?t=1793730506",
+    "store_url": "https://store.steampowered.com/app/3053950/",
+    "price": 10.06,
+    "currency": "EUR",
+    "blurb": "Remastered one-to-four player co-op hack-and-slash dungeon crawler. Very Positive from 3,239 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Dungeon%20Rampage%20Remastered/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Deadly Days: Roadtrip",
+    "appid": 3026450,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3026450/aa28ee2993252e3f93edda9835367e0e277f953e/header_alt_assets_6.jpg?t=1793282351",
+    "store_url": "https://store.steampowered.com/app/3026450/",
+    "price": 9.74,
+    "currency": "EUR",
+    "blurb": "Zombie bullet heaven with extraction runs and backpack-tetris builds. Very Positive across 3,197 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Deadly%20Days%3A%20Roadtrip/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Queen's Domain",
+    "appid": 1799840,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1799840/1a209734951f53b019ec9fa03f835def14f2a968/header.jpg?t=1793628353",
+    "store_url": "https://store.steampowered.com/app/1799840/",
+    "price": 16.56,
+    "currency": "EUR",
+    "blurb": "Retro-fantasy action RPG with brutal combat and traversal-focused exploration. Overwhelmingly Positive from 1,984 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Queen%27s%20Domain/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Can 'Em All",
+    "appid": 5133900,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5133900/19aa14ebe3720e02f7f8c720abbf9749cf36967f/header.jpg?t=1793384095",
+    "store_url": "https://store.steampowered.com/app/5133900/",
+    "price": 6.29,
+    "currency": "EUR",
+    "blurb": "First-person incremental game about turning cute creatures into cans for profit. Overwhelmingly Positive, 1,572 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Can%20%27Em%20All/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "ArcheAge Chronicles",
+    "appid": 3218230,
+    "release_date": "2026-11-03",
+    "steam_rating": "Mixed",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3218230/header.jpg?t=1793752512",
+    "store_url": "https://store.steampowered.com/app/3218230/",
+    "price": 29.99,
+    "currency": "EUR",
+    "blurb": "Early access action RPG set in the ArcheAge world of Auroria. Reception is Mixed across 1,739 reviews.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/ArcheAge%20Chronicles/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Scam Line",
+    "appid": 2794590,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2794590/86d84c71aadc3000e8719d3df387a0f11007ebcc/header_alt_assets_0.jpg?t=1793728821",
+    "store_url": "https://store.steampowered.com/app/2794590/",
+    "price": 5.59,
+    "currency": "EUR",
+    "blurb": "Social deception party game for four to eight players who lie and cheat to win. Very Positive, 1,157 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Scam%20Line/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-pc-gamer-enshrouded-1-0",
+    "game": "Enshrouded 1.0",
+    "outlet": "PC Gamer",
+    "score": "",
+    "verdict": "PC Gamer calls the 1.0 release of Enshrouded a survival crafting masterpiece.",
+    "url": "https://www.pcgamer.com/games/survival-crafting/enshrouded-1-0-review/",
+    "published_at": "2026-11-02T21:47:58+00:00"
+   },
+   {
+    "id": "r-rps-reviews-virtue-and-a-sledgehammer",
+    "game": "Virtue and a Sledgehammer",
+    "outlet": "Rock Paper Shotgun",
+    "score": "",
+    "verdict": "Rock Paper Shotgun finds it a haunting sci-fi drama that lingered in the reviewer's mind more than a week later.",
+    "url": "https://www.rockpapershotgun.com/virtue-and-a-sledgehammer-review",
+    "published_at": "2026-10-27T16:00:00+00:00"
+   }
+  ],
+  "console_spotlight": [
+   {
+    "game": "Grand Theft Auto VI",
+    "platforms": [
+     "ps5",
+     "xbox"
+    ],
+    "headline": "GTA VI needs 212 GB as Rockstar sets global launch times",
+    "summary": "With a couple of weeks to go, Rockstar has shared preload details and worldwide release times, MISSIL reports. The studio is also releasing a free map of Leonida.",
+    "sources": [
+     {
+      "name": "MISSIL",
+      "url": "https://missil.se/nyheter/gta-6-kraver-212-gb-och-nu-ar-de-globala-lanseringstiderna-bekraftade/"
+     },
+     {
+      "name": "MISSIL",
+      "url": "https://missil.se/nyheter/rockstar-slapper-gratis-karta-over-leonida-till-gta-6/"
+     }
+    ]
+   },
+   {
+    "game": "The Legend of Zelda: Ocarina of Time",
+    "platforms": [
+     "switch2"
+    ],
+    "headline": "Ocarina of Time remake on Switch 2 earns strong early praise",
+    "summary": "TechRadar calls the remake the ultimate celebration of Zelda's 40-year milestone and says it ticks almost every box.",
+    "sources": [
+     {
+      "name": "TechRadar",
+      "url": "https://www.techradar.com/gaming/the-legend-of-zelda-ocarina-of-time-review"
+     }
+    ]
+   }
+  ],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Emberville",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-07",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2295170/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   },
+   {
+    "game": "Family Time",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-03-31",
+    "date_precision": "quarter",
+    "url": "https://store.steampowered.com/app/5072600/"
+   }
+  ],
+  "watch": [
+   {
+    "channel": "gameranx",
+    "title": "20 Game of The Year Contenders of 2026",
+    "url": "https://www.youtube.com/watch?v=30B9HuAyfg8",
+    "thumbnail": "https://i4.ytimg.com/vi/30B9HuAyfg8/hqdefault.jpg",
+    "blurb": "Gameranx runs through 20 Game of the Year contenders, from Phantom Blade Zero to Forza Horizon 6.",
+    "published_at": "2026-11-04T17:40:22+00:00"
+   },
+   {
+    "channel": "gameranx",
+    "title": "20 Flaws GTA 6 Is Trying To Fix",
+    "url": "https://www.youtube.com/watch?v=ZUPsRg7i4Bg",
+    "thumbnail": "https://i3.ytimg.com/vi/ZUPsRg7i4Bg/hqdefault.jpg",
+    "blurb": "Gameranx rounds up 20 changes GTA 6 reportedly makes, drawing on IGN interviews and previews.",
+    "published_at": "2026-11-03T16:40:32+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "Godzilla: Destroy All Monsters Melee Remastered Review - A Classic Returns!",
+    "url": "https://www.youtube.com/watch?v=7-mM-aJvVJk",
+    "thumbnail": "https://i4.ytimg.com/vi/7-mM-aJvVJk/hqdefault.jpg",
+    "blurb": "Full review of the remastered Godzilla: Destroy All Monsters Melee, and whether the kaiju brawler holds up.",
+    "published_at": "2026-11-02T14:00:01+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "I Found 50 NEW Indie Games You Should Grab This Week!",
+    "url": "https://www.youtube.com/watch?v=1Kb80Ax3ayQ",
+    "thumbnail": "https://i2.ytimg.com/vi/1Kb80Ax3ayQ/hqdefault.jpg",
+    "blurb": "Fifty new indie and AA releases this week, from 2D action games to brutal roguelikes.",
+    "published_at": "2026-11-01T13:30:22+00:00"
+   }
+  ],
+  "news": [
+   {
+    "headline": "The Elder Scrolls 6 is officially titled Sentinel",
+    "summary": "Bethesda revealed the long-awaited name in a video marking its 40th anniversary, PC Gamer reports.",
+    "url": "https://www.pcgamer.com/games/the-elder-scrolls/the-elder-scrolls-6-sentinel-is-finally-made-official/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Arkane Lyon union says studio is profitable, just not enough for Microsoft",
+    "summary": "Unionized workers at the Dishonored developer published a new statement on negotiations with Microsoft over the studio's potential closure, Rock Paper Shotgun reports.",
+    "url": "https://www.rockpapershotgun.com/arkane-is-profitable-say-marvels-blade-developers-in-fiery-new-statement-just-not-profitable-enough-for-microsoft",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Steam game reviews now take up to 12 business days",
+    "summary": "Valve told developers on Steamworks that store page and build reviews can currently take up to twelve business days, up from the usual three to five, MISSIL reports.",
+    "url": "https://missil.se/nyheter/steams-granskning-av-nya-spel-tar-nu-upp-till-tolv-arbetsdagar/",
+    "source": "MISSIL"
+   },
+   {
+    "headline": "Nexus Mods requires disclosure for AI-generated mods instead of banning them",
+    "summary": "The modding site is following Valve's approach of mandatory disclosure rather than outright bans, according to PC Gamer.",
+    "url": "https://www.pcgamer.com/games/nexus-mods-takes-the-valve-approach-to-ai-generated-content-no-outright-bans-but-mandatory-disclosures/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Control Resonant is Remedy's fastest-selling game, tripling quarterly revenue",
+    "summary": "The game has outsold every previous Remedy release at launch and tripled the studio's quarterly revenue, PC Gamer reports.",
+    "url": "https://www.pcgamer.com/games/action/control-resonant-is-remedys-fastest-selling-game-to-date-tripling-the-studios-quarterly-revenue/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Itch.io purges terabytes of AI content and expands its AI filters",
+    "summary": "The storefront deleted a couple of terabytes of AI-generated games and now lets users exclude games made with different types of generative AI, PC Gamer reports.",
+    "url": "https://www.pcgamer.com/software/ai/just-deleted-a-couple-terabytes-of-ai-slop-itch-io-pushes-back-against-the-flood-of-ai-on-its-storefront/",
+    "source": "PC Gamer"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-04T18:15:30.109715+00:00",
+  "featured": [
+   {
+    "game": "Frostpunk",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-14T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/323190/",
+    "headline": "Frostpunk drops 90 percent to €2.99 on Steam. Buy it.",
+    "body": "Frostpunk is down to €2.99 on Steam, 90 percent off its regular €29.99. That is a cut of €27, and the game holds a Very Positive rating from Steam users.\n\nThe deal runs until November 14 at 18:00 UTC, so there is no rush, but there is also little reason to hold out. At under €3, a game with this level of player approval is close to a free pick. It suits anyone who has had Frostpunk on a wishlist or wants a well-rated game for the price of a coffee. If it has been sitting in your backlog of maybes, this is the moment to settle it.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Borderlands 3",
+    "shop": "Steam",
+    "price": 5.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/397540/",
+    "headline": "Borderlands 3 falls to €5.99, 90 percent off. Buy it.",
+    "body": "Borderlands 3 costs €5.99 on Steam, down 90 percent from its regular €59.99. Steam users rate it Very Positive. The sale saves €54 on what is normally a full-price game.\n\nThe offer runs until November 16 at 18:00 UTC, giving plenty of time to decide. Borderlands 2 is in the same sale at €2.99, also 90 percent off, so newcomers can pick up both for under €9. For anyone who skipped the series at launch prices, this is an easy entry point at a fraction of the usual cost.",
+    "verdict": "buy"
+   }
+  ],
+  "more": [
+   {
+    "game": "Rust",
+    "shop": "Steam",
+    "price": 19.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-09T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/252490/",
+    "advice": "Rust at €19.99, half off, Very Positive. A solid price if you plan to play. Ends November 9.",
+    "verdict": "buy"
+   },
+   {
+    "game": "No Man's Sky",
+    "shop": "Steam",
+    "price": 23.59,
+    "regular": 58.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": false,
+    "expires": "2026-11-09T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/275850/",
+    "advice": "No Man's Sky is 60 percent off at €23.59, rated Very Positive. Good value; ends November 9.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Grand Theft Auto V Enhanced",
+    "shop": "Steam",
+    "price": 14.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-05T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/3240220/",
+    "advice": "GTA V Enhanced at €14.99, half off, Very Positive. Ends November 5 at 18:00 UTC.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Borderlands 2",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/49520/",
+    "advice": "Borderlands 2 at €2.99, 90 percent off and Very Positive. An easy pick through November 16.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Assassin's Creed® Odyssey",
+    "shop": "Steam",
+    "price": 11.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 80,
+    "lowest_ever": false,
+    "expires": "2026-11-10T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/812140/",
+    "advice": "Assassin's Creed Odyssey drops 80 percent to €11.99, rated Very Positive. Strong deal until November 10.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Teardown",
+    "shop": "Steam",
+    "price": 14.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-08T13:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/1167630/",
+    "advice": "Teardown is Overwhelmingly Positive at €14.99, half off. Worth it; ends November 8 at 13:00 UTC.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Brotato",
+    "shop": "Steam",
+    "price": 2.49,
+    "regular": 4.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/1942280/",
+    "advice": "Brotato at €2.49, half off, Overwhelmingly Positive. Cheap and highly rated; ends November 16.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Hell Let Loose",
+    "shop": "Steam",
+    "price": 17.49,
+    "regular": 69.99,
+    "currency": "EUR",
+    "cut": 75,
+    "lowest_ever": false,
+    "expires": "2026-11-09T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/686810/",
+    "advice": "Hell Let Loose is 75 percent off at €17.49, rated Very Positive. Good cut; ends November 9.",
+    "verdict": "buy"
+   }
+  ],
+  "source": "steam"
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 333,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 10,
+   "ms": 107,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 23,
+   "ms": 311,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 266,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 11,
+   "ms": 1548,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 515,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 60,
+   "ms": 198,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 62,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 266,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 27,
+   "ms": 336,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": true,
+   "count": 15,
+   "ms": 78,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": true,
+   "count": 10,
+   "ms": 222,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 709,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 556,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam specials",
+   "ok": true,
+   "count": 100,
+   "ms": 1781,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal",
+   "ok": false,
+   "count": 0,
+   "ms": 0,
+   "error": "ITAD_API_KEY not set; using Steam specials",
+   "skipped": true
+  }
+ ]
+}
