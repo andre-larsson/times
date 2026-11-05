@@ -1,7 +1,7 @@
 {
  "months": {
   "2026-11": {
-   "usd": 0.629479,
+   "usd": 0.986853,
    "runs": [
     {
      "at": "2026-11-04T18:15:30.109715+00:00",
@@ -67,6 +67,72 @@
       "output": 39351,
       "cache_read": 8051,
       "cache_write": 19338
+     }
+    },
+    {
+     "at": "2026-11-05T07:27:29.240238+00:00",
+     "edition_id": "2026-11-05",
+     "mode": "full",
+     "backend": "api",
+     "usd": 0.357374,
+     "equivalent_usd": 0.357374,
+     "calls": 13,
+     "by_task": {
+      "probe": {
+       "calls": 1,
+       "usd": 2.5e-05,
+       "equivalent_usd": 2.5e-05,
+       "failed": 0
+      },
+      "triage": {
+       "calls": 3,
+       "usd": 0.0099,
+       "equivalent_usd": 0.0099,
+       "failed": 0
+      },
+      "editor": {
+       "calls": 1,
+       "usd": 0.068671,
+       "equivalent_usd": 0.068671,
+       "failed": 0
+      },
+      "medium": {
+       "calls": 4,
+       "usd": 0.082298,
+       "equivalent_usd": 0.082298,
+       "failed": 0
+      },
+      "featured": {
+       "calls": 1,
+       "usd": 0.025293,
+       "equivalent_usd": 0.025293,
+       "failed": 0
+      },
+      "briefs": {
+       "calls": 1,
+       "usd": 0.050396,
+       "equivalent_usd": 0.050396,
+       "failed": 0
+      },
+      "gaming": {
+       "calls": 1,
+       "usd": 0.070261,
+       "equivalent_usd": 0.070261,
+       "failed": 0
+      },
+      "deals": {
+       "calls": 1,
+       "usd": 0.05053,
+       "equivalent_usd": 0.05053,
+       "failed": 0
+      }
+     },
+     "stopped": "",
+     "tokens": {
+      "input": 37461,
+      "output": 25319,
+      "cache_read": 2412,
+      "cache_write": 17542
      }
     }
    ]

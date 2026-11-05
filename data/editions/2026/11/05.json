@@ -1,0 +1,1193 @@
+{
+ "edition_id": "2026-11-05",
+ "generated_at": "2026-11-05T07:27:29.240238+00:00",
+ "mode": "full",
+ "reason": "",
+ "llm": {
+  "backend": "api",
+  "usd": 0.357374,
+  "equivalent_usd": 0.357374,
+  "calls": 13,
+  "by_task": {
+   "probe": {
+    "calls": 1,
+    "usd": 2.5e-05,
+    "equivalent_usd": 2.5e-05,
+    "failed": 0
+   },
+   "triage": {
+    "calls": 3,
+    "usd": 0.0099,
+    "equivalent_usd": 0.0099,
+    "failed": 0
+   },
+   "editor": {
+    "calls": 1,
+    "usd": 0.068671,
+    "equivalent_usd": 0.068671,
+    "failed": 0
+   },
+   "medium": {
+    "calls": 4,
+    "usd": 0.082298,
+    "equivalent_usd": 0.082298,
+    "failed": 0
+   },
+   "featured": {
+    "calls": 1,
+    "usd": 0.025293,
+    "equivalent_usd": 0.025293,
+    "failed": 0
+   },
+   "briefs": {
+    "calls": 1,
+    "usd": 0.050396,
+    "equivalent_usd": 0.050396,
+    "failed": 0
+   },
+   "gaming": {
+    "calls": 1,
+    "usd": 0.070261,
+    "equivalent_usd": 0.070261,
+    "failed": 0
+   },
+   "deals": {
+    "calls": 1,
+    "usd": 0.05053,
+    "equivalent_usd": 0.05053,
+    "failed": 0
+   }
+  },
+  "stopped": "",
+  "estimated_usd": 0.357374
+ },
+ "stories": [
+  {
+   "slug": "security-firm-reports-residential-proxies-on-white-house-net",
+   "section": "tech",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-04T20:45:18+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Residential proxies detected on White House network",
+     "url": "https://layer3intel.com/blog/residential-proxies-white-house-network"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50371246",
+    "points": 930,
+    "comments": 281
+   },
+   "tier": "featured",
+   "kicker": "Security",
+   "headline": "Security firm reports residential proxies on White House network",
+   "dek": "A blog post from threat intelligence outfit Layer3 Intel says residential proxy traffic was detected on the White House network.",
+   "body": "Residential proxy traffic has been detected on the White House network, according to a report published by Layer3 Intel on its company blog on November 4.\n\nThe post, titled \"Residential proxies detected on White House network,\" quickly climbed to the top of Hacker News, where it collected 930 points and 281 comments.\n\nResidential proxies route internet traffic through IP addresses assigned to ordinary home or consumer connections. That makes the traffic look like it comes from regular users instead of data centers or commercial services. For defenders, spotting such traffic on a sensitive network is generally treated as a signal worth investigating.\n\nLayer3 Intel's report is the sole account of the finding. The White House has not publicly responded to it, and no independent confirmation of the claim has been published. Details such as when the traffic was observed, how much there was, which systems were involved and who is responsible have not been established publicly.\n\nUntil more is known, the finding stands as one security firm's claim. The strong reaction on Hacker News reflects how much attention any suggestion of unusual traffic on a government network draws in the security community.",
+   "key_points": [
+    "Layer3 Intel reports residential proxy traffic on the White House network",
+    "Report published November 4 on the company's blog",
+    "Story reached 930 points and 281 comments on Hacker News",
+    "No independent confirmation or White House response so far"
+   ],
+   "breaking": false,
+   "why_it_matters": "Residential proxy traffic blends in with ordinary consumer connections, so reports like this are a reminder that IP reputation alone is a weak signal for network defenders.",
+   "cover": {
+    "style": "type",
+    "figure": "930",
+    "caption": "Hacker News points for Layer3 Intel's White House report"
+   },
+   "id": "s1",
+   "lead": true
+  },
+  {
+   "slug": "suspected-russian-spies-used-patched-phone-flaws-to-hack-sit",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-04T22:26:49+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Hackers exploited iOS and Android flaws to infect phones",
+     "url": "https://arstechnica.com/security/2026/11/hackers-exploited-ios-and-android-flaws-to-infect-phones/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Suspected Russian spies used patched phone flaws to hack site visitors",
+   "dek": "Sekoia links the campaign to Russia's Foreign Intelligence Service, citing fake sites mimicking a US anniversary group and a London hotel.",
+   "body": "Hackers possibly tied to the Kremlin exploited previously patched iOS and Android flaws to infect visitors of potentially hundreds of websites, Ars Technica reports. Security firm Sekoia assessed with \"moderate to high confidence\" that the attackers belong to Russia's Foreign Intelligence Service. Many targeted sites had links to the war in Ukraine.\n\nInjected JavaScript profiled each visiting phone, then delivered a platform-specific payload. The payloads tried to steal browser cookies and, in some cases, Wi-Fi passwords and full device data.\n\nOne fake domain, america250[.]holiday, proxied america250.org, the site of a group marking 250 years of American independence. Sekoia says the site may have been a pretext for invitation-themed spear-phishing. Another, theowo[.]club, mimicked Raffles London at The OWO, a hotel near the UK Ministry of Defence and 10 Downing Street.",
+   "key_points": [
+    "Sekoia ties the campaign to Russia's Foreign Intelligence Service with \"moderate to high confidence.\"",
+    "Attackers used already-patched iOS and Android flaws to steal cookies, Wi-Fi passwords and device data.",
+    "Fake sites proxied america250.org and a London luxury hotel near key UK government buildings."
+   ],
+   "id": "s2"
+  },
+  {
+   "slug": "harvard-breach-exposed-851-000-email-addresses-hibp-finds",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-05T02:50:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Harvard University reveals data breach exposed 851,000 accounts",
+     "url": "https://www.techradar.com/pro/security/harvard-university-reveals-data-breach-exposed-851-000-accounts"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Harvard breach exposed 851,000 email addresses, HIBP finds",
+   "dek": "Have I Been Pwned analyzed data ShinyHunters leaked after a 2025 vishing attack on Harvard's alumni and fundraising systems.",
+   "body": "Data stolen from Harvard University in a November 2025 breach contains 851,000 unique email addresses, according to Have I Been Pwned (HIBP), TechRadar reports. HIBP says the leaked archive also holds \"extensive profile information\" on donors, alumni, parents and some faculty, staff and students, including names, dates of birth, phone numbers, postal addresses and social media profiles.\n\nHarvard confirmed in late November 2025 that its Alumni Affairs and Development systems were compromised through a voice phishing attack. The university said Social Security numbers, passwords and payment card data were not exposed. The ShinyHunters extortion group claimed responsibility and, after negotiations broke down, leaked more than 1.1GB of documents in early February.\n\nHarvard was the third university hit in weeks, after Princeton and the University of Pennsylvania, where ShinyHunters claimed data on about 1.2 million people.",
+   "key_points": [
+    "HIBP counts 851,000 unique email addresses in the leaked Harvard data, plus detailed profile records.",
+    "Attackers got in through a voice phishing attack on Harvard's alumni and fundraising systems in November 2025.",
+    "ShinyHunters leaked more than 1.1GB of documents after talks with Harvard broke down."
+   ],
+   "id": "s3"
+  },
+  {
+   "slug": "ricursive-releases-ripple-65b-claims-top-us-open-weight-codi",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-04T18:53:29+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Ripple-65B Preview: U.S. Open-Weight SOTA on Agentic Coding",
+     "url": "https://www.ricursive.com/ripple"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50369925",
+    "points": 276,
+    "comments": 99
+   },
+   "tier": "medium",
+   "kicker": "Open weights",
+   "headline": "Ricursive releases Ripple-65B, claims top US open-weight coding score",
+   "dek": "The chip-design AI lab says its dense 65B model beats far larger US open models on TerminalBench 2.1 and cost $32 million to build.",
+   "body": "Ricursive Intelligence has released Ripple-65B Preview, an open-weight language model the company says sets a new US open-weight high on agentic coding. By its own figures, the model scores 80.52 on TerminalBench 2.1, ahead of Reflection Beam 501B (80.1), Meta Muse Spark Open 816B (76.4) and NVIDIA Nemotron 3 Ultra 550B (56.4). The scores are the company's and have not been independently verified.\n\nRipple is a general-purpose variant of the model behind Ricursive's chip design platform. It is a dense Transformer rather than Mixture-of-Experts, pretrained on 12 trillion tokens with up to 1M tokens of context. The company says its small size lets it run on local hardware such as NVIDIA DGX Spark.\n\nRicursive puts its full R&D cost at $32 million, which it estimates is one-tenth that of the prior leader. The model is on Hugging Face, Together AI, GMI Cloud and OpenRouter.",
+   "key_points": [
+    "Ricursive claims a TerminalBench 2.1 score of 80.52, beating much larger US open-weight models by its own measure.",
+    "Ripple-65B is a dense model trained on 12 trillion tokens with up to 1M context, built for a total R&D cost of $32 million, the company says.",
+    "Weights are on Hugging Face, with hosted access via Together AI, GMI Cloud and OpenRouter."
+   ],
+   "id": "s4"
+  },
+  {
+   "slug": "openai-to-acquire-pierre-computer-company",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-04T15:21:21+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "OpenAI to acquire Pierre Computer Company",
+     "url": "https://openai.com/index/openai-to-acquire-pierre/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50366863",
+    "points": 227,
+    "comments": 69
+   },
+   "tier": "medium",
+   "kicker": "Business",
+   "headline": "OpenAI to acquire Pierre Computer Company",
+   "dek": "The ChatGPT maker announced the planned deal on its website, with terms not disclosed in the announcement's headline.",
+   "body": "OpenAI plans to acquire Pierre Computer Company, the company announced on its website on Wednesday, November 4.\n\nThe announcement, titled \"OpenAI to acquire Pierre Computer Company,\" did not come with publicly detailed terms at the time of writing. The price, deal structure, closing timeline and the future of Pierre's products and staff remain unclear.\n\nThe news drew attention among developers. A Hacker News thread linking to the announcement collected 227 points and 69 comments.",
+   "key_points": [
+    "OpenAI announced on November 4 that it plans to acquire Pierre Computer Company.",
+    "Price and other deal terms have not been made public.",
+    "The Hacker News thread on the deal reached 227 points and 69 comments."
+   ],
+   "id": "s5"
+  },
+  {
+   "slug": "go-gets-a-new-api-for-working-with-json",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T17:52:11+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "A new Go API for JSON",
+     "url": "https://go.dev/blog/jsonv2"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50369106",
+    "points": 286,
+    "comments": 130
+   },
+   "tier": "brief",
+   "kicker": "Dev",
+   "headline": "Go gets a new API for working with JSON",
+   "body": "",
+   "id": "s6"
+  },
+  {
+   "slug": "qualcomm-cloud-ai-100-ultra-packs-128gb-into-a-150w-accelera",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T19:55:14+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Qualcomm Cloud AI 100 Ultra – 150W AI Accelerator Card with 128GB at 548GB/s",
+     "url": "https://www.qualcomm.com/data-center/products/cloud-ai-100-ultra"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50370654",
+    "points": 136,
+    "comments": 54
+   },
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "Qualcomm Cloud AI 100 Ultra packs 128GB into a 150W accelerator card",
+   "body": "The card's 128GB of memory delivers 548GB/s of bandwidth.",
+   "id": "s7"
+  },
+  {
+   "slug": "vmware-launches-vsphere-express-for-virtualization-on-up-to",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T21:38:49+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "VMware releases vSphere Express for virtualization on up to 128 cores",
+     "url": "https://arstechnica.com/information-technology/2026/11/vmware-releases-vsphere-express-for-virtualization-on-up-to-128-cores/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Infrastructure",
+   "headline": "VMware launches vSphere Express for virtualization on up to 128 cores",
+   "body": "The product targets smaller customers, Ars Technica reports. \"We started listening to a lot of our lower-end customers,\" a VMware executive says.",
+   "id": "s8"
+  },
+  {
+   "slug": "tencent-puts-out-hy4",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T14:11:26+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Tencent Hy4",
+     "url": "https://hy.tencent.ai/research/hy4"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50365780",
+    "points": 229,
+    "comments": 78
+   },
+   "tier": "brief",
+   "kicker": "Models",
+   "headline": "Tencent puts out Hy4",
+   "body": "",
+   "id": "s9"
+  },
+  {
+   "slug": "researchers-report-progress-on-provable-inference-for-large",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T17:17:46+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Progress on provable inference for large language models",
+     "url": "https://www.anthropic.com/research/provable-inference"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50368626",
+    "points": 207,
+    "comments": 95
+   },
+   "tier": "brief",
+   "kicker": "Research",
+   "headline": "Researchers report progress on provable inference for large language models",
+   "body": "",
+   "id": "s10"
+  },
+  {
+   "slug": "conductor-is-joining-meta",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T18:22:40+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Conductor is joining Meta",
+     "url": "https://www.conductor.build/announcement"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50369503",
+    "points": 161,
+    "comments": 174
+   },
+   "tier": "brief",
+   "kicker": "Business",
+   "headline": "Conductor is joining Meta",
+   "body": "",
+   "id": "s11"
+  },
+  {
+   "slug": "malware-let-a-hacker-spy-on-high-stakes-online-poker-games",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T20:30:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Hacker steals millions by scamming high-stakes online poker games with this devious malware attack",
+     "url": "https://www.techradar.com/computing/cyber-security/hacker-steals-millions-by-scamming-high-stakes-online-poker-games-with-this-devious-malware-attack"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Malware let a hacker spy on high-stakes online poker games",
+   "body": "Hundreds of players may have lost millions after malware allegedly gave the attacker access to their screens during games, TechRadar reports.",
+   "id": "s12"
+  },
+  {
+   "slug": "crowdstrike-launches-an-ai-kill-switch-to-stop-rogue-agents",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T15:20:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "CrowdStrike launches 'AI kill switch' it claims can stop rogue agents and more",
+     "url": "https://www.techradar.com/pro/security/crowdstrike-launches-ai-kill-switch-it-claims-can-stop-rogue-agents-and-more"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Agents",
+   "headline": "CrowdStrike launches an 'AI kill switch' to stop rogue agents",
+   "body": "The tool is part of Falcon Guardian, CrowdStrike's AI Detection and Response platform. The company claims it can halt misbehaving AI agents.",
+   "id": "s13"
+  },
+  {
+   "slug": "xbox-360-hypervisor-hack-series-reaches-part-3-with-bad-upda",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T22:01:49+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Hacking the Xbox 360 Hypervisor Part 3: Bad Update Improvements",
+     "url": "https://icode4.coffee/?p=1746"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50372164",
+    "points": 103,
+    "comments": 6
+   },
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Xbox 360 hypervisor hack series reaches part 3 with Bad Update fixes",
+   "body": "",
+   "id": "s14"
+  },
+  {
+   "slug": "prototype-driver-renders-the-windows-11-desktop-on-an-npu-in",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Open source project renders your Windows 11 desktop using the NPU rather than the GPU — ‘npu-driver’ can only run at 2 to 3 Hz, targets 30 Hz performance",
+     "url": "https://www.tomshardware.com/pc-components/gpu-drivers/open-source-project-renders-your-windows-11-desktop-using-the-npu-rather-than-the-gpu-npu-driver-can-only-run-at-2-to-3-hz-targets-30-hz-performance"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Open Source",
+   "headline": "Prototype driver renders the Windows 11 desktop on an NPU instead of a GPU",
+   "body": "The open source 'npu-driver' currently manages only 2 to 3 Hz. Its developers are aiming for 30 Hz, according to Tom's Hardware.",
+   "id": "s15"
+  },
+  {
+   "slug": "amd-posts-record-quarter-as-data-center-doubles-and-gaming-f",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-04T21:29:46+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "AMD's record quarter: Data center business doubles, while gaming craters",
+     "url": "https://arstechnica.com/gadgets/2026/11/amds-record-quarter-data-center-business-doubles-while-gaming-craters/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Business",
+   "headline": "AMD posts record quarter as data center doubles and gaming falls 40%",
+   "body": "Revenue reached a record $13.4 billion, but AMD's gaming revenue fell 40 percent, Ars Technica reports.",
+   "id": "s16"
+  },
+  {
+   "slug": "big-tech-calls-voter-backlash-on-ai-anti-trump-not-anti-tech",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T20:55:50+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Big Tech claims voters’ AI backlash is “anti-Trump” not “anti-tech”",
+     "url": "https://arstechnica.com/tech-policy/2026/11/big-tech-claims-voters-ai-backlash-is-anti-trump-not-anti-tech/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Big Tech calls voter backlash on AI \"anti-Trump,\" not \"anti-tech\"",
+   "body": "Ars Technica argues the industry is in denial after US voters overwhelmingly backed restrictions on AI and data centers.",
+   "id": "s17"
+  },
+  {
+   "slug": "nyc-mayor-mamdani-accuses-google-of-forcing-ai-into-public-s",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-03T22:58:03+00:00",
+   "sources": [
+    {
+     "name": "PC Gamer",
+     "title": "Google criticized by NYC mayor Zohran Mamdani following AI policy change: 'Google is trying to use its monopoly power to force AI into our public schools'",
+     "url": "https://www.pcgamer.com/software/ai/google-criticized-by-nyc-mayor-zohran-mamdani-following-ai-policy-change-google-is-trying-to-use-its-monopoly-power-to-force-ai-into-our-public-schools/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "NYC mayor Mamdani accuses Google of forcing AI into public schools",
+   "body": "Mamdani and others criticized Google's decision to disable search for schools that opt out of its AI tools, calling it an abuse of monopoly power.",
+   "id": "s18"
+  },
+  {
+   "slug": "uk-policing-minister-promises-new-facial-recognition-laws",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-04T12:50:19+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "UK policing minister promises new facial recognition laws after criticisms",
+     "url": "https://www.techradar.com/tech/uk-policing-minister-promises-new-facial-recognition-camera-laws-after-criticism-of-alarming-escalation-government-admits-we-have-to-use-it-proportionately"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "UK policing minister promises new facial recognition laws",
+   "body": "MP Sarah Jones says proper rules for live facial recognition technology will roll out soon, following criticism of its use.",
+   "id": "s19"
+  },
+  {
+   "slug": "ted-cruz-moves-to-stack-fcc-with-republicans-before-senate-f",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T19:08:23+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Ted Cruz aims to stack FCC with Republicans before Democrats take Senate control",
+     "url": "https://arstechnica.com/tech-policy/2026/11/ted-cruz-aims-to-put-another-republican-on-fcc-in-senates-lame-duck-session/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Ted Cruz moves to stack FCC with Republicans before Senate flips",
+   "body": "Cruz and President Trump appear to have no plans to fill the FCC's empty Democratic seat before Democrats take Senate control, Ars Technica reports.",
+   "id": "s20"
+  },
+  {
+   "slug": "microsoft-says-windows-11-is-now-up-to-40-faster-at-multitas",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-04T14:20:37+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Microsoft boasts Windows 11 is now up to 40% faster for multi-tasking",
+     "url": "https://www.techradar.com/computing/windows/microsoft-boasts-windows-11-is-now-up-to-40-percent-faster-for-multi-tasking-as-latest-update-packs-a-big-speed-boost-for-8gb-pcs"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Windows",
+   "headline": "Microsoft says Windows 11 is now up to 40% faster at multitasking",
+   "body": "Microsoft attributes the gains to making better use of memory in every Windows 11 PC.",
+   "id": "s21"
+  },
+  {
+   "slug": "ukrainian-drone-strikes-push-russia-toward-underground-data",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-03T20:39:55+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Ukraine’s drone strikes spur hasty Russian plans for underground data centers",
+     "url": "https://arstechnica.com/ai/2026/11/russia-looks-to-hide-data-centers-underground-as-ukrainian-drones-strike-back/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Infrastructure",
+   "headline": "Ukrainian drone strikes push Russia toward underground data centers",
+   "body": "Russia is rushing to protect exposed digital infrastructure, Ars Technica reports.",
+   "id": "s22"
+  }
+ ],
+ "links": [],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "AI is forcing us to pay off 40 years of technical debt",
+   "url": "https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability",
+   "points": 1157,
+   "comments": 668,
+   "comments_url": "https://news.ycombinator.com/item?id=50364336"
+  },
+  {
+   "rank": 2,
+   "title": "Residential proxies detected on White House network",
+   "url": "https://layer3intel.com/blog/residential-proxies-white-house-network",
+   "points": 930,
+   "comments": 281,
+   "comments_url": "https://news.ycombinator.com/item?id=50371246"
+  },
+  {
+   "rank": 3,
+   "title": "Kimi K3.1 Pro model weights are out",
+   "url": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
+   "points": 486,
+   "comments": 138,
+   "comments_url": "https://news.ycombinator.com/item?id=50366999"
+  },
+  {
+   "rank": 4,
+   "title": "Guerrilla bike lanes: San Francisco makes illicit infrastructure permanent (2016)",
+   "url": "https://99percentinvisible.org/article/guerrilla-bike-lanes-san-francisco-makes-illicit-infrastructure-permanent/",
+   "points": 286,
+   "comments": 212,
+   "comments_url": "https://news.ycombinator.com/item?id=50366522"
+  },
+  {
+   "rank": 5,
+   "title": "A new Go API for JSON",
+   "url": "https://go.dev/blog/jsonv2",
+   "points": 286,
+   "comments": 130,
+   "comments_url": "https://news.ycombinator.com/item?id=50369106"
+  },
+  {
+   "rank": 6,
+   "title": "A thousand fewer paths to root",
+   "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/",
+   "points": 276,
+   "comments": 175,
+   "comments_url": "https://news.ycombinator.com/item?id=50372929"
+  },
+  {
+   "rank": 7,
+   "title": "Ripple-65B Preview: U.S. Open-Weight SOTA on Agentic Coding",
+   "url": "https://www.ricursive.com/ripple",
+   "points": 276,
+   "comments": 99,
+   "comments_url": "https://news.ycombinator.com/item?id=50369925"
+  },
+  {
+   "rank": 8,
+   "title": "Ask HN: What's your current AI agentic setup?",
+   "url": "https://news.ycombinator.com/item?id=50366117",
+   "points": 273,
+   "comments": 267,
+   "comments_url": "https://news.ycombinator.com/item?id=50366117"
+  },
+  {
+   "rank": 9,
+   "title": "Images 2.6",
+   "url": "https://openai.com/index/introducing-images-2-6/",
+   "points": 240,
+   "comments": 157,
+   "comments_url": "https://news.ycombinator.com/item?id=50372945"
+  },
+  {
+   "rank": 10,
+   "title": "Tencent Hy4",
+   "url": "https://hy.tencent.ai/research/hy4",
+   "points": 229,
+   "comments": 78,
+   "comments_url": "https://news.ycombinator.com/item?id=50365780"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "Phantom Blade Zero",
+    "appid": 4115450,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4115450/7f882f889630270d3d3fb93825ac6f55b55e7a6c/header.jpg?t=1793261976",
+    "store_url": "https://store.steampowered.com/app/4115450/",
+    "price": 59.99,
+    "currency": "EUR",
+    "blurb": "S-GAME's Unreal Engine 5 wuxia action game about a doomed warrior; Very Positive across 74,005 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Phantom%20Blade%20Zero/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Lightyear Frontier",
+    "appid": 1677110,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1677110/f4aec944f634f189990fe69e6d353b5609787955/header_alt_assets_7.jpg?t=1793811955",
+    "store_url": "https://store.steampowered.com/app/1677110/",
+    "price": 23.99,
+    "currency": "EUR",
+    "blurb": "Relaxed open-world mech farming with up to four-player co-op; Very Positive from 4,370 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Lightyear%20Frontier/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Dungeon Rampage Remastered",
+    "appid": 3053950,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3053950/eac09ebd91ad5af0c09404e715ea7672c2404120/header_alt_assets_2.jpg?t=1793730506",
+    "store_url": "https://store.steampowered.com/app/3053950/",
+    "price": 10.06,
+    "currency": "EUR",
+    "blurb": "Remastered one-to-four player co-op hack-and-slash dungeon crawler; Very Positive across 3,247 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Dungeon%20Rampage%20Remastered/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "VOID/BREAKER",
+    "appid": 2615540,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2615540/4f3789458cfd9c3375c2926620b19640135f7c4a/header_alt_assets_8.jpg?t=1793821113",
+    "store_url": "https://store.steampowered.com/app/2615540/",
+    "price": 16.19,
+    "currency": "EUR",
+    "blurb": "Bullet hell roguelite FPS with deep gun modding and destructible environments; Very Positive from 2,579 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/VOID%2FBREAKER/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Queen's Domain",
+    "appid": 1799840,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1799840/1a209734951f53b019ec9fa03f835def14f2a968/header.jpg?t=1793628353",
+    "store_url": "https://store.steampowered.com/app/1799840/",
+    "price": 16.56,
+    "currency": "EUR",
+    "blurb": "Retro-fantasy action RPG with brutal combat and traversal-heavy exploration; Overwhelmingly Positive from 2,344 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Queen%27s%20Domain/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "ArcheAge Chronicles",
+    "appid": 3218230,
+    "release_date": "2026-11-03",
+    "steam_rating": "Mixed",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3218230/header.jpg?t=1793752512",
+    "store_url": "https://store.steampowered.com/app/3218230/",
+    "price": 29.99,
+    "currency": "EUR",
+    "blurb": "Early access fantasy action RPG set in ArcheAge's world of Auroria; reception is Mixed across 2,264 reviews.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/ArcheAge%20Chronicles/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Can 'Em All",
+    "appid": 5133900,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5133900/19aa14ebe3720e02f7f8c720abbf9749cf36967f/header.jpg?t=1793384095",
+    "store_url": "https://store.steampowered.com/app/5133900/",
+    "price": 6.29,
+    "currency": "EUR",
+    "blurb": "First-person incremental game about canning cute creatures for profit; Overwhelmingly Positive from 1,711 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Can%20%27Em%20All/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Terrible Lizards",
+    "appid": 2920220,
+    "release_date": "2026-10-29",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2920220/4b19bf2cbb1c1ef26cc0e898fc6e727776845b73/header.jpg?t=1793292736",
+    "store_url": "https://store.steampowered.com/app/2920220/",
+    "price": 20.39,
+    "currency": "EUR",
+    "blurb": "Horror parkour game set at an old Route 66 dinosaur attraction; Very Positive from 862 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Terrible%20Lizards/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Godzilla: Destroy All Monsters Melee Remastered",
+    "appid": 4251460,
+    "release_date": "2026-11-03",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4251460/28023d80b51185fe3dbadadf608523942f47238c/header.jpg?t=1793714569",
+    "store_url": "https://store.steampowered.com/app/4251460/",
+    "price": 29.99,
+    "currency": "EUR",
+    "blurb": "Remastered Godzilla arena brawler, now with online multiplayer; Overwhelmingly Positive from 699 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Godzilla%3A%20Destroy%20All%20Monsters%20Melee%20Remastered/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-pc-gamer-enshrouded-1-0",
+    "game": "Enshrouded 1.0",
+    "outlet": "PC Gamer",
+    "score": "",
+    "verdict": "PC Gamer calls the full release of Enshrouded a survival crafting masterpiece.",
+    "url": "https://www.pcgamer.com/games/survival-crafting/enshrouded-1-0-review/",
+    "published_at": "2026-11-02T21:47:58+00:00"
+   },
+   {
+    "id": "r-rps-reviews-virtue-and-a-sledgehammer",
+    "game": "Virtue and a Sledgehammer",
+    "outlet": "Rock Paper Shotgun",
+    "score": "",
+    "verdict": "Rock Paper Shotgun finds it a haunting sci-fi drama that lingers in the mind more than a week after finishing.",
+    "url": "https://www.rockpapershotgun.com/virtue-and-a-sledgehammer-review",
+    "published_at": "2026-10-27T16:00:00+00:00"
+   }
+  ],
+  "console_spotlight": [
+   {
+    "game": "Grand Theft Auto VI",
+    "platforms": [
+     "ps5",
+     "xbox"
+    ],
+    "headline": "GTA VI needs 212 GB as Rockstar posts global launch times",
+    "summary": "With a couple of weeks to go, Rockstar has shared preload details, a 212 GB install size and worldwide launch times, according to MISSIL. The studio is also releasing a free map of Leonida.",
+    "sources": [
+     {
+      "name": "MISSIL",
+      "url": "https://missil.se/nyheter/gta-6-kraver-212-gb-och-nu-ar-de-globala-lanseringstiderna-bekraftade/"
+     },
+     {
+      "name": "MISSIL",
+      "url": "https://missil.se/nyheter/rockstar-slapper-gratis-karta-over-leonida-till-gta-6/"
+     }
+    ]
+   }
+  ],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Emberville",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-07",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2295170/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   },
+   {
+    "game": "Family Time",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-03-31",
+    "date_precision": "quarter",
+    "url": "https://store.steampowered.com/app/5072600/"
+   }
+  ],
+  "watch": [],
+  "news": [
+   {
+    "headline": "French union says Microsoft sabotaged Blade to justify closing Arkane",
+    "summary": "The STJV union says Microsoft froze hiring at Arkane Lyon for 19 months, then cited the resulting delays and costs as reasons to shut the studio.",
+    "url": "https://www.pcgamer.com/gaming-industry/french-game-union-accuses-microsoft-of-sabotaging-blade-and-then-using-the-fallout-to-justify-closing-arkane/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Valve says it is running behind on Steam game approvals",
+    "summary": "Valve says repeated re-reviews are slowing approvals and causing missed release dates, and has published a new checklist to help developers pass the first time, PC Gamer reports.",
+    "url": "https://www.pcgamer.com/gaming-industry/valve-admits-its-running-behind-on-approving-steam-games-because-it-has-to-keep-re-reviewing-them-which-surely-has-nothing-to-do-with-ai/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Probably Stolen hits 162,000 concurrent players on Steam",
+    "summary": "The cyberpunk shopkeeper sim started life as a different, non-cyberpunk game, Rock Paper Shotgun reports.",
+    "url": "https://www.rockpapershotgun.com/smash-hit-cyberpunk-storekeeper-probably-stolen-was-originally-a-different-non-cyberpunk-game-that-seemed-destined-to-sink-without-trace",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Nintendo's biggest ROM chip supplier is leaving the business",
+    "summary": "Ars Technica looks at what the exit could mean for the cost of physical Switch games.",
+    "url": "https://arstechnica.com/gaming/2026/11/the-tech-memory-shortage-comes-for-nintendos-cartridge-supply-chain/",
+    "source": "Ars Technica"
+   },
+   {
+    "headline": "Nexus Mods rules out a ban on AI-generated mods",
+    "summary": "The site will instead expand its rules requiring modders to disclose how they used AI, saying an outright ban would not eliminate it.",
+    "url": "https://www.rockpapershotgun.com/nexus-mods-rule-out-barring-ai-generated-creations-from-their-site",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Embark on Arc Raiders' AI voices: \"We are not replacing actors\"",
+    "summary": "The Stockholm studio explains its use of AI-generated voices in a new video featuring audio director Bence Pajor and two of the game's actors, MISSIL reports.",
+    "url": "https://missil.se/nyheter/embark-om-ai-rosterna-i-arc-raiders-vi-ersatter-inte-skadespelare/",
+    "source": "MISSIL"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-05T07:27:29.240238+00:00",
+  "featured": [
+   {
+    "game": "Frostpunk",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-14T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/323190/",
+    "headline": "Frostpunk drops 90 percent to €2.99 on Steam. Buy it.",
+    "body": "Frostpunk is down to €2.99 on Steam, 90 percent off its regular €29.99. Steam users rate it Very Positive. That combination of a deep cut, a solid rating and a price below a cup of coffee makes it one of the safest buys on today's list.\n\nThe deal runs until November 14 at 18:00 UTC, so there is time, but little reason to wait. It suits anyone who has had Frostpunk sitting on a wishlist, or a player looking for a well-reviewed game to fill the gap before the next big release. At this price, even a few evenings of play pay for it.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Borderlands 3",
+    "shop": "Steam",
+    "price": 5.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/397540/",
+    "headline": "Borderlands 3 falls to €5.99, 90 percent off. Buy it.",
+    "body": "Borderlands 3 costs €5.99 on Steam, down 90 percent from its regular €59.99. Steam users rate it Very Positive. That is a cut of €54 on a full-priced game, the biggest absolute saving in today's deals.\n\nThe offer ends November 16 at 18:00 UTC, the latest end date on the list. Borderlands 2 is also 90 percent off at €2.99 until the same date, so series newcomers can pick up both for under €9. It is a strong buy for anyone who skipped Borderlands 3 at full price, and especially for players who want a game to share with friends.",
+    "verdict": "buy"
+   }
+  ],
+  "more": [
+   {
+    "game": "Rust",
+    "shop": "Steam",
+    "price": 19.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-09T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/252490/",
+    "advice": "Half off at €19.99 with a Very Positive rating; a fair buy before November 9.",
+    "verdict": "buy"
+   },
+   {
+    "game": "No Man's Sky",
+    "shop": "Steam",
+    "price": 23.59,
+    "regular": 58.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": false,
+    "expires": "2026-11-09T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/275850/",
+    "advice": "60 percent off brings it to €23.59; Very Positive and a solid buy until November 9.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Grand Theft Auto V Enhanced",
+    "shop": "Steam",
+    "price": 14.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-05T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/3240220/",
+    "advice": "€14.99, half price, Very Positive. Ends November 5 at 18:00 UTC, so act today.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Borderlands 2",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/49520/",
+    "advice": "€2.99 at 90 percent off with a Very Positive rating. Easy buy until November 16.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Teardown",
+    "shop": "Steam",
+    "price": 14.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-08T13:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/1167630/",
+    "advice": "Overwhelmingly Positive and half price at €14.99; grab it before November 8.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Brotato",
+    "shop": "Steam",
+    "price": 2.49,
+    "regular": 4.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/1942280/",
+    "advice": "Overwhelmingly Positive for €2.49, half off. Hard to go wrong before November 16.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Shadow of the Tomb Raider: Definitive Edition",
+    "shop": "Steam",
+    "price": 3.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-06T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/750920/",
+    "advice": "90 percent off at €3.99, Very Positive. Ends November 6 at 17:00 UTC.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Dying Light: The Beast",
+    "shop": "Steam",
+    "price": 29.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-09T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/3008130/",
+    "advice": "Very Positive and half off, but €29.99 is the priciest deal here. No rush.",
+    "verdict": "wait"
+   }
+  ],
+  "source": "steam"
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 302,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 14,
+   "ms": 147,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 27,
+   "ms": 410,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 270,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 13,
+   "ms": 1321,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 481,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 60,
+   "ms": 240,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 91,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 189,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 28,
+   "ms": 324,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 110,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 33,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 644,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 386,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam specials",
+   "ok": true,
+   "count": 100,
+   "ms": 534,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal",
+   "ok": false,
+   "count": 0,
+   "ms": 0,
+   "error": "ITAD_API_KEY not set; using Steam specials",
+   "skipped": true
+  }
+ ]
+}
