@@ -277,3 +277,21 @@ def test_dotenv_loader(tmp_path, monkeypatch):
     assert os.environ["FAKE_ONE"] == "quoted value" and os.environ["FAKE_TWO"] == "plain"
     assert os.environ["FAKE_THREE"] == "from-environment"          # real env vars win
     assert load_dotenv(tmp_path / "missing.env") == []
+
+
+def test_http_error_includes_api_reason_but_never_the_key():
+    import httpx
+    from newsroom.http import Client, FetchError
+
+    def handler(request):
+        key = request.url.params.get("key", "")
+        reason = "Invalid or expired api key" if key == "secret-key-123" else f"bad key {key}"
+        return httpx.Response(403, json={"status_code": 403, "reason_phrase": reason})
+
+    client = Client(retries=0)
+    client._http = httpx.Client(transport=httpx.MockTransport(handler))
+    with pytest.raises(FetchError, match=r"HTTP 403 for https://api.example.com/deals \(Invalid or expired api key\)"):
+        client.json("https://api.example.com/deals", params={"key": "secret-key-123"})
+    with pytest.raises(FetchError) as err:
+        client.json("https://api.example.com/deals", params={"key": "echoed-key-456"})
+    assert "echoed-key-456" not in str(err.value) and str(err.value).endswith("/deals")

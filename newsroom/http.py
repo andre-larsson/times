@@ -41,7 +41,7 @@ class Client:
             else:
                 if resp.status_code < 400:
                     return resp
-                last = FetchError(f"HTTP {resp.status_code} for {_safe(url)}")
+                last = FetchError(f"HTTP {resp.status_code} for {_safe(url)}{_reason(resp, params)}")
                 if resp.status_code not in RETRY_STATUS:
                     break
             if attempt < self.retries:
@@ -57,6 +57,26 @@ class Client:
             return resp.json()
         except ValueError as exc:
             raise FetchError(f"not JSON from {_safe(url)} (got {resp.headers.get('content-type')})") from exc
+
+
+def _reason(resp: httpx.Response, params: dict[str, Any] | None) -> str:
+    """An API's short error reason from a JSON body (e.g. ITAD's "Invalid or expired api key").
+
+    Left out if it could echo a parameter value, so a key can't leak through it.
+    """
+    if "json" not in resp.headers.get("content-type", ""):
+        return ""
+    try:
+        body = resp.json()
+    except ValueError:
+        return ""
+    if not isinstance(body, dict):
+        return ""
+    msg = next((body[k] for k in ("reason_phrase", "error", "message", "detail") if isinstance(body.get(k), str)), "")
+    msg = " ".join(msg.split())[:100]
+    if any(len(str(v)) >= 8 and str(v) in msg for v in (params or {}).values()):
+        return ""
+    return f" ({msg})" if msg else ""
 
 
 def _safe(url: str) -> str:
