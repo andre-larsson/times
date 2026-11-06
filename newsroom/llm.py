@@ -125,6 +125,7 @@ class LLM:
         self.env = dict(os.environ) if env is None else env
         llm_cfg = cfg.get("llm") or {}
         self.max_tokens = llm_cfg.get("max_tokens") or {}
+        self.effort = llm_cfg.get("effort") or {}       # task → low | medium | high | xhigh | max
         self.timeout = float(llm_cfg.get("timeout_seconds", 240))
         self._client = None
         if backend == "claude-code" and self.env.get("GITHUB_ACTIONS") == "true":
@@ -189,7 +190,8 @@ class LLM:
                 max_tokens=max_tokens,
                 system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
                 messages=[{"role": "user", "content": user}],
-                output_config={"format": {"type": "json_schema", "schema": schema}},
+                output_config={"format": {"type": "json_schema", "schema": schema},
+                               **({"effort": self.effort[call.task]} if self.effort.get(call.task) else {})},
             )
         except anthropic.AuthenticationError as exc:
             raise CreditError(f"authentication failed ({exc.status_code})") from exc
@@ -230,6 +232,8 @@ class LLM:
                "--json-schema", json.dumps(schema), "--system-prompt", system,
                "--tools", "", "--strict-mcp-config", "--setting-sources", "",
                "--no-session-persistence", "--disable-slash-commands"]
+        if self.effort.get(call.task):
+            cmd += ["--effort", self.effort[call.task]]
         with tempfile.TemporaryDirectory(prefix="newsroom-cc-") as cwd:   # no CLAUDE.md, no project context
             try:
                 proc = subprocess.run(cmd, input=user, capture_output=True, text=True, cwd=cwd, env=env,

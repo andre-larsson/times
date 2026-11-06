@@ -149,9 +149,14 @@ An argued column of about 800 words, **twice a week: Wednesday and Sunday** (`op
 - **Where:** the front-page rail for a week (`opinion.front_days`), its own page, an `/opinion/` list
   (and nav link) once the first column exists, the archive and the feed. Labeled "Opinion" and "Column
   by Claude (AI)" everywhere.
+- **Thinking:** the Claude 5 models always think (adaptive thinking; it can't be turned off on Opus 5.5
+  or Fable 5.1), and thinking tokens count toward `max_tokens`. All three column calls run at `high`
+  effort (`llm.effort`): Fable's default, one level above Opus 5.5's `medium`. Their `max_tokens` are
+  large (8k / 16k / 8k) so thinking never cuts a column off; you pay only for what's used.
 - **Cost:** measured on the subscription, API-equivalent: Opus pick $0.14 (with 14 days of material),
-  Fable column $0.25, fact-check $0.06–0.08. With 7 days of material, about **$0.40 a column,
-  ~$3.50/month** at 8–9 columns, which leaves a month of editions at about $17 of the $20.
+  Fable column $0.25, fact-check $0.06–0.08. With 7 days of material and `high` effort, about
+  **$0.40–0.50 a column, ~$4/month** at 8–9 columns, which leaves a month of editions at about $17.50
+  of the $20.
 - **First column:** an introduction to the column itself, in the 2026-11-06 edition (written on the
   subscription).
 
@@ -278,7 +283,7 @@ web search is $0.01 per search.
 | Gaming: blurbs, verdicts, video blurbs (one batched call) | Opus | $0.04 | $0.06 |
 | Deals: deal of the day + more deals (one call) | Opus | $0.04 | $0.06 |
 | Discovery, depth `light` (3 searches, 3 fetches) | Opus | $0.25 | $0.25 |
-| Opinion column, Wednesday and Sunday (~$0.40 each) | Opus + Fable | ~$3.50/month | ~$3.50/month |
+| Opinion column, Wednesday and Sunday (~$0.45 each) | Opus + Fable | ~$4/month | ~$4/month |
 | **Per day / per month** | | **~$0.52 / ~$16** | **~$0.74 / ~$22** |
 
 - A month of busy days would run slightly over $20. The pacing guard handles that by making some
@@ -296,6 +301,7 @@ web search is $0.01 per search.
 | Search depth and frequency | `search.depth`, `search.discovery_every_days` | `light`, 1 |
 | Models | `models.*` | Opus everywhere except Haiku triage and the Fable column (`opinion`) |
 | Opinion column | `opinion.days / every_weeks / words / lookback_days / front_days` | Wed, Sun / 1 / 800 / 7 / 7 |
+| Effort per task | `llm.effort` | `high` for the three column calls; others use the model default |
 | Budget | `budget.monthly_usd` | 20 |
 
 ## Run modes and the pre-run check

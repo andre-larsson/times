@@ -205,8 +205,11 @@ def test_claude_code_backend(monkeypatch):
               {"type": "result", "subtype": "success", "is_error": False, "total_cost_usd": 0.0123,
                "usage": {"input_tokens": 10, "output_tokens": 20}, "structured_output": {"ok": True}}]
 
+    seen_cmd = []
+
     def fake_run(cmd, input, capture_output, text, cwd, env, timeout):
         seen_env.update(env)
+        seen_cmd[:] = cmd
         assert "--json-schema" in cmd and "--tools" in cmd and input == "hello"
         return subprocess.CompletedProcess(cmd, 0, stdout=json.dumps(events), stderr="")
 
@@ -217,6 +220,11 @@ def test_claude_code_backend(monkeypatch):
     assert llm.call("triage", "sys", "hello", {"type": "object"}) == {"ok": True}
     assert "ANTHROPIC_API_KEY" not in seen_env                          # subscription, never the key
     assert tally.usd == 0 and tally.equivalent_usd == 0.0123
+
+    llm.call("opinion", "sys", "hello", {"type": "object"})               # effort from llm.effort
+    assert "--effort" in seen_cmd and seen_cmd[seen_cmd.index("--effort") + 1] == "high"
+    llm.call("triage", "sys", "hello", {"type": "object"})
+    assert "--effort" not in seen_cmd                                      # unset: the model's default
 
     events[0]["apiKeySource"] = "ANTHROPIC_API_KEY"
     with pytest.raises(CreditError):
@@ -240,3 +248,23 @@ def test_steam_deals_have_unknown_price_history():
     assert material["deals"][0]["lowest_ever"] is None          # unknown, not "has been cheaper"
     material, _ = ai_edition._deals_material({**base, "source": "itad"})
     assert material["deals"][0]["lowest_ever"] is False
+
+
+def test_api_backend_sends_effort_per_task():
+    sent = {}
+
+    class FakeMessages:
+        def create(self, **kw):
+            sent.update(kw)
+            usage = SimpleNamespace(input_tokens=10, output_tokens=5, cache_read_input_tokens=0,
+                                    cache_creation_input_tokens=0)
+            return SimpleNamespace(usage=usage, stop_reason="end_turn",
+                                   content=[SimpleNamespace(type="thinking"), SimpleNamespace(type="text", text='{"ok": true}')])
+
+    llm = LLM(load_config(), "api", Tally(1.0), env={})
+    llm._client = SimpleNamespace(messages=FakeMessages())
+    assert llm.call("opinion_check", "sys", "hi", {"type": "object"}) == {"ok": True}
+    assert sent["output_config"]["effort"] == "high" and sent["max_tokens"] == 8000
+    assert sent["model"] == "claude-opus-5-5" and "thinking" not in sent        # adaptive thinking is the default
+    llm.call("triage", "sys", "hi", {"type": "object"})
+    assert "effort" not in sent["output_config"]

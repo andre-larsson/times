@@ -83,7 +83,10 @@ llm:
   timeout_seconds: 240
   reduced: { featured_max: 1, medium_max: 3 }
   max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000,
-                opinion_pick: 1500, opinion: 4000, opinion_check: 2500 }
+                opinion_pick: 8000, opinion: 16000, opinion_check: 8000 }
+                                      # a hard cap on thinking + text (Claude 5 models always think); you pay for what's used
+  effort: { opinion_pick: high, opinion: high, opinion_check: high }
+                                      # per task; unset = the model's default (Opus 5.5: medium, Fable 5.1: high)
 
 opinion:                              # the opinion column: Opus picks a topic, Fable writes it, Opus fact-checks it
   enabled: true
