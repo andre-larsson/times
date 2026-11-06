@@ -115,7 +115,8 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 | **Deal of the day** | 1–2 | A short article (~150 words): what the game is, how good reviewers and Steam users say it is, the price versus its lowest ever, when the deal ends, and a rating like a stock analyst's (**Strong Buy / Buy / Hold / Avoid**, never imperatives like "Buy it") with who it suits |
 | **More deals** | 5–10 | One-line advice per deal, with a price tag showing the regular price struck through, the sale price, the discount and a "Lowest ever" badge |
 
-- **Picking deals:** IsThereAnyDeal deals for Sweden (prices in the local currency), filtered to
+- **Picking deals:** IsThereAnyDeal deals for Sweden (priced in EUR), sorted by ITAD's popularity rank
+  (`sort: rank`; biggest-discount-first filled the list with €1 games), filtered to
   at or near the lowest price ever, a minimum discount, and well-reviewed games (Steam rating, review scores).
 - **Links:** plain store links, no affiliate links.
 - **Labels:** "Price checked 07:00. Prices change." Each deal is credited to IsThereAnyDeal.

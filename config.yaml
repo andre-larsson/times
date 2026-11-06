@@ -141,7 +141,7 @@ sources:
   steam: { cc: se, lists: [new_releases, coming_soon, specials] }   # popular new · most wishlisted · popular on sale
   itad:                               # needs the ITAD_API_KEY secret; without it deals come from Steam specials
     enabled: true
-    sort: "-cut"
+    sort: rank                        # ITAD popularity; "-cut" (biggest discount first) filled the list with €1 games
     limit: 100
     min_steam_percent: 80
     min_steam_reviews: 500
