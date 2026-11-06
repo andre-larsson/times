@@ -110,3 +110,5 @@ def test_deals_use_ratings_not_imperatives(site):
     for label in ("Strong Buy", "Hold", "Avoid"):
         assert f"{label}</span>" in html, label
     assert "verdict--strong_buy" in html and "Buy it" not in html
+    assert '<span class="chip chip--pick">Hidden gem</span>' in html            # where a deal came from
+    assert '<span class="chip chip--pick">Horror</span>' in html

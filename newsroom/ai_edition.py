@@ -22,6 +22,8 @@ from .seen import is_seen
 from .sources import Harvest
 from .text import canonical_url, excerpt, slugify
 
+PICKS = {"popular": "popular", "hidden": "hidden_gem", "genre": "genre"}   # why a deal is in the list (deals.md)
+
 
 class AIUnavailable(Exception):
     """AI couldn't produce the core of the paper; publish the links edition instead."""
@@ -423,6 +425,9 @@ def _deals_material(base: dict[str, Any]) -> tuple[dict[str, Any], dict[str, dic
         "cut_percent": d["cut"], "lowest_ever": d.get("lowest_ever") if history else None,
         "steam_rating": d.get("steam_rating"),
         "metascore": d.get("metascore"), "ends": d.get("expires"),
+        **({"pick": PICKS[d["pick"]]} if d.get("pick") in PICKS else {}),
+        **({"genre": d["genre"]} if d.get("genre") else {}),
+        **({"tags": d["tags"]} if d.get("tags") else {}),
     } for did, d in ids.items()]}
     return material, ids
 

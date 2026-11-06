@@ -135,11 +135,16 @@
 </div>
 {%- endmacro %}
 
+{% macro pick(d) -%}
+{%- if d.pick == 'hidden' %}<span class="chip chip--pick">Hidden gem</span>
+{%- elif d.pick == 'genre' and d.genre %}<span class="chip chip--pick">{{ d.genre }}</span>{% endif %}
+{%- endmacro %}
+
 {% macro deal_row(d) -%}
 <li class="deal-row">
   <div class="deal-main">
     <a class="deal-name" href="{{ d.url }}">{{ d.game }}</a>
-    <p class="meta"><span>{{ d.shop }}</span>{% if d.steam_rating %}<span class="meta-sep" aria-hidden="true">·</span>{{ rating(d.steam_rating) }}{% endif %}{% if d.expires %}<span class="meta-sep" aria-hidden="true">·</span><span>Ends {{ d.expires | date_short }}</span>{% endif %}</p>
+    <p class="meta">{{ pick(d) }}<span>{{ d.shop }}</span>{% if d.steam_rating %}<span class="meta-sep" aria-hidden="true">·</span>{{ rating(d.steam_rating) }}{% endif %}{% if d.expires %}<span class="meta-sep" aria-hidden="true">·</span><span>Ends {{ d.expires | date_short }}</span>{% endif %}</p>
     {%- if d.advice %}<p class="deal-advice">{{ verdict(d.verdict) }} {{ d.advice }}</p>{% endif %}
   </div>
   {{ price(d, 'sm') }}

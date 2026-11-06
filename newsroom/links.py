@@ -234,6 +234,45 @@ def watch_block(items: list[Item], now: dt.datetime, cfg: dict[str, Any]) -> lis
 
 # ── deals ────────────────────────────────────────────────────────────────────
 
+def mix_deals(deals: list[dict[str, Any]], mix: dict[str, Any], limit: int, genres: list[str],
+              day: dt.date) -> list[dict[str, Any]]:
+    """The more-deals list from the ITAD pools (`deals` already filtered and in order).
+
+    `mix.popular` from the popular list, then `mix.hidden` hidden gems and `mix.genre` genre picks (one
+    per genre; the genres take turns by day, skipping one with nothing today). Every game appears once,
+    and slots a pool can't fill go to the next popular deals. Each deal gets `pick` (and `genre`).
+    """
+    def pool(name: str) -> list[dict[str, Any]]:
+        return [x for x in deals if name in (x.get("pools") or ["popular"])]
+
+    popular = pool("popular")
+    seen = {x["itad_id"] for x in popular[: int(mix.get("popular", limit))]}
+    extra: list[dict[str, Any]] = []
+
+    def take(candidates: list[dict[str, Any]], n: int, **label: str) -> None:
+        for x in candidates:
+            if n <= 0 or len(extra) >= limit:
+                return
+            if x["itad_id"] not in seen:
+                seen.add(x["itad_id"])
+                extra.append({**x, **label})
+                n -= 1
+
+    take(pool("hidden"), int(mix.get("hidden", 0)), pick="hidden")
+    slots = int(mix.get("genre", 0))
+    if genres and slots:
+        start = day.toordinal() * slots % len(genres)
+        for g in genres[start:] + genres[:start]:
+            if slots <= 0:
+                break
+            before = len(extra)
+            take(pool(f"genre:{g}"), 1, pick="genre", genre=g)
+            slots -= len(extra) - before
+    chosen = {x["itad_id"] for x in extra}
+    rest = [{**x, "pick": "popular"} for x in popular if x["itad_id"] not in chosen]
+    return (rest[: max(0, limit - len(extra))] + extra)[:limit]
+
+
 def deals_block(cfg: dict[str, Any], harvest: Harvest) -> dict[str, Any]:
     d = cfg.get("deals") or {}
     limit = int((d.get("more") or {}).get("max", 10))
@@ -249,13 +288,16 @@ def deals_block(cfg: dict[str, Any], harvest: Harvest) -> dict[str, Any]:
                  and RATING_SCORE.get((x.get("steam_rating") or "").lower(), 0) >= min_rating]
         deals.sort(key=lambda x: (not x.get("new_low"), not x.get("lowest_ever"),
                                   x.get("rank") or 10**6, -(x.get("steam_count") or 0)))
+        genres = list(((cfg.get("sources") or {}).get("itad", {}).get("genres") or {}).get("tags") or {})
         block["source"] = "itad"
         block["more"] = [{
             "game": x["game"], "shop": x["shop"], "price": x["price"], "regular": x["regular"],
             "currency": x["currency"], "cut": x["cut"], "lowest_ever": x["lowest_ever"],
             "expires": x.get("expires"), "steam_rating": x.get("steam_rating", ""),
             "metascore": x.get("metascore"), "url": store_url(x) or x.get("itad_url", ""),
-        } for x in deals[:limit]]
+            "pick": x["pick"], **({"genre": x["genre"]} if x.get("genre") else {}),
+            **({"tags": x["tags"]} if x.get("tags") else {}),
+        } for x in mix_deals(deals, d.get("mix") or {}, limit, genres, harvest.fetched_at.date())]
         return block
 
     specials = [gm for gm in harvest.steam.get("specials") or []

@@ -247,7 +247,10 @@ def test_steam_deals_have_unknown_price_history():
     material, _ = ai_edition._deals_material(base)
     assert material["deals"][0]["lowest_ever"] is None          # unknown, not "has been cheaper"
     material, _ = ai_edition._deals_material({**base, "source": "itad"})
-    assert material["deals"][0]["lowest_ever"] is False
+    assert material["deals"][0]["lowest_ever"] is False and "pick" not in material["deals"][0]
+    base["more"][0].update(pick="hidden", tags=["Roguelike"])
+    material, _ = ai_edition._deals_material({**base, "source": "itad"})
+    assert material["deals"][0]["pick"] == "hidden_gem" and material["deals"][0]["tags"] == ["Roguelike"]
 
 
 def test_api_backend_sends_effort_per_task():

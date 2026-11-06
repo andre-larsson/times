@@ -486,6 +486,7 @@ h1, h2, h3, h4 { margin: 0; }
   font: 800 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em;
   padding: 4px 6px 3px; border: 1px solid var(--rule); color: var(--ink-2);
 }
+.chip--pick { color: var(--sec-ink); border-color: currentColor; }   /* "Hidden gem" or a genre on a deal */
 
 .soon-item {
   display: grid; grid-template-columns: 4.5rem minmax(0, 1fr) auto; align-items: baseline; gap: var(--s-3);

@@ -65,7 +65,7 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **IsThereAnyDeal** | Official API (`/deals/v2` with a JSON filter: cut ≥ 50%, within 10% of the historical low, games only, Steam ≥ 80% with ≥ 500 reviews; then `/games/info/v2` for Steam rating and Metascore). Free key by registering an app at isthereanydeal.com; personal and public use allowed; 1000 requests per 5 minutes. Store links: Steam's own page for Steam deals, otherwise the ITAD game page (no affiliate redirects). Credited on the page. Live since 2026-11-06. ITAD prices Sweden in EUR. Its percent ranges need an explicit `max: 100` (a null max reads as 0 and matches nothing, despite the spec) | ✅ |
+| **IsThereAnyDeal** | Official API (`/deals/v2` with a JSON filter: cut ≥ 50%, within 10% of the historical low, games only, Steam ≥ 80% with ≥ 500 reviews; plus a hidden-gems list and one list per genre group, using `tagsUnion` with ITAD's tag names such as "Point & Click" and "Roguelike"; then `/games/info/v2` for Steam rating, Metascore and tags, looked up once per game per run, about 60 requests in all). Free key by registering an app at isthereanydeal.com; personal and public use allowed; 1000 requests per 5 minutes. Store links: Steam's own page for Steam deals, otherwise the ITAD game page (no affiliate redirects). Credited on the page. Live since 2026-11-06. ITAD prices Sweden in EUR. Its percent ranges need an explicit `max: 100` (a null max reads as 0 and matches nothing, despite the spec) | ✅ |
 | Steam specials | Popular games on sale. **Fallback** when there's no ITAD key: same cut and rating filters, but no lowest-ever data | ✅ |
 
 ### Draft interests (editable)
@@ -115,9 +115,16 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 | **Deal of the day** | 1–2 | A short article (~150 words): what the game is, how good reviewers and Steam users say it is, the price versus its lowest ever, when the deal ends, and a rating like a stock analyst's (**Strong Buy / Buy / Hold / Avoid**, never imperatives like "Buy it") with who it suits |
 | **More deals** | 5–10 | One-line advice per deal, with a price tag showing the regular price struck through, the sale price, the discount and a "Lowest ever" badge |
 
-- **Picking deals:** IsThereAnyDeal deals for Sweden (priced in EUR), sorted by ITAD's popularity rank
-  (`sort: rank`; biggest-discount-first filled the list with €1 games), filtered to
-  at or near the lowest price ever, a minimum discount, and well-reviewed games (Steam rating, review scores).
+- **Picking deals:** IsThereAnyDeal deals for Sweden (priced in EUR), all filtered to at or near the lowest
+  price ever, a minimum discount and well-reviewed games, from three kinds of list (`deals.mix`, 5 / 3 / 2):
+  - **Popular:** ITAD's popularity rank (`sort: rank`; biggest-discount-first filled the list with €1 games).
+  - **Hidden gems:** lesser-known but very well rated: Steam ≥ 90% from 200–5,000 reviews, a normal price of
+    at least €8 (review count alone surfaces €0.49 shovelware). Labeled "Hidden gem".
+  - **Genre picks:** one ITAD query per genre group of Steam tags (`sources.itad.genres.tags`: Horror, FMV,
+    Point & Click, Roguelike, Incremental), Steam ≥ 85% from 100–20,000 reviews. Two slots a day; the
+    genres take turns by day, and a genre with nothing qualifying passes its turn on. Labeled with the genre.
+  - Every game appears once; slots a list can't fill go to the next popular deals. Claude gets each deal's
+    pick type and Steam tags, so it can call a game "a psychological horror game" without inventing more.
 - **Links:** plain store links, no affiliate links.
 - **Labels:** "Price checked 07:00. Prices change." Each deal is credited to IsThereAnyDeal.
 - **Cost:** written in one Opus call for the whole section.
@@ -299,6 +306,7 @@ web search is $0.01 per search.
 | Newsworthiness bar | `edition.*.min_newsworthiness` | 4.5 / 3.5 / 2.5 |
 | Gaming blocks | `gaming.*` | see the gaming section above |
 | Deals | `deals.featured / more / min_cut / near_low_pct / min_rating` | 1–2 / 5–10 / 50% / 10% / "Very Positive" |
+| Deals mix and genres | `deals.mix`, `sources.itad.hidden`, `sources.itad.genres` | 5 popular / 3 hidden gems / 2 genre picks; five genre groups |
 | Search depth and frequency | `search.depth`, `search.discovery_every_days` | `light`, 1 |
 | Models | `models.*` | Opus everywhere except Haiku triage and the Fable column (`opinion`) |
 | Opinion column | `opinion.days / every_weeks / words / lookback_days / front_days` | Wed, Sun / 1 / 800 / 7 / 7 |
@@ -427,6 +435,7 @@ deals:
   min_cut_pct: 50
   near_low_pct: 10                  # within 10% of the lowest price ever
   min_steam_rating: "Very Positive"
+  mix: { popular: 5, hidden: 3, genre: 2 }
 
 search:
   depth: light                      # off | light | normal | deep

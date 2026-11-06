@@ -20,7 +20,13 @@ Return:
   and who it suits), verdict (the rating).
 - more: for every other deal, id, a one-line note (at most ~18 words) giving the reason for its
   rating, and a verdict (the rating).
-- If a game's description isn't in the data, don't describe its gameplay; talk about price and ratings.
+- pick says why a deal is on the list: "popular" (a well-known game), "hidden_gem" (a lesser-known game
+  with few but very positive Steam reviews) or "genre" (a pick from a genre the reader follows; genre
+  names it). Say so where it helps ("a lesser-known", "for roguelike fans"), and give hidden gems and
+  genre picks a fair look for the deal of the day, not only the popular names.
+- tags are Steam's user tags for the game. You may describe it in those general terms ("a
+  psychological horror game", "a roguelike deckbuilder"), but nothing more specific: no story, setting,
+  mechanics or length that isn't in the data. With no tags, talk only about price and ratings.
 - lowest_ever: true means this is the lowest price ever recorded, false means it has been cheaper
   before, null means the price history is unknown. When it's null, say nothing about earlier prices
   and base the rating on the cut, the price and the rating.

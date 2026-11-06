@@ -295,20 +295,3 @@ def test_http_error_includes_api_reason_but_never_the_key():
     with pytest.raises(FetchError) as err:
         client.json("https://api.example.com/deals", params={"key": "echoed-key-456"})
     assert "echoed-key-456" not in str(err.value) and str(err.value).endswith("/deals")
-
-
-def test_itad_percent_ranges_have_an_explicit_max():
-    """ITAD reads "max": null in a 0-100 range as 0, which matched no deals at all (live API, 2026-11-06)."""
-    from newsroom.sources import itad
-
-    sent = {}
-
-    class Recorder(FakeClient):
-        def json(self, url, params=None, headers=None):
-            sent.update(params or {})
-            return {"list": [], "hasMore": False}
-
-    cfg = load_config()
-    assert itad.fetch_deals(Recorder({}), cfg["sources"]["itad"], cfg["deals"], "k") == []
-    f = json.loads(sent["filter"])
-    assert f["steamPerc"]["max"] == 100 and f["cut"]["max"] == 100

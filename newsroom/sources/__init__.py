@@ -100,8 +100,13 @@ def fetch_all(cfg: dict[str, Any], client: Client, now: dt.datetime | None = Non
     itad_cfg = src.get("itad") or {}
     if itad_cfg.get("enabled"):
         if itad_key:
-            h.itad = h.run("IsThereAnyDeal",
-                           lambda: itad.fetch_deals(client, itad_cfg, cfg.get("deals") or {}, itad_key))
+            deals_cfg, cache, lists = cfg.get("deals") or {}, {}, []
+            for q in itad.queries(itad_cfg, deals_cfg):
+                got = h.run(q.label, lambda q=q: itad.fetch_query(client, q, itad_cfg, deals_cfg, itad_key, cache))
+                if got is None and q.pool == "popular":
+                    break                                    # no backbone: deals come from Steam specials
+                lists.append((q.pool, got or []))
+            h.itad = itad.merge(lists) if lists else None
         else:
             h.status.append(SourceStatus("IsThereAnyDeal", False, skipped=True,
                                          error="ITAD_API_KEY not set; using Steam specials"))

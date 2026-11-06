@@ -45,6 +45,7 @@ deals:
   min_cut_pct: 50
   near_low_pct: 10                    # within 10% of the lowest price ever
   min_steam_rating: "Very Positive"
+  mix: { popular: 5, hidden: 3, genre: 2 }   # where "more" comes from (ITAD); genres take turns by day
 
 search:
   depth: light                        # off | light | normal | deep
@@ -146,6 +147,23 @@ sources:
     min_steam_percent: 80
     min_steam_reviews: 500
     info_limit: 25                    # games to look up for ratings and Metascore
+    hidden:                           # hidden gems: lesser-known (few reviews) but very well rated
+      min_steam_percent: 90
+      steam_reviews: [200, 5000]
+      min_regular: 8                  # normal price in EUR; keeps out the €0.49 shovelware
+      limit: 40
+      info_limit: 10
+    genres:                           # genre picks: each group is any of these Steam tags (ITAD's names)
+      min_steam_percent: 85
+      steam_reviews: [100, 20000]     # the cap leaves the big names to the popular list
+      limit: 30
+      info_limit: 5
+      tags:
+        Horror: [Horror, Psychological Horror, Survival Horror]
+        FMV: [FMV]
+        Point & Click: [Point & Click]
+        Roguelike: [Roguelike, Roguelite, Action Roguelike, Roguelike Deckbuilder, Traditional Roguelike]
+        Incremental: [Incremental, Idler, Clicker]
 
 pricing:                              # USD per million tokens (Nov 2026)
   claude-fable-5-1:  { input: 10.00, output: 50.00, cache_read: 0.25, cache_write_5m: 12.50 }

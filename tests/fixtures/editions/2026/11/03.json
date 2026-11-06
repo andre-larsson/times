@@ -258,9 +258,9 @@
     ],
     "more": [
       { "game": "Copperline", "shop": "GOG", "price": 4.99, "regular": 19.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-09T12:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "buy", "advice": "A clever puzzle game about building circuits; the lowest price it's had.", "url": "https://example.com/gog/copperline" },
+        "pick": "hidden", "steam_rating": "Very Positive", "verdict": "buy", "advice": "A clever puzzle game about building circuits; the lowest price it's had.", "url": "https://example.com/gog/copperline" },
       { "game": "Pale Signal", "shop": "Steam", "price": 9.99, "regular": 24.99, "currency": "EUR", "cut": 60, "lowest_ever": false, "expires": "2026-11-06T17:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "hold", "advice": "A good deal, but it hit €7.49 last winter; the holiday sale may beat it.", "url": "https://example.com/steam/pale-signal" },
+        "pick": "genre", "genre": "Horror", "steam_rating": "Very Positive", "verdict": "hold", "advice": "A good deal, but it hit €7.49 last winter; the holiday sale may beat it.", "url": "https://example.com/steam/pale-signal" },
       { "game": "Garden Wars", "shop": "Humble Store", "price": 3.74, "regular": 14.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-07T18:00:00Z",
         "steam_rating": "Very Positive", "verdict": "buy", "advice": "Couch co-op strategy that's great with two players.", "url": "https://example.com/humble/garden-wars" },
       { "game": "Riftwalker", "shop": "Steam", "price": 13.99, "regular": 39.99, "currency": "EUR", "cut": 65, "lowest_ever": false, "expires": "2026-11-08T17:00:00Z",

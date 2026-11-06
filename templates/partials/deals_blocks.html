@@ -11,7 +11,7 @@
         {{ m.verdict(d.verdict) }}
       </div>
       <p class="meta">
-        <span>{{ d.game }} on {{ d.shop }}</span>
+        {{ m.pick(d) }}<span>{{ d.game }} on {{ d.shop }}</span>
         {% if d.steam_rating %}<span class="meta-sep" aria-hidden="true">·</span>{{ m.rating(d.steam_rating) }}{% endif %}
         {% if d.expires %}<span class="meta-sep" aria-hidden="true">·</span><span>Ends {{ d.expires | date_short }}</span>{% endif %}
       </p>
