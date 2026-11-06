@@ -1,0 +1,891 @@
+{
+ "edition_id": "2026-11-06",
+ "generated_at": "2026-11-06T13:50:01.758766+00:00",
+ "mode": "full",
+ "reason": "",
+ "llm": {
+  "backend": "api",
+  "usd": 0.353272,
+  "equivalent_usd": 0.353272,
+  "calls": 12,
+  "by_task": {
+   "probe": {
+    "calls": 1,
+    "usd": 2.5e-05,
+    "equivalent_usd": 2.5e-05,
+    "failed": 0
+   },
+   "triage": {
+    "calls": 4,
+    "usd": 0.014027,
+    "equivalent_usd": 0.014027,
+    "failed": 0
+   },
+   "editor": {
+    "calls": 1,
+    "usd": 0.088003,
+    "equivalent_usd": 0.088003,
+    "failed": 0
+   },
+   "medium": {
+    "calls": 3,
+    "usd": 0.065837,
+    "equivalent_usd": 0.065837,
+    "failed": 0
+   },
+   "featured": {
+    "calls": 1,
+    "usd": 0.042053,
+    "equivalent_usd": 0.042053,
+    "failed": 0
+   },
+   "deals": {
+    "calls": 1,
+    "usd": 0.044502,
+    "equivalent_usd": 0.044502,
+    "failed": 0
+   },
+   "gaming": {
+    "calls": 1,
+    "usd": 0.098825,
+    "equivalent_usd": 0.098825,
+    "failed": 0
+   }
+  },
+  "stopped": "",
+  "estimated_usd": 0.353272
+ },
+ "stories": [
+  {
+   "slug": "sshole-flaw-lets-attackers-ssh-into-alpine-linux-with-any-lo",
+   "section": "tech",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-05T18:14:56+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Combined OpenSSH and musl-libc flaws let anyone into Alpine Linux and other distros by typing anything over 256 characters as a password",
+     "url": "https://www.tomshardware.com/tech-industry/cyber-security/combined-flaws-let-anyone-into-alpine-linux-and-other-distros-by-typing-anything-over-256-characters-as-a-password-emergency-fixes-for-openssh-and-musl-libc-issued-for-millions-of-systems-patch-immediately"
+    },
+    {
+     "name": "Ars Technica",
+     "title": "Meet *sshole, the vulnerability that lets hackers SSH into Linux devices",
+     "url": "https://arstechnica.com/security/2026/11/vulnerability-allows-attackers-to-log-into-some-linux-devices-sans-password/"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Security",
+   "headline": "*sshole flaw lets attackers SSH into Alpine Linux with any long password",
+   "dek": "An OpenSSH and musl-libc interaction grants logins to passwordless accounts when attackers type more than 256 characters; fixes are out.",
+   "body": "A decade-old flaw in how OpenSSH and the musl C library work together lets attackers log into some Linux systems without knowing a password, Ars Technica reports. Typing anything longer than 256 characters at the password prompt is enough. The bug has been dubbed *sshole, and Alpine Linux is the most exposed.\n\n\"An attacker who can reach your SSH port can log in without knowing any password,\" Alpine maintainers said Thursday. \"It takes one connection, works every time, and needs no retries.\" Tom's Hardware says Alpine ships with the required conditions and password authentication enabled by default, and that it runs in what could amount to millions of containers, servers, cloud VMs and embedded devices.\n\nSeveral conditions must line up. The system must run OpenSSH on musl without PAM. The target account must be passwordless, marked with a \"*\" in /etc/shadow, which is common for accounts that use certificate-based logins. At least one other account must have a password hash, which Ars describes as SHA256 or SHA512. Security firm Checkpoint says that matters because sshd borrows that account's salt, and that the account must be active. Checkpoint adds that root is safe under the default PermitRootLogin setting, though reachable accounts with sudo or doas rights can still escalate.\n\nThe root cause, per Tom's Hardware, is that musl's crypt() function returns \"*\" on error instead of a null value, and OpenSSH then compares that result to the stored hash. An overly long input triggers the chain. OpenSSH has published a fix and advisory, as has musl author Rich Felker. Tom's Hardware says each side appears to blame the other.\n\nThe bug is present, though not necessarily enabled, in Buildroot, Yocto and Void Linux, according to Tom's Hardware. OpenWRT uses Dropbear by default, but users can install OpenSSH. Ars says other platforms may be affected if they share the configuration, and the full list of exposed systems remains unclear.\n\nMost such installs are not reachable from the internet, Tom's Hardware notes, but anyone inside a network, including VPNs, home labs and cloud networks, can exploit it. The quickest mitigation is setting \"PasswordAuthentication\" to \"no\" in the OpenSSH config and restarting the service.",
+   "key_points": [
+    "Typing over 256 characters logs into passwordless accounts via SSH",
+    "Requires OpenSSH on musl without PAM, as in default Alpine setups",
+    "OpenSSH and musl have both issued fixes and advisories",
+    "Mitigation: set PasswordAuthentication to no and restart sshd"
+   ],
+   "breaking": false,
+   "why_it_matters": "Alpine is the base of countless Docker images and home-lab containers, so anyone running OpenSSH in them should patch or disable password authentication now.",
+   "cover": {
+    "style": "type",
+    "figure": "256",
+    "caption": "Characters of any password needed to get in"
+   },
+   "id": "s1",
+   "lead": true
+  },
+  {
+   "slug": "claude-code-sends-user-email-addresses-to-websites-bug-repor",
+   "section": "ai",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-05T22:17:15+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Claude Code sends your email address to websites",
+     "url": "https://github.com/anthropics/claude-code/issues/107757"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50385272",
+    "points": 1303,
+    "comments": 411
+   },
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Claude Code sends user email addresses to websites, bug report claims",
+   "dek": "A GitHub issue citing a privacy violation in the tool's User-Agent header drew 1,303 points on Hacker News.",
+   "body": "Claude Code, Anthropic's AI coding tool, sends users' email addresses to the websites it visits, according to a bug report filed in the official claude-code repository on GitHub. The report, issue #107757, is titled \"Bug Report: Privacy violation in User-Agent header.\"\n\nThe claim spread quickly on Hacker News, where a post titled \"Claude Code sends your email address to websites\" reached 1,303 points and 411 comments. The issue's title points to the User-Agent header, the string a client sends to identify itself when it requests a web page, as the place where the information leaks.\n\nAnthropic has not publicly confirmed the behavior. The report remains a user claim. Developers who let Claude Code fetch web pages may want to follow the issue for updates.",
+   "key_points": [
+    "A GitHub bug report, issue #107757 in Anthropic's claude-code repository, alleges a privacy violation in the tool's User-Agent header.",
+    "The Hacker News post claims Claude Code sends users' email addresses to websites it visits.",
+    "The post drew 1,303 points and 411 comments on Hacker News."
+   ],
+   "id": "s2"
+  },
+  {
+   "slug": "remote-code-execution-flaw-in-ms-paint-gets-a-cve-entry",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-05T20:43:42+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "MS Paint Remote Code Execution Vulnerability",
+     "url": "https://www.cve.org/CVERecord?id=CVE-2026-83844"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50384233",
+    "points": 601,
+    "comments": 223
+   },
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Remote code execution flaw in MS Paint gets a CVE entry",
+   "dek": "CVE-2026-83844 describes a remote code execution vulnerability in Microsoft's bundled image editor and drew 601 points on Hacker News.",
+   "body": "A remote code execution vulnerability in MS Paint has been assigned an identifier in the Common Vulnerabilities and Exposures (CVE) catalog. The record, CVE-2026-83844, is titled \"MS Paint Remote Code Execution Vulnerability.\"\n\nThe entry spread quickly on Hacker News after it was posted on November 5. It gathered 601 points and 223 comments, a large response for a bug in one of the oldest and most familiar programs that ships with Windows.\n\nRemote code execution is among the most serious classes of software flaws, because it can let an attacker run code on a target machine. Windows users should watch for official guidance and install updates once they are available.",
+   "key_points": [
+    "The MS Paint flaw is tracked as CVE-2026-83844 and classed as remote code execution.",
+    "The CVE record drew 601 points and 223 comments on Hacker News.",
+    "The entry was posted to Hacker News on November 5, 2026."
+   ],
+   "id": "s3"
+  },
+  {
+   "slug": "marvell-agrees-to-buy-lumentum-in-115-billion-all-stock-deal",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-05T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Marvell to buy Lumentum in $115 billion all-stock deal",
+     "url": "https://www.tomshardware.com/tech-industry/semiconductors/marvell-to-buy-lumentum-in-usd115-billion-all-stock-deal-combined-company-to-supply-scale-up-and-scale-in-optics-for-ai-data-centers"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Business",
+   "headline": "Marvell agrees to buy Lumentum in $115 billion all-stock deal",
+   "dek": "The merger pairs Marvell's optical DSPs and SerDes with Lumentum's lasers and indium phosphide fabs as AI data centers shift to optics.",
+   "body": "Marvell has signed a definitive agreement to acquire Lumentum for an enterprise value of $115 billion, Tom's Hardware reports. Lumentum shareholders get 4.5 Marvell shares per share, about $1,132, a 23.9 percent premium. Marvell holders will own about 67 percent of the combined company. Both boards approved it, and closing is expected in the first half of 2028.\n\nMarvell already supplies optical DSPs, SerDes and silicon photonics. Lumentum adds lasers, transceivers, optical circuit switches and what its CEO calls the world's largest indium phosphide manufacturing footprint, giving Marvell a portfolio closer to rival Broadcom's.\n\nInvestors balked. Marvell fell 12.7 percent and Lumentum 18.6 percent on November 2. The companies project over $1 billion in annual cost synergies and about $17.7 billion in annualized combined revenue.",
+   "key_points": [
+    "Lumentum holders receive 4.5 Marvell shares each, a 23.9 percent premium; the deal is expected to close in the first half of 2028.",
+    "Lumentum brings lasers, transceivers and in-house indium phosphide fabs to fabless Marvell.",
+    "Marvell shares closed down 12.7 percent and Lumentum down 18.6 percent on the announcement."
+   ],
+   "id": "s4"
+  }
+ ],
+ "links": [],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "sshole",
+   "url": "https://sshhole.com",
+   "points": 2794,
+   "comments": 678,
+   "comments_url": "https://news.ycombinator.com/item?id=50378228"
+  },
+  {
+   "rank": 2,
+   "title": "Claude Code sends your email address to websites",
+   "url": "https://github.com/anthropics/claude-code/issues/107757",
+   "points": 1303,
+   "comments": 411,
+   "comments_url": "https://news.ycombinator.com/item?id=50385272"
+  },
+  {
+   "rank": 3,
+   "title": "MS Paint Remote Code Execution Vulnerability",
+   "url": "https://www.cve.org/CVERecord?id=CVE-2026-83844",
+   "points": 601,
+   "comments": 223,
+   "comments_url": "https://news.ycombinator.com/item?id=50384233"
+  },
+  {
+   "rank": 4,
+   "title": "Motorola Signature 27 with GrapheneOS support",
+   "url": "https://motorolanews.com/motorola-signature-27-2/",
+   "points": 520,
+   "comments": 373,
+   "comments_url": "https://news.ycombinator.com/item?id=50380810"
+  },
+  {
+   "rank": 5,
+   "title": "I wish tech companies knew more about me",
+   "url": "https://rakhim.exotext.com/i-wish-tech-companies-knew-more-about-me",
+   "points": 480,
+   "comments": 379,
+   "comments_url": "https://news.ycombinator.com/item?id=50378942"
+  },
+  {
+   "rank": 6,
+   "title": "Cuban: Facebook knowingly runs AI deepfake scam ads; docs say $16B fraud revenue",
+   "url": "https://finance.yahoo.com/technology/ai/articles/mark-cuban-says-facebook-knowingly-213000020.html",
+   "points": 417,
+   "comments": 190,
+   "comments_url": "https://news.ycombinator.com/item?id=50385870"
+  },
+  {
+   "rank": 7,
+   "title": "Window Sweaters",
+   "url": "https://github.com/saragordic/window-sweaters",
+   "points": 388,
+   "comments": 113,
+   "comments_url": "https://news.ycombinator.com/item?id=50381383"
+  },
+  {
+   "rank": 8,
+   "title": "Download your favourite YouTube videos",
+   "url": "https://criminallyvulgar.dev/you-should-absolutely-download-your-favourite-youtube-videos/",
+   "points": 371,
+   "comments": 179,
+   "comments_url": "https://news.ycombinator.com/item?id=50378571"
+  },
+  {
+   "rank": 9,
+   "title": "Blender's UI and Runtime: Much Faster Than GPUI",
+   "url": "https://github.com/ppmpreetham/BUI",
+   "points": 368,
+   "comments": 150,
+   "comments_url": "https://news.ycombinator.com/item?id=50389333"
+  },
+  {
+   "rank": 10,
+   "title": "The Hackintosh Reborn",
+   "url": "https://www.naut.ca/blog/2026/11/05/the-hackintosh-reborn-with-ai/",
+   "points": 348,
+   "comments": 195,
+   "comments_url": "https://news.ycombinator.com/item?id=50383057"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "Lightyear Frontier",
+    "appid": 1677110,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1677110/f4aec944f634f189990fe69e6d353b5609787955/header_alt_assets_7.jpg?t=1793891345",
+    "store_url": "https://store.steampowered.com/app/1677110/",
+    "price": 23.99,
+    "currency": "EUR",
+    "blurb": "Relaxed open-world farming game where a tunable mech clears forests and plows fields, with co-op for four. Very Positive, 4,410 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Lightyear%20Frontier/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "ZED ZONE",
+    "appid": 1211600,
+    "release_date": "2026-11-06",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1211600/aac7446006d1fb3898eccf697406d0c357cf20a3/header_alt_assets_2.jpg?t=1793949713",
+    "store_url": "https://store.steampowered.com/app/1211600/",
+    "price": 7.07,
+    "currency": "EUR",
+    "blurb": "Zombie survival game: crash-land, gather materials, build shelters and fight hordes and mechs. Very Positive across 3,636 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/ZED%20ZONE/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Queen's Domain",
+    "appid": 1799840,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1799840/1a209734951f53b019ec9fa03f835def14f2a968/header.jpg?t=1793628353",
+    "store_url": "https://store.steampowered.com/app/1799840/",
+    "price": 16.56,
+    "currency": "EUR",
+    "blurb": "Retro-fantasy action RPG with brutal combat and traversal-heavy exploration. Overwhelmingly Positive from 2,888 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Queen%27s%20Domain/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "VOID/BREAKER",
+    "appid": 2615540,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2615540/4f3789458cfd9c3375c2926620b19640135f7c4a/header_alt_assets_8.jpg?t=1793821113",
+    "store_url": "https://store.steampowered.com/app/2615540/",
+    "price": 16.19,
+    "currency": "EUR",
+    "blurb": "Bullet-hell roguelite FPS with deep gun modding and environmental destruction. Very Positive, 2,665 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/VOID%2FBREAKER/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Can 'Em All",
+    "appid": 5133900,
+    "release_date": "2026-10-30",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5133900/19aa14ebe3720e02f7f8c720abbf9749cf36967f/header.jpg?t=1793384095",
+    "store_url": "https://store.steampowered.com/app/5133900/",
+    "price": 6.29,
+    "currency": "EUR",
+    "blurb": "First-person incremental game about turning cute creatures into canned goods. Overwhelmingly Positive from 1,819 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Can%20%27Em%20All/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Godzilla: Destroy All Monsters Melee Remastered",
+    "appid": 4251460,
+    "release_date": "2026-11-03",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4251460/28023d80b51185fe3dbadadf608523942f47238c/header.jpg?t=1793714569",
+    "store_url": "https://store.steampowered.com/app/4251460/",
+    "price": 29.99,
+    "currency": "EUR",
+    "blurb": "Remaster of the classic Godzilla arena brawler, now with online multiplayer. Overwhelmingly Positive, 883 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Godzilla%3A%20Destroy%20All%20Monsters%20Melee%20Remastered/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Potato Please",
+    "appid": 5266240,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5266240/e289442aa6b3756109bc65b427556ea538efb849/header.jpg?t=1793891257",
+    "store_url": "https://store.steampowered.com/app/5266240/",
+    "price": 8.72,
+    "currency": "EUR",
+    "blurb": "First-person potato peeling with real physics and tool upgrades. Very Positive across 896 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Potato%20Please/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Rip It! Card Collector",
+    "appid": 5088440,
+    "release_date": "2026-10-30",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5088440/c954ef40e8f93cc628fa4993b038ee2e021cdeb7/header_alt_assets_1.jpg?t=1793726040",
+    "store_url": "https://store.steampowered.com/app/5088440/",
+    "price": 6.11,
+    "currency": "EUR",
+    "blurb": "Single-player incremental card-collecting game built for a 3-5 hour session. Very Positive, 813 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Rip%20It%21%20Card%20Collector/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Horses of Hoofprint Bay",
+    "appid": 3727090,
+    "release_date": "2026-11-04",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3727090/05ecc629bbeefe5b64ea3acc33da82009bccf968/header.jpg?t=1793830906",
+    "store_url": "https://store.steampowered.com/app/3727090/",
+    "price": 22.94,
+    "currency": "EUR",
+    "blurb": "Hand-drawn 2D stable sim: train, breed and race horses for prize money. Overwhelmingly Positive from 739 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Horses%20of%20Hoofprint%20Bay/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-missil-tape-to-tape",
+    "game": "Tape to Tape",
+    "outlet": "MISSIL",
+    "score": "9/10",
+    "verdict": "MISSIL gives the hockey game 9/10: reviewer Måns eats pucks, skates more, takes a few hits and loves all of it.",
+    "url": "https://missil.se/spelrecensioner/tape-to-tape/",
+    "published_at": "2026-11-06T00:52:04+00:00"
+   },
+   {
+    "id": "r-pc-gamer-phantom-blade-zero",
+    "game": "Phantom Blade Zero",
+    "outlet": "PC Gamer",
+    "score": "",
+    "verdict": "PC Gamer calls it a martial arts action epic with a dash of Souls and Sekiro that favors feeling good over grinding.",
+    "url": "https://www.pcgamer.com/games/action/phantom-blade-zero-review/",
+    "published_at": "2026-11-05T17:10:23+00:00"
+   },
+   {
+    "id": "r-rps-reviews-virtue-and-a-sledgehammer",
+    "game": "Virtue and a Sledgehammer",
+    "outlet": "Rock Paper Shotgun",
+    "score": "",
+    "verdict": "Rock Paper Shotgun finds it a haunting sci-fi drama that lingered in the reviewer's mind more than a week later.",
+    "url": "https://www.rockpapershotgun.com/virtue-and-a-sledgehammer-review",
+    "published_at": "2026-10-27T16:00:00+00:00"
+   }
+  ],
+  "console_spotlight": [
+   {
+    "game": "Grand Theft Auto VI",
+    "platforms": [
+     "ps5",
+     "xbox"
+    ],
+    "headline": "GTA VI preorders top 7 billion kronor ahead of Nov. 19 launch",
+    "summary": "Rockstar says preorders have brought in nearly 7.5 billion Swedish kronor with two weeks to go, according to MISSIL. The studio also released a fresh batch of launch screenshots.",
+    "sources": [
+     {
+      "name": "MISSIL",
+      "url": "https://missil.se/nyheter/gta-vi-har-redan-dragit-over-750-miljoner-dollar-pa-forhandsbokningar/"
+     },
+     {
+      "name": "MISSIL",
+      "url": "https://missil.se/nyheter/har-kommer-38-nya-bilder-fran-gta-vi/"
+     },
+     {
+      "name": "PC Gamer",
+      "url": "https://www.pcgamer.com/games/grand-theft-auto/rockstar-drops-a-pile-of-new-gta-6-launch-screenshots-featuring-dancers-combat-dogs-and-so-many-pores/"
+     }
+    ]
+   },
+   {
+    "game": "The Legend of Zelda: Ocarina of Time",
+    "platforms": [
+     "switch2"
+    ],
+    "headline": "Ocarina of Time remake launches on Switch 2 and leaks within hours",
+    "summary": "The remake was reportedly dumped as a ROM on launch day, according to Tom's Hardware. PC Gamer reports it already runs at 60 fps on PC, though with visual and performance issues.",
+    "sources": [
+     {
+      "name": "Tom's Hardware",
+      "url": "https://www.tomshardware.com/video-games/nintendo/nintendos-latest-zelda-remake-already-circulating-online-as-a-switch-2-rom-openai-assisted-software-jailbreak-new-game-dumper-let-pirates-share-game-for-free-immediately-following-release"
+     },
+     {
+      "name": "PC Gamer",
+      "url": "https://www.pcgamer.com/software/zelda-ocarina-of-time-remake-reportedly-running-at-60-fps-on-pc-just-hours-after-games-official-nintendo-switch-2-release/"
+     }
+    ]
+   }
+  ],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Emberville",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-07",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2295170/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   },
+   {
+    "game": "Family Time",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-03-31",
+    "date_precision": "quarter",
+    "url": "https://store.steampowered.com/app/5072600/"
+   }
+  ],
+  "watch": [
+   {
+    "channel": "gameranx",
+    "title": "The Legend of Zelda: Ocarina of Time Remake - Before You Buy",
+    "url": "https://www.youtube.com/watch?v=HuF6-efVdyI",
+    "thumbnail": "https://i1.ytimg.com/vi/HuF6-efVdyI/hqdefault.jpg",
+    "blurb": "Gameranx sizes up the long-awaited Ocarina of Time remake on Switch 2.",
+    "published_at": "2026-11-05T23:38:35+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "15 Indie and AA Games Coming in 2027 You CANNOT Ignore",
+    "url": "https://www.youtube.com/watch?v=88mbf7M4U0Y",
+    "thumbnail": "https://i1.ytimg.com/vi/88mbf7M4U0Y/hqdefault.jpg",
+    "blurb": "A countdown of 15 indie and AA games due in 2027, from shooters to narrative adventures.",
+    "published_at": "2026-11-05T13:14:19+00:00"
+   },
+   {
+    "channel": "gameranx",
+    "title": "Godzilla: Destroy All Monsters Melee - Before You Buy",
+    "url": "https://www.youtube.com/watch?v=WVyxHb3OfwI",
+    "thumbnail": "https://i4.ytimg.com/vi/WVyxHb3OfwI/hqdefault.jpg",
+    "blurb": "Gameranx checks whether the GameCube Godzilla brawler holds up as a remake.",
+    "published_at": "2026-11-04T19:50:20+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "Godzilla: Destroy All Monsters Melee Remastered Review - A Classic Returns!",
+    "url": "https://www.youtube.com/watch?v=7-mM-aJvVJk",
+    "thumbnail": "https://i4.ytimg.com/vi/7-mM-aJvVJk/hqdefault.jpg",
+    "blurb": "Full review: does the remastered Godzilla kaiju brawler breathe new life into a classic?",
+    "published_at": "2026-11-02T14:00:01+00:00"
+   }
+  ],
+  "news": [
+   {
+    "headline": "Saudi-led group behind EA buyout reportedly eyes Unity",
+    "summary": "Reuters reports that the consortium led by Saudi Arabia's Public Investment Fund, which took over EA, has held talks about buying Unity.",
+    "url": "https://www.pcgamer.com/gaming-industry/saudi-arabia-owns-ea-and-according-to-a-reuters-report-unity-is-next/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "EA puts 25 restored Wing Commander and Ultima classics on Steam",
+    "summary": "EA released restored versions and ports of 25 classic games on Steam, GOG and the EA App after a producer found a cupboard of old tapes, Rock Paper Shotgun reports.",
+    "url": "https://www.rockpapershotgun.com/steam-gets-a-boatload-of-restored-wing-commanders-and-ultima-ports-after-ea-producer-stumbles-across-cupboard-of-old-tapes",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Nikke PC launcher hit by possible malware infection",
+    "summary": "Shift Up's gacha shooter Goddess of Victory: Nikke suffered a security incident, and its publishers advise anyone who launched it since late September to run a security check.",
+    "url": "https://www.rockpapershotgun.com/goddess-of-victory-nikkes-pc-launcher-suffers-potential-malware-infection-with-its-publishers-suggesting-folks-whove-booted-since-late-september-do-a-security-check",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Pillars of Eternity 1 and 2 get full controller support on PC",
+    "summary": "Obsidian has opened testing for an update that lets players finish both Pillars of Eternity games on PC with a gamepad.",
+    "url": "https://www.rockpapershotgun.com/you-can-now-play-pillars-of-eternity-and-pillars-of-eternity-2-deadfire-with-a-controller-on-pc-from-start-to-finish-thanks-to-a-new-update-open-for-testing",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Switch 2 sales fall 41 percent after price increase",
+    "summary": "Tom's Hardware reports Switch 2 sales dropped 41 percent year over year after a price hike, with investors pressing Nintendo for more big games.",
+    "url": "https://www.tomshardware.com/video-games/nintendo/nintendo-switch-2-sales-dropped-by-41-percent-from-last-year-due-to-consoles-price-increase-pressure-to-release-more-big-games-to-make-up-for-shortfall",
+    "source": "Tom's Hardware"
+   },
+   {
+    "headline": "Zelnick says he doesn't regret delaying GTA 6",
+    "summary": "Take-Two's Strauss Zelnick says shipping an unfinished game rarely ends well, pointing to an unnamed high-profile release that did, PC Gamer reports.",
+    "url": "https://www.pcgamer.com/games/grand-theft-auto/zelnick-doesnt-regret-gta-6s-delay-because-shipping-an-unfinished-game-rarely-ends-well-there-was-a-very-high-profile-release-that-fell-into-this-category/",
+    "source": "PC Gamer"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-06T13:50:01.758766+00:00",
+  "featured": [
+   {
+    "game": "Sid Meier's Civilization® V",
+    "shop": "Steam",
+    "price": 7.49,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 75,
+    "lowest_ever": false,
+    "expires": "2026-11-19T18:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/8930/",
+    "headline": "Civilization V drops to €7.49 on Steam. Buy it.",
+    "body": "Sid Meier's Civilization V costs €7.49 on Steam, 75 percent off its regular €29.99. Steam users rate it Overwhelmingly Positive, the platform's highest rating band and one of the best scores in today's sale.\n\nThe deal runs until November 19 at 18:00 UTC, so there is time, but little reason to wait. At a quarter of the usual price, this is an easy pick for anyone who has had it on a wishlist or skipped it at full price. With a score this strong and a price this low, the risk is minimal.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Borderlands 3",
+    "shop": "Steam",
+    "price": 5.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/397540/",
+    "headline": "Borderlands 3 is 90 percent off at €5.99. Buy it.",
+    "body": "Borderlands 3 is down to €5.99 on Steam, 90 percent off its regular €59.99. Steam users rate it Very Positive. Few full-priced games in this sale take a cut this deep.\n\nThe offer ends November 16 at 18:00 UTC. Borderlands 2 is on sale until the same date for €2.99, so both games cost €8.98 together. That suits anyone who wants to catch up on the series or simply wants a well-reviewed game for less than €6. At a tenth of the usual price, the value is hard to argue with.",
+    "verdict": "buy"
+   }
+  ],
+  "more": [
+   {
+    "game": "Rust",
+    "shop": "Steam",
+    "price": 19.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-09T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/252490/",
+    "advice": "Half off at €19.99 and rated Very Positive. Fair, but smaller cut. Ends November 9.",
+    "verdict": "wait"
+   },
+   {
+    "game": "No Man's Sky",
+    "shop": "Steam",
+    "price": 23.59,
+    "regular": 58.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": false,
+    "expires": "2026-11-09T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/275850/",
+    "advice": "60 percent off at €23.59, Very Positive on Steam. Solid deal through November 9.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Borderlands 2",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/49520/",
+    "advice": "€2.99 after a 90 percent cut, rated Very Positive. Pairs well with Borderlands 3.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Grand Theft Auto IV: The Complete Edition",
+    "shop": "Steam",
+    "price": 5.99,
+    "regular": 19.99,
+    "currency": "EUR",
+    "cut": 70,
+    "lowest_ever": false,
+    "expires": "2026-11-19T18:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/12210/",
+    "advice": "€5.99, 70 percent off, rated Very Positive. Good value through November 19.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Assassin's Creed® Odyssey",
+    "shop": "Steam",
+    "price": 11.99,
+    "regular": 59.99,
+    "currency": "EUR",
+    "cut": 80,
+    "lowest_ever": false,
+    "expires": "2026-11-10T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/812140/",
+    "advice": "80 percent off at €11.99, rated Very Positive. Strong price; ends November 10.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Rise of the Tomb Raider™",
+    "shop": "Steam",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": false,
+    "expires": "2026-11-06T17:00:00+00:00",
+    "steam_rating": "Very Positive",
+    "url": "https://store.steampowered.com/app/391220/",
+    "advice": "€2.99, 90 percent off, Very Positive. Ends November 6 at 17:00 UTC.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Teardown",
+    "shop": "Steam",
+    "price": 14.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-08T13:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/1167630/",
+    "advice": "Overwhelmingly Positive at €14.99, half off. Ends November 8 at 13:00 UTC.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Brotato",
+    "shop": "Steam",
+    "price": 2.49,
+    "regular": 4.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": false,
+    "expires": "2026-11-16T18:00:00+00:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "url": "https://store.steampowered.com/app/1942280/",
+    "advice": "Overwhelmingly Positive for €2.49, half off. Cheap pick through November 16.",
+    "verdict": "buy"
+   }
+  ],
+  "source": "steam"
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 450,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 13,
+   "ms": 159,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 26,
+   "ms": 304,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 309,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 16,
+   "ms": 1463,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 398,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 60,
+   "ms": 217,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 61,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 239,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 27,
+   "ms": 402,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": true,
+   "count": 15,
+   "ms": 148,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": true,
+   "count": 10,
+   "ms": 98,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 775,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 574,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam specials",
+   "ok": true,
+   "count": 100,
+   "ms": 409,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal",
+   "ok": false,
+   "count": 0,
+   "ms": 0,
+   "error": "ITAD_API_KEY not set; using Steam specials",
+   "skipped": true
+  }
+ ]
+}
