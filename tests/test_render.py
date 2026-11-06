@@ -10,7 +10,7 @@ import pytest
 
 from newsroom import ROOT
 from newsroom.config import load_config
-from newsroom.render import build
+from newsroom.render import build, quote_slot
 
 FIXTURES = ROOT / "tests" / "fixtures"
 LINK_RE = re.compile(r'(?:href|src)="([^"]+)"')
@@ -95,3 +95,11 @@ def test_opinion_column(site):
 def test_column_not_on_earlier_fronts(tmp_path, cfg):
     build(cfg, data_dir=FIXTURES, out_dir=tmp_path / "out", front_edition="2026-11-02")
     assert "Build the PC this winter" not in (tmp_path / "out" / "index.html").read_text(encoding="utf-8")
+
+
+def test_pull_quote_is_not_next_to_its_paragraph():
+    paras = ["a", "b QUOTE", "c", "d", "e"]
+    assert quote_slot(paras, "QUOTE") == 3                     # not right after (or before) paragraph 2
+    assert quote_slot(["x QUOTE", "b", "c", "d"], "QUOTE") == 2
+    assert quote_slot(paras[:3], "QUOTE") == 0                 # too short for a pull quote
+    assert quote_slot(paras, "") == 0

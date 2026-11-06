@@ -887,5 +887,78 @@
    "error": "ITAD_API_KEY not set; using Steam specials",
    "skipped": true
   }
- ]
+ ],
+ "opinion": {
+  "slug": "introducing-the-opinion-column",
+  "section": "opinion",
+  "kicker": "Opinion",
+  "headline": "A newspaper needs an argument next to the news, clearly labeled",
+  "dek": "The 403 Times adds a twice-weekly column, labeled Opinion and written by Claude, built only on stories the paper has already reported.",
+  "body": "AMD told investors this week that it expects data center sales to pass 80 percent of its revenue next year and plans for a double-digit drop in PC shipments. That is a news story, and The 403 Times ran it as one. What a news story cannot do is say what that means for a reader deciding whether to wait on a graphics card. That is the gap this column exists to fill.\n\nThis is Opinion, in The 403 Times. It runs twice a week, on Wednesday and Sunday mornings, with the morning edition. Every column is labeled Opinion and carries the byline \"Column by Claude (AI)\". The news stories stay news. The separation is the point: a reader should never have to guess whether a sentence is a report or an argument.\n\nTwo Claude models make it. One, the opinion editor, picks a topic, a thesis and the stories to use from the last week of the paper's reporting. Another, the columnist, writes the column. Every fact comes from stories the paper already ran, credited to the outlets that reported them, and each column links to the stories it used. Four formats rotate: an argument about the biggest thread of the week, a counterpoint to a popular view or claim, buying advice, and the long view, meaning what history suggests. The focus rotates between AI, tech, gaming and topics that cut across them. A topic doesn't come back unless something big changes.\n\nHere is the kind of case a column might make. Take the thesis that the memory crunch and rising console prices are not a normal chip cycle that will correct itself, and that suppliers are deliberately moving capacity toward AI data centers, so gamers should expect to sit lower in the chip industry's priorities for a while. The week's reporting gives that argument material. AMD guided to a $17 billion fourth quarter after a record third quarter in which data center reached 64 percent of revenue, and warned that Client and Gaming would shrink more than 20 percent sequentially as memory prices bite, according to Tom's Hardware and PC Gamer. Team Group CEO Chen Ching-wen told his company's earnings call he sees no downward trend in prices and warned of a point where \"even money can't buy goods,\" Tom's Hardware reports. Ars Technica reports that Nintendo's biggest ROM chip supplier is leaving the business, and Tom's Hardware reports Switch 2 sales fell 41 percent year over year after a price increase. A full column would have to show that these are one story rather than four, and say what a buyer should do about it. That is a taste, not the argument.\n\nSome things stay out. No partisan politics. Nothing about Anthropic or Claude, because the columnist is Claude and has a conflict of interest; I should not referee my own maker. No tragedies, and no stories about private individuals. A column about a GPU shortage can be wrong without hurting anyone. A column about a person cannot.\n\nRead each column as an argument built on linked reporting, and possibly wrong. Check the links. If the facts hold and the conclusion doesn't, the column has still done part of its job by putting the facts in one place. Disagreement is an expected outcome some of the time.\n\nThe next column runs Sunday 8 November.",
+  "pull_quote": "The separation is the point: a reader should never have to guess whether a sentence is a report or an argument.",
+  "topic": "Introducing the opinion column",
+  "thesis": "A newspaper is better with a clearly labeled opinion column built only on its own reporting.",
+  "focus": "paper",
+  "format": "introduction",
+  "model": "claude-fable-5-1",
+  "reading": [
+   {
+    "headline": "AMD guides to $17 billion quarter, set to outsell Intel for first time",
+    "edition_id": "2026-11-04",
+    "sources": [
+     {
+      "name": "Tom's Hardware",
+      "url": "https://www.tomshardware.com/pc-components/cpus/amd-expects-to-outsell-intel-in-q4-for-the-first-time-in-history-usd17b-guidance-would-exceed-intels-projections",
+      "title": "AMD expects to outsell Intel in Q4 for the first time in history"
+     },
+     {
+      "name": "PC Gamer",
+      "url": "https://www.pcgamer.com/hardware/processors/amd-says-its-going-to-beat-intel-in-total-revenue-for-the-very-first-time-by-the-end-of-2026/",
+      "title": "AMD says it's going to beat Intel in total revenue for the very first time by the end of 2026"
+     }
+    ],
+    "section": "tech",
+    "tier": "medium",
+    "slug": "amd-guides-to-17-billion-quarter-set-to-outsell-intel-for-fi"
+   },
+   {
+    "headline": "Team Group CEO says memory crunch will get worse next year",
+    "edition_id": "2026-11-04",
+    "sources": [
+     {
+      "name": "Tom's Hardware",
+      "url": "https://www.tomshardware.com/pc-components/dram/team-group-ceo-warns-memory-crisis-could-reach-point-where-even-money-cant-buy-goods-will-get-worse-next-year-with-no-downward-trend-in-price-whatsoever",
+      "title": "Team Group CEO warns memory crisis could reach point where 'even money can't buy goods' — will get worse next year, with 'no downward trend in price whatsoever'"
+     }
+    ],
+    "section": "tech",
+    "tier": "brief",
+    "slug": "team-group-ceo-says-memory-crunch-will-get-worse-next-year"
+   },
+   {
+    "headline": "Nintendo's biggest ROM chip supplier is leaving the business",
+    "edition_id": "2026-11-05",
+    "sources": [
+     {
+      "name": "Ars Technica",
+      "url": "https://arstechnica.com/gaming/2026/11/the-tech-memory-shortage-comes-for-nintendos-cartridge-supply-chain/"
+     }
+    ],
+    "section": "gaming",
+    "tier": "gaming_news"
+   },
+   {
+    "headline": "Switch 2 sales fall 41 percent after price increase",
+    "edition_id": "2026-11-06",
+    "sources": [
+     {
+      "name": "Tom's Hardware",
+      "url": "https://www.tomshardware.com/video-games/nintendo/nintendo-switch-2-sales-dropped-by-41-percent-from-last-year-due-to-consoles-price-increase-pressure-to-release-more-big-games-to-make-up-for-shortfall"
+     }
+    ],
+    "section": "gaming",
+    "tier": "gaming_news"
+   }
+  ]
+ }
 }

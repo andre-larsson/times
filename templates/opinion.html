@@ -6,7 +6,6 @@
 
 {% block main %}
 {% set paras = column.body | paragraphs %}
-{% set quote_after = 2 if column.pull_quote and paras | length > 3 else 0 %}
 <article class="article wrap sec-opinion">
   <header class="article-head">
     {{ m.kicker(column) }}
@@ -28,7 +27,7 @@
       <div class="article-body">
         {% for p in paras %}
         <p>{{ p }}</p>
-        {% if loop.index == quote_after %}
+        {% if loop.index == column.quote_after %}
         <blockquote class="pull-quote"><p>{{ column.pull_quote }}</p></blockquote>
         {% endif %}
         {% endfor %}

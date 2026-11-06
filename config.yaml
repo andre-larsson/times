@@ -86,10 +86,10 @@ llm:
 
 opinion:                              # the opinion column: Opus picks a topic from recent editions, Fable writes it
   enabled: true
-  days: [sun]                         # weekdays it can run (mon … sun), only in full editions
-  every_weeks: 2                      # 2 = every other week; 1 = every listed day, every week
+  days: [wed, sun]                    # weekdays it can run (mon … sun), only in full editions
+  every_weeks: 1                      # 1 = every listed day, every week; 2 = every other week
   words: 800
-  lookback_days: 14                   # the editions a topic is picked from
+  lookback_days: 7                    # the editions a topic is picked from
   front_days: 7                       # how long the latest column stays on the front page
 
 links:                                # the no-AI links edition

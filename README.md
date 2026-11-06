@@ -46,7 +46,7 @@ uv run python -m newsroom generate --mode full --opinion force --llm claude-code
 no MCP servers and no project context, on your Claude subscription instead of API credits. It is for
 local development only and refuses to run in GitHub Actions; the workflow always uses the API.
 
-The opinion column (Opus picks the topic, Fable writes it) runs every other Sunday in full editions;
+The opinion column (Opus picks the topic, Fable writes it) runs on Wednesdays and Sundays in full editions;
 `--opinion force` writes one now and `--opinion off` skips it. See `opinion:` in config.yaml.
 
 `generate` without `--mode` (= `auto`) only builds an edition when a slot in `schedule.editions` has

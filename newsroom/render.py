@@ -49,6 +49,20 @@ def load_editions(data_dir: Path) -> list[dict[str, Any]]:
     return editions
 
 
+def quote_slot(paragraphs: list[str], quote: str) -> int:
+    """After which paragraph (1-based) a pull quote goes: not next to the paragraph it's taken from.
+
+    0 means no pull quote (no quote, a short column, or no slot far enough from the source).
+    """
+    if not quote or len(paragraphs) < 4:
+        return 0
+    source = next((i for i, p in enumerate(paragraphs) if quote in p), None)
+    for after in range(2, len(paragraphs) - 1):                  # between paragraphs[after-1] and [after]
+        if source not in (after - 1, after):
+            return after
+    return 0
+
+
 def link_reviews(gaming: dict[str, Any]) -> dict[str, Any]:
     """Attach each new game's reviews (by id) so templates can list them."""
     by_id = {r["id"]: r for r in gaming.get("reviews", []) if r.get("id")}
@@ -273,7 +287,8 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         if not col:
             continue
         col.update(edition_id=ed["edition_id"], edition_generated_at=ed.get("generated_at"),
-                   path=article_path(ed["edition_id"], col["slug"]), section="opinion")
+                   path=article_path(ed["edition_id"], col["slug"]), section="opinion",
+                   quote_after=quote_slot(SiteBuilder.paragraphs(col.get("body")), col.get("pull_quote") or ""))
         for r in col.get("reading", []):
             path = article_path(r["edition_id"], r["slug"]) if r.get("tier") in PAGE_TIERS and r.get("slug") else ""
             if path in pages:
