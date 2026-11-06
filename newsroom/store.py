@@ -13,6 +13,20 @@ def edition_path(data_dir: Path, edition_id: str) -> Path:
     return data_dir / "editions" / year / month / f"{rest}.json"
 
 
+def load_edition(data_dir: Path, edition_id: str) -> dict[str, Any] | None:
+    path = edition_path(data_dir, edition_id)
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
+
+
+def all_editions(data_dir: Path) -> list[dict[str, Any]]:
+    """Every saved edition, oldest first."""
+    root = data_dir / "editions"
+    if not root.exists():
+        return []
+    editions = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(root.rglob("*.json"))]
+    return sorted(editions, key=lambda e: e["edition_id"])
+
+
 def latest_edition(data_dir: Path) -> dict[str, Any] | None:
     files = sorted((data_dir / "editions").rglob("*.json"))
     if not files:

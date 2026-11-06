@@ -33,6 +33,7 @@ def test_expected_pages_exist(site):
         "index.html", "ai/index.html", "tech/index.html", "gaming/index.html", "deals/index.html",
         "archive/index.html", "archive/2026-11-02/index.html", "archive/2026-11-03/index.html",
         "2026/11/03/kestrel-2-open-model-catches-big-labs/index.html",
+        "2026/11/03/build-the-pc-this-winter/index.html", "opinion/index.html",
         "404.html", "feed.xml", "static/style.css", "static/favicon.svg",
     ]:
         assert (site / rel).is_file(), rel
@@ -78,3 +79,19 @@ def test_links_edition_renders(tmp_path, cfg):
 def test_refuses_to_wipe_project(cfg):
     with pytest.raises(SystemExit):
         build(cfg, data_dir=FIXTURES, out_dir=ROOT)
+
+
+def test_opinion_column(site):
+    front = (site / "index.html").read_text(encoding="utf-8")
+    assert "Build the PC this winter, not next year" in front              # on the front page for a week
+    assert '/times/opinion/"' in front                                     # and in the nav
+    page = (site / "2026/11/03/build-the-pc-this-winter/index.html").read_text(encoding="utf-8")
+    assert "Column by Claude (AI)" in page and 'class="pull-quote"' in page
+    assert 'href="/times/2026/11/03/arcwave-r9-review-roundup/"' in page   # reporting links to our article
+    assert 'href="https://example.com/circuit-weekly/budget-gpus"' in page  # briefs link to the source
+    assert "build-the-pc-this-winter" in (site / "feed.xml").read_text(encoding="utf-8")
+
+
+def test_column_not_on_earlier_fronts(tmp_path, cfg):
+    build(cfg, data_dir=FIXTURES, out_dir=tmp_path / "out", front_edition="2026-11-02")
+    assert "Build the PC this winter" not in (tmp_path / "out" / "index.html").read_text(encoding="utf-8")

@@ -137,3 +137,44 @@ def write_deals(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> dict
     f = d.get("featured") or {}
     system = system_prompt("deals", featured_min=f.get("min", 1), featured_max=f.get("max", 2))
     return llm.call("deals", system, data_block(material, "Today's deals:"), DEALS_SCHEMA)
+
+
+# ── opinion column: the opinion editor (Opus) picks, the columnist (Fable) writes ──
+
+COLUMN_FORMATS = {
+    "argument": "Take a clear position on the biggest thread of the period and defend it.",
+    "counterpoint": "Take a widely held view, a company's claim or an argument in the news, and argue "
+                    "against it, fairly.",
+    "advice": "What the news means for the reader's money, hardware or games: buy, wait, upgrade or "
+              "skip, and why.",
+    "long_view": "Put a current story in its history: what happened the last time something like it "
+                 "happened, and what that suggests now.",
+}
+COLUMN_FOCUS = {
+    "ai": "AI",
+    "tech": "Tech",
+    "gaming": "Gaming",
+    "cross": "a topic that spans sections, e.g. AI demand driving PC hardware prices",
+}
+
+
+def pick_opinion(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> dict[str, Any]:
+    """material: stories, earlier_columns, allowed_formats, allowed_focus (the rotation, decided in code)."""
+    schema = obj({
+        "topic": STR, "focus": {"type": "string", "enum": material["allowed_focus"]},
+        "format": {"type": "string", "enum": material["allowed_formats"]},
+        "thesis": STR, "story_ids": arr(STR),
+    })
+    o = cfg.get("opinion") or {}
+    system = system_prompt("opinion_pick", interests=cfg.get("interests", "").strip(),
+                           lookback_days=o.get("lookback_days", 14))
+    return llm.call("opinion_pick", system, data_block(material, "Recent stories and the rotation:"), schema)
+
+
+OPINION_SCHEMA = obj({"headline": STR, "dek": STR, "body": STR, "pull_quote": STR})
+
+
+def write_opinion(llm: LLM, cfg: dict[str, Any], assignment: dict[str, Any]) -> dict[str, Any]:
+    words = (cfg.get("opinion") or {}).get("words", 800)
+    system = system_prompt("opinion", words=words)
+    return llm.call("opinion", system, data_block(assignment, "The assignment and the reporting:"), OPINION_SCHEMA)

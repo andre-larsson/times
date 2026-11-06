@@ -273,5 +273,24 @@
         "steam_rating": "Very Positive", "verdict": "wait", "advice": "Lovely farming game, but it's been 60% off twice this year.", "url": "https://example.com/steam/quiet-orchard" }
     ]
   },
+  "opinion": {
+    "slug": "build-the-pc-this-winter",
+    "section": "opinion",
+    "kicker": "Opinion",
+    "headline": "Build the PC this winter, not next year",
+    "dek": "Cheaper chips, falling SSD prices and discounted graphics cards line up for once, and waiting for next year's parts is the worse bet.",
+    "body": "A 2 TB SSD costs about €95 this month, the lowest price in almost two years, according to The Byte Ledger. That alone would not be a reason to build a computer. It is the company it keeps that matters.\n\nFor the first time in a while, every big part of a desktop is getting cheaper or better at the same moment. Anyone who has been putting off an upgrade should stop waiting.\n\nStart with the processor. Circuit Weekly and The Byte Ledger found Arcwave's new R9 about 18 percent faster than last year's flagship in multi-threaded work, and it launched at a lower price. It also runs cool enough for a mid-range air cooler, which is money saved twice.\n\nGraphics cards point the same way. Entry-level cards sell for about 10 percent under their launch prices, Circuit Weekly reports, as stores clear stock ahead of next year's refresh.\n\nThe case for waiting is real: new parts always come, and analysts quoted by The Byte Ledger expect SSD prices to bottom out in December. But a bottom is only visible afterward, and the saving left on a €95 drive is small.\n\nCheap parts now are worth more than better parts later.\n\nSo buy the processor and the storage this winter, and pick the graphics card last, when the refresh makes the old models cheaper still.",
+    "pull_quote": "Cheap parts now are worth more than better parts later.",
+    "topic": "Cheaper PC parts this winter",
+    "thesis": "With CPU, SSD and GPU prices all falling at once, building a PC now beats waiting for next year's parts.",
+    "focus": "tech",
+    "format": "advice",
+    "model": "claude-fable-5-1",
+    "reading": [
+      {"headline": "Arcwave's new desktop chip is faster, cooler and cheaper", "edition_id": "2026-11-03", "section": "tech", "tier": "featured", "slug": "arcwave-r9-review-roundup", "sources": [{"name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/arcwave-r9-review"}]},
+      {"headline": "SSD prices fall for a third straight month", "edition_id": "2026-11-03", "section": "tech", "tier": "medium", "slug": "ssd-prices-fall-third-month", "sources": [{"name": "The Byte Ledger", "url": "https://example.com/byte-ledger/ssd-prices"}]},
+      {"headline": "Budget graphics cards now sell below launch price", "edition_id": "2026-11-03", "section": "tech", "tier": "brief", "slug": "budget-gpu-below-msrp", "sources": [{"name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/budget-gpus"}]}
+    ]
+  },
   "links": []
 }

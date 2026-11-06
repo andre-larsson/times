@@ -160,3 +160,16 @@
   {%- if l.excerpt %}<p class="link-excerpt">{{ l.excerpt }}</p>{% endif %}
 </li>
 {%- endmacro %}
+
+{# ── Opinion ────────────────────────────────────────────────────────────── #}
+
+{% macro column_card(c, size='md') -%}
+<article class="column-card sec-opinion">
+  {{ kicker(c) }}
+  <h3 class="hl hl-{{ size }}"><a class="hl-link" href="{{ c | article_url }}">{{ c.headline }}</a></h3>
+  {%- if c.dek %}
+  <p class="teaser-text">{{ c.dek }}</p>
+  {%- endif %}
+  <p class="meta"><span>Column by Claude (AI)</span><span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ c.edition_generated_at | iso }}">{{ c.edition_generated_at | date_short }}</time></p>
+</article>
+{%- endmacro %}

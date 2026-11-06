@@ -63,6 +63,8 @@ models:
   deals:    claude-opus-5-5
   discover: claude-opus-5-5
   probe:    claude-haiku-5-5
+  opinion_pick: claude-opus-5-5       # the opinion editor picks the column's topic
+  opinion:  claude-fable-5-1          # the columnist writes it
 
 budget:
   monthly_usd: 20                     # paced over the calendar month, like the Console workspace spend limit
@@ -79,7 +81,16 @@ llm:
   triage_chunk: 40                    # items per triage call (structured output from Haiku runs ~1 token per character)
   timeout_seconds: 240
   reduced: { featured_max: 1, medium_max: 3 }
-  max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000 }
+  max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000,
+                opinion_pick: 1500, opinion: 4000 }
+
+opinion:                              # the opinion column: Opus picks a topic from recent editions, Fable writes it
+  enabled: true
+  days: [sun]                         # weekdays it can run (mon … sun), only in full editions
+  every_weeks: 2                      # 2 = every other week; 1 = every listed day, every week
+  words: 800
+  lookback_days: 14                   # the editions a topic is picked from
+  front_days: 7                       # how long the latest column stays on the front page
 
 links:                                # the no-AI links edition
   per_section: 12                     # AI and Tech headline lists
@@ -133,6 +144,7 @@ sources:
     info_limit: 25                    # games to look up for ratings and Metascore
 
 pricing:                              # USD per million tokens (Nov 2026)
+  claude-fable-5-1:  { input: 10.00, output: 50.00, cache_read: 0.25, cache_write_5m: 12.50 }
   claude-opus-5-5:   { input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00 }
   claude-sonnet-5-5: { input: 2.00, output: 10.00, cache_read: 0.10, cache_write_5m: 2.50 }
   claude-haiku-5-5:  { input: 0.10, output: 0.50,  cache_read: 0.01, cache_write_5m: 0.125 }

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}{{ section.name }} · {{ site.title }}{% endblock %}
+
+{% block main %}
+<header class="section-hero sec-opinion">
+  <div class="wrap">
+    <h1 class="section-title">{{ section.name }}</h1>
+    <p class="section-blurb">{{ section.blurb }}</p>
+  </div>
+</header>
+
+<div class="wrap archive">
+  <ol class="column-list">
+    {% for c in columns %}
+    <li>{{ m.column_card(c, 'lg' if loop.first else 'md') }}</li>
+    {% endfor %}
+  </ol>
+</div>
+{% endblock %}

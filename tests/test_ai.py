@@ -27,6 +27,7 @@ class FakeLLM(LLM):
 
     def call(self, task, system, user, schema, max_tokens=None):
         self.tally.check()
+        self.schemas = {**getattr(self, "schemas", {}), task: schema}
         call = Call(task=task, model=self.model_for(task), backend=self.backend, input_tokens=1000,
                     output_tokens=200, usd=0.01 if self.backend == "api" else 0.0, equivalent_usd=0.01)
         if task in self.fail:
@@ -79,6 +80,16 @@ class FakeLLM(LLM):
         return {"featured": [{"id": first["id"], "headline": f"{first['game']}: buy it", "body": "Good.",
                               "verdict": "buy"}],
                 "more": [{"id": d["id"], "advice": "Fine.", "verdict": "wait"} for d in rest]}
+
+
+    def _opinion_pick(self, m):
+        return {"topic": "Cheaper parts", "focus": m["allowed_focus"][0], "format": m["allowed_formats"][0],
+                "thesis": "Buy now.", "story_ids": [r["id"] for r in m["stories"][:3]] + ["made-up-id"]}
+
+    def _opinion(self, a):
+        assert a["stories"] and all("headline" in s for s in a["stories"])
+        return {"headline": f"Column: {a['topic']}", "dek": "Buy now.",
+                "body": "One.\n\nTwo is the point.\n\nThree.\n\nFour.", "pull_quote": "Two is the point."}
 
 
 def factory(fail=None):

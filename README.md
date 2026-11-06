@@ -39,11 +39,15 @@ uv run python -m newsroom serve --data-dir _work/data                   # previe
 # Claude-written editions
 uv run python -m newsroom generate --mode full --llm claude-code --data-dir _work/data   # on your Claude subscription
 uv run python -m newsroom generate --mode full --data-dir _work/data                     # on the API key (costs credits)
+uv run python -m newsroom generate --mode full --opinion force --llm claude-code --data-dir _work/data   # with an opinion column
 ```
 
 `--llm claude-code` runs each Claude call through `claude -p` (Claude Code in print mode) with no tools,
 no MCP servers and no project context, on your Claude subscription instead of API credits. It is for
 local development only and refuses to run in GitHub Actions; the workflow always uses the API.
+
+The opinion column (Opus picks the topic, Fable writes it) runs every other Sunday in full editions;
+`--opinion force` writes one now and `--opinion off` skips it. See `opinion:` in config.yaml.
 
 `generate` without `--mode` (= `auto`) only builds an edition when a slot in `schedule.editions` has
 passed without one; that is what the hourly workflow runs. Local test runs should use
@@ -66,11 +70,12 @@ newsroom/            Python package: `python -m newsroom <command>`
   preflight.py       picks full / reduced / links / skip (key, budget pace, credit probe)
   ai_edition.py      triage → editor → full text → writers → assembly, with partial fallbacks
   desk.py, llm.py    the Claude tasks and schemas; the API and claude-code backends, cost tally
+  opinion.py         the opinion column: when it's due, format/focus rotation, pick → write
   budget.py          data/usage.json and monthly pacing
   render.py          edition JSON → static HTML in _site/
   serve.py           local preview server under the /times/ base path
 prompts/             style guide and per-task instructions for Claude
-templates/           Jinja2 templates (front, section, gaming, deals, article, archive, 404, feed)
+templates/           Jinja2 templates (front, section, gaming, deals, article, opinion, archive, 404, feed)
 static/              style.css, favicon, self-hosted fonts (SIL Open Font License)
 tests/fixtures/      sample editions and feeds (made-up names; links go to example.com)
 data/                real editions, committed by the workflow

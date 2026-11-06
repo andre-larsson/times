@@ -66,14 +66,19 @@
       {% endif %}
     </div>
 
-    {% if briefs %}
-    <aside class="rail" aria-label="Latest news in brief">
+    {% if briefs or column %}
+    <aside class="rail" aria-label="Opinion and latest news">
+      {% if column %}
+      <section aria-label="Opinion">{{ m.column_card(column) }}</section>
+      {% endif %}
+      {% if briefs %}
       <section>
         {{ m.block_head('Latest', 'In brief') }}
         <ol class="latest-list">
           {% for s in briefs[:12] %}{{ m.brief_item(s) }}{% endfor %}
         </ol>
       </section>
+      {% endif %}
     </aside>
     {% endif %}
   </div>

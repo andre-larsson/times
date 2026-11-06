@@ -18,6 +18,8 @@ from . import ROOT
 TIERS = ("featured", "medium", "brief")
 PAGE_TIERS = ("featured", "medium")            # tiers that get their own article page
 AI_SECTIONS = ("ai", "tech")                   # sections built from tiered stories
+OPINION_SECTION = {"slug": "opinion", "name": "Opinion",
+                   "blurb": "Columns by Claude (AI): arguments built on the paper's reporting."}
 CURRENCY_FORMATS = {"EUR": "€{:.2f}", "USD": "${:.2f}", "GBP": "£{:.2f}", "SEK": "{:.0f} kr"}
 POSITIVE_RATINGS = {"overwhelmingly positive", "very positive", "positive", "mostly positive"}
 NEGATIVE_RATINGS = {"mostly negative", "negative", "very negative", "overwhelmingly negative"}
@@ -74,9 +76,11 @@ class SiteBuilder:
         self.out = out_dir
         self.pages = 0
         self.now = dt.datetime.now(dt.timezone.utc)
+        self.columns: list[dict[str, Any]] = []         # opinion columns, newest first
+        self.front_days = int((cfg.get("opinion") or {}).get("front_days", 7))
 
         css = (ROOT / "static" / "style.css").read_bytes()
-        nav = [("front", "Front", self.url(""))] + [
+        self.nav = [("front", "Front", self.url(""))] + [
             (s["slug"], s["name"], self.url(f"{s['slug']}/")) for s in cfg["sections"]
         ] + [("archive", "Archive", self.url("archive/"))]
 
@@ -88,7 +92,7 @@ class SiteBuilder:
             lstrip_blocks=True,
         )
         self.env.globals.update(
-            url=self.url, site=self.site, sections=self.sections, nav=nav, preview=preview,
+            url=self.url, site=self.site, sections=self.sections, nav=self.nav, preview=preview,
             section_name=self.section_name, build_id=hashlib.sha1(css).hexdigest()[:8],
             verdicts=VERDICTS, edition_time=(cfg["schedule"].get("editions") or [""])[0],
         )
@@ -105,6 +109,19 @@ class SiteBuilder:
 
     def section_name(self, slug: str) -> str:
         return self.sections.get(slug, {}).get("name", slug.title())
+
+    def add_nav(self, slug: str, label: str, path: str, before: str = "archive") -> None:
+        at = next((i for i, n in enumerate(self.nav) if n[0] == before), len(self.nav))
+        self.nav.insert(at, (slug, label, self.url(path)))
+
+    def column_for(self, edition: dict[str, Any]) -> dict[str, Any] | None:
+        """The latest opinion column as of this edition, if it's recent enough for its front page."""
+        day = dt.date.fromisoformat(edition["edition_id"][:10])
+        for c in self.columns:
+            age = (day - dt.date.fromisoformat(c["edition_id"][:10])).days
+            if 0 <= age < self.front_days and c["edition_id"] <= edition["edition_id"]:
+                return c
+        return None
 
     def article_url(self, story: dict[str, Any]) -> str:
         if story.get("path"):
@@ -221,6 +238,7 @@ class SiteBuilder:
             "gaming": gaming,
             "deals": edition.get("deals") or {},
             "links_by_section": links_by_section,
+            "column": self.column_for(edition),
         }
 
 
@@ -248,6 +266,21 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
             s["edition_generated_at"] = ed.get("generated_at")
             if s["tier"] in PAGE_TIERS:
                 s["path"] = article_path(ed["edition_id"], s["slug"])
+
+    pages = {s["path"] for ed in editions for s in ed.get("stories", []) if s.get("path")}
+    for ed in editions:
+        col = ed.get("opinion")
+        if not col:
+            continue
+        col.update(edition_id=ed["edition_id"], edition_generated_at=ed.get("generated_at"),
+                   path=article_path(ed["edition_id"], col["slug"]), section="opinion")
+        for r in col.get("reading", []):
+            path = article_path(r["edition_id"], r["slug"]) if r.get("tier") in PAGE_TIERS and r.get("slug") else ""
+            if path in pages:
+                r["path"] = path                     # our article page; otherwise article_url uses the source
+    b.columns = [ed["opinion"] for ed in reversed(editions) if ed.get("opinion")]
+    if b.columns:
+        b.add_nav("opinion", "Opinion", "opinion/")
 
     by_id = {e["edition_id"]: e for e in editions}
     if front_edition and front_edition not in by_id:
@@ -305,6 +338,16 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
             b.write(s["path"], "article.html", active=s["section"], story=s, edition=ed,
                     related=related, briefs=latest_briefs, current_edition=ed)
 
+    # Opinion: one page per column, and the list of all columns
+    for col in b.columns:
+        ed = by_id[col["edition_id"]]
+        others = [c for c in b.columns if c is not col][:4]
+        b.write(col["path"], "opinion.html", active="opinion", column=col, edition=ed, current_edition=ed,
+                more_columns=others, briefs=b.front_context(ed)["briefs"][:6])
+    if b.columns:
+        b.write("opinion/", "opinion_index.html", active="opinion", section=OPINION_SECTION, **common,
+                columns=b.columns)
+
     # Archive
     summaries = []
     for ed in newest_first:
@@ -320,7 +363,9 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
 
     # 404 and feed
     b.write("404.html", "404.html", active="", **common)
-    feed_items = [s for ed in newest_first[:20] for s in ed.get("stories", []) if s["tier"] in PAGE_TIERS]
+    feed_items = [s for ed in newest_first[:20]
+                  for s in ([ed["opinion"]] if ed.get("opinion") else []) + ed.get("stories", [])
+                  if s.get("path")]
     b.write("feed.xml", "feed.xml", **common, items=feed_items[:50],
             updated=front.get("generated_at"))
     return b.pages

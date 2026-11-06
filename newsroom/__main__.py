@@ -36,6 +36,9 @@ def main(argv: list[str] | None = None) -> int:
     add_data_dir(gen_p)
     gen_p.add_argument("--mode", default="auto", choices=("auto", "full", "reduced", "links", "skip"),
                        help="auto = follow the schedule and the pre-run check; others force a run now")
+    gen_p.add_argument("--opinion", default="auto", choices=("auto", "force", "off"),
+                       help="the opinion column: auto = when due (config opinion.*), force = write one "
+                            "now (needs an AI edition), off = never")
     gen_p.add_argument("--now", type=dt.datetime.fromisoformat, help="pretend it is this time (testing)")
     gen_p.add_argument("--dump", type=Path, help="also write everything fetched to this JSON file")
     gen_p.add_argument("--llm", choices=("api", "claude-code"),
@@ -66,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
         from .generate import dump_harvest, generate, report, write_github_outputs
 
         now = args.now.astimezone(dt.timezone.utc) if args.now else None
-        result = generate(cfg, args.data_dir, args.mode, now=now, backend=args.llm)
+        result = generate(cfg, args.data_dir, args.mode, now=now, backend=args.llm, column=args.opinion)
         print(report(result))
         if result.path:
             print(f"\nWrote {result.path}")

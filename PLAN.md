@@ -21,7 +21,8 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Look | **Tabloid-style news site**, inspired by Swedish evening papers like Expressen but **not a copy**: own logo, colors, fonts and layout |
 | Language | **English** (Swedish sources such as MISSIL are summarized in English) |
 | Build / hosting | GitHub Actions → GitHub Pages (`actions/deploy-pages`) |
-| AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
+| AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**; **Fable writes the opinion column**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
+| Opinion | **A column every other Sunday** (~800 words): Opus picks the topic from the last two weeks of editions, Fable writes it. Format and focus rotate, so it stays varied |
 | Budget | **~$20/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $25 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -119,6 +120,30 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 - **Links:** plain store links, no affiliate links.
 - **Labels:** "Price checked 07:00. Prices change." Each deal is credited to IsThereAnyDeal.
 - **Cost:** written in one Opus call for the whole section.
+
+### Opinion column
+
+An argued column of about 800 words, **every other Sunday** (`opinion.days: [sun]`, `every_weeks: 2`).
+For twice a week instead, set `days: [wed, sun]` and `every_weeks: 1`.
+
+- **Two calls.** The opinion editor (`opinion_pick`, Opus) reads the headlines, deks and key points of
+  the last 14 days of editions and picks a topic, a thesis and 3–8 stories. The columnist (`opinion`,
+  **Fable**) writes the column from those stories' full text. No new sources: the facts are the paper's
+  own reporting, credited to the original outlets, and the column links to the stories it used.
+- **Variety, enforced in code.** The pick call's schema only allows a **format** that neither of the last
+  two columns used (argument, counterpoint, advice, long view) and a **focus** different from the last
+  column's (AI, Tech, Gaming, or cross-section). Every earlier column's topic and thesis go to the editor,
+  which must not return to a topic without a big new development.
+- **Off limits:** partisan politics, Anthropic and Claude (the columnist is Claude: conflict of
+  interest), tragedies and private individuals.
+- **When:** only in `full` editions (never `reduced`), and a failed column never stops the edition. A
+  same-day re-run keeps the day's column instead of paying for a new one. A missed Sunday catches up on
+  the next one. `generate --opinion force` writes one now; `--opinion off` skips it.
+- **Where:** the front-page rail for a week (`opinion.front_days`), its own page, an `/opinion/` list
+  (and nav link) once the first column exists, the archive and the feed. Labeled "Opinion" and "Column
+  by Claude (AI)" everywhere.
+- **Cost:** measured at **$0.39** API-equivalent on the subscription (Opus pick $0.14, Fable column
+  $0.25), so about $0.80/month at two columns.
 
 ## Look and feel: a real tabloid news site
 
@@ -230,7 +255,8 @@ low" and publishes a links edition.
 
 ## Cost estimate and tuning knobs
 
-Prices: Opus 5.5 is $4 in / $20 out per million tokens; Haiku 5.5 is $0.10 / $0.50; web search is $0.01 per search.
+Prices: Opus 5.5 is $4 in / $20 out per million tokens; Fable 5.1 is $10 / $50; Haiku 5.5 is $0.10 / $0.50;
+web search is $0.01 per search.
 
 | Step, one edition a day | Model | Quiet day | Busy day |
 |---|---|---|---|
@@ -242,6 +268,7 @@ Prices: Opus 5.5 is $4 in / $20 out per million tokens; Haiku 5.5 is $0.10 / $0.
 | Gaming: blurbs, verdicts, video blurbs (one batched call) | Opus | $0.04 | $0.06 |
 | Deals: deal of the day + more deals (one call) | Opus | $0.04 | $0.06 |
 | Discovery, depth `light` (3 searches, 3 fetches) | Opus | $0.25 | $0.25 |
+| Opinion column, every other Sunday (~$0.40 each) | Opus + Fable | ~$0.80/month | ~$0.80/month |
 | **Per day / per month** | | **~$0.52 / ~$16** | **~$0.74 / ~$22** |
 
 - A month of busy days would run slightly over $20. The pacing guard handles that by making some
@@ -257,7 +284,8 @@ Prices: Opus 5.5 is $4 in / $20 out per million tokens; Haiku 5.5 is $0.10 / $0.
 | Gaming blocks | `gaming.*` | see the gaming section above |
 | Deals | `deals.featured / more / min_cut / near_low_pct / min_rating` | 1–2 / 5–10 / 50% / 10% / "Very Positive" |
 | Search depth and frequency | `search.depth`, `search.discovery_every_days` | `light`, 1 |
-| Models | `models.*` | Opus everywhere except Haiku triage |
+| Models | `models.*` | Opus everywhere except Haiku triage and the Fable column |
+| Opinion column | `opinion.days / every_weeks / words / lookback_days / front_days` | Sunday / 2 / 800 / 14 / 7 |
 | Budget | `budget.monthly_usd` | 20 |
 
 ## Run modes and the pre-run check
@@ -464,9 +492,15 @@ pricing:                            # USD per million tokens (Nov 2026)
     "more": [ { "game": "…", "price": 4.99, "regular": 19.99, "cut": 75, "lowest_ever": false, "advice": "…", "url": "…" } ],
     "checked_at": "2026-11-03T05:30:00Z"
   },
-  "links": [ { "section": "tech", "title": "…", "url": "…", "source": "…", "excerpt": "…", "rank": 0.8 } ]
+  "links": [ { "section": "tech", "title": "…", "url": "…", "source": "…", "excerpt": "…", "rank": 0.8 } ],
+  "opinion": { "slug": "…", "kicker": "Opinion", "headline": "…", "dek": "…", "body": "…", "pull_quote": "…",
+               "topic": "…", "thesis": "…", "focus": "cross", "format": "argument", "model": "claude-fable-5-1",
+               "reading": [ { "headline": "…", "edition_id": "2026-11-05", "tier": "medium", "slug": "…",
+                              "sources": [ { "name": "…", "url": "…" } ] } ] }
 }
 ```
+
+`opinion` is only present on the days a column runs.
 
 **seen.json rules:** items dropped by triage are marked seen right away; items written up are marked
 seen once written; link-only items stay unseen, so a later full edition can still use them.
@@ -479,7 +513,8 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/ai/`, `/times/tech/` | Section front: colored band, recent featured and medium stories, briefs |
 | `/times/gaming/` | All gaming blocks, ~2 weeks of history, the full "Coming soon" list |
 | `/times/deals/` | Today's deals plus recent ones still active |
-| `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*) |
+| `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
+| `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
 | `/times/archive/` | Past editions by date, mode labeled |
 | `/times/feed.xml` | Atom feed |
 

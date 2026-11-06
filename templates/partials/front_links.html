@@ -15,12 +15,17 @@
     {% endif %}
     {% endfor %}
   </div>
-  {% if hn_top %}
-  <aside class="rail sec-tech" aria-label="Hacker News">
+  {% if hn_top or column %}
+  <aside class="rail sec-tech" aria-label="Opinion and Hacker News">
+    {% if column %}
+    <section aria-label="Opinion">{{ m.column_card(column) }}</section>
+    {% endif %}
+    {% if hn_top %}
     <section>
       {{ m.block_head('Top on Hacker News') }}
       {{ m.hn_list(hn_top) }}
     </section>
+    {% endif %}
   </aside>
   {% endif %}
 </div>

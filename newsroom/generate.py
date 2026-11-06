@@ -11,7 +11,7 @@ from typing import Any
 
 from typing import Callable
 
-from . import ai_edition, budget, preflight, schedule, store
+from . import ai_edition, budget, opinion, preflight, schedule, store
 from . import seen as seen_store
 from .http import Client
 from .links import build_links_edition
@@ -19,6 +19,7 @@ from .llm import LLM, Tally
 from .sources import Harvest, fetch_all
 
 MODES = ("auto", "full", "reduced", "links", "skip")
+OPINION = ("auto", "force", "off")    # auto = when due (opinion.days / every_weeks) in a full edition
 MIN_LINKS_TO_PUBLISH = 5          # below this the sources are probably down: keep the last edition
 
 
@@ -31,14 +32,17 @@ class Result:
     path: Path | None = None
     harvest: Harvest | None = None
     llm: dict[str, Any] | None = None
+    column: str = ""                  # the opinion column's headline, or why it wasn't written
 
 
 def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
              now: dt.datetime | None = None, env: dict[str, str] | None = None,
              client: Client | None = None, backend: str | None = None,
-             llm_factory: Callable[..., LLM] = LLM) -> Result:
+             llm_factory: Callable[..., LLM] = LLM, column: str = "auto") -> Result:
     if requested not in MODES:
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
+    if column not in OPINION:
+        raise ValueError(f"opinion must be one of {', '.join(OPINION)}")
     now = now or dt.datetime.now(dt.timezone.utc)
     env = dict(os.environ) if env is None else env
     sched = cfg["schedule"]
@@ -82,6 +86,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
                 mode, reason = fallback, f"AI unavailable: {exc}"
         if edition is None and mode == "links":
             edition = build_links_edition(cfg, harvest, edition_id, previous=previous, reason=reason)
+        column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
     finally:
         if own_client:
             client.__exit__(None, None, None)
@@ -97,13 +102,40 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
                       harvest=harvest, llm=tally.summary())
     path = store.save_edition(data_dir, edition)
     seen_store.save(data_dir, seen, now)
-    return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary())
+    return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note)
+
+
+def _opinion(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
+             requested: str) -> str:
+    """Add the opinion column to the edition when one is due. Returns a line for the report."""
+    replaced = store.load_edition(data_dir, edition["edition_id"])
+    kept = (replaced or {}).get("opinion")
+    if kept and requested != "force":                # re-running today: keep today's column, don't pay twice
+        kept = dict(kept, slug=opinion.unique_slug(kept["headline"], {s["slug"] for s in edition["stories"]}))
+        edition["opinion"] = kept
+        return f"kept today's column: {kept['headline']}"
+    if requested == "force" and edition["mode"] == "links":
+        return "not written: a links edition has no Claude to write it"
+    if requested == "off" or edition["mode"] == "links" or (requested == "auto" and mode != "full"):
+        return ""
+    try:
+        outcome = opinion.write(cfg, llm, edition, store.all_editions(data_dir), force=requested == "force")
+    except Exception as exc:                         # the column is optional: never lose the edition over it
+        outcome = opinion.Outcome(note=f"{type(exc).__name__}: {str(exc)[:200]}")
+    edition["llm"] = {"backend": llm.backend, **llm.tally.summary()}
+    edition["llm"]["estimated_usd"] = edition["llm"]["equivalent_usd"]
+    if outcome.column:
+        edition["opinion"] = outcome.column
+        return f"written: {outcome.column['headline']}"
+    return f"not written: {outcome.note}" if outcome.note else ""
 
 
 def report(result: Result) -> str:
     """Plain-text summary for the console and the Actions step summary."""
     lines = [f"Edition {result.edition_id or '-'}: {'published' if result.published else 'not published'} "
              f"(mode {result.mode}; {result.reason})"]
+    if result.column:
+        lines.append(f"Opinion column {result.column}")
     if result.llm and result.llm.get("calls"):
         l = result.llm
         lines.append(f"Claude: {l['calls']} calls, ${l['usd']:.4f} charged, ${l['equivalent_usd']:.4f} API-equivalent"

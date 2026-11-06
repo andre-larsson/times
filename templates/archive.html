@@ -23,6 +23,9 @@
         {% else %}
         {{ row.links }} links
         {% endif %}
+        {% if ed.opinion %}
+        <span class="meta-sep" aria-hidden="true">·</span> Opinion: <a class="meta-link" href="{{ ed.opinion | article_url }}">{{ ed.opinion.headline }}</a>
+        {% endif %}
       </span>
     </li>
     {% endfor %}

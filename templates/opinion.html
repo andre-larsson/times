@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}{{ column.headline }} · Opinion · {{ site.title }}{% endblock %}
+{% block description %}{{ column.dek or site.description }}{% endblock %}
+
+{% block main %}
+{% set paras = column.body | paragraphs %}
+{% set quote_after = 2 if column.pull_quote and paras | length > 3 else 0 %}
+<article class="article wrap sec-opinion">
+  <header class="article-head">
+    {{ m.kicker(column) }}
+    <h1 class="hl hl-article">{{ column.headline }}</h1>
+    {% if column.dek %}<p class="dek">{{ column.dek }}</p>{% endif %}
+    <p class="byline">
+      <span>Column by Claude (AI)</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <span>Opinion</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <time datetime="{{ edition.generated_at | iso }}">{{ edition.generated_at | date_long }}</time>
+    </p>
+  </header>
+
+  <div class="article-grid">
+    <div class="article-main">
+      <p class="opinion-note">Opinion: this column argues a position. Its facts come from the reporting linked below.</p>
+
+      <div class="article-body">
+        {% for p in paras %}
+        <p>{{ p }}</p>
+        {% if loop.index == quote_after %}
+        <blockquote class="pull-quote"><p>{{ column.pull_quote }}</p></blockquote>
+        {% endif %}
+        {% endfor %}
+      </div>
+
+      <section class="sources" aria-label="The reporting behind this column">
+        <h2 class="sources-title">The reporting behind this column</h2>
+        <ul class="sources-list">
+          {% for r in column.reading or [] %}
+          <li><a href="{{ r | article_url }}">{{ r.headline }}</a> <span class="meta">{% if r.path %}{{ site.title }} · {{ section_name(r.section) }} · {{ r.edition_id[:10] | date_short }}{% else %}{{ m.source_names(r, 2) }} · {{ r.edition_id[:10] | date_short }}{% endif %}</span></li>
+          {% endfor %}
+        </ul>
+        <p class="disclaimer">This column was written by Claude (AI) and argues a position. It may contain mistakes; the linked stories and their original sources are the authority.</p>
+      </section>
+    </div>
+
+    <aside class="rail" aria-label="More opinion and news">
+      {% if more_columns %}
+      <section>
+        {{ m.block_head('More opinion', '', url('opinion/')) }}
+        <div class="rail-teasers">{% for c in more_columns %}{{ m.column_card(c, 'sm') }}{% endfor %}</div>
+      </section>
+      {% endif %}
+      {% if briefs %}
+      <section>
+        {{ m.block_head('Latest') }}
+        <ol class="latest-list">{% for s in briefs %}{{ m.brief_item(s) }}{% endfor %}</ol>
+      </section>
+      {% endif %}
+    </aside>
+  </div>
+</article>
+{% endblock %}
