@@ -70,7 +70,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
     own_client = client is None
     client = client or Client()
     try:
-        harvest = fetch_all(cfg, client, now, itad_key=env.get("ITAD_API_KEY") or None)
+        harvest = fetch_all(cfg, client, now, itad_key=(env.get("ITAD_API_KEY") or "").strip() or None)
         previous = store.latest_edition(data_dir)
         if previous and previous.get("edition_id") == edition_id:
             previous = None                  # replacing today's edition: don't dedupe against it

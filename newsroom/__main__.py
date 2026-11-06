@@ -86,7 +86,7 @@ def main(argv: list[str] | None = None) -> int:
         from .sources import fetch_all
 
         with Client() as client:
-            harvest = fetch_all(cfg, client, itad_key=os.environ.get("ITAD_API_KEY") or None)
+            harvest = fetch_all(cfg, client, itad_key=(os.environ.get("ITAD_API_KEY") or "").strip() or None)
         print(report(Result(False, "check", "sources only", harvest=harvest)))
         if args.dump:
             dump_harvest(harvest, args.dump)
