@@ -16,7 +16,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | URL | **`https://a403.space/times/`**: a project Pages site under my root site's custom domain |
 | Repo | New public repo **`andre-larsson/times`** (personal account, not the work org) |
 | Sections | **AI** · **Tech** · **Gaming** · **Deals** |
-| Frequency | **One edition a day**, 07:45 Swedish time (`Europe/Stockholm`, so daylight saving is handled) |
+| Frequency | **One edition a day**, 07:00 Swedish time (`Europe/Stockholm`, so daylight saving is handled) |
 | Edition shape | 1–3 **featured** · 3+ **medium** · 10+ **briefs**, plus the **gaming** and **deals** sections, all sized by how much news there is |
 | Look | **Tabloid-style news site**, inspired by Swedish evening papers like Expressen but **not a copy**: own logo, colors, fonts and layout |
 | Language | **English** (Swedish sources such as MISSIL are summarized in English) |
@@ -117,7 +117,7 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 - **Picking deals:** IsThereAnyDeal deals for Sweden (prices in the local currency), filtered to
   at or near the lowest price ever, a minimum discount, and well-reviewed games (Steam rating, review scores).
 - **Links:** plain store links, no affiliate links.
-- **Labels:** "Price checked 07:45. Prices change." Each deal is credited to IsThereAnyDeal.
+- **Labels:** "Price checked 07:00. Prices change." Each deal is credited to IsThereAnyDeal.
 - **Cost:** written in one Opus call for the whole section.
 
 ## Look and feel: a real tabloid news site
@@ -251,7 +251,7 @@ Prices: Opus 5.5 is $4 in / $20 out per million tokens; Haiku 5.5 is $0.10 / $0.
 
 | Knob | Config | Default |
 |---|---|---|
-| Editions per day | `schedule.editions` | `["07:45"]` |
+| Editions per day | `schedule.editions` | `["07:00"]` |
 | Story counts | `edition.featured / medium / briefs` | 1–3 / 3–6 / 10–20 |
 | Newsworthiness bar | `edition.*.min_newsworthiness` | 4.5 / 3.5 / 2.5 |
 | Gaming blocks | `gaming.*` | see the gaming section above |
@@ -360,7 +360,7 @@ site:
 
 schedule:
   timezone: "Europe/Stockholm"
-  editions: ["07:45"]
+  editions: ["07:00"]
 
 edition:
   featured: { min: 1, max: 3,   words: 350, max_sources: 3, min_newsworthiness: 4.5 }
@@ -493,7 +493,7 @@ The real file is in the repo; this is its shape.
 
 | Trigger | What runs |
 |---|---|
-| `schedule: "50 * * * *"` (hourly) | `generate` checks whether a slot in `schedule.editions` (Stockholm time) has passed without an edition. Usually not, and the run ends in seconds. At :50 the 07:45 slot is caught at 07:50, plus GitHub's usual cron delay (moved from 06:30 on 2026-11-03) |
+| `schedule: "23 * * * *"` (hourly) and `"7,41 5,6 * * *"` (cluster) | `generate` checks whether a slot in `schedule.editions` (Stockholm time) has passed without an edition. Usually not, and the run ends in seconds. GitHub delays and drops scheduled runs (much worse since late August 2026; :00 and :30 are the most contended), so the 07:00 slot (06:00 UTC in winter, 05:00 UTC in summer) gets runs at 05:07, 05:23, 05:41, 06:07, 06:23 and 06:41 UTC, with the hourly :23 run as the fallback. Extra runs are harmless: one edition per slot. Slot moved from 07:45 (cron :50) on 2026-11-06 after a morning with no cron run for seven hours |
 | `workflow_dispatch` with `mode` | `auto` behaves like the schedule; `full`, `reduced`, `links` or `skip` force a run now and replace today's edition |
 | `push` to `main` touching code, templates, static files or config | Skips `generate`; tests, renders and redeploys |
 

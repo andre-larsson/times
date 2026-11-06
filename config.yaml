@@ -13,7 +13,7 @@ site:
 
 schedule:
   timezone: "Europe/Stockholm"
-  editions: ["07:45"]                 # one morning edition; add slots for more
+  editions: ["07:00"]                 # one morning edition; add slots for more
 
 sections:
   - { slug: ai,     name: AI,     blurb: "Models, research, tools and the policy that matters." }

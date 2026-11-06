@@ -16,7 +16,7 @@ See [PLAN.md](PLAN.md) for the full design: sources, budget, run modes, phases.
 - **Phase 3 (Claude writes the paper): done.** Triage (Haiku), editor and writers (Opus), budget pacing,
   the pre-run check and the partial/links fallbacks. About $0.40 per edition on the API.
 - Live at <https://a403.space/times/>: a links edition since 2026-11-03, Claude-written from the next
-  07:45 edition.
+  07:00 edition.
 - Next: phase 5 (discovery via web search) and tuning.
 
 ## Run it locally
@@ -74,7 +74,7 @@ templates/           Jinja2 templates (front, section, gaming, deals, article, a
 static/              style.css, favicon, self-hosted fonts (SIL Open Font License)
 tests/fixtures/      sample editions and feeds (made-up names; links go to example.com)
 data/                real editions, committed by the workflow
-.github/workflows/   edition.yml (hourly check, generate, deploy), sources.yml (manual source check)
+.github/workflows/   edition.yml (scheduled check, generate, deploy), sources.yml (manual source check)
 ```
 
 ## Design notes
