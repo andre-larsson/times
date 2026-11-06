@@ -65,7 +65,7 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **IsThereAnyDeal** | Official API (`/deals/v2` with a JSON filter: cut ≥ 50%, within 10% of the historical low, games only, Steam ≥ 80% with ≥ 500 reviews; then `/games/info/v2` for Steam rating and Metascore). Free key by registering an app at isthereanydeal.com; personal and public use allowed; 1000 requests per 5 minutes. Store links: Steam's own page for Steam deals, otherwise the ITAD game page (no affiliate redirects). Credited on the page. **Coded from the API spec; not yet run with a real key** | ⏳ key needed |
+| **IsThereAnyDeal** | Official API (`/deals/v2` with a JSON filter: cut ≥ 50%, within 10% of the historical low, games only, Steam ≥ 80% with ≥ 500 reviews; then `/games/info/v2` for Steam rating and Metascore). Free key by registering an app at isthereanydeal.com; personal and public use allowed; 1000 requests per 5 minutes. Store links: Steam's own page for Steam deals, otherwise the ITAD game page (no affiliate redirects). Credited on the page. Live since 2026-11-06. ITAD prices Sweden in EUR. Its percent ranges need an explicit `max: 100` (a null max reads as 0 and matches nothing, despite the spec) | ✅ |
 | Steam specials | Popular games on sale. **Fallback** when there's no ITAD key: same cut and rating filters, but no lowest-ever data | ✅ |
 
 ### Draft interests (editable)

@@ -36,11 +36,13 @@ def steam_label(percent: int | None, count: int | None) -> str:
 
 
 def fetch_deals(client: Client, cfg: dict[str, Any], deals_cfg: dict[str, Any], key: str) -> list[dict[str, Any]]:
+    # Percent ranges (0-100) need an explicit max: ITAD reads "max": null there as 0, which matched
+    # nothing (checked against the live API, 2026-11-06), although its spec says null means unbounded.
     filters = {
-        "cut": {"min": int(deals_cfg.get("min_cut_pct", 50)), "max": None},
+        "cut": {"min": int(deals_cfg.get("min_cut_pct", 50)), "max": 100},
         "hlperc": float(deals_cfg.get("near_low_pct", 10)),
         "type": [GAME_TYPE],
-        "steamPerc": {"min": int(cfg.get("min_steam_percent", 80)), "max": None},
+        "steamPerc": {"min": int(cfg.get("min_steam_percent", 80)), "max": 100},
         "steamCount": {"min": int(cfg.get("min_steam_reviews", 500)), "max": None},
     }
     params = {
