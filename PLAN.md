@@ -22,7 +22,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Language | **English** (Swedish sources such as MISSIL are summarized in English) |
 | Build / hosting | GitHub Actions → GitHub Pages (`actions/deploy-pages`) |
 | AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**; **Fable writes the opinion column**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
-| Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it. Format and focus rotate, so it stays varied |
+| Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it, Opus fact-checks it. Format and focus rotate, so it stays varied |
 | Budget | **~$20/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $25 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -126,10 +126,17 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 An argued column of about 800 words, **twice a week: Wednesday and Sunday** (`opinion.days: [wed, sun]`,
 `every_weeks: 1`). For every other Sunday instead, set `days: [sun]` and `every_weeks: 2`.
 
-- **Two calls.** The opinion editor (`opinion_pick`, Opus) reads the headlines, deks and key points of
+- **Three calls.** The opinion editor (`opinion_pick`, Opus) reads the headlines, deks and key points of
   the last 7 days of editions (`lookback_days`) and picks a topic, a thesis and 3–8 stories. The columnist (`opinion`,
   **Fable**) writes the column from those stories' full text. No new sources: the facts are the paper's
   own reporting, credited to the original outlets, and the column links to the stories it used.
+- **Fact-check.** The copy desk (`opinion_check`, Opus) checks every factual statement against the same
+  stories and returns sentence-level fixes, which the code applies, so the columnist's voice stays and
+  only the flagged sentences change. The fixes are kept in the column's `checked` field. The column is
+  dropped if the check rejects it, flags a sentence the code can't find, or the call fails: no column
+  goes out unchecked. Tried on the first two drafts, it caught a third-quarter figure presented as part
+  of a forecast and a figure credited to the wrong outlet, but missed an invented "32GB kits" aside: a
+  filter, not a guarantee.
 - **Variety, enforced in code.** The pick call's schema only allows a **format** that neither of the last
   two columns used (argument, counterpoint, advice, long view) and a **focus** different from the last
   column's (AI, Tech, Gaming, or cross-section). Every earlier column's topic and thesis go to the editor,
@@ -142,9 +149,9 @@ An argued column of about 800 words, **twice a week: Wednesday and Sunday** (`op
 - **Where:** the front-page rail for a week (`opinion.front_days`), its own page, an `/opinion/` list
   (and nav link) once the first column exists, the archive and the feed. Labeled "Opinion" and "Column
   by Claude (AI)" everywhere.
-- **Cost:** measured at **$0.39** API-equivalent on the subscription (Opus pick $0.14 with 14 days of
-  material, Fable column $0.25). With 7 days of material, about **$0.32 a column, ~$2.80/month** at
-  8–9 columns, which leaves a month of editions at about $16 of the $20.
+- **Cost:** measured on the subscription, API-equivalent: Opus pick $0.14 (with 14 days of material),
+  Fable column $0.25, fact-check $0.06–0.08. With 7 days of material, about **$0.40 a column,
+  ~$3.50/month** at 8–9 columns, which leaves a month of editions at about $17 of the $20.
 - **First column:** an introduction to the column itself, in the 2026-11-06 edition (written on the
   subscription).
 
@@ -271,7 +278,7 @@ web search is $0.01 per search.
 | Gaming: blurbs, verdicts, video blurbs (one batched call) | Opus | $0.04 | $0.06 |
 | Deals: deal of the day + more deals (one call) | Opus | $0.04 | $0.06 |
 | Discovery, depth `light` (3 searches, 3 fetches) | Opus | $0.25 | $0.25 |
-| Opinion column, Wednesday and Sunday (~$0.32 each) | Opus + Fable | ~$2.80/month | ~$2.80/month |
+| Opinion column, Wednesday and Sunday (~$0.40 each) | Opus + Fable | ~$3.50/month | ~$3.50/month |
 | **Per day / per month** | | **~$0.52 / ~$16** | **~$0.74 / ~$22** |
 
 - A month of busy days would run slightly over $20. The pacing guard handles that by making some
@@ -287,7 +294,7 @@ web search is $0.01 per search.
 | Gaming blocks | `gaming.*` | see the gaming section above |
 | Deals | `deals.featured / more / min_cut / near_low_pct / min_rating` | 1–2 / 5–10 / 50% / 10% / "Very Positive" |
 | Search depth and frequency | `search.depth`, `search.discovery_every_days` | `light`, 1 |
-| Models | `models.*` | Opus everywhere except Haiku triage and the Fable column |
+| Models | `models.*` | Opus everywhere except Haiku triage and the Fable column (`opinion`) |
 | Opinion column | `opinion.days / every_weeks / words / lookback_days / front_days` | Wed, Sun / 1 / 800 / 7 / 7 |
 | Budget | `budget.monthly_usd` | 20 |
 

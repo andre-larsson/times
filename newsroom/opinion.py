@@ -1,8 +1,10 @@
 """The opinion column: when it's due, the rotation that keeps it varied, and writing it.
 
-Two calls. The opinion editor (`opinion_pick`, Opus) reads the headlines of the last
+Three calls. The opinion editor (`opinion_pick`, Opus) reads the headlines of the last
 `opinion.lookback_days` of editions and picks a topic, a thesis and the stories to use. The columnist
-(`opinion`, Fable) then writes the column from those stories' full text.
+(`opinion`, Fable) writes the column from those stories' full text. The copy desk (`opinion_check`,
+Opus) fact-checks it against the same stories and returns sentence-level fixes, which are applied here.
+A column that fails the check, or whose fixes can't be placed, isn't published.
 
 Variety is enforced in code, through the pick call's schema: the format can't repeat either of the
 last two columns' formats, and the focus (AI, Tech, Gaming or cross-section) can't repeat the last
@@ -12,6 +14,7 @@ column's. Every earlier column's topic and thesis go to the editor so topics don
 from __future__ import annotations
 
 import datetime as dt
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -129,6 +132,42 @@ def _reading(entry: dict[str, Any]) -> dict[str, Any]:
     return row
 
 
+_QUOTES = str.maketrans({"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"'})
+
+
+def _locate(text: str, sentence: str) -> tuple[int, int] | None:
+    """Where `sentence` is in `text`: exactly, or ignoring whitespace and curly-quote differences."""
+    i = text.find(sentence)
+    if i >= 0:
+        return i, i + len(sentence)
+    words = sentence.translate(_QUOTES).split()
+    if not words:
+        return None
+    m = re.search(r"\s+".join(re.escape(w) for w in words), text.translate(_QUOTES))   # same length: spans match
+    return m.span() if m else None
+
+
+def apply_fixes(draft: dict[str, str], fixes: list[dict[str, Any]]) -> tuple[dict[str, str], list[dict[str, Any]]]:
+    """Replace each flagged sentence in the headline, dek or body. Returns (fixed draft, fixes not found)."""
+    out = dict(draft)
+    unmatched = []
+    for f in fixes:
+        sentence = (f.get("sentence") or "").strip()
+        if not sentence:
+            continue
+        for key in ("headline", "dek", "body"):
+            span = _locate(out[key], sentence)
+            if span:
+                out[key] = out[key][:span[0]] + (f.get("replacement") or "").strip() + out[key][span[1]:]
+                break
+        else:
+            unmatched.append(f)
+    paragraphs = (" ".join(p.split()) for p in out["body"].split("\n\n"))
+    out["body"] = "\n\n".join(p for p in paragraphs if p)
+    out["headline"], out["dek"] = " ".join(out["headline"].split()), " ".join(out["dek"].split())
+    return out, unmatched
+
+
 def unique_slug(headline: str, taken: set[str]) -> str:
     base = slugify(headline) or "column"
     slug, n = base, 2
@@ -163,26 +202,37 @@ def write(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], editions: list
             return Outcome(note="the opinion editor picked too few known stories")
         fmt = pick.get("format") if pick.get("format") in formats else formats[0]
         foc = pick.get("focus") if pick.get("focus") in focus else focus[0]
+        stories = [_reporting(index[i]) for i in ids]
         out = desk.write_opinion(llm, cfg, {
             "today": day.isoformat(), "topic": pick.get("topic", ""), "thesis": pick.get("thesis", ""),
             "format": fmt, "format_guide": desk.COLUMN_FORMATS[fmt], "focus": foc,
             "earlier_headlines": [c["headline"] for c in hist[:6]],
-            "stories": [_reporting(index[i]) for i in ids],
+            "stories": stories,
         })
-    except LLMError as exc:
+        if not out.get("headline") or not out.get("body"):
+            return Outcome(note="the columnist returned an empty column")
+        draft = {k: (out.get(k) or "").strip() for k in ("headline", "dek", "body")}
+        check = desk.check_opinion(llm, cfg, {"column": draft, "stories": stories})
+    except LLMError as exc:                          # includes a failed fact-check: no unchecked columns
         return Outcome(note=str(exc))
-    if not out.get("headline") or not out.get("body"):
-        return Outcome(note="the columnist returned an empty column")
-    body = out["body"].strip()
+    fixes = check.get("fixes") or []
+    if check.get("verdict") == "reject":
+        return Outcome(note="rejected by the fact-check: " + "; ".join(f.get("problem", "") for f in fixes)[:300])
+    fixed, unmatched = apply_fixes(draft, fixes)
+    if unmatched:
+        return Outcome(note=f"the fact-check flagged {len(unmatched)} sentence(s) that couldn't be found to fix")
+    if not fixed["headline"] or not fixed["body"]:
+        return Outcome(note="nothing left after the fact-check")
     quote = (out.get("pull_quote") or "").strip()
-    if quote and " ".join(quote.split()) not in " ".join(body.split()):
-        quote = ""                                   # only quote what the column actually says
+    if quote and " ".join(quote.split()) not in fixed["body"]:
+        quote = ""                                   # only quote what the column actually says (after fixes)
     column = {
-        "slug": unique_slug(out["headline"], {s["slug"] for s in edition.get("stories", [])}),
-        "section": "opinion", "kicker": "Opinion",
-        "headline": out["headline"].strip(), "dek": (out.get("dek") or "").strip(), "body": body,
+        "slug": unique_slug(fixed["headline"], {s["slug"] for s in edition.get("stories", [])}),
+        "section": "opinion", "kicker": "Opinion", **fixed,
         "pull_quote": quote, "topic": pick.get("topic", ""), "thesis": pick.get("thesis", ""),
         "focus": foc, "format": fmt, "model": llm.model_for("opinion"),
+        "checked": {"model": llm.model_for("opinion_check"), "verdict": check.get("verdict", "ok"),
+                    "fixes": [{k: f.get(k, "") for k in ("sentence", "problem", "replacement")} for f in fixes]},
         "reading": [_reading(index[i]) for i in ids],
     }
     return Outcome(column)

@@ -92,6 +92,13 @@ class FakeLLM(LLM):
                 "body": "One.\n\nTwo is the point.\n\nThree.\n\nFour.", "pull_quote": "Two is the point."}
 
 
+    check = {"verdict": "ok", "fixes": []}             # the copy desk's answer; tests may replace it
+
+    def _opinion_check(self, m):
+        assert m["column"]["body"] and m["stories"]
+        return self.check
+
+
 def factory(fail=None):
     def make(cfg, backend, tally, env):
         llm = FakeLLM(cfg, backend, tally, env)

@@ -65,6 +65,7 @@ models:
   probe:    claude-haiku-5-5
   opinion_pick: claude-opus-5-5       # the opinion editor picks the column's topic
   opinion:  claude-fable-5-1          # the columnist writes it
+  opinion_check: claude-opus-5-5      # the copy desk fact-checks it against the stories
 
 budget:
   monthly_usd: 20                     # paced over the calendar month, like the Console workspace spend limit
@@ -82,9 +83,9 @@ llm:
   timeout_seconds: 240
   reduced: { featured_max: 1, medium_max: 3 }
   max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000,
-                opinion_pick: 1500, opinion: 4000 }
+                opinion_pick: 1500, opinion: 4000, opinion_check: 2500 }
 
-opinion:                              # the opinion column: Opus picks a topic from recent editions, Fable writes it
+opinion:                              # the opinion column: Opus picks a topic, Fable writes it, Opus fact-checks it
   enabled: true
   days: [wed, sun]                    # weekdays it can run (mon … sun), only in full editions
   every_weeks: 1                      # 1 = every listed day, every week; 2 = every other week

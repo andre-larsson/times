@@ -9,7 +9,7 @@ import json
 from newsroom import ROOT, opinion, store
 from newsroom import generate as gen
 from newsroom.config import load_config
-from newsroom.llm import Tally
+from newsroom.llm import Tally, TransientError
 from newsroom.render import build
 from tests.test_ai import KEY, FakeLLM, factory, offline  # noqa: F401  (offline is a fixture)
 from tests.test_pipeline import NOW
@@ -99,3 +99,46 @@ def test_no_column_when_not_due_or_reduced(tmp_path, offline):  # noqa: F811
     r = gen.generate(_cfg(days=["tue"]), data, "auto", now=NOW, env=KEY, client=offline, llm_factory=factory())
     ed = json.loads(store.edition_path(data, r.edition_id).read_text())
     assert ed["mode"] == "reduced" and "opinion" not in ed
+
+
+def _today():
+    today = copy.deepcopy(FIXTURE)
+    today["edition_id"] = "2026-11-17"
+    today.pop("opinion")
+    return today
+
+
+def test_fact_check_fixes_are_applied():
+    cfg = load_config()
+    llm = FakeLLM(cfg, "api", Tally(5.0), env={})
+    llm.check = {"verdict": "fixed", "fixes": [
+        {"sentence": "Three.", "problem": "wrong", "replacement": "Three, corrected."},
+        {"sentence": "Four.", "problem": "not in the stories", "replacement": ""},          # deleted
+        {"sentence": "Column:   Cheaper parts", "problem": "x", "replacement": "Column: Cheap parts"},
+    ]}
+    col = opinion.write(cfg, llm, _today(), [FIXTURE], force=True).column
+    assert col["body"] == "One.\n\nTwo is the point.\n\nThree, corrected."
+    assert col["headline"] == "Column: Cheap parts" and col["slug"] == "column-cheap-parts"
+    assert col["pull_quote"] == "Two is the point." and len(col["checked"]["fixes"]) == 3
+
+
+def test_fact_check_can_stop_a_column():
+    cfg = load_config()
+    for check in ({"verdict": "reject", "fixes": [{"sentence": "One.", "problem": "core claim unsupported",
+                                                   "replacement": ""}]},
+                  {"verdict": "fixed", "fixes": [{"sentence": "Not in the column.", "problem": "x",
+                                                  "replacement": "y"}]}):
+        llm = FakeLLM(cfg, "api", Tally(5.0), env={})
+        llm.check = check
+        out = opinion.write(cfg, llm, _today(), [FIXTURE], force=True)
+        assert out.column is None and out.note
+    llm = FakeLLM(cfg, "api", Tally(5.0), env={})
+    llm.fail = {"opinion_check": TransientError("overloaded")}
+    out = opinion.write(cfg, llm, _today(), [FIXTURE], force=True)
+    assert out.column is None and "overloaded" in out.note                # no unchecked columns
+
+
+def test_apply_fixes_tolerates_whitespace_and_curly_quotes():
+    draft = {"headline": "H", "dek": "D", "body": "He said \u201cno\u201d  to it.\n\nNext."}
+    fixed, missing = opinion.apply_fixes(draft, [{"sentence": 'He said "no" to it.', "replacement": "He declined."}])
+    assert not missing and fixed["body"] == "He declined.\n\nNext."

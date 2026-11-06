@@ -178,3 +178,15 @@ def write_opinion(llm: LLM, cfg: dict[str, Any], assignment: dict[str, Any]) -> 
     words = (cfg.get("opinion") or {}).get("words", 800)
     system = system_prompt("opinion", words=words)
     return llm.call("opinion", system, data_block(assignment, "The assignment and the reporting:"), OPINION_SCHEMA)
+
+
+CHECK_SCHEMA = obj({
+    "verdict": {"type": "string", "enum": ["ok", "fixed", "reject"]},
+    "fixes": arr(obj({"sentence": STR, "problem": STR, "replacement": STR})),
+})
+
+
+def check_opinion(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> dict[str, Any]:
+    """The copy desk: material is {column: {headline, dek, body}, stories: [what the columnist had]}."""
+    return llm.call("opinion_check", system_prompt("opinion_check"),
+                    data_block(material, "The column and the stories it was written from:"), CHECK_SCHEMA)

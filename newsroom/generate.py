@@ -126,7 +126,8 @@ def _opinion(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode:
     edition["llm"]["estimated_usd"] = edition["llm"]["equivalent_usd"]
     if outcome.column:
         edition["opinion"] = outcome.column
-        return f"written: {outcome.column['headline']}"
+        n = len(outcome.column.get("checked", {}).get("fixes", []))
+        return f"written{f' ({n} fact-check fixes)' if n else ''}: {outcome.column['headline']}"
     return f"not written: {outcome.note}" if outcome.note else ""
 
 
