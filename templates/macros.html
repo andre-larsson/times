@@ -96,10 +96,11 @@
   <h4 class="game-title"><a href="{{ g.store_url }}">{{ g.title }}</a></h4>
   <p class="meta"><span>{{ g.release_date | date_when }}</span>{% if g.price %}<span class="meta-sep" aria-hidden="true">·</span><span>{{ g.price | money(g.currency or 'EUR') }}</span>{% endif %}</p>
   {{ rating(g.steam_rating) }}
+  {{- critics(g.critics) }}
   {%- if g.blurb %}<p class="game-blurb">{{ g.blurb }}</p>{% endif %}
   <p class="game-links">
     <a href="{{ g.store_url }}">Steam →</a>
-    {%- if g.metacritic_search %}<a href="{{ g.metacritic_search }}">Metacritic →</a>{% endif %}
+    {%- if g.metacritic_search and not g.critics.metascore.url %}<a href="{{ g.metacritic_search }}">Metacritic →</a>{% endif %}
     {%- for r in g.reviews or [] %}<a href="{{ r.url }}">{{ r.outlet }} {{ r.score }}</a>{% endfor %}
   </p>
 </article>
@@ -107,13 +108,33 @@
 
 {% macro review_item(r) -%}
 <li class="review{% if not r.score %} review--unscored{% endif %}">
-  {%- if r.score %}<span class="score{% if r.score | length > 5 %} score--word{% endif %}">{{ r.score }}</span>{% endif %}
+  {%- if r.score %}{% set parts = r.score | score_parts %}
+  <span class="score{% if not parts %} score--word{% endif %}">
+    {%- if parts %}<span>{{ parts[0] }}{% if parts[1] %}<small class="score-scale">{{ parts[1] }}</small>{% endif %}</span>{% else %}{{ r.score }}{% endif -%}
+  </span>
+  {%- endif %}
   <div class="review-body">
     <a class="review-game" href="{{ r.url }}">{{ r.game }}</a>
     <span class="review-outlet">{{ r.outlet }}</span>
     {%- if r.verdict %}<p class="review-verdict">{{ r.verdict }}</p>{% endif %}
+    {{- critics(r.critics) }}
   </div>
 </li>
+{%- endmacro %}
+
+{# Critic averages from IsThereAnyDeal (OpenCritic, Metascore), colored on Metacritic's bands (75+, 50–74, below 50) #}
+{% macro critics(c) -%}
+{%- if c and (c.opencritic or c.metascore) %}
+<p class="critics">
+  {%- for key, name in [("opencritic", "OpenCritic"), ("metascore", "Metascore")] if c[key] %}
+  {%- set s = c[key] %}
+  {%- set band = "positive" if s.score >= 75 else "mixed" if s.score >= 50 else "negative" %}
+  {%- set tag = "a" if s.url else "span" %}
+  <{{ tag }} class="critic critic--{{ band }}"{% if s.url %} href="{{ s.url }}"{% endif %}{% if s.count %} title="Average of {{ s.count }} critic reviews"{% endif %}>
+    {#- #}<b class="critic-score">{{ s.score }}</b> {{ name }}</{{ tag }}>
+  {%- endfor %}
+</p>
+{%- endif %}
 {%- endmacro %}
 
 {% macro platforms(list) -%}

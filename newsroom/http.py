@@ -32,10 +32,23 @@ class Client:
 
     def get(self, url: str, params: dict[str, Any] | None = None,
             headers: dict[str, str] | None = None) -> httpx.Response:
+        return self._request("GET", url, params, headers)
+
+    def post_json(self, url: str, body: Any, params: dict[str, Any] | None = None) -> Any:
+        """POST a JSON body and return the JSON reply (batch APIs such as ITAD's lookups)."""
+        resp = self._request("POST", url, params, None, body)
+        try:
+            return resp.json()
+        except ValueError as exc:
+            raise FetchError(f"not JSON from {_safe(url)} (got {resp.headers.get('content-type')})") from exc
+
+    def _request(self, method: str, url: str, params: dict[str, Any] | None,
+                 headers: dict[str, str] | None, body: Any = None) -> httpx.Response:
         last: Exception | None = None
         for attempt in range(self.retries + 1):
             try:
-                resp = self._http.get(url, params=params, headers=headers)
+                resp = self._http.request(method, url, params=params, headers=headers,
+                                          json=body if method == "POST" else None)
             except httpx.HTTPError as exc:               # timeouts, DNS, resets, redirects, decoding
                 last = FetchError(f"{type(exc).__name__} for {_safe(url)}")
             else:

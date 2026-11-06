@@ -73,7 +73,7 @@ def _ms(start: float) -> int:
 
 def fetch_all(cfg: dict[str, Any], client: Client, now: dt.datetime | None = None,
               itad_key: str | None = None) -> Harvest:
-    from . import feeds, hackernews, itad, steam
+    from . import critics, feeds, hackernews, itad, steam
 
     now = now or dt.datetime.now(dt.timezone.utc)
     src = cfg.get("sources") or {}
@@ -110,4 +110,12 @@ def fetch_all(cfg: dict[str, Any], client: Client, now: dt.datetime | None = Non
         else:
             h.status.append(SourceStatus("IsThereAnyDeal", False, skipped=True,
                                          error="ITAD_API_KEY not set; using Steam specials"))
+
+    # Gaming: critic averages and the outlets' own scores, once the games and reviews are known
+    if h.steam.get("new_releases") or any(i.kind == "review" for i in h.items):
+        if itad_cfg.get("enabled") and itad_key and (itad_cfg.get("critics") or {}).get("enabled", True):
+            h.run("Critic scores (IsThereAnyDeal)", lambda: critics.annotate(client, cfg, h, itad_key),
+                  count=lambda n: n)
+        if any(i.extra.get("score_from_page") for i in h.items):
+            h.run("Review scores (outlet pages)", lambda: critics.page_scores(client, cfg, h), count=lambda n: n)
     return h

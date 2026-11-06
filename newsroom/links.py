@@ -139,6 +139,7 @@ def new_on_pc_block(games: list[dict[str, Any]], now: dt.datetime, cfg: dict[str
         "early_access": gm.get("early_access", False),
         "metacritic_search": metacritic_search(gm["title"]),
         "review_ids": [],
+        **({"critics": gm["critics"]} if gm.get("critics") else {}),
     } for gm in picked[:limit]]
 
 
@@ -146,34 +147,50 @@ def metacritic_search(title: str) -> str:
     return f"https://www.metacritic.com/search/{quote(title, safe='')}/?category=13"
 
 
+def review_candidates(items: list[Item], now: dt.datetime, cfg: dict[str, Any]) -> list[Item]:
+    """Game reviews from the last `fill_days`, newest first, minus console-only games: a review from a
+    multi-platform outlet (multi_platform in its feed config) is dropped when IsThereAnyDeal knows the game
+    but sells it on no PC store (sources/critics.py sets on_pc). Games it can't find, and every review
+    when the check didn't run, stay."""
+    fallback = int(cfg.get("fill_days", 14))
+    return sorted((i for i in items if i.kind == "review" and i.published_at
+                   and (now - i.published_at).days <= fallback
+                   and not (i.extra.get("multi_platform") and i.extra.get("on_pc") is False)),
+                  key=lambda i: i.published_at, reverse=True)
+
+
 def review_block(items: list[Item], now: dt.datetime, cfg: dict[str, Any]) -> list[dict[str, Any]]:
-    window, fallback = int(cfg.get("window_days", 3)), int(cfg.get("fill_days", 14))
+    window = int(cfg.get("window_days", 3))
     limit, minimum = int(cfg.get("max", 10)), int(cfg.get("min", 3))
-    reviews = sorted((i for i in items if i.kind == "review" and i.published_at),
-                     key=lambda i: i.published_at, reverse=True)
-
-    def within(days: int) -> list[Item]:
-        return [i for i in reviews if (now - i.published_at).days <= days]
-
-    picked = within(window)
+    per_game = int(cfg.get("per_game", 2))            # several outlets on one big game: keep the list varied
+    reviews = review_candidates(items, now, cfg)
+    picked = [i for i in reviews if (now - i.published_at).days <= window]
     if len(picked) < minimum:
-        picked = within(fallback)[:max(minimum, len(picked))]
-    out, seen = [], set()
+        picked = reviews[:max(minimum, len(picked))]
+    out, seen, games = [], set(), {}
     for i in picked:
-        key = (game_key(i.extra["game"]), i.source)
-        if key in seen:
+        game, outlet = game_key(i.extra["game"]), _outlet(i.source)
+        if (game, outlet) in seen or games.get(game, 0) >= per_game:
             continue
-        seen.add(key)
+        seen.add((game, outlet))
+        games[game] = games.get(game, 0) + 1
         out.append({
-            "id": f"r-{slugify(i.source, 12)}-{slugify(i.extra['game'], 40)}",
-            "game": i.extra["game"], "outlet": _outlet(i.source), "score": i.extra.get("score", ""),
+            "id": f"r-{slugify(outlet, 12)}-{slugify(i.extra['game'], 40)}",
+            "game": i.extra["game"], "outlet": outlet, "score": i.extra.get("score", ""),
             "verdict": i.extra.get("verdict", ""), "url": i.url, "published_at": i.published_at.isoformat(),
+            **({"critics": i.extra["critics"]} if i.extra.get("critics") else {}),
         })
     return out[:limit]
 
 
 def _outlet(source: str) -> str:
-    return {"RPS Reviews": "Rock Paper Shotgun"}.get(source, source)
+    """The outlet's name: one outlet can have two feeds ("PC Gamer" and "PC Gamer Reviews")."""
+    if source in OUTLETS:
+        return OUTLETS[source]
+    return source[: -len(" Reviews")] if source.endswith(" Reviews") else source
+
+
+OUTLETS = {"RPS Reviews": "Rock Paper Shotgun"}
 
 
 def news_blocks(cands: list[rank.Candidate], cfg: dict[str, Any]) -> tuple[list[dict], list[dict]]:

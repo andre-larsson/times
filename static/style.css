@@ -471,6 +471,20 @@ h1, h2, h3, h4 { margin: 0; }
   font: 800 1.375rem/1 var(--font-head); text-align: center; font-variant-numeric: tabular-nums;
 }
 .score--word { font-size: 0.6875rem; letter-spacing: 0.01em; text-transform: uppercase; }
+.score-scale { font-size: 0.6em; font-weight: 700; color: var(--ink-3); }   /* "/10", "%" after the number */
+
+/* Critic averages (OpenCritic, Metascore) on game cards and reviews */
+.critics { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); font: 600 0.8125rem/1.4 var(--font-ui); color: var(--ink-2); }
+.review-body .critics { margin-top: var(--s-1); }
+.critic { display: inline-flex; align-items: center; gap: 6px; color: inherit; }
+a.critic:hover { text-decoration: underline; }
+.critic-score {
+  font: 800 0.8125rem/1 var(--font-head); font-variant-numeric: tabular-nums;
+  padding: 4px 6px 3px; border: 1px solid currentColor; color: var(--ink-2);
+}
+.critic--positive .critic-score { color: var(--positive); }
+.critic--mixed .critic-score { color: var(--mixed); }
+.critic--negative .critic-score { color: var(--negative); }
 .review-body { display: grid; gap: 2px; align-content: start; }
 .review-game { font: 800 1.1875rem/1.1 var(--font-head); }
 .review-game:hover { text-decoration: underline; }

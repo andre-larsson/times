@@ -399,9 +399,11 @@ def _gaming_material(harvest: Harvest, base: dict[str, Any], kept: dict[str, dic
             "review_count": steam.get(g["appid"], {}).get("review_count"), "release_date": g.get("release_date"),
             "early_access": g.get("early_access"),
             "description": steam.get(g["appid"], {}).get("short_description", ""),
+            **_critic_numbers(g.get("critics")),
         } for g in base.get("new_on_pc", [])],
         "reviews": [{
             "id": r["id"], "game": r["game"], "outlet": r["outlet"], "score": r.get("score"),
+            **_critic_numbers(r.get("critics")),
             "outlet_headline": (items.get(canonical_url(r["url"])) or _Empty).title,
             "excerpt": excerpt((items.get(canonical_url(r["url"])) or _Empty).excerpt, 300),
             "language": (items.get(canonical_url(r["url"])) or _Empty).language,
@@ -413,6 +415,13 @@ def _gaming_material(harvest: Harvest, base: dict[str, Any], kept: dict[str, dic
         "news_candidates": [{k: v for k, v in n.items() if k not in ("url", "sources")} for n in news_ids.values()],
     }
     return material, news_ids
+
+
+def _critic_numbers(critics: dict[str, Any] | None) -> dict[str, Any]:
+    """{"critics": {"opencritic": {"score": 88, "critics": 69}, …}} for the material, or nothing."""
+    if not critics:
+        return {}
+    return {"critics": {k: {"score": v["score"], "critics": v.get("count")} for k, v in critics.items()}}
 
 
 class _Empty:

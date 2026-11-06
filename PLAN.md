@@ -51,15 +51,18 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **MISSIL** (missil.se) | RSS `missil.se/feed` (Swedish → summarized in English). Reviews (`/spelrecensioner/`) carry a score ("Betyg 5 av 10"); film news and blogs skipped. Links edition: reviews only | ✅ |
-| **PC Gamer** | RSS `pcgamer.com/feeds.xml`; reviews recognized by their `…-review/` URLs | ✅ |
+| **MISSIL** (missil.se) | RSS `missil.se/feed` (Swedish → summarized in English) and the reviews-only `missil.se/spelrecensioner/feed/` (the main feed has 15 items; the MISSIL Retro launch on 2026-11-06 filled all of them). Reviews carry a score ("Betyg 5 av 10"); film news, blogs and `/retro/` skipped. Multi-platform: console-only games are dropped (see Critic scores) | ✅ |
+| **PC Gamer** | RSS `pcgamer.com/feeds.xml` (reviews recognized by their `…-review/` URLs) and the reviews feed `/feeds/articletype/review/` (game reviews only; hardware skipped). The score ("90%") is read from the review page's schema.org data | ✅ |
+| **Eurogamer** | Reviews feed `eurogamer.net/feed/reviews`; score (1–5 stars) from the review page. Multi-platform | ✅ |
+| **Game Informer** | `gameinformer.com/reviews.xml`; the feed carries the score ("Score: 9.25" → 9.25/10). Multi-platform | ✅ |
+| **PCGamesN** | Reviews from the main feed (`/review` URLs; read up to 100 items, reviews sit near the end); score from the review page | ✅ |
+| GameSpot, IGN | GameSpot blocks page fetches and has no scores in its feed; IGN has no working review feed | ❌ |
 | **Rock Paper Shotgun** | RSS `/feed` and **`/feed/reviews`** (the "Bestest Bests" tag becomes the score badge). `/feed/deals` dropped: mostly hardware, often weeks old | ✅ |
 | **gameranx** | YouTube channel RSS (no API key needed) | ✅ |
 | **I Dream of Indie Games** | YouTube channel RSS (`UC_HX1n5iojK-xjy9WxfxXhg`; Shorts skipped) + **written reviews** from `idreamofindie.com/blog-feed.xml` (posts are infrequent) | ✅ |
 | Twitch (both channels) | Not used: live streams aren't news, and their YouTube uploads cover the same content | — |
 | **Steam store data** | Store search in JSON mode for app lists (**popular new releases** by date, **most wishlisted**, **popular specials**), then `IStoreBrowseService/GetItems` for release dates, user-review labels, prices and art, 50 apps per call. No key. (The older `appreviews` endpoint now redirects to the store front, and `featuredcategories` only lists the newest, mostly unknown, releases.) Unofficial but widely used | ✅ |
-| **Metacritic** | Feed removed ("410 Gone"), no public API, and scraping would go against its terms. **Link out only:** a "Metacritic →" search link per game | ❌ link only |
-| OpenCritic (optional) | Has an API with a key; terms and limits to check in phase 2. Would add aggregate scores | to check |
+| **Critic scores** (Metascore, OpenCritic) | No public APIs (Metacritic's feed is gone, OpenCritic's API needs a paid key), but **IsThereAnyDeal's game info carries both averages**, with critic counts and direct links. Looked up for the games New on PC and Reviews list (batch title / Steam app id lookups, then `/games/info/v2`; about 25 requests). ITAD also answers "is it on PC?": console-only games come back as empty placeholders (no type), so reviews of them from multi-platform outlets are dropped; a game ITAD can't find stays (headlines name games loosely). "Metacritic →" search link only when there's no Metascore | ✅ via ITAD |
 
 ### Deals
 
@@ -105,8 +108,8 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 
 | Block | Count | Content |
 |---|---|---|
-| **New on PC** | 3–10 | PC games released on Steam in the last ~7 days: art, date, Steam user rating, one-line blurb, links to reviews, "Steam →" and "Metacritic →" |
-| **Reviews** | 3–10 | Reviews from PC Gamer, RPS, MISSIL… in the last ~3 days, grouped per game: outlet, score as stated (or the RPS "Recommended" badge), one-line verdict, link |
+| **New on PC** | 3–10 | PC games released on Steam in the last ~7 days: art, date, Steam user rating, OpenCritic and Metascore averages when there are any, one-line blurb, links to reviews, "Steam →" |
+| **Reviews** | 3–10 | Reviews from PC Gamer, RPS, MISSIL, Eurogamer, Game Informer, PCGamesN… in the last ~7 days (at most 2 per game), PC games only: outlet, its score on its own scale (90%, 3/5, 8.5/10, or the RPS "Recommended" badge), one-line verdict, the game's critic averages, link |
 | **Console spotlight** | 0–3, often empty | Only console-first releases above a high notability bar (GTA VI, an Ocarina of Time remake): announcements, release dates, launch week, review round-ups |
 | **Coming soon** | ≤ 8 | Notable upcoming releases with dates. PC games from Steam's upcoming list; big console games added when the news states a date. Kept in `data/games_watchlist.json` |
 | **Watch** | 2–4 | New videos from gameranx and I Dream of Indie Games: thumbnail, title, one-line blurb based on the video's title and description (no transcripts) |
@@ -353,8 +356,8 @@ GitHub Actions (hourly check; "Run workflow" button with an optional mode)
 ├─ job: generate ─────────────────────────────────────────────────────────────
 │   0. preflight  due? → mode
 │   1. fetch      HN (Algolia) · Ars · TechRadar · Tom's Hardware · PCMag via Google News
-│                 MISSIL · PC Gamer · RPS (main, reviews, deals) · YouTube channel feeds
-│                 Steam store data · IsThereAnyDeal deals
+│                 MISSIL · PC Gamer · RPS · Eurogamer · Game Informer · PCGamesN · YouTube channel feeds
+│                 Steam store data · IsThereAnyDeal deals and critic scores · review pages (scores)
 │   2. normalize  canonical URL, title, excerpt, source, time, signals, language
 │   3. dedupe     against data/seen.json; age limits
 │   4. rank       rule-based (signals, recency, keywords, number of sources) → every mode
@@ -426,7 +429,7 @@ edition:
 
 gaming:
   new_on_pc:         { min: 3, max: 10, window_days: 7 }
-  reviews:           { min: 3, max: 10, window_days: 3 }
+  reviews:           { min: 3, max: 10, window_days: 7, fill_days: 14, per_game: 2 }
   console_spotlight: { max: 3, min_notability: 4.5 }
   coming_soon:       { max: 8, horizon_days: 180 }
   watch:             { max: 4 }
@@ -475,7 +478,12 @@ sources:
     - { name: TechRadar,          url: "https://www.techradar.com/feeds.xml",             sections: [ai, tech] }
     - { name: Tom's Hardware,     url: "https://www.tomshardware.com/feeds.xml",          sections: [tech] }
     - { name: MISSIL,             url: "https://www.missil.se/feed/", sections: [gaming], language: sv }
-    - { name: PC Gamer,           url: "https://www.pcgamer.com/feeds.xml",               sections: [gaming, tech] }
+    - { name: MISSIL Reviews,     url: "https://missil.se/spelrecensioner/feed/", kind: reviews, reviews_only: true, multi_platform: true }
+    - { name: PC Gamer,           url: "https://www.pcgamer.com/feeds.xml",               sections: [gaming, tech], score_from_page: true }
+    - { name: PC Gamer Reviews,   url: "https://www.pcgamer.com/feeds/articletype/review/", kind: reviews, reviews_only: true, score_from_page: true }
+    - { name: Eurogamer,          url: "https://www.eurogamer.net/feed/reviews", kind: reviews, reviews_only: true, multi_platform: true, score_from_page: true }
+    - { name: Game Informer,      url: "https://gameinformer.com/reviews.xml",   kind: reviews, reviews_only: true, multi_platform: true, score_scale: 10 }
+    - { name: PCGamesN,           url: "https://www.pcgamesn.com/mainrss.xml",   reviews_url: "/review/?$", reviews_only: true, score_from_page: true }
     - { name: Rock Paper Shotgun, url: "https://www.rockpapershotgun.com/feed",           sections: [gaming] }
     - { name: RPS Reviews,        url: "https://www.rockpapershotgun.com/feed/reviews",   sections: [gaming], kind: reviews }
     - { name: RPS Deals,          url: "https://www.rockpapershotgun.com/feed/deals",     sections: [deals] }
@@ -485,7 +493,7 @@ sources:
     - { name: gameranx,               channel_id: "UCNvzD7Z-g64bPXxGzaQaa4g" }
     - { name: I Dream of Indie Games, channel_id: "TBD" }
   steam: { cc: se, lists: [new_releases, top_sellers, coming_soon, specials] }
-  itad:  { enabled: true }          # needs the ITAD_API_KEY secret
+  itad:  { enabled: true, critics: { enabled: true, max_reviewed_games: 40 } }   # needs the ITAD_API_KEY secret
 
 pricing:                            # USD per million tokens (Nov 2026)
   claude-opus-5-5:   { input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00 }
@@ -509,8 +517,10 @@ pricing:                            # USD per million tokens (Nov 2026)
   "hn_top": [ { "rank": 1, "title": "…", "url": "…", "points": 2878, "comments_url": "…" } ],
   "gaming": {
     "new_on_pc": [ { "title": "…", "appid": 123, "release_date": "…", "steam_rating": "Very Positive",
-                     "image": "steam capsule url", "blurb": "…", "review_ids": ["r1"], "metacritic_search": "…" } ],
-    "reviews": [ { "id": "r1", "game": "…", "outlet": "PC Gamer", "score": "82", "verdict": "…", "url": "…" } ],
+                     "image": "steam capsule url", "blurb": "…", "review_ids": ["r1"], "metacritic_search": "…",
+                     "critics": { "opencritic": { "score": 88, "count": 69, "url": "…" }, "metascore": { … } } } ],
+    "reviews": [ { "id": "r1", "game": "…", "outlet": "PC Gamer", "score": "90%", "verdict": "…", "url": "…",
+                   "critics": { … } } ],
     "console_spotlight": [ { "game": "…", "platforms": ["ps5"], "headline": "…", "summary": "…", "sources": [] } ],
     "coming_soon": [ { "game": "…", "platforms": ["pc"], "date": "2026-11-14", "date_precision": "day", "url": "…" } ],
     "watch": [ { "channel": "gameranx", "title": "…", "url": "…", "thumbnail": "…", "blurb": "…" } ],
@@ -661,7 +671,7 @@ The real file is in the repo; this is its shape.
 | PCMag only via Google News (redirect links, little text) | Mostly briefs; fine for a minor source |
 | Datacenter IPs blocked by some sources | Re-checked from Actions in phase 2; excerpt fallback; Google News as a backup route |
 | Steam data is an unofficial endpoint | Graceful fallback (the block hides itself); IsThereAnyDeal and the feeds cover the rest |
-| No Metacritic scores | Scores from the reviews themselves + Steam rating; Metacritic as a link; OpenCritic optional |
+| No Metacritic or OpenCritic API | Both averages via IsThereAnyDeal's game info; outlets' own scores from feeds or the review page's schema.org data; Steam rating alongside |
 | Video blurbs based only on title and description | Framed as "Watch" teasers, not reviews |
 | Deals advice that's wrong or out of date | Price and timestamp shown; "prices change"; lowest-ever data from IsThereAnyDeal; no affiliate links |
 | Summaries state things the source doesn't say | Prompts limit Claude to the provided text; "By Claude (AI)" byline; source links |

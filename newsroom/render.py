@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -22,6 +23,7 @@ AI_SECTIONS = ("ai", "tech")                   # sections built from tiered stor
 OPINION_SECTION = {"slug": "opinion", "name": "Opinion",
                    "blurb": "Columns by Claude (AI): arguments built on the paper's reporting."}
 CURRENCY_FORMATS = {"EUR": "€{:.2f}", "USD": "${:.2f}", "GBP": "£{:.2f}", "SEK": "{:.0f} kr"}
+SCORE = re.compile(r"^(\d{1,3}(?:\.\d{1,2})?)(%|/\d{1,3})?$")     # a review score: "8.5/10", "90%", "3/5", "82"
 POSITIVE_RATINGS = {"overwhelmingly positive", "very positive", "positive", "mostly positive"}
 NEGATIVE_RATINGS = {"mostly negative", "negative", "very negative", "overwhelmingly negative"}
 VERDICTS = {"strong_buy": ("▲▲", "Strong Buy"), "buy": ("▲", "Buy"), "hold": ("◆", "Hold"),
@@ -119,6 +121,7 @@ class SiteBuilder:
             date_when=self.date_when, time=self.time, iso=self.iso, num=self.num, money=self.money,
             paragraphs=self.paragraphs, domain=self.domain, rating_class=self.rating_class,
             edition_name=self.edition_name, article_url=self.article_url, when=self.when,
+            score_parts=self.score_parts,
         )
 
     # urls and names
@@ -210,6 +213,13 @@ class SiteBuilder:
     def domain(url: str | None) -> str:
         host = urlparse(url or "").netloc
         return host[4:] if host.startswith("www.") else host
+
+    @staticmethod
+    def score_parts(score: str | None) -> tuple[str, str] | None:
+        """A review score as (number, scale): "8.5/10" → ("8.5", "/10"), "90%" → ("90", "%"), "82" → ("82", "").
+        None for a word ("Bestest Best")."""
+        m = SCORE.match((score or "").strip())
+        return (m.group(1), m.group(2) or "") if m else None
 
     @staticmethod
     def rating_class(rating: str | None) -> str:

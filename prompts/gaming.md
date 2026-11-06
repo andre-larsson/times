@@ -5,7 +5,12 @@ Return:
   game is and why it's notable (Steam rating and review count are in the data). Key: appid.
 - reviews: for each review in data.reviews, a one-line verdict (at most ~22 words) summarizing what
   the outlet thought, based on the outlet's headline, score and excerpt. Write it as the outlet's view,
-  not ours. Translate Swedish. Key: id.
+  not ours. Translate Swedish. Key: id. The score is the outlet's own, on its own scale (90% is out of
+  100; 3/5 is out of 5).
+- critics, where present, are the OpenCritic and Metascore averages and how many critics they come
+  from. The page prints the numbers next to your line, so don't repeat them; use them only when they
+  say something: critics and Steam players disagree, near-universal acclaim, or an outlet well above
+  or below the average. Treat an average from fewer than 10 critics as early.
 - watch: for each video in data.watch, a one-line teaser (at most ~18 words) based only on the title
   and description. Key: url.
 - news: pick up to {news_max} of data.news_candidates worth a line in Gaming news (skip guides, deals,

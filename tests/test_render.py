@@ -114,6 +114,19 @@ def test_deals_use_ratings_not_imperatives(site):
     assert '<span class="chip chip--pick">Horror</span>' in html
 
 
+def test_gaming_shows_critic_averages_and_outlet_scores(site):
+    html = (site / "gaming" / "index.html").read_text(encoding="utf-8")
+    assert ('<a class="critic critic--positive" href="https://example.com/opencritic/hollow-lantern" '
+            'title="Average of 42 critic reviews"><b class="critic-score">87</b> OpenCritic</a>') in html
+    assert ('<span class="critic critic--negative" title="Average of 12 critic reviews">'
+            '<b class="critic-score">48</b> Metascore</span>') in html                  # no link from ITAD
+    assert 'href="https://example.com/metacritic/hollow-lantern"' not in html          # direct link instead
+    assert 'href="https://example.com/metacritic/ashen-rails"' in html                 # search link kept
+    assert '<span class="score"><span>9<small class="score-scale">/10</small></span></span>' in html
+    assert '<span class="score"><span>82</span></span>' in html
+    assert '<span class="score score--word">Recommended</span>' in html
+
+
 def test_search_page_and_index(site, cfg):
     import json
 

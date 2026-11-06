@@ -18,8 +18,10 @@ from . import Item
 REVIEW_TITLE = re.compile(r"^(?P<game>.+?)\s+review\b\s*(?:[–—:|-]\s*(?P<verdict>.+))?$", re.I)
 SCORE_PATTERNS = [
     re.compile(r"Betyg\s+(\d{1,2})\s+av\s+10", re.I),          # MISSIL
-    re.compile(r"\bScore:\s*(\d{1,3}(?:/\d{1,3})?)", re.I),
+    re.compile(r"\bScore:\s*(\d{1,3}(?:\.\d{1,2})?(?:/\d{1,3})?)", re.I),   # Game Informer: "Score: 9.25"
 ]
+# Per-feed review options copied onto each review, for the critic-score step (sources/critics.py)
+REVIEW_FLAGS = ("multi_platform", "score_from_page")
 BADGE_TAGS = {"bestest bests": "Bestest Best", "recommended": "Recommended", "essential": "Essential"}
 HARDWARE_HINTS = re.compile(r"/hardware/|/peripherals?/|/pc-components/", re.I)
 
@@ -78,6 +80,8 @@ def fetch_feed(client: Client, cfg: dict[str, Any]) -> list[Item]:
         )
         if cfg.get("kind") == "reviews" or (review_url and review_url.search(url)):
             _as_review(item, e, cfg)
+        if cfg.get("reviews_only") and item.kind != "review":
+            continue                              # a feed added for its reviews: skip its news and hardware
         items.append(item)
     return items
 
@@ -92,6 +96,8 @@ def _as_review(item: Item, entry: Any, cfg: dict[str, Any]) -> None:
     score = next((m.group(1) for p in SCORE_PATTERNS for m in [p.search(text)] if m), "")
     if score and "/" not in score and "betyg" in text.lower():
         score = f"{score}/10"
+    elif score and "/" not in score and cfg.get("score_scale"):
+        score = f"{score}/{cfg['score_scale']}"
     badge = next((BADGE_TAGS[c] for c in cats if c in BADGE_TAGS), "")
 
     m = REVIEW_TITLE.match(item.title)
@@ -108,6 +114,7 @@ def _as_review(item: Item, entry: Any, cfg: dict[str, Any]) -> None:
         score=score or badge,
         verdict=_sentence_case(verdict) if verdict else (item.excerpt if item.language == "en" else ""),
     )
+    item.extra.update({k: True for k in REVIEW_FLAGS if cfg.get(k)})
 
 
 def _sentence_case(s: str) -> str:

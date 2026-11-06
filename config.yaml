@@ -29,7 +29,7 @@ edition:
 
 gaming:
   new_on_pc:         { min: 3, max: 9, window_days: 7, min_reviews: 50 }     # Steam user reviews = popularity
-  reviews:           { min: 3, max: 10, window_days: 3, fill_days: 14 }     # quiet days: fill from 14 days
+  reviews:           { min: 3, max: 10, window_days: 7, fill_days: 14, per_game: 2 }   # quiet days: fill from 14 days
   console_spotlight:
     max: 3
     min_notability: 4.5
@@ -116,6 +116,9 @@ interests: |
 sources:
   # weight scales a source's headlines in the rule-based ranking (1.0 = normal)
   # skip_categories matches a feed item's first category; skip_paths matches its URL (keep_paths wins)
+  # reviews: kind: reviews (every item) or reviews_url (matching URLs); reviews_only drops the rest;
+  # score_from_page reads the score from the review page; score_scale turns "Score: 9.25" into 9.25/10;
+  # multi_platform outlets also review console games: a game IsThereAnyDeal lists as console-only is dropped
   hackernews: { front_page: true, min_points: 100 }
   feeds:
     - { name: Ars Technica,  url: "https://feeds.arstechnica.com/arstechnica/index", sections: [ai, tech], weight: 1.1,
@@ -126,13 +129,25 @@ sources:
     - { name: Tom's Hardware, url: "https://www.tomshardware.com/feeds.xml", sections: [tech], weight: 1.0,
         skip_paths: [/deals/, /best-picks/] }
     - { name: MISSIL,        url: "https://www.missil.se/feed/", sections: [gaming], language: sv,
-        reviews_url: "/spelrecensioner/", title_is_game: true, skip_categories: [FILMNYHET, Petters blogg] }
+        reviews_url: "/spelrecensioner/", title_is_game: true, multi_platform: true,
+        skip_categories: [FILMNYHET, Petters blogg], skip_paths: [/retro/] }   # MISSIL Retro: old games
+    - { name: MISSIL Reviews, url: "https://missil.se/spelrecensioner/feed/", sections: [gaming], language: sv,
+        kind: reviews, title_is_game: true, reviews_only: true, multi_platform: true }   # the main feed has 15 items
     - { name: PC Gamer,      url: "https://www.pcgamer.com/feeds.xml", sections: [gaming, tech],
-        reviews_url: "-review/?$", skip_paths: [/deals/] }
+        reviews_url: "-review/?$", score_from_page: true, skip_paths: [/deals/] }
+    - { name: PC Gamer Reviews, url: "https://www.pcgamer.com/feeds/articletype/review/", sections: [gaming],
+        kind: reviews, reviews_only: true, score_from_page: true }      # the main feed carries only a few
     - { name: Rock Paper Shotgun, url: "https://www.rockpapershotgun.com/feed", sections: [gaming],
         skip_paths: [-deals-, /deals] }
     - { name: RPS Reviews,   url: "https://www.rockpapershotgun.com/feed/reviews", sections: [gaming], kind: reviews }
     - { name: I Dream of Indie Games, url: "https://www.idreamofindie.com/blog-feed.xml", sections: [gaming], kind: reviews }
+    - { name: Eurogamer,     url: "https://www.eurogamer.net/feed/reviews", sections: [gaming], kind: reviews,
+        reviews_only: true, multi_platform: true, score_from_page: true }
+    - { name: Game Informer, url: "https://gameinformer.com/reviews.xml", sections: [gaming], kind: reviews,
+        reviews_only: true, multi_platform: true, score_scale: 10 }
+    - { name: PCGamesN,      url: "https://www.pcgamesn.com/mainrss.xml", sections: [gaming], reviews_url: "/review/?$",
+        reviews_only: true, score_from_page: true, max_items: 100 }    # 75 items, reviews often near the end
+    # GameSpot blocks page fetches and has no scores in its feed; IGN has no working review feed
     # RPS deals (/feed/deals) is mostly hardware and often weeks old; IsThereAnyDeal covers game deals
   google_news:
     - { name: PCMag, query: "pcmag.com when:2d", domain: pcmag.com, sections: [tech, ai], weight: 0.8 }   # direct feed is bot-blocked
@@ -147,6 +162,7 @@ sources:
     min_steam_percent: 80
     min_steam_reviews: 500
     info_limit: 25                    # games to look up for ratings and Metascore
+    critics: { enabled: true, max_reviewed_games: 40 }   # Gaming: Metascore/OpenCritic, and "is it on PC?"
     hidden:                           # hidden gems: lesser-known (few reviews) but very well rated
       min_steam_percent: 90
       steam_reviews: [200, 5000]
