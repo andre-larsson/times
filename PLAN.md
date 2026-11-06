@@ -94,6 +94,10 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 **Sized by the news, not a quota.**
 - Haiku triage scores every candidate for **newsworthiness** (1–5) and groups articles covering the same event.
 - An Opus **editor** call then looks at the shortlist and assigns tiers within the min/max in config.
+  If it returns fewer briefs than the minimum, the best unused events it saw fill the gap (AI/Tech
+  only, above the briefs bar, nothing that repeats a recent headline). On 2026-11-06 it returned none
+  from 50 events, a one-off (a replay returned 20). Each edition records the editor's counts under
+  `editor` (events shown, picks returned and kept, briefs added).
 - On quiet days it prints fewer stories rather than padding. There's always at least one featured lead.
 - A GTA VI-size gaming story can take the front-page lead.
 

@@ -271,3 +271,36 @@ def test_api_backend_sends_effort_per_task():
     assert sent["model"] == "claude-opus-5-5" and "thinking" not in sent        # adaptive thinking is the default
     llm.call("triage", "sys", "hi", {"type": "object"})
     assert "effort" not in sent["output_config"]
+
+
+def test_editor_short_on_briefs_is_topped_up(tmp_path, offline):
+    """2026-11-06: the editor returned no briefs at all; the paper still gets its briefs column."""
+    class NoBriefs(FakeLLM):
+        def _editor(self, data):
+            return {**super()._editor(data), "briefs": []}
+
+    r = gen.generate(load_config(), tmp_path / "data", "full", now=NOW, env=KEY, client=offline,
+                     llm_factory=lambda cfg, backend, tally, env: NoBriefs(cfg, backend, tally, env))
+    ed = json.loads(store.edition_path(tmp_path / "data", r.edition_id).read_text())
+    st = ed["editor"]
+    assert st["returned"]["briefs"] == 0 and st["kept"]["briefs"] == st["briefs_added"] > 0
+    assert sum(s["tier"] == "brief" for s in ed["stories"]) == st["kept"]["briefs"]
+    assert ed["mode"] == "full" and "editor returned 0 briefs" in ed["reason"]
+
+
+def test_brief_top_up_skips_used_gaming_and_repeated_events():
+    def ev(key, section, title):
+        return {"event": key, "ids": [key], "section": section, "newsworthiness": 3.0,
+                "prompt": {"candidates": [{"title": title}]}}
+    sent = [ev("a", "ai", "Kestrel ships a smaller open model for laptops"),
+            ev("b", "gaming", "A big game gets a release date"),
+            ev("c", "tech", "Chipmaker Example Corp recalls overheating graphics cards"),
+            ev("d", "tech", "Example browser adds tab groups on phones"),
+            ev("e", "ai", "Another lab publishes an agent benchmark")]
+    recent = [{"edition_id": "2026-11-02", "headlines": ["Example Corp recalls overheating graphics cards"]}]
+    limits = {"briefs": {"min": 3}}
+    assignments = {"featured": [{"event": "a"}], "medium": [], "briefs": []}
+    rows = ai_edition._brief_top_up(assignments, sent, {}, recent, limits)
+    assert [r["event"] for r in rows] == ["d", "e"]                       # a used, b gaming, c a repeat
+    assert ai_edition._brief_top_up({**assignments, "briefs": [{"event": x} for x in "xyz"]},
+                                    sent, {}, recent, limits) == []       # enough briefs: nothing added

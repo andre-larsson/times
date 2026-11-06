@@ -20,7 +20,7 @@ from .http import Client
 from .llm import LLM, LLMError
 from .seen import is_seen
 from .sources import Harvest
-from .text import canonical_url, excerpt, slugify
+from .text import canonical_url, excerpt, similarity, slugify, words
 
 PICKS = {"popular": "popular", "hidden": "hidden_gem", "genre": "genre"}   # why a deal is in the list (deals.md)
 
@@ -101,12 +101,20 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
     events = _events(kept, by_id, now, limits)
     if not events:
         raise AIUnavailable("triage kept nothing worth printing")
+    sent = [e for e in events.values() if e["section"] != "gaming" or e["newsworthiness"] >= 4.5]
     try:
-        plan = desk.editor(llm, cfg, [e["prompt"] for e in events.values() if e["section"] != "gaming"
-                                      or e["newsworthiness"] >= 4.5], recent, limits)
+        plan = desk.editor(llm, cfg, [e["prompt"] for e in sent], recent, limits)
     except LLMError as exc:
         raise AIUnavailable(f"editor failed: {exc}") from exc
     assignments = _assignments(plan, events, by_id, kept, limits)
+    returned = {t: len(plan.get(t) or []) for t in ("featured", "medium", "briefs")}
+    extra = _brief_top_up(assignments, sent, kept, recent, limits)
+    if extra:
+        problems.append(f"editor returned {returned['briefs']} briefs (min {limits['briefs']['min']}); "
+                        f"added {len(extra)} from the triage ranking")
+        assignments = _assignments({**plan, "briefs": (plan.get("briefs") or []) + extra}, events, by_id, kept, limits)
+    editor_stats = {"events": len(sent), "returned": returned,
+                    "kept": {t: len(assignments[t]) for t in assignments}, "briefs_added": len(extra)}
     if not assignments["featured"] and not assignments["medium"] and not assignments["briefs"]:
         raise AIUnavailable("the editor picked no stories")
 
@@ -202,6 +210,7 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
         "gaming": gaming,
         "deals": deals,
         "sources": [s.__dict__ for s in harvest.status],
+        "editor": editor_stats,
     }
     edition["llm"]["estimated_usd"] = edition["llm"]["equivalent_usd"]
     return Result(edition, seen_urls, problems)
@@ -249,6 +258,34 @@ def _events(kept: dict[str, dict[str, Any]], by_id: dict[str, rank.Candidate], n
         if len(out) >= 80:
             break
     return out
+
+
+def _brief_top_up(assignments: dict[str, list[dict]], sent: list[dict[str, Any]], kept: dict[str, dict[str, Any]],
+                  recent: list[dict[str, Any]], limits: dict[str, dict[str, Any]]) -> list[dict[str, str]]:
+    """Plan rows that bring the briefs up to their minimum when the editor returned too few.
+
+    On 2026-11-06 the editor (API, Opus) returned no briefs at all from 50 events above the bar; a replay
+    of the same step returned 20. The extra briefs are the best events the editor saw but didn't use. All
+    of them clear the briefs bar, so a quiet day still prints fewer. AI and Tech only, and nothing that
+    looks like a recent edition's headline (the same-story rule from ranking).
+    """
+    short = int(limits["briefs"]["min"]) - len(assignments["briefs"])
+    if short <= 0:
+        return []
+    used = {a["event"] for rows in assignments.values() for a in rows}
+    old = [words(h) for ed in recent for h in ed.get("headlines", [])]
+    rows = []
+    for e in sent:                                   # best first (events are sorted by newsworthiness)
+        if len(rows) >= short:
+            break
+        if e["event"] in used or e["section"] == "gaming":
+            continue
+        cid = e["ids"][0]
+        title = words(kept.get(cid, {}).get("title_en") or e["prompt"]["candidates"][0]["title"])
+        if any(len(title & w) >= 3 and similarity(title, w) >= 0.6 for w in old):
+            continue
+        rows.append({"event": e["event"], "source_id": cid})
+    return rows
 
 
 def _assignments(plan: dict[str, Any], events: dict[str, dict[str, Any]], by_id: dict[str, rank.Candidate],
