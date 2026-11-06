@@ -495,6 +495,7 @@ The real file is in the repo; this is its shape.
 |---|---|
 | `schedule: "23 * * * *"` (hourly) and `"7,41 5,6 * * *"` (cluster) | `generate` checks whether a slot in `schedule.editions` (Stockholm time) has passed without an edition. Usually not, and the run ends in seconds. GitHub delays and drops scheduled runs (much worse since late August 2026; :00 and :30 are the most contended), so the 07:00 slot (06:00 UTC in winter, 05:00 UTC in summer) gets runs at 05:07, 05:23, 05:41, 06:07, 06:23 and 06:41 UTC, with the hourly :23 run as the fallback. Extra runs are harmless: one edition per slot. Slot moved from 07:45 (cron :50) on 2026-11-06 after a morning with no cron run for seven hours |
 | `workflow_dispatch` with `mode` | `auto` behaves like the schedule; `full`, `reduced`, `links` or `skip` force a run now and replace today's edition |
+| `workflow_dispatch` from the Raspberry Pi (`ssh pi`, systemd timer `times-edition.timer`, 07:05 and 07:35 Stockholm, catch-up on boot) | The reliable trigger: GitHub's cron dropped every run for 12 hours on 2026-11-06, and dispatch is not affected. `/usr/local/bin/times-edition-trigger` posts a `mode: auto` dispatch with a fine-grained token (repo `times` only, Actions read/write, expires 2027-11, in root-only `/etc/times-trigger.env`). Set up 2026-11-06; the 07:35 attempt is a free retry |
 | `push` to `main` touching code, templates, static files or config | Skips `generate`; tests, renders and redeploys |
 
 - **generate job** (`contents: write`, `actions: write`): runs `newsroom generate`, commits `data/` when
