@@ -23,7 +23,8 @@ OPINION_SECTION = {"slug": "opinion", "name": "Opinion",
 CURRENCY_FORMATS = {"EUR": "€{:.2f}", "USD": "${:.2f}", "GBP": "£{:.2f}", "SEK": "{:.0f} kr"}
 POSITIVE_RATINGS = {"overwhelmingly positive", "very positive", "positive", "mostly positive"}
 NEGATIVE_RATINGS = {"mostly negative", "negative", "very negative", "overwhelmingly negative"}
-VERDICTS = {"buy": ("✓", "Buy"), "wait": ("◷", "Wait"), "skip": ("✕", "Skip")}
+VERDICTS = {"strong_buy": ("▲▲", "Strong Buy"), "buy": ("▲", "Buy"), "hold": ("◆", "Hold"),
+            "avoid": ("▼", "Avoid")}                    # deal ratings: symbol and word, never color alone
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────

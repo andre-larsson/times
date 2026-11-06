@@ -251,26 +251,26 @@
     "checked_at": "2026-11-03T05:30:00Z",
     "featured": [
       { "game": "Orbital Freight Co.", "shop": "Steam", "price": 7.49, "regular": 29.99, "currency": "EUR", "cut": 75, "lowest_ever": true,
-        "expires": "2026-11-10T17:00:00Z", "verdict": "buy", "steam_rating": "Overwhelmingly Positive",
-        "headline": "Orbital Freight Co. hits its lowest price ever. Buy it.",
-        "body": "Orbital Freight Co. is a logistics sim about running cargo between moons, and one of the best-reviewed management games of the last two years: \"Overwhelmingly Positive\" on Steam from more than 40,000 reviews.\n\nAt €7.49 it is a quarter of the regular price and 25 cents under its previous lowest. The sequel arrives on 19 November, which is likely why the original is this cheap, but the first game is complete and the sequel will not import saves.\n\nWho it's for: anyone who liked Factorio-style planning but wants something calmer. Skip it if you dislike spreadsheets; the late game is mostly optimisation.",
+        "expires": "2026-11-10T17:00:00Z", "verdict": "strong_buy", "steam_rating": "Overwhelmingly Positive",
+        "headline": "Orbital Freight Co. hits its lowest price ever: Strong Buy",
+        "body": "Orbital Freight Co. is a logistics sim about running cargo between moons, and one of the best-reviewed management games of the last two years: \"Overwhelmingly Positive\" on Steam from more than 40,000 reviews.\n\nAt €7.49 it is a quarter of the regular price and 25 cents under its previous lowest. The sequel arrives on 19 November, which is likely why the original is this cheap, but the first game is complete and the sequel will not import saves.\n\nWho it's for: anyone who liked Factorio-style planning but wants something calmer. A poor fit for anyone who dislikes spreadsheets: the late game is mostly optimisation.",
         "url": "https://example.com/steam/orbital-freight" }
     ],
     "more": [
       { "game": "Copperline", "shop": "GOG", "price": 4.99, "regular": 19.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-09T12:00:00Z",
         "steam_rating": "Very Positive", "verdict": "buy", "advice": "A clever puzzle game about building circuits; the lowest price it's had.", "url": "https://example.com/gog/copperline" },
       { "game": "Pale Signal", "shop": "Steam", "price": 9.99, "regular": 24.99, "currency": "EUR", "cut": 60, "lowest_ever": false, "expires": "2026-11-06T17:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "wait", "advice": "Good deal, but it hit €7.49 last winter. Wait for the holiday sale.", "url": "https://example.com/steam/pale-signal" },
+        "steam_rating": "Very Positive", "verdict": "hold", "advice": "A good deal, but it hit €7.49 last winter; the holiday sale may beat it.", "url": "https://example.com/steam/pale-signal" },
       { "game": "Garden Wars", "shop": "Humble Store", "price": 3.74, "regular": 14.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-07T18:00:00Z",
         "steam_rating": "Very Positive", "verdict": "buy", "advice": "Couch co-op strategy that's great with two players.", "url": "https://example.com/humble/garden-wars" },
       { "game": "Riftwalker", "shop": "Steam", "price": 13.99, "regular": 39.99, "currency": "EUR", "cut": 65, "lowest_ever": false, "expires": "2026-11-08T17:00:00Z",
-        "steam_rating": "Mostly Positive", "verdict": "skip", "advice": "Discounted often, and the PC version still has crashes reviewers flagged.", "url": "https://example.com/steam/riftwalker" },
+        "steam_rating": "Mostly Positive", "verdict": "avoid", "advice": "Discounted often, and the PC version still has crashes reviewers flagged.", "url": "https://example.com/steam/riftwalker" },
       { "game": "Night Shift Diner", "shop": "Steam", "price": 2.99, "regular": 11.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-12T17:00:00Z",
         "steam_rating": "Overwhelmingly Positive", "verdict": "buy", "advice": "A short, funny cooking game for one evening. Hard to go wrong at this price.", "url": "https://example.com/steam/night-shift-diner" },
       { "game": "Second Dawn", "shop": "Epic", "price": 17.99, "regular": 59.99, "currency": "EUR", "cut": 70, "lowest_ever": true, "expires": "2026-11-05T16:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "buy", "advice": "A big open-world RPG at its lowest price; budget 60 hours.", "url": "https://example.com/epic/second-dawn" },
+        "steam_rating": "Very Positive", "verdict": "strong_buy", "advice": "A big open-world RPG at its lowest price; budget 60 hours.", "url": "https://example.com/epic/second-dawn" },
       { "game": "Quiet Orchard", "shop": "Steam", "price": 6.49, "regular": 12.99, "currency": "EUR", "cut": 50, "lowest_ever": false, "expires": "2026-11-10T17:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "wait", "advice": "Lovely farming game, but it's been 60% off twice this year.", "url": "https://example.com/steam/quiet-orchard" }
+        "steam_rating": "Very Positive", "verdict": "hold", "advice": "Lovely farming game, but it's been 60% off twice this year.", "url": "https://example.com/steam/quiet-orchard" }
     ]
   },
   "opinion": {

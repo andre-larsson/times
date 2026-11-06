@@ -77,9 +77,9 @@ class FakeLLM(LLM):
 
     def _deals(self, m):
         first, *rest = m["deals"]
-        return {"featured": [{"id": first["id"], "headline": f"{first['game']}: buy it", "body": "Good.",
-                              "verdict": "buy"}],
-                "more": [{"id": d["id"], "advice": "Fine.", "verdict": "wait"} for d in rest]}
+        return {"featured": [{"id": first["id"], "headline": f"{first['game']}: Strong Buy", "body": "Good.",
+                              "verdict": "strong_buy"}],
+                "more": [{"id": d["id"], "advice": "Fine.", "verdict": "hold"} for d in rest]}
 
 
     def _opinion_pick(self, m):
@@ -130,7 +130,7 @@ def test_full_edition(tmp_path, offline):
     assert all(s["slug"] for s in ed["stories"]) and len({s["slug"] for s in ed["stories"]}) == len(tiers)
     assert ed["gaming"]["new_on_pc"][0]["blurb"].startswith("AI blurb")
     assert ed["gaming"]["reviews"][0]["verdict"] == "AI verdict"
-    assert ed["deals"]["featured"][0]["verdict"] == "buy"
+    assert ed["deals"]["featured"][0]["verdict"] == "strong_buy"
     assert ed["llm"]["backend"] == "api" and ed["llm"]["calls"] >= 6
 
     usage = budget.load_usage(data)

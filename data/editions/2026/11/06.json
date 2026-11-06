@@ -622,9 +622,9 @@
     "expires": "2026-11-19T18:00:00+00:00",
     "steam_rating": "Overwhelmingly Positive",
     "url": "https://store.steampowered.com/app/8930/",
-    "headline": "Civilization V drops to €7.49 on Steam. Buy it.",
+    "headline": "Civilization V drops to €7.49 on Steam: Strong Buy",
     "body": "Sid Meier's Civilization V costs €7.49 on Steam, 75 percent off its regular €29.99. Steam users rate it Overwhelmingly Positive, the platform's highest rating band and one of the best scores in today's sale.\n\nThe deal runs until November 19 at 18:00 UTC, so there is time, but little reason to wait. At a quarter of the usual price, this is an easy pick for anyone who has had it on a wishlist or skipped it at full price. With a score this strong and a price this low, the risk is minimal.",
-    "verdict": "buy"
+    "verdict": "strong_buy"
    },
    {
     "game": "Borderlands 3",
@@ -637,9 +637,9 @@
     "expires": "2026-11-16T18:00:00+00:00",
     "steam_rating": "Very Positive",
     "url": "https://store.steampowered.com/app/397540/",
-    "headline": "Borderlands 3 is 90 percent off at €5.99. Buy it.",
+    "headline": "Borderlands 3 is 90 percent off at €5.99: Strong Buy",
     "body": "Borderlands 3 is down to €5.99 on Steam, 90 percent off its regular €59.99. Steam users rate it Very Positive. Few full-priced games in this sale take a cut this deep.\n\nThe offer ends November 16 at 18:00 UTC. Borderlands 2 is on sale until the same date for €2.99, so both games cost €8.98 together. That suits anyone who wants to catch up on the series or simply wants a well-reviewed game for less than €6. At a tenth of the usual price, the value is hard to argue with.",
-    "verdict": "buy"
+    "verdict": "strong_buy"
    }
   ],
   "more": [
@@ -655,7 +655,7 @@
     "steam_rating": "Very Positive",
     "url": "https://store.steampowered.com/app/252490/",
     "advice": "Half off at €19.99 and rated Very Positive. Fair, but smaller cut. Ends November 9.",
-    "verdict": "wait"
+    "verdict": "hold"
    },
    {
     "game": "No Man's Sky",

@@ -112,7 +112,7 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 
 | Block | Count | Content |
 |---|---|---|
-| **Deal of the day** | 1–2 | A short article (~150 words): what the game is, how good reviewers and Steam users say it is, the price versus its lowest ever, when the deal ends, and a clear **Buy / Wait / Skip** verdict with who it's for |
+| **Deal of the day** | 1–2 | A short article (~150 words): what the game is, how good reviewers and Steam users say it is, the price versus its lowest ever, when the deal ends, and a rating like a stock analyst's (**Strong Buy / Buy / Hold / Avoid**, never imperatives like "Buy it") with who it suits |
 | **More deals** | 5–10 | One-line advice per deal, with a price tag showing the regular price struck through, the sale price, the discount and a "Lowest ever" badge |
 
 - **Picking deals:** IsThereAnyDeal deals for Sweden (prices in the local currency), filtered to
@@ -504,7 +504,7 @@ pricing:                            # USD per million tokens (Nov 2026)
   },
   "deals": {
     "featured": [ { "game": "…", "shop": "Steam", "price": 9.99, "regular": 39.99, "currency": "EUR", "cut": 75,
-                    "lowest_ever": true, "expires": "…", "verdict": "buy", "headline": "…", "body": "…", "url": "…" } ],
+                    "lowest_ever": true, "expires": "…", "verdict": "strong_buy", "headline": "…", "body": "…", "url": "…" } ],
     "more": [ { "game": "…", "price": 4.99, "regular": 19.99, "cut": 75, "lowest_ever": false, "advice": "…", "url": "…" } ],
     "checked_at": "2026-11-03T05:30:00Z"
   },

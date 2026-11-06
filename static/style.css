@@ -75,8 +75,8 @@
 
   /* Verdicts (always paired with a symbol and a word) */
   --buy: #15803d;
-  --wait: #a15c07;
-  --skip: #57534e;
+  --hold: #a15c07;
+  --avoid: #57534e;
 
   /* Ratings */
   --positive: #15803d;
@@ -555,9 +555,9 @@ h1, h2, h3, h4 { margin: 0; }
   padding: 6px 10px 4px; color: #fff;
   font: 800 1.125rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em;
 }
-.verdict--buy { background: var(--buy); }
-.verdict--wait { background: var(--wait); }
-.verdict--skip { background: var(--skip); }
+.verdict--strong_buy, .verdict--buy { background: var(--buy); }
+.verdict--hold { background: var(--hold); }
+.verdict--avoid { background: var(--avoid); }
 .deal-advice .verdict { font-size: 0.8125rem; padding: 3px 6px 2px; margin-right: 4px; vertical-align: 1px; }
 
 .more-deals { align-self: start; }

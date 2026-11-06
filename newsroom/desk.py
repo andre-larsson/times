@@ -15,7 +15,7 @@ from .llm import LLM
 PROMPTS = ROOT / "prompts"
 SECTIONS = ["ai", "tech", "gaming"]
 PLATFORMS = ["pc", "ps5", "xbox", "switch", "switch2"]
-VERDICTS = ["buy", "wait", "skip"]
+VERDICTS = ["strong_buy", "buy", "hold", "avoid"]   # deal ratings, like stock ratings
 
 
 def system_prompt(task: str, **values: Any) -> str:

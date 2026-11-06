@@ -103,3 +103,10 @@ def test_pull_quote_is_not_next_to_its_paragraph():
     assert quote_slot(["x QUOTE", "b", "c", "d"], "QUOTE") == 2
     assert quote_slot(paras[:3], "QUOTE") == 0                 # too short for a pull quote
     assert quote_slot(paras, "") == 0
+
+
+def test_deals_use_ratings_not_imperatives(site):
+    html = (site / "deals" / "index.html").read_text(encoding="utf-8")
+    for label in ("Strong Buy", "Hold", "Avoid"):
+        assert f"{label}</span>" in html, label
+    assert "verdict--strong_buy" in html and "Buy it" not in html
