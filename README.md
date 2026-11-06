@@ -73,10 +73,11 @@ newsroom/            Python package: `python -m newsroom <command>`
   opinion.py         the opinion column: when it's due, format/focus rotation, pick → write → fact-check
   budget.py          data/usage.json and monthly pacing
   render.py          edition JSON → static HTML in _site/
+  search.py          the search index (search/index.json) for the Search page
   serve.py           local preview server under the /times/ base path
 prompts/             style guide and per-task instructions for Claude
-templates/           Jinja2 templates (front, section, gaming, deals, article, opinion, archive, 404, feed)
-static/              style.css, favicon, self-hosted fonts (SIL Open Font License)
+templates/           Jinja2 templates (front, section, gaming, deals, article, opinion, archive, search, 404, feed)
+static/              style.css, search.js (the Search page, plain JS), favicon, self-hosted fonts (SIL Open Font License)
 tests/fixtures/      sample editions and feeds (made-up names; links go to example.com)
 data/                real editions, committed by the workflow
 .github/workflows/   edition.yml (scheduled check, generate, deploy), sources.yml (manual source check)

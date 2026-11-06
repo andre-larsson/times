@@ -11,6 +11,13 @@
 </header>
 
 <div class="wrap archive">
+  <form class="search-form archive-search" role="search" action="{{ url('search/') }}">
+    <div class="search-box">
+      <label class="visually-hidden" for="archive-q">Search every story</label>
+      <input class="search-input" id="archive-q" type="search" name="q" placeholder="Search every story" enterkeyhint="search">
+      <button class="btn" type="submit">Search</button>
+    </div>
+  </form>
   <ol class="archive-list">
     {% for row in summaries %}
     {% set ed = row.edition %}

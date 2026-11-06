@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Search · {{ site.title }}{% endblock %}
+{% block head %}<script src="{{ url('static/search.js') }}?v={{ js_id }}" defer></script>{% endblock %}
+
+{% block main %}
+<header class="section-hero sec-search">
+  <div class="wrap">
+    <h1 class="section-title">Search</h1>
+    <p class="section-blurb">Every story, brief, column and gaming item since {{ since.day }} {{ since.strftime('%B %Y') }}: {{ count | num }} in all.</p>
+  </div>
+</header>
+
+<div class="wrap search">
+  <form class="search-form" role="search" action="{{ url('search/') }}" data-search
+        data-index="{{ index_url }}" data-sections="{{ section_names }}">
+    <div class="search-box">
+      <label class="visually-hidden" for="search-q">Search the paper</label>
+      <input class="search-input" id="search-q" type="search" name="q" placeholder="Headlines, summaries, sources"
+             autocomplete="off" spellcheck="false" enterkeyhint="search">
+      <button class="btn btn--primary" type="submit">Search</button>
+    </div>
+    <fieldset class="search-filters">
+      <legend class="visually-hidden">Section</legend>
+      <label class="filter"><input type="radio" name="section" value="" checked><span>All</span></label>
+      {% for slug, name in filters %}
+      <label class="filter sec-{{ slug }}"><input type="radio" name="section" value="{{ slug }}"><span>{{ name }}</span></label>
+      {% endfor %}
+    </fieldset>
+  </form>
+
+  <p class="search-status" id="search-status" aria-live="polite"></p>
+  <ol class="search-results" id="search-results"></ol>
+  <button class="btn search-more" id="search-more" type="button" hidden>Show more</button>
+  <noscript><p class="empty">Search runs in your browser and needs JavaScript. The <a href="{{ url('archive/') }}">Archive</a> lists every edition by date.</p></noscript>
+</div>
+{% endblock %}

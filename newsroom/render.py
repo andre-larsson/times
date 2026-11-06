@@ -14,6 +14,7 @@ from zoneinfo import ZoneInfo
 from jinja2 import ChainableUndefined, Environment, FileSystemLoader, select_autoescape
 
 from . import ROOT
+from .search import build_index
 
 TIERS = ("featured", "medium", "brief")
 PAGE_TIERS = ("featured", "medium")            # tiers that get their own article page
@@ -95,9 +96,10 @@ class SiteBuilder:
         self.front_days = int((cfg.get("opinion") or {}).get("front_days", 7))
 
         css = (ROOT / "static" / "style.css").read_bytes()
+        js = (ROOT / "static" / "search.js").read_bytes()
         self.nav = [("front", "Front", self.url(""))] + [
             (s["slug"], s["name"], self.url(f"{s['slug']}/")) for s in cfg["sections"]
-        ] + [("archive", "Archive", self.url("archive/"))]
+        ] + [("archive", "Archive", self.url("archive/")), ("search", "Search", self.url("search/"))]
 
         self.env = Environment(
             loader=FileSystemLoader(ROOT / "templates"),
@@ -109,6 +111,7 @@ class SiteBuilder:
         self.env.globals.update(
             url=self.url, site=self.site, sections=self.sections, nav=self.nav, preview=preview,
             section_name=self.section_name, build_id=hashlib.sha1(css).hexdigest()[:8],
+            js_id=hashlib.sha1(js).hexdigest()[:8],
             verdicts=VERDICTS, edition_time=(cfg["schedule"].get("editions") or [""])[0],
         )
         self.env.filters.update(
@@ -376,6 +379,19 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         b.write(f"archive/{ed['edition_id']}/", "front.html", active="archive", archived=True,
                 current_edition=ed, **b.front_context(ed))
     b.write("archive/", "archive.html", active="archive", **common, summaries=summaries)
+
+    # Search: the index, and the page that searches it in the browser
+    rows = build_index(editions, b.article_url)
+    index = json.dumps({"items": rows}, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    (out_dir / "search").mkdir(exist_ok=True)
+    (out_dir / "search" / "index.json").write_bytes(index)
+    filters = [(slug, b.section_name(slug)) for slug in (*AI_SECTIONS, "gaming")]
+    if b.columns:
+        filters.append(("opinion", OPINION_SECTION["name"]))
+    b.write("search/", "search.html", active="search", **common, filters=filters, count=len(rows),
+            since=b.local(editions[0].get("generated_at")),
+            index_url=b.url("search/index.json") + "?v=" + hashlib.sha1(index).hexdigest()[:8],
+            section_names=json.dumps(dict(filters)))
 
     # 404 and feed
     b.write("404.html", "404.html", active="", **common)

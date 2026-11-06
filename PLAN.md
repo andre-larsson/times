@@ -221,7 +221,7 @@ Dark mode inverts the paper but keeps the section colors.
 ├──────────────────────────────────────────────────────────────────────────┤
 │ ███ THE [403] TIMES ███                                    Access Granted│  ← black masthead
 ├──────────────────────────────────────────────────────────────────────────┤
-│  Front   AI   Tech   Gaming   Deals   Archive                            │
+│  Front   AI   Tech   Gaming   Deals   Archive   Search                   │
 ├────────────────────────────────────────────────┬─────────────────────────┤
 │ BREAKING:                                      │ LATEST                  │
 │ HUGE CONDENSED LEAD HEADLINE                   │ 06:12 AI  one-liner →   │
@@ -390,8 +390,8 @@ times/
 │   ├── writers.py            # featured / medium / briefs / gaming / deals prompts + schemas
 │   └── render.py
 ├── prompts/
-├── templates/                # base, front, section, gaming, deals, article, archive, 404, feed.xml
-├── static/                   # style.css, fonts/ (self-hosted, open-licensed), logo.svg
+├── templates/                # base, front, section, gaming, deals, article, archive, search, 404, feed.xml
+├── static/                   # style.css, search.js, fonts/ (self-hosted, open-licensed), logo.svg
 ├── data/  seen.json  usage.json  games_watchlist.json  editions/2026/11/03.json
 ├── tests/                    # fixtures/ (fictional editions and feeds), test_render.py, test_pipeline.py
 └── .github/workflows/        # edition.yml, sources.yml
@@ -541,7 +541,8 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/deals/` | Today's deals plus recent ones still active |
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
 | `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
-| `/times/archive/` | Past editions by date, mode labeled |
+| `/times/archive/` | Past editions by date, mode labeled, with a search box |
+| `/times/search/` | Search every story, brief, column and gaming item: `search/index.json` (written at build time by `newsroom/search.py`: headline, one-line summary, key points, sources, section, date, link) searched in the browser by `static/search.js` (plain JavaScript, no libraries). Word-start matching that ignores case and accents, "quoted phrases", section filters, newest first; the query lives in the URL (`?q=…&section=…`). Deals and release lists aren't indexed. About 11 KB per edition (4 KB gzipped); split the index by year if it ever gets slow |
 | `/times/feed.xml` | Atom feed |
 
 - `noindex` on every page.
@@ -643,7 +644,7 @@ The real file is in the repo; this is its shape.
 
 6. **Tune and polish**
    - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.
-   - Then: Batch API, an "editor's note", search, more editions if wanted.
+   - Then: Batch API, an "editor's note", more editions if wanted. (Search: built 2026-11-06.)
 
 ## Risks and mitigations
 

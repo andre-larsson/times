@@ -112,3 +112,30 @@ def test_deals_use_ratings_not_imperatives(site):
     assert "verdict--strong_buy" in html and "Buy it" not in html
     assert '<span class="chip chip--pick">Hidden gem</span>' in html            # where a deal came from
     assert '<span class="chip chip--pick">Horror</span>' in html
+
+
+def test_search_page_and_index(site, cfg):
+    import json
+
+    from newsroom.search import build_index
+
+    html = (site / "search" / "index.html").read_text(encoding="utf-8")
+    assert 'data-index="/times/search/index.json?v=' in html and "static/search.js?v=" in html
+    assert 'value="opinion"' in html                                   # a filter per section, Opinion included
+    rows = json.loads((site / "search" / "index.json").read_text(encoding="utf-8"))["items"]
+    assert [r["t"] for r in rows] == sorted((r["t"] for r in rows), reverse=True)    # newest first
+    kinds = {r["n"] for r in rows}
+    assert {"", "Brief", "Column", "News", "Review", "Link"} <= kinds, kinds
+    base = cfg["site"]["base_path"]
+    for r in rows:
+        assert r["h"] and r["s"] and r["t"], r
+        if not r["u"].startswith("http"):                              # our pages must exist
+            target = site / r["u"][len(base):]
+            assert r["u"].startswith(base) and (target / "index.html").is_file(), r["u"]
+    archive = (site / "archive" / "index.html").read_text(encoding="utf-8")
+    assert 'action="/times/search/"' in archive
+
+    same = {"headline": "Same story", "summary": "", "url": "https://example.com/same"}
+    eds = [{"edition_id": "2026-11-01", "gaming": {"news": [same]}},
+           {"edition_id": "2026-11-02", "gaming": {"news": [same]}}]
+    assert [r["t"] for r in build_index(eds, lambda s: "#")] == ["2026-11-01"]   # first seen, listed once
