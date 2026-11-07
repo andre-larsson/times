@@ -11,7 +11,7 @@ from typing import Any
 
 from typing import Callable
 
-from . import ai_edition, budget, opinion, preflight, schedule, store
+from . import ai_edition, budget, opinion, preflight, quiz, schedule, store
 from . import seen as seen_store
 from .http import Client
 from .links import build_links_edition
@@ -20,6 +20,7 @@ from .sources import Harvest, fetch_all
 
 MODES = ("auto", "full", "reduced", "links", "skip")
 OPINION = ("auto", "force", "off")    # auto = when due (opinion.days / every_weeks) in a full edition
+QUIZ = ("auto", "force", "off")       # auto = when due (quiz.days / every_weeks) in a full edition
 MIN_LINKS_TO_PUBLISH = 5          # below this the sources are probably down: keep the last edition
 
 
@@ -33,16 +34,19 @@ class Result:
     harvest: Harvest | None = None
     llm: dict[str, Any] | None = None
     column: str = ""                  # the opinion column's headline, or why it wasn't written
+    quiz: str = ""                    # the quiz's size, or why it wasn't written
 
 
 def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
              now: dt.datetime | None = None, env: dict[str, str] | None = None,
              client: Client | None = None, backend: str | None = None,
-             llm_factory: Callable[..., LLM] = LLM, column: str = "auto") -> Result:
+             llm_factory: Callable[..., LLM] = LLM, column: str = "auto", quiz_mode: str = "auto") -> Result:
     if requested not in MODES:
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
     if column not in OPINION:
         raise ValueError(f"opinion must be one of {', '.join(OPINION)}")
+    if quiz_mode not in QUIZ:
+        raise ValueError(f"quiz must be one of {', '.join(QUIZ)}")
     now = now or dt.datetime.now(dt.timezone.utc)
     env = dict(os.environ) if env is None else env
     sched = cfg["schedule"]
@@ -89,6 +93,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
         if edition is not None and harvest.weather:
             edition["weather"] = harvest.weather
         column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
+        quiz_note = _quiz(cfg, data_dir, edition, mode, llm, quiz_mode) if edition else ""
     finally:
         if own_client:
             client.__exit__(None, None, None)
@@ -104,7 +109,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
                       harvest=harvest, llm=tally.summary())
     path = store.save_edition(data_dir, edition)
     seen_store.save(data_dir, seen, now)
-    return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note)
+    return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note, quiz_note)
 
 
 def _opinion(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
@@ -116,21 +121,57 @@ def _opinion(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode:
         kept = dict(kept, slug=opinion.unique_slug(kept["headline"], {s["slug"] for s in edition["stories"]}))
         edition["opinion"] = kept
         return f"kept today's column: {kept['headline']}"
-    if requested == "force" and edition["mode"] == "links":
-        return "not written: a links edition has no Claude to write it"
-    if requested == "off" or edition["mode"] == "links" or (requested == "auto" and mode != "full"):
-        return ""
+    skip = _skip_extra(edition, mode, requested)
+    if skip is not None:
+        return skip
     try:
         outcome = opinion.write(cfg, llm, edition, store.all_editions(data_dir), force=requested == "force")
     except Exception as exc:                         # the column is optional: never lose the edition over it
         outcome = opinion.Outcome(note=f"{type(exc).__name__}: {str(exc)[:200]}")
-    edition["llm"] = {"backend": llm.backend, **llm.tally.summary()}
-    edition["llm"]["estimated_usd"] = edition["llm"]["equivalent_usd"]
+    _record_llm(edition, llm)
     if outcome.column:
         edition["opinion"] = outcome.column
         n = len(outcome.column.get("checked", {}).get("fixes", []))
         return f"written{f' ({n} fact-check fixes)' if n else ''}: {outcome.column['headline']}"
     return f"not written: {outcome.note}" if outcome.note else ""
+
+
+def _quiz(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
+          requested: str) -> str:
+    """Add the quiz to the edition when one is due. Returns a line for the report."""
+    kept = (store.load_edition(data_dir, edition["edition_id"]) or {}).get("quiz")
+    if kept and requested != "force":                # re-running today: keep today's quiz, don't pay twice
+        edition["quiz"] = kept
+        return f"kept today's quiz ({len(kept['questions'])} questions)"
+    skip = _skip_extra(edition, mode, requested)
+    if skip is not None:
+        return skip
+    try:
+        outcome = quiz.write(cfg, llm, edition, store.all_editions(data_dir), force=requested == "force")
+    except Exception as exc:                         # the quiz is optional: never lose the edition over it
+        outcome = quiz.Outcome(note=f"{type(exc).__name__}: {str(exc)[:200]}")
+    _record_llm(edition, llm)
+    if outcome.quiz:
+        edition["quiz"] = outcome.quiz
+        n, dropped = len(outcome.quiz["questions"]), len(outcome.quiz["checked"]["dropped"])
+        return f"written: {n} questions" + (f" ({dropped} dropped by the check)" if dropped else "")
+    return f"not written: {outcome.note}" if outcome.note else ""
+
+
+def _skip_extra(edition: dict[str, Any], mode: str, requested: str) -> str | None:
+    """Whether the column or the quiz stays out of this edition: a line for the report ("" says nothing),
+    or None to go ahead and write it if it's due."""
+    if requested == "force" and edition["mode"] == "links":
+        return "not written: a links edition has no Claude to write it"
+    if requested == "off" or edition["mode"] == "links" or (requested == "auto" and mode != "full"):
+        return ""
+    return None
+
+
+def _record_llm(edition: dict[str, Any], llm: LLM) -> None:
+    """The edition's cost line, now including the column or quiz calls."""
+    edition["llm"] = {"backend": llm.backend, **llm.tally.summary()}
+    edition["llm"]["estimated_usd"] = edition["llm"]["equivalent_usd"]
 
 
 def report(result: Result) -> str:
@@ -139,6 +180,8 @@ def report(result: Result) -> str:
              f"(mode {result.mode}; {result.reason})"]
     if result.column:
         lines.append(f"Opinion column {result.column}")
+    if result.quiz:
+        lines.append(f"Quiz {result.quiz}")
     if result.llm and result.llm.get("calls"):
         l = result.llm
         lines.append(f"Claude: {l['calls']} calls, ${l['usd']:.4f} charged, ${l['equivalent_usd']:.4f} API-equivalent"

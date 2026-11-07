@@ -190,3 +190,30 @@ def check_opinion(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> di
     """The copy desk: material is {column: {headline, dek, body}, stories: [what the columnist had]}."""
     return llm.call("opinion_check", system_prompt("opinion_check"),
                     data_block(material, "The column and the stories it was written from:"), CHECK_SCHEMA)
+
+
+# ── the quiz: the quiz editor writes the questions, the copy desk checks them (both Opus) ──
+
+QUIZ_SCHEMA = obj({"questions": arr(obj({
+    "story_id": STR, "question": STR, "answer": STR, "wrong_answers": arr(STR), "explanation": STR,
+}))})
+
+
+def write_quiz(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> dict[str, Any]:
+    """material: stories (since the last quiz), questions_wanted, max_per_day, earlier_questions."""
+    q = cfg.get("quiz") or {}
+    system = system_prompt("quiz", interests=cfg.get("interests", "").strip(),
+                           questions=material["questions_wanted"], max_per_day=material["max_per_day"],
+                           max_per_section=q.get("max_per_section", 4))
+    return llm.call("quiz", system, data_block(material, "The stories since the last quiz:"), QUIZ_SCHEMA)
+
+
+QUIZ_CHECK_SCHEMA = obj({"results": arr(obj({
+    "n": {"type": "integer"}, "verdict": {"type": "string", "enum": ["ok", "drop"]}, "problem": STR,
+}))})
+
+
+def check_quiz(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> dict[str, Any]:
+    """The copy desk: material is {questions: [...], stories: {story_id: its full text}}."""
+    return llm.call("quiz_check", system_prompt("quiz_check"),
+                    data_block(material, "The questions and the stories they were written from:"), QUIZ_CHECK_SCHEMA)

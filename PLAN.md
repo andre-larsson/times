@@ -23,6 +23,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Build / hosting | GitHub Actions → GitHub Pages (`actions/deploy-pages`) |
 | AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**; **Fable writes the opinion column**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
 | Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it, Opus fact-checks it. Format and focus rotate, so it stays varied |
+| Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
 | Budget | **~$20/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $25 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -181,6 +182,46 @@ An argued column of about 800 words, **twice a week: Wednesday and Sunday** (`op
 - **First column:** an introduction to the column itself, in the 2026-11-06 edition (written on the
   subscription).
 
+### News quiz
+
+Eight multiple-choice questions on the paper's own stories, **twice a week: Tuesday and Saturday**
+(`quiz.days: [tue, sat]`), the days without an opinion column. A test checks the two never share a day.
+
+- **What it covers:** the editions since the last quiz (Wednesday–Saturday, then Sunday–Tuesday), at most
+  `lookback_days` (7). The quiz editor (`quiz`, Opus) gets each story's headline and dek, the key points of
+  featured and medium stories, and the one or two sentences of briefs and gaming news.
+- **Choosing questions** (prompt): every section with stories gets at least one question, none more than
+  `max_per_section` (4, also enforced in code); one question per story; what a reader would remember (the
+  release, the number, who did what), never site metrics such as HN points, never "which outlet" or "which
+  day". Music-related stories (AI music, soundtracks, audio gear) are welcome when the period has them.
+  Earlier quizzes' questions go in so they don't come back.
+- **Answers:** Claude writes the right answer and three wrong ones. The code places the right answer:
+  positions are spread evenly over A–D and shuffled with a seed from the edition id, so the answer
+  key is stable across re-renders and never falls into a pattern. Questions without exactly three distinct
+  wrong answers, or tied to a story id that doesn't exist, are dropped before the check.
+- **Check:** the copy desk (`quiz_check`, Opus, `high` effort) gets every question and the full text of its
+  story, and passes or drops each one: the answer must be in the story, every wrong answer must be wrong,
+  the question must have one reading, the explanation must hold up. Nothing is repaired; a doubtful
+  question is dropped, and so is any question the check doesn't return. With fewer than `min_questions`
+  (5) left, or a failed check call, there's no quiz. Dropped questions are kept under `checked.dropped`.
+- **The page** (`/quiz/YYYY-MM-DD/`): each question is a set of radio buttons; picking one shows right or
+  wrong (symbol, word and color), the explanation and a link to the story, with CSS only
+  (`:has(input:checked)`), so it works without JavaScript. `static/quiz.js` adds one try per question, the
+  running score and "Start over", and remembers the answers in this browser (localStorage).
+- **Where:** a card in the front-page rail for `front_days` (4, until the next quiz), `/quiz/` (and a nav
+  link once one exists), the archive and the feed. Labeled "Questions by Claude (AI)".
+- **When:** only in `full` editions; a failed quiz never stops the edition; a same-day re-run keeps the
+  day's quiz. `generate --quiz force` writes one now; `--quiz off` skips it.
+- **Cost:** measured $0.34–0.36 API-equivalent for the first quiz (a full week of material; writing $0.26,
+  check $0.10). A 3–4 day window is a little less: **~$3/month** at 8–9 quizzes. The first quiz, in the
+  2026-11-07 edition, was written on the subscription.
+- **Later, round 2 ("Deep cut"):** 2–3 questions on a rotating theme, ideally hooked to the period's news,
+  rotated in code like the column's format. Themes: computing history, PC gaming history, chips and
+  hardware, famous hacks and breaches, how AI works, open source, internet culture, game design, and music:
+  music technology and audio, video game music, synths and electronic music, music history from vinyl to
+  streaming. These questions have no story to check against, so the check would get a web search per
+  question (~$0.01 each).
+
 ## Look and feel: a real tabloid news site
 
 Inspired by the conventions of Swedish evening papers (Expressen, Aftonbladet). **Nothing is copied:** the
@@ -305,9 +346,10 @@ web search is $0.01 per search.
 | Deals: deal of the day + more deals (one call) | Opus | $0.04 | $0.06 |
 | Discovery, depth `light` (3 searches, 3 fetches) | Opus | $0.25 | $0.25 |
 | Opinion column, Wednesday and Sunday (~$0.45 each) | Opus + Fable | ~$4/month | ~$4/month |
-| **Per day / per month** | | **~$0.52 / ~$16** | **~$0.74 / ~$22** |
+| News quiz, Tuesday and Saturday (~$0.35 each) | Opus | ~$3/month | ~$3/month |
+| **Per day / per month** | | **~$0.62 / ~$19** | **~$0.84 / ~$25** |
 
-- A month of busy days would run slightly over $20. The pacing guard handles that by making some
+- A month of busy days would run over $20. The pacing guard handles that by making some
   editions `reduced` (no discovery, fewer stories), so the month lands at about $20.
 - Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$4/month.
 - Rough estimates; phases 3 and 5 measure the real numbers.
@@ -323,7 +365,8 @@ web search is $0.01 per search.
 | Search depth and frequency | `search.depth`, `search.discovery_every_days` | `light`, 1 |
 | Models | `models.*` | Opus everywhere except Haiku triage and the Fable column (`opinion`) |
 | Opinion column | `opinion.days / every_weeks / words / lookback_days / front_days` | Wed, Sun / 1 / 800 / 7 / 7 |
-| Effort per task | `llm.effort` | `high` for the three column calls; others use the model default |
+| News quiz | `quiz.days / questions / min_questions / max_per_section / lookback_days / front_days` | Tue, Sat / 8 / 5 / 4 / 7 / 4 |
+| Effort per task | `llm.effort` | `high` for the three column calls and the quiz check; others use the model default |
 | Budget | `budget.monthly_usd` | 20 |
 
 ## Run modes and the pre-run check
@@ -542,11 +585,17 @@ pricing:                            # USD per million tokens (Nov 2026)
   "opinion": { "slug": "…", "kicker": "Opinion", "headline": "…", "dek": "…", "body": "…", "pull_quote": "…",
                "topic": "…", "thesis": "…", "focus": "cross", "format": "argument", "model": "claude-fable-5-1",
                "reading": [ { "headline": "…", "edition_id": "2026-11-05", "tier": "medium", "slug": "…",
-                              "sources": [ { "name": "…", "url": "…" } ] } ] }
+                              "sources": [ { "name": "…", "url": "…" } ] } ] },
+  "quiz": { "kicker": "Quiz", "headline": "The Saturday quiz", "dek": "Eight questions on …",
+            "period": { "start": "2026-11-04", "end": "2026-11-07" }, "model": "claude-opus-5-5",
+            "checked": { "model": "claude-opus-5-5", "dropped": [ { "question": "…", "answer": "…", "problem": "…" } ] },
+            "questions": [ { "question": "…", "options": ["…", "…", "…", "…"], "answer": 2, "explanation": "…",
+                             "section": "tech", "story": { "headline": "…", "edition_id": "…", "tier": "featured",
+                                                           "slug": "…", "sources": [ … ] } } ] }
 }
 ```
 
-`opinion` is only present on the days a column runs. `weather` (see *Sources → Weather*) is missing when
+`opinion` and `quiz` are only present on the days they run. `weather` (see *Sources → Weather*) is missing when
 the forecast couldn't be fetched:
 `{ "place": "Stockholm", "today": { "date", "high", "low", "code", "condition", "precip_chance", "precip_mm",
 "wind_ms", "sunrise", "sunset" }, "hours": [ { "time": "12:00", "temp", "code", "condition", "precip_chance" } ],
@@ -565,6 +614,7 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/deals/` | Today's deals plus recent ones still active |
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
 | `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
+| `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz nav link once there is one) |
 | `/times/archive/` | Past editions by date, mode labeled, with a search box |
 | `/times/search/` | Search every story, brief, column and gaming item: `search/index.json` (written at build time by `newsroom/search.py`: headline, one-line summary, key points, sources, section, date, link) searched in the browser by `static/search.js` (plain JavaScript, no libraries). Word-start matching that ignores case and accents, "quoted phrases", section filters, newest first; the query lives in the URL (`?q=…&section=…`). Deals and release lists aren't indexed. About 11 KB per edition (4 KB gzipped); split the index by year if it ever gets slow |
 | `/times/feed.xml` | Atom feed |

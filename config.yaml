@@ -67,6 +67,8 @@ models:
   opinion_pick: claude-opus-5-5       # the opinion editor picks the column's topic
   opinion:  claude-fable-5-1          # the columnist writes it
   opinion_check: claude-opus-5-5      # the copy desk fact-checks it against the stories
+  quiz:     claude-opus-5-5           # the quiz editor writes the questions
+  quiz_check: claude-opus-5-5         # the copy desk checks each answer against its story
 
 budget:
   monthly_usd: 20                     # paced over the calendar month, like the Console workspace spend limit
@@ -84,9 +86,9 @@ llm:
   timeout_seconds: 240
   reduced: { featured_max: 1, medium_max: 3 }
   max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000,
-                opinion_pick: 8000, opinion: 16000, opinion_check: 8000 }
+                opinion_pick: 8000, opinion: 16000, opinion_check: 8000, quiz: 12000, quiz_check: 8000 }
                                       # a hard cap on thinking + text (Claude 5 models always think); you pay for what's used
-  effort: { opinion_pick: high, opinion: high, opinion_check: high }
+  effort: { opinion_pick: high, opinion: high, opinion_check: high, quiz_check: high }
                                       # per task; unset = the model's default (Opus 5.5: medium, Fable 5.1: high)
 
 opinion:                              # the opinion column: Opus picks a topic, Fable writes it, Opus fact-checks it
@@ -96,6 +98,16 @@ opinion:                              # the opinion column: Opus picks a topic, 
   words: 800
   lookback_days: 7                    # the editions a topic is picked from
   front_days: 7                       # how long the latest column stays on the front page
+
+quiz:                                 # the news quiz: Opus writes multiple-choice questions on the news since the
+  enabled: true                       #   last quiz, and Opus checks each one against its story
+  days: [tue, sat]                    # twice a week, on days without an opinion column (opinion.days); full editions only
+  every_weeks: 1
+  questions: 8
+  min_questions: 5                    # fewer pass the check: no quiz this time
+  max_per_section: 4
+  lookback_days: 7                    # at most; normally the days since the last quiz
+  front_days: 4                       # how long the latest quiz stays on the front page
 
 weather:                              # the front page's weather box: Open-Meteo, no key, fetched with each edition
   enabled: true

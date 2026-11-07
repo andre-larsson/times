@@ -5,6 +5,8 @@ from __future__ import annotations
 import datetime as dt
 from zoneinfo import ZoneInfo
 
+WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
+
 
 def _slots(slots: list[str]) -> list[dt.time]:
     return sorted(dt.time.fromisoformat(s) for s in slots)
@@ -48,3 +50,11 @@ def forced_slot(now: dt.datetime, tz: str, slots: list[str]) -> dt.datetime:
     if slot.date() == local.date():
         return slot
     return dt.datetime.combine(local.date(), _slots(slots)[0], tzinfo=zone)
+
+
+def weekly_due(day: dt.date, days: list[str], every_weeks: int, last: dt.date | None) -> bool:
+    """For features on set weekdays (the opinion column, the quiz): `day` is one of `days` (mon … sun),
+    and at least `every_weeks` weeks have passed since `last`. Never twice on one day."""
+    if day.weekday() not in {WEEKDAYS.index(str(d)[:3].lower()) for d in days}:
+        return False
+    return last is None or (day - last).days > 7 * (max(1, every_weeks) - 1)

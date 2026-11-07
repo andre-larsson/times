@@ -34,6 +34,7 @@ def test_expected_pages_exist(site):
         "archive/index.html", "archive/2026-11-02/index.html", "archive/2026-11-03/index.html",
         "2026/11/03/kestrel-2-open-model-catches-big-labs/index.html",
         "2026/11/03/build-the-pc-this-winter/index.html", "opinion/index.html",
+        "quiz/index.html", "quiz/2026-11-03/index.html", "static/quiz.js",
         "404.html", "feed.xml", "static/style.css", "static/favicon.svg",
     ]:
         assert (site / rel).is_file(), rel
@@ -67,6 +68,19 @@ def test_front_page_content(site):
     assert 'name="robots" content="noindex' in html
     assert "Design preview" in html  # fixtures are clearly marked
     assert 'aria-label="Weather in Sample City"' in html and "Light rain" in html and ">Wed<" in html and "−1°" in html
+
+
+def test_quiz_page(site):
+    html = (site / "quiz" / "2026-11-03" / "index.html").read_text(encoding="utf-8")
+    assert html.count('class="quiz-q ') == 5 and html.count("quiz-opt--right") == 5
+    assert html.count('type="radio" name="q1"') == 4 and "static/quiz.js" in html
+    assert 'href="/times/2026/11/03/kestrel-2-open-model-catches-big-labs/"' in html   # our article page
+    assert 'href="https://example.com/pixel-courier/showcase"' in html                  # gaming news: the source
+    assert "Not quite. Right answer: 71.4%<" in html
+    front = (site / "index.html").read_text(encoding="utf-8")
+    assert 'aria-label="Quiz"' in front and "The Tuesday quiz" in front and ">Quiz</a>" in front   # rail card, nav
+    assert "The Tuesday quiz" in (site / "archive" / "index.html").read_text(encoding="utf-8")
+    assert "/times/quiz/2026-11-03/" in (site / "feed.xml").read_text(encoding="utf-8")
 
 
 def test_links_edition_renders(tmp_path, cfg):

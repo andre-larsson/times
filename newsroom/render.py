@@ -22,6 +22,8 @@ PAGE_TIERS = ("featured", "medium")            # tiers that get their own articl
 AI_SECTIONS = ("ai", "tech")                   # sections built from tiered stories
 OPINION_SECTION = {"slug": "opinion", "name": "Opinion",
                    "blurb": "Columns by Claude (AI): arguments built on the paper's reporting."}
+QUIZ_SECTION = {"slug": "quiz", "name": "Quiz",
+                "blurb": "Twice a week: how much of the news did you catch? Questions by Claude (AI)."}
 CURRENCY_FORMATS = {"EUR": "€{:.2f}", "USD": "${:.2f}", "GBP": "£{:.2f}", "SEK": "{:.0f} kr"}
 SCORE = re.compile(r"^(\d{1,3}(?:\.\d{1,2})?)(%|/\d{1,3})?$")     # a review score: "8.5/10", "90%", "3/5", "82"
 POSITIVE_RATINGS = {"overwhelmingly positive", "very positive", "positive", "mostly positive"}
@@ -95,10 +97,12 @@ class SiteBuilder:
         self.pages = 0
         self.now = dt.datetime.now(dt.timezone.utc)
         self.columns: list[dict[str, Any]] = []         # opinion columns, newest first
+        self.quizzes: list[dict[str, Any]] = []         # quizzes, newest first
         self.front_days = int((cfg.get("opinion") or {}).get("front_days", 7))
+        self.quiz_days = int((cfg.get("quiz") or {}).get("front_days", 4))
 
         css = (ROOT / "static" / "style.css").read_bytes()
-        js = (ROOT / "static" / "search.js").read_bytes()
+        js = b"".join(p.read_bytes() for p in sorted((ROOT / "static").glob("*.js")))
         self.nav = [("front", "Front", self.url(""))] + [
             (s["slug"], s["name"], self.url(f"{s['slug']}/")) for s in cfg["sections"]
         ] + [("archive", "Archive", self.url("archive/")), ("search", "Search", self.url("search/"))]
@@ -137,12 +141,11 @@ class SiteBuilder:
 
     def column_for(self, edition: dict[str, Any]) -> dict[str, Any] | None:
         """The latest opinion column as of this edition, if it's recent enough for its front page."""
-        day = dt.date.fromisoformat(edition["edition_id"][:10])
-        for c in self.columns:
-            age = (day - dt.date.fromisoformat(c["edition_id"][:10])).days
-            if 0 <= age < self.front_days and c["edition_id"] <= edition["edition_id"]:
-                return c
-        return None
+        return _latest(self.columns, edition, self.front_days)
+
+    def quiz_for(self, edition: dict[str, Any]) -> dict[str, Any] | None:
+        """The latest quiz as of this edition, if it's recent enough for its front page."""
+        return _latest(self.quizzes, edition, self.quiz_days)
 
     def article_url(self, story: dict[str, Any]) -> str:
         if story.get("path"):
@@ -272,8 +275,28 @@ class SiteBuilder:
             "deals": edition.get("deals") or {},
             "links_by_section": links_by_section,
             "column": self.column_for(edition),
+            "quiz": self.quiz_for(edition),
             "weather": edition.get("weather"),
         }
+
+
+def _latest(items: list[dict[str, Any]], edition: dict[str, Any], days: int) -> dict[str, Any] | None:
+    """The newest of `items` (newest first) published at or before `edition` and fewer than `days` days old."""
+    day = dt.date.fromisoformat(edition["edition_id"][:10])
+    for it in items:
+        age = (day - dt.date.fromisoformat(it["edition_id"][:10])).days
+        if 0 <= age < days and it["edition_id"] <= edition["edition_id"]:
+            return it
+    return None
+
+
+def _link_stories(rows: list[dict[str, Any]], pages: set[str]) -> None:
+    """Rows pointing at earlier stories (a column's reporting, a quiz's answers) get our article page's
+    path when it exists; otherwise article_url falls back to the original source."""
+    for r in rows:
+        path = article_path(r["edition_id"], r["slug"]) if r.get("tier") in PAGE_TIERS and r.get("slug") else ""
+        if path in pages:
+            r["path"] = path
 
 
 def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
@@ -309,13 +332,19 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         col.update(edition_id=ed["edition_id"], edition_generated_at=ed.get("generated_at"),
                    path=article_path(ed["edition_id"], col["slug"]), section="opinion",
                    quote_after=quote_slot(SiteBuilder.paragraphs(col.get("body")), col.get("pull_quote") or ""))
-        for r in col.get("reading", []):
-            path = article_path(r["edition_id"], r["slug"]) if r.get("tier") in PAGE_TIERS and r.get("slug") else ""
-            if path in pages:
-                r["path"] = path                     # our article page; otherwise article_url uses the source
+        _link_stories(col.get("reading", []), pages)
     b.columns = [ed["opinion"] for ed in reversed(editions) if ed.get("opinion")]
     if b.columns:
         b.add_nav("opinion", "Opinion", "opinion/")
+    for ed in editions:
+        qz = ed.get("quiz")
+        if qz:
+            qz.update(edition_id=ed["edition_id"], edition_generated_at=ed.get("generated_at"),
+                      path=f"quiz/{ed['edition_id']}/", section="quiz")
+            _link_stories([q["story"] for q in qz.get("questions", []) if q.get("story")], pages)
+    b.quizzes = [ed["quiz"] for ed in reversed(editions) if ed.get("quiz")]
+    if b.quizzes:
+        b.add_nav("quiz", "Quiz", "quiz/")
 
     by_id = {e["edition_id"]: e for e in editions}
     if front_edition and front_edition not in by_id:
@@ -383,6 +412,14 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         b.write("opinion/", "opinion_index.html", active="opinion", section=OPINION_SECTION, **common,
                 columns=b.columns)
 
+    # Quiz: one page per quiz, and the list of all quizzes
+    for qz in b.quizzes:
+        ed = by_id[qz["edition_id"]]
+        b.write(qz["path"], "quiz.html", active="quiz", quiz=qz, edition=ed, current_edition=ed,
+                more_quizzes=[x for x in b.quizzes if x is not qz][:4], briefs=b.front_context(ed)["briefs"][:6])
+    if b.quizzes:
+        b.write("quiz/", "quiz_index.html", active="quiz", section=QUIZ_SECTION, **common, quizzes=b.quizzes)
+
     # Archive
     summaries = []
     for ed in newest_first:
@@ -412,7 +449,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     # 404 and feed
     b.write("404.html", "404.html", active="", **common)
     feed_items = [s for ed in newest_first[:20]
-                  for s in ([ed["opinion"]] if ed.get("opinion") else []) + ed.get("stories", [])
+                  for s in [ed[k] for k in ("opinion", "quiz") if ed.get(k)] + ed.get("stories", [])
                   if s.get("path")]
     b.write("feed.xml", "feed.xml", **common, items=feed_items[:50],
             updated=front.get("generated_at"))

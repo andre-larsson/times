@@ -233,3 +233,16 @@
   <p class="meta"><span>Column by Claude (AI)</span><span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ c.edition_generated_at | iso }}">{{ c.edition_generated_at | date_short }}</time></p>
 </article>
 {%- endmacro %}
+
+{# ── Quiz ───────────────────────────────────────────────────────────────── #}
+
+{% macro quiz_card(q, size='md') -%}
+<article class="column-card quiz-card sec-quiz">
+  {{ kicker(q) }}
+  <h3 class="hl hl-{{ size }}"><a class="hl-link" href="{{ q | article_url }}">{{ q.headline }}</a></h3>
+  {%- if q.dek %}
+  <p class="teaser-text">{{ q.dek }}</p>
+  {%- endif %}
+  <p class="meta"><span>{{ q.questions | length }} questions</span><span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ q.edition_generated_at | iso }}">{{ q.edition_generated_at | date_short }}</time></p>
+</article>
+{%- endmacro %}

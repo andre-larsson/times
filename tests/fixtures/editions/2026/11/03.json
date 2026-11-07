@@ -312,5 +312,36 @@
       {"headline": "Budget graphics cards now sell below launch price", "edition_id": "2026-11-03", "section": "tech", "tier": "brief", "slug": "budget-gpu-below-msrp", "sources": [{"name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/budget-gpus"}]}
     ]
   },
+  "quiz": {
+    "kicker": "Quiz", "headline": "The Tuesday quiz",
+    "dek": "Five questions on AI, tech and gaming news from 2–3 November. How much do you remember?",
+    "period": { "start": "2026-11-02", "end": "2026-11-03" }, "model": "claude-opus-5-5",
+    "checked": { "model": "claude-opus-5-5", "dropped": [
+      { "question": "How many labs signed up to the shared safety test suite?", "answer": "Twelve",
+        "problem": "The story says eleven labs signed up." }
+    ] },
+    "questions": [
+      { "question": "What did Kestrel's free model score on the CodeArena coding benchmark?",
+        "options": ["52%", "71.4%", "88%", "35%"], "answer": 1, "section": "ai",
+        "explanation": "That put it two points behind the best closed model, though early real-world tests showed a wider gap.",
+        "story": {"headline": "Kestrel's free model catches the big labs at coding", "edition_id": "2026-11-03", "section": "ai", "tier": "featured", "slug": "kestrel-2-open-model-catches-big-labs", "sources": [{"name": "The Byte Ledger", "url": "https://example.com/byte-ledger/kestrel-2"}]} },
+      { "question": "How long was the hijacked version of the npm package live?",
+        "options": ["Ten minutes", "Three days", "Two weeks", "Six hours"], "answer": 3, "section": "tech",
+        "explanation": "It was installed about 180,000 times in that window, mostly by CI systems.",
+        "story": {"headline": "Popular npm package hijacked to steal cloud keys", "edition_id": "2026-11-03", "section": "tech", "tier": "featured", "slug": "tinyfetchr-npm-package-hijacked", "sources": [{"name": "Kernel Post", "url": "https://example.com/kernel-post/tinyfetchr"}]} },
+      { "question": "What does Arcwave's new desktop chip cost at launch?",
+        "options": ["€549", "€199", "€899", "€1,299"], "answer": 0, "section": "tech",
+        "explanation": "It also needs a new motherboard, which adds to the cost of an upgrade.",
+        "story": {"headline": "Arcwave's new desktop chip is faster, cooler and cheaper", "edition_id": "2026-11-03", "section": "tech", "tier": "featured", "slug": "arcwave-r9-review-roundup", "sources": [{"name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/arcwave-r9"}]} },
+      { "question": "What share of new code do coding agents now write at mid-size firms?",
+        "options": ["5%", "60%", "34%", "80%"], "answer": 2, "section": "ai",
+        "explanation": "That is up from 12% a year earlier; review fatigue is the top complaint.",
+        "story": {"headline": "Coding agents now write a third of new code at mid-size firms", "edition_id": "2026-11-03", "section": "ai", "tier": "medium", "slug": "survey-coding-agents-third-of-new-code", "sources": [{"name": "Kernel Post", "url": "https://example.com/kernel-post/survey-2026"}]} },
+      { "question": "How many games will the indie showcase show when it returns in December?",
+        "options": ["Four", "40", "400", "12"], "answer": 1, "section": "gaming",
+        "explanation": "The stream on 10 December also promises six world premieres and a demo festival.",
+        "story": {"headline": "Indie showcase returns in December with 40 games", "edition_id": "2026-11-03", "section": "gaming", "tier": "gaming_news", "sources": [{"name": "Pixel Courier", "url": "https://example.com/pixel-courier/showcase"}]} }
+    ]
+  },
   "links": []
 }

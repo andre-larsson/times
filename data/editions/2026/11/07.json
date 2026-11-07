@@ -1649,5 +1649,258 @@
     "precip_chance": 0
    }
   ]
+ },
+ "quiz": {
+  "kicker": "Quiz",
+  "headline": "The Saturday quiz",
+  "dek": "Eight questions on AI, tech and gaming news from 1–7 November. How much do you remember?",
+  "period": {
+   "start": "2026-11-01",
+   "end": "2026-11-07"
+  },
+  "model": "claude-opus-5-5",
+  "checked": {
+   "model": "claude-opus-5-5",
+   "dropped": []
+  },
+  "questions": [
+   {
+    "question": "What is the official title of The Elder Scrolls 6, revealed for Bethesda's 40th anniversary?",
+    "options": [
+     "Valenwood",
+     "Sentinel",
+     "Redguard",
+     "Hammerfell"
+    ],
+    "answer": 1,
+    "explanation": "The next Elder Scrolls game is officially called Sentinel. Bethesda revealed the long-awaited name in a video marking its 40th anniversary.",
+    "section": "gaming",
+    "story": {
+     "headline": "The Elder Scrolls 6: Sentinel is finally made official",
+     "edition_id": "2026-11-03",
+     "sources": [
+      {
+       "name": "PC Gamer",
+       "url": "https://www.pcgamer.com/games/the-elder-scrolls/the-elder-scrolls-6-sentinel-is-finally-made-official/"
+      }
+     ],
+     "section": "gaming",
+     "tier": "gaming_news"
+    }
+   },
+   {
+    "question": "On what date does Grand Theft Auto VI launch?",
+    "options": [
+     "November 19",
+     "November 26",
+     "November 12",
+     "December 3"
+    ],
+    "answer": 0,
+    "explanation": "GTA VI launches on November 19. With two weeks to go, Rockstar says preorders have brought in nearly 7.5 billion Swedish kronor.",
+    "section": "gaming",
+    "story": {
+     "headline": "GTA VI preorders top 7 billion kronor ahead of Nov. 19 launch",
+     "edition_id": "2026-11-06",
+     "sources": [
+      {
+       "name": "MISSIL",
+       "url": "https://missil.se/nyheter/gta-vi-har-redan-dragit-over-750-miljoner-dollar-pa-forhandsbokningar/"
+      },
+      {
+       "name": "MISSIL",
+       "url": "https://missil.se/nyheter/har-kommer-38-nya-bilder-fran-gta-vi/"
+      },
+      {
+       "name": "PC Gamer",
+       "url": "https://www.pcgamer.com/games/grand-theft-auto/rockstar-drops-a-pile-of-new-gta-6-launch-screenshots-featuring-dancers-combat-dogs-and-so-many-pores/"
+      }
+     ],
+     "section": "gaming",
+     "tier": "gaming_news"
+    }
+   },
+   {
+    "question": "Which Google model edged Claude Opus 5.5 for the top spot on Artificial Analysis' Intelligence Index?",
+    "options": [
+     "Gemini 4 Ultra",
+     "Gemini 4 Pro",
+     "Gemini Omni 1.2 Flash",
+     "Gemini 4 Carbon"
+    ],
+    "answer": 3,
+    "explanation": "Gemini 4 Carbon scored 59, one point ahead of Opus 5.5. At first, only cyber defenders in Google's Fairwind program get access.",
+    "section": "ai",
+    "story": {
+     "headline": "Google's Gemini 4 Carbon edges Claude Opus 5.5 for top AI ranking",
+     "edition_id": "2026-11-04",
+     "sources": [
+      {
+       "name": "Tom's Hardware",
+       "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/google-reveals-new-gemini-4-carbon-ai-model-narrowly-beating-claude-opus-5-5-frontier-ai-model-is-also-the-least-likely-to-hallucinate-benchmarks-claim",
+       "title": "Google reveals new Gemini 4 Carbon AI model, narrowly beating Claude Opus 5.5"
+      }
+     ],
+     "section": "ai",
+     "tier": "featured",
+     "slug": "google-s-gemini-4-carbon-edges-claude-opus-5-5-for-top-ai-ra"
+    }
+   },
+   {
+    "question": "Which blockchain analytics firm says hackers took credentials and live tokens for all of its customers?",
+    "options": [
+     "Elliptic",
+     "Chainalysis",
+     "Coinbase",
+     "TRM Labs"
+    ],
+    "answer": 1,
+    "explanation": "Chainalysis forced password resets and API key rotation. It also took products including Reactor and KYT offline after an AI-assisted attack escalated.",
+    "section": "tech",
+    "story": {
+     "headline": "Chainalysis says hackers took credentials and tokens for all customers",
+     "edition_id": "2026-11-07",
+     "sources": [
+      {
+       "name": "Ars Technica",
+       "url": "https://arstechnica.com/security/2026/11/chainalysis-says-hackers-stole-credentials-and-tokens-for-all-of-its-customers/",
+       "title": "Chainalysis says hackers stole credentials and tokens for all of its customers"
+      },
+      {
+       "name": "TechRadar",
+       "url": "https://www.techradar.com/pro/security/chainalysis-admits-all-users-affected-in-major-data-breach-names-usernames-password-hashes-and-live-tokens-all-exposed",
+       "title": "Chainalysis admits all users affected in major data breach — names, usernames, password hashes, and live tokens all exposed"
+      }
+     ],
+     "section": "tech",
+     "tier": "featured",
+     "slug": "chainalysis-says-hackers-took-credentials-and-tokens-for-all"
+    }
+   },
+   {
+    "question": "Which tampered developer tool download started the months-long intrusion behind the $6.3 billion Binance theft?",
+    "options": [
+     "npm",
+     "Docker Desktop",
+     "Homebrew",
+     "Visual Studio Code"
+    ],
+    "answer": 2,
+    "explanation": "Binance says the attack began in June with a tampered Homebrew download. The FBI blames North Korea's TraderTraitor group, and about $2.85 billion has been frozen.",
+    "section": "tech",
+    "story": {
+     "headline": "North Korean hackers spent months inside Binance before $6.3B theft",
+     "edition_id": "2026-11-04",
+     "sources": [
+      {
+       "name": "Ars Technica",
+       "url": "https://arstechnica.com/information-technology/2026/11/binance-says-hackers-who-stole-billions-in-crypto-spent-months-planning-heist/",
+       "title": "Binance says hackers who stole billions in crypto spent months planning heist"
+      },
+      {
+       "name": "Tom's Hardware",
+       "url": "https://www.tomshardware.com/tech-industry/cryptocurrency/binance-heist-began-with-fake-job-interviews-and-a-malicious-homebrew-download-attackers-used-adulterated-software-and-social-engineering-to-gain-access-to-billions-in-assets",
+       "title": "Binance heist began with fake job interviews and a malicious Homebrew download"
+      },
+      {
+       "name": "PC Gamer",
+       "url": "https://www.pcgamer.com/software/security/users-pull-usd3-6-bn-from-binance-as-it-reopens-following-usd6-3-billion-mega-hack-fbi-says-north-korean-hacking-group-tradertraitor-to-blame-north-korea-says-nuh-uh/",
+       "title": "Users pull $3.6 bn from Binance as it reopens following $6.3 billion mega-hack - FBI says North Korean hacking group 'TraderTraitor' to blame, North Korea says nuh-uh"
+      }
+     ],
+     "section": "tech",
+     "tier": "featured",
+     "slug": "north-korean-hackers-spent-months-inside-binance-before-6-3b"
+    }
+   },
+   {
+    "question": "What Q4 2026 revenue does AMD forecast, putting it on track to outsell Intel for the first time?",
+    "options": [
+     "About $21 billion",
+     "About $12 billion",
+     "About $17 billion",
+     "About $25 billion"
+    ],
+    "answer": 2,
+    "explanation": "AMD guides to about $17 billion, above Intel's forecast of $15 billion to $16 billion. Its Q3 data center sales rose 97 percent to $8.55 billion.",
+    "section": "tech",
+    "story": {
+     "headline": "AMD guides to $17 billion quarter, set to outsell Intel for first time",
+     "edition_id": "2026-11-04",
+     "sources": [
+      {
+       "name": "Tom's Hardware",
+       "url": "https://www.tomshardware.com/pc-components/cpus/amd-expects-to-outsell-intel-in-q4-for-the-first-time-in-history-usd17b-guidance-would-exceed-intels-projections",
+       "title": "AMD expects to outsell Intel in Q4 for the first time in history"
+      },
+      {
+       "name": "PC Gamer",
+       "url": "https://www.pcgamer.com/hardware/processors/amd-says-its-going-to-beat-intel-in-total-revenue-for-the-very-first-time-by-the-end-of-2026/",
+       "title": "AMD says it's going to beat Intel in total revenue for the very first time by the end of 2026"
+      }
+     ],
+     "section": "tech",
+     "tier": "medium",
+     "slug": "amd-guides-to-17-billion-quarter-set-to-outsell-intel-for-fi"
+    }
+   },
+   {
+    "question": "How many characters does an attacker need to exceed to log into passwordless Alpine Linux accounts over SSH?",
+    "options": [
+     "256",
+     "4,096",
+     "1,024",
+     "64"
+    ],
+    "answer": 0,
+    "explanation": "Typing more than 256 characters triggers the flaw, which comes from how OpenSSH interacts with musl when PAM isn't used. OpenSSH and musl have both released fixes.",
+    "section": "tech",
+    "story": {
+     "headline": "*sshole flaw lets attackers SSH into Alpine Linux with any long password",
+     "edition_id": "2026-11-06",
+     "sources": [
+      {
+       "name": "Tom's Hardware",
+       "url": "https://www.tomshardware.com/tech-industry/cyber-security/combined-flaws-let-anyone-into-alpine-linux-and-other-distros-by-typing-anything-over-256-characters-as-a-password-emergency-fixes-for-openssh-and-musl-libc-issued-for-millions-of-systems-patch-immediately",
+       "title": "Combined OpenSSH and musl-libc flaws let anyone into Alpine Linux and other distros by typing anything over 256 characters as a password"
+      },
+      {
+       "name": "Ars Technica",
+       "url": "https://arstechnica.com/security/2026/11/vulnerability-allows-attackers-to-log-into-some-linux-devices-sans-password/",
+       "title": "Meet *sshole, the vulnerability that lets hackers SSH into Linux devices"
+      }
+     ],
+     "section": "tech",
+     "tier": "featured",
+     "slug": "sshole-flaw-lets-attackers-ssh-into-alpine-linux-with-any-lo"
+    }
+   },
+   {
+    "question": "What total R&D cost does Ricursive say it spent building its open-weight Ripple-65B coding model?",
+    "options": [
+     "$3 million",
+     "$1.2 billion",
+     "$320 million",
+     "$32 million"
+    ],
+    "answer": 3,
+    "explanation": "Ricursive says Ripple-65B cost $32 million in total to build. The dense model was trained on 12 trillion tokens and scored 80.52 on TerminalBench 2.1, by the company's own count.",
+    "section": "ai",
+    "story": {
+     "headline": "Ricursive releases Ripple-65B, claims top US open-weight coding score",
+     "edition_id": "2026-11-05",
+     "sources": [
+      {
+       "name": "Hacker News",
+       "url": "https://www.ricursive.com/ripple",
+       "title": "Ripple-65B Preview: U.S. Open-Weight SOTA on Agentic Coding"
+      }
+     ],
+     "section": "ai",
+     "tier": "medium",
+     "slug": "ricursive-releases-ripple-65b-claims-top-us-open-weight-codi"
+    }
+   }
+  ]
  }
 }

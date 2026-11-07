@@ -18,11 +18,10 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from . import desk
+from . import desk, schedule
 from .llm import LLM, LLMError
 from .text import slugify
 
-WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 MIN_STORIES = 2                   # fewer known stories than this from the editor: no column
 MAX_STORIES = 8
 
@@ -44,13 +43,8 @@ def edition_date(edition: dict[str, Any]) -> dt.date:
 def is_due(cfg: dict[str, Any], day: dt.date, last: dt.date | None) -> bool:
     """On one of opinion.days, once at least `every_weeks` weeks have passed since the last column."""
     o = settings(cfg)
-    if not o.get("enabled", True):
-        return False
-    days = {WEEKDAYS.index(str(d)[:3].lower()) for d in o.get("days", ["sun"])}
-    if day.weekday() not in days:
-        return False
-    weeks = max(1, int(o.get("every_weeks", 2)))
-    return last is None or (day - last).days > 7 * (weeks - 1)
+    return bool(o.get("enabled", True)) and schedule.weekly_due(day, o.get("days", ["sun"]),
+                                                                int(o.get("every_weeks", 2)), last)
 
 
 def history(editions: list[dict[str, Any]], exclude: str = "") -> list[dict[str, Any]]:
@@ -73,9 +67,11 @@ def rotation(hist: list[dict[str, Any]]) -> tuple[list[str], list[str]]:
     return formats, focus
 
 
-def material(editions: list[dict[str, Any]], today: dict[str, Any],
-             lookback_days: int) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
-    """Compact rows for the editor (oldest first), and an index from row id to the full item."""
+def material(editions: list[dict[str, Any]], today: dict[str, Any], lookback_days: int,
+             detail: bool = False) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+    """Compact rows for the editor (oldest first), and an index from row id to the full item.
+
+    `detail` (the quiz) adds medium stories' key points and the briefs' one or two sentences."""
     day = edition_date(today)
     start = day - dt.timedelta(days=max(1, lookback_days) - 1)
     eds = [e for e in sorted(editions, key=lambda e: e["edition_id"])
@@ -89,8 +85,10 @@ def material(editions: list[dict[str, Any]], today: dict[str, Any],
             row = {"id": sid, "date": date, "section": s["section"], "tier": s["tier"], "headline": s["headline"]}
             if s["tier"] != "brief" and s.get("dek"):
                 row["dek"] = s["dek"]
-            if s["tier"] == "featured" and s.get("key_points"):
+            if s.get("key_points") and (s["tier"] == "featured" or (detail and s["tier"] == "medium")):
                 row["key_points"] = s["key_points"]
+            if detail and s["tier"] == "brief" and s.get("body"):
+                row["summary"] = s["body"]
             rows.append(row)
             index[sid] = {"kind": "story", "edition_id": eid, "item": s}
         g = ed.get("gaming") or {}
@@ -111,7 +109,7 @@ def _sources(entry: dict[str, Any]) -> list[dict[str, str]]:
             for s in srcs if s.get("url")][:3]
 
 
-def _reporting(entry: dict[str, Any]) -> dict[str, Any]:
+def reporting(entry: dict[str, Any]) -> dict[str, Any]:
     """What the columnist gets for one story: its full text and the outlets behind it."""
     it = entry["item"]
     keys = ("headline", "dek", "body", "key_points", "why_it_matters") if entry["kind"] == "story" \
@@ -121,7 +119,7 @@ def _reporting(entry: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
-def _reading(entry: dict[str, Any]) -> dict[str, Any]:
+def reading(entry: dict[str, Any]) -> dict[str, Any]:
     """A 'reporting behind this column' link: the article page if it has one, else the source."""
     it = entry["item"]
     row = {"headline": it["headline"], "edition_id": entry["edition_id"], "sources": _sources(entry)}
@@ -202,7 +200,7 @@ def write(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], editions: list
             return Outcome(note="the opinion editor picked too few known stories")
         fmt = pick.get("format") if pick.get("format") in formats else formats[0]
         foc = pick.get("focus") if pick.get("focus") in focus else focus[0]
-        stories = [_reporting(index[i]) for i in ids]
+        stories = [reporting(index[i]) for i in ids]
         out = desk.write_opinion(llm, cfg, {
             "today": day.isoformat(), "topic": pick.get("topic", ""), "thesis": pick.get("thesis", ""),
             "format": fmt, "format_guide": desk.COLUMN_FORMATS[fmt], "focus": foc,
@@ -233,6 +231,6 @@ def write(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], editions: list
         "focus": foc, "format": fmt, "model": llm.model_for("opinion"),
         "checked": {"model": llm.model_for("opinion_check"), "verdict": check.get("verdict", "ok"),
                     "fixes": [{k: f.get(k, "") for k in ("sentence", "problem", "replacement")} for f in fixes]},
-        "reading": [_reading(index[i]) for i in ids],
+        "reading": [reading(index[i]) for i in ids],
     }
     return Outcome(column)

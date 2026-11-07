@@ -33,6 +33,9 @@
         {% if ed.opinion %}
         <span class="meta-sep" aria-hidden="true">·</span> Opinion: <a class="meta-link" href="{{ ed.opinion | article_url }}">{{ ed.opinion.headline }}</a>
         {% endif %}
+        {% if ed.quiz %}
+        <span class="meta-sep" aria-hidden="true">·</span> <a class="meta-link" href="{{ ed.quiz | article_url }}">{{ ed.quiz.headline }}</a>
+        {% endif %}
       </span>
     </li>
     {% endfor %}

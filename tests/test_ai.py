@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import itertools
 import json
 import subprocess
 from types import SimpleNamespace
@@ -97,6 +98,29 @@ class FakeLLM(LLM):
     def _opinion_check(self, m):
         assert m["column"]["body"] and m["stories"]
         return self.check
+
+    def _quiz(self, m):
+        by_section = {}
+        for r in m["stories"]:
+            by_section.setdefault(r["section"], []).append(r)
+        rows = [r for group in itertools.zip_longest(*by_section.values()) for r in group if r]   # mixes sections
+        bad = [{"story_id": "made-up-id", "question": "Unknown story?", "answer": "A",          # dropped in code
+                "wrong_answers": ["B", "C", "D"], "explanation": ""},
+               {"story_id": rows[0]["id"], "question": "Twice the same option?", "answer": "Same",
+                "wrong_answers": ["same", "B", "C"], "explanation": ""}]
+        return {"questions": bad + [
+            {"story_id": r["id"], "question": f"What happened: {r['headline']}?", "answer": f"Right {i}",
+             "wrong_answers": [f"Wrong {i}a", f"Wrong {i}b", f"Wrong {i}c"], "explanation": "Because."}
+            for i, r in enumerate(rows[:m["questions_wanted"]], 1)]}
+
+    quiz_verdicts: dict[int, str] = {}                  # question number → "drop"; unlisted are ok
+
+    def _quiz_check(self, m):
+        assert m["questions"] and all(q["story_id"] in m["stories"] for q in m["questions"])
+        self.checked_questions = m["questions"]
+        return {"results": [{"n": q["n"], "verdict": self.quiz_verdicts.get(q["n"], "ok"),
+                             "problem": "wrong answer" if q["n"] in self.quiz_verdicts else ""}
+                            for q in m["questions"] if self.quiz_verdicts.get(q["n"]) != "missing"]}
 
 
 def factory(fail=None):
