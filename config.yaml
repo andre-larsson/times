@@ -109,9 +109,9 @@ quiz:                                 # the news quiz: Opus writes multiple-choi
   lookback_days: 7                    # at most; normally the days since the last quiz
   front_days: 4                       # how long the latest quiz stays on the front page
 
-weather:                              # the front page's weather box: Open-Meteo, no key, fetched with each edition
-  enabled: true
-  place: Stockholm
+weather:                              # today's front page: Open-Meteo, no key, fetched live in the reader's browser
+  enabled: true                       # (static/weather.js); "Use my location" swaps the place for theirs
+  place: Stockholm                    # until then
   latitude: 59.33
   longitude: 18.07
   hours: [9, 12, 15, 18]              # the "later today" strip, local time (only hours still ahead are shown)

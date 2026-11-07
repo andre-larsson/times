@@ -76,7 +76,7 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **Open-Meteo** | One forecast request per edition (`/v1/forecast`, no key, data CC BY 4.0, credited in the box) for the place in `config.yaml` → `weather` (Stockholm). Stored in the edition as `weather`: today's high/low, condition (WMO code → word), precipitation chance and amount, max wind (m/s), sunrise/sunset; the configured hours still ahead today (09, 12, 15, 18); the next two days. Shown at the top of the front page's rail, in every mode. A failed fetch only drops the box | ✅ |
+| **Open-Meteo** | Fetched **live in the reader's browser** (`static/weather.js`, `/v1/forecast`, no key, `timezone=auto`), not by the pipeline. Shows the place in `config.yaml` → `weather` (Stockholm) until the reader presses "Use my location": the browser asks for permission, and the position is rounded to two decimals (~1 km) before it's sent. The choice and the last forecast (30 minutes, one place) are kept in localStorage; on later visits the position is only read when the permission still stands, so the page never opens with a prompt. Box: today's high/low, condition (WMO code → word), temperature now, precipitation chance and amount, max wind (m/s), the configured hours still ahead today (09, 12, 15, 18), the next two days, sunrise/sunset. Top of today's front-page rail only (archived front pages have none); hidden without JavaScript; a failed fetch shows one line. **Terms:** the free API is for non-commercial use (no ads or subscriptions: true here), under 10,000 calls a day per IP, which each reader's browser has to itself; data CC BY 4.0, so "Weather data by Open-Meteo.com" links to open-meteo.com next to the data | ✅ |
 
 ### Draft interests (editable)
 
@@ -204,10 +204,18 @@ Eight multiple-choice questions on the paper's own stories, **twice a week: Tues
   the question must have one reading, the explanation must hold up. Nothing is repaired; a doubtful
   question is dropped, and so is any question the check doesn't return. With fewer than `min_questions`
   (5) left, or a failed check call, there's no quiz. Dropped questions are kept under `checked.dropped`.
-- **The page** (`/quiz/YYYY-MM-DD/`): each question is a set of radio buttons; picking one shows right or
-  wrong (symbol, word and color), the explanation and a link to the story, with CSS only
-  (`:has(input:checked)`), so it works without JavaScript. `static/quiz.js` adds one try per question, the
-  running score and "Start over", and remembers the answers in this browser (localStorage).
+- **The page** (`/quiz/YYYY-MM-DD/`), step by step like SweClockers' news quiz (`static/quiz.js`): a start
+  screen ("Start the quiz", or "Continue" with the count answered), then one question at a time under
+  "‹ Question 3 of 8 ›" (back to review; forward only once answered). Picking an option locks it (one
+  try) and shows right or wrong (symbol, word and color), the explanation, a link to the story and "Next
+  question", or "See result" when all are answered. The result: "6 of 8 right", a verdict, the time taken
+  (at most 3 minutes counted per question), and a recap of every question (✓/✗) that opens it for review;
+  "Take it again" clears it. Arrow keys only move between options (Space or Enter picks), so the keyboard
+  can't commit by accident. Without JavaScript all questions show at once and CSS (`:has(input:checked)`)
+  reveals the answers.
+- **Saved in the browser:** localStorage `quiz:<edition_id>` → `{answers, time, done, right, total,
+  finished}`, so a quiz resumes where it was left. Quiz cards (front-page rail, `/quiz/`, "More quizzes")
+  show "✓ Completed 6/8" from it. Nothing leaves the browser.
 - **Where:** a card in the front-page rail for `front_days` (4, until the next quiz), `/quiz/` (and a nav
   link once one exists), the archive and the feed. Labeled "Questions by Claude (AI)".
 - **When:** only in `full` editions; a failed quiz never stops the edition; a same-day re-run keeps the
@@ -595,11 +603,8 @@ pricing:                            # USD per million tokens (Nov 2026)
 }
 ```
 
-`opinion` and `quiz` are only present on the days they run. `weather` (see *Sources → Weather*) is missing when
-the forecast couldn't be fetched:
-`{ "place": "Stockholm", "today": { "date", "high", "low", "code", "condition", "precip_chance", "precip_mm",
-"wind_ms", "sunrise", "sunset" }, "hours": [ { "time": "12:00", "temp", "code", "condition", "precip_chance" } ],
-"days": [ { "date", "high", "low", "code", "condition", "precip_chance" } ] }`.
+`opinion` and `quiz` are only present on the days they run. The 2026-11-07 edition also carries a
+`weather` forecast from when the pipeline fetched it; it's no longer written or read (see *Sources → Weather*).
 
 **seen.json rules:** items dropped by triage are marked seen right away; items written up are marked
 seen once written; link-only items stay unseen, so a later full edition can still use them.

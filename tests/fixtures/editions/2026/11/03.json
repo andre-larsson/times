@@ -4,21 +4,6 @@
   "mode": "full",
   "sample": true,
   "llm": { "estimated_usd": 0.55 },
-  "weather": {
-    "place": "Sample City",
-    "today": { "date": "2026-11-03", "high": 7, "low": 2, "code": 61, "condition": "Light rain", "precip_chance": 70,
-               "precip_mm": 2.4, "wind_ms": 6, "sunrise": "07:12", "sunset": "15:49" },
-    "hours": [
-      { "time": "09:00", "temp": 3, "code": 3, "condition": "Cloudy", "precip_chance": 20 },
-      { "time": "12:00", "temp": 6, "code": 61, "condition": "Light rain", "precip_chance": 60 },
-      { "time": "15:00", "temp": 7, "code": 61, "condition": "Light rain", "precip_chance": 70 },
-      { "time": "18:00", "temp": 4, "code": 2, "condition": "Partly cloudy", "precip_chance": 30 }
-    ],
-    "days": [
-      { "date": "2026-11-04", "high": 5, "low": -1, "code": 1, "condition": "Mostly clear", "precip_chance": 5 },
-      { "date": "2026-11-05", "high": 3, "low": -2, "code": 71, "condition": "Light snow", "precip_chance": 55 }
-    ]
-  },
   "stories": [
     {
       "id": "f1", "slug": "kestrel-2-open-model-catches-big-labs", "tier": "featured", "section": "ai",

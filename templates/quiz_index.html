@@ -2,6 +2,7 @@
 {% import "macros.html" as m with context %}
 
 {% block title %}{{ section.name }} · {{ site.title }}{% endblock %}
+{% block head %}<script src="{{ url('static/quiz.js') }}?v={{ js_id }}" defer></script>{% endblock %}
 
 {% block main %}
 <header class="section-hero sec-quiz">

@@ -68,7 +68,7 @@ would pick it up and bill its own usage to it. In GitHub Actions they are reposi
 ```
 config.yaml          every tuning knob: schedule, story counts, sources and filters, models, budget
 newsroom/            Python package: `python -m newsroom <command>`
-  sources/           fetchers: RSS feeds, Google News, YouTube, Hacker News, Steam, IsThereAnyDeal, critic scores, weather
+  sources/           fetchers: RSS feeds, Google News, YouTube, Hacker News, Steam, IsThereAnyDeal, critic scores
   rank.py            rule-based sections, junk filters, same-story clustering, scoring
   links.py           the links edition (and the gaming/deals blocks)
   generate.py        due check → pre-run check → fetch → build → save; GitHub Actions outputs
@@ -83,7 +83,9 @@ newsroom/            Python package: `python -m newsroom <command>`
   serve.py           local preview server under the /times/ base path
 prompts/             style guide and per-task instructions for Claude
 templates/           Jinja2 templates (front, section, gaming, deals, article, opinion, quiz, archive, search, 404, feed)
-static/              style.css, search.js (the Search page) and quiz.js (score and saved answers), plain JS; favicon, self-hosted fonts (SIL Open Font License)
+static/              style.css and plain JS: search.js (the Search page), quiz.js (the step-by-step quiz, results saved
+                     in the browser), weather.js (live Open-Meteo forecast, optionally for the reader's position);
+                     favicon, self-hosted fonts (SIL Open Font License)
 tests/fixtures/      sample editions and feeds (made-up names; links go to example.com)
 data/                real editions, committed by the workflow
 .github/workflows/   edition.yml (scheduled check, generate, deploy), sources.yml (manual source check)

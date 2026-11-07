@@ -100,6 +100,8 @@ class SiteBuilder:
         self.quizzes: list[dict[str, Any]] = []         # quizzes, newest first
         self.front_days = int((cfg.get("opinion") or {}).get("front_days", 7))
         self.quiz_days = int((cfg.get("quiz") or {}).get("front_days", 4))
+        weather = cfg.get("weather") or {}
+        self.weather = weather if weather.get("enabled") else None   # live in the browser: today's front page only
 
         css = (ROOT / "static" / "style.css").read_bytes()
         js = b"".join(p.read_bytes() for p in sorted((ROOT / "static").glob("*.js")))
@@ -125,7 +127,7 @@ class SiteBuilder:
             date_when=self.date_when, time=self.time, iso=self.iso, num=self.num, money=self.money,
             paragraphs=self.paragraphs, domain=self.domain, rating_class=self.rating_class,
             edition_name=self.edition_name, article_url=self.article_url, when=self.when,
-            score_parts=self.score_parts, weekday=self.weekday,
+            score_parts=self.score_parts,
         )
 
     # urls and names
@@ -189,11 +191,6 @@ class SiteBuilder:
         if not d:
             return ""
         return f"{d:%H:%M}" if d.date() == self.now.astimezone(self.tz).date() else f"{d.day} {d:%b} {d:%H:%M}"
-
-    @staticmethod
-    def weekday(value: Any) -> str:
-        """A calendar date ("2026-11-08") as its short day name: "Sun"."""
-        return f"{dt.date.fromisoformat(str(value)[:10]):%a}" if value else ""
 
     def iso(self, value: Any) -> str:
         ts = parse_ts(value)
@@ -276,7 +273,6 @@ class SiteBuilder:
             "links_by_section": links_by_section,
             "column": self.column_for(edition),
             "quiz": self.quiz_for(edition),
-            "weather": edition.get("weather"),
         }
 
 
@@ -354,7 +350,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     common = {"current_edition": front}
 
     # front page
-    b.write("", "front.html", active="front", **common, **b.front_context(front))
+    b.write("", "front.html", active="front", **common, **b.front_context(front), weather=b.weather)
 
     # AI and Tech section fronts
     all_stories = [s for ed in newest_first for s in ed.get("stories", [])]

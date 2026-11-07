@@ -3,6 +3,10 @@
 
 {% block title %}{% if archived %}{{ edition.generated_at | date_long }} · {% endif %}{{ site.title }} · {{ site.tagline }}{% endblock %}
 {% block body_class %}page-front{% endblock %}
+{% block head %}
+{% if quiz %}<script src="{{ url('static/quiz.js') }}?v={{ js_id }}" defer></script>{% endif %}
+{% if weather %}<script src="{{ url('static/weather.js') }}?v={{ js_id }}" defer></script>{% endif %}
+{% endblock %}
 
 {% block main %}
 <h1 class="visually-hidden">{{ site.title }}: {{ edition | edition_name }}, {{ edition.generated_at | date_long }}</h1>

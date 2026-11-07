@@ -49,7 +49,6 @@ class Harvest:
     hn: list[dict[str, Any]] = field(default_factory=list)
     steam: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
     itad: list[dict[str, Any]] | None = None             # None: not configured (no key)
-    weather: dict[str, Any] | None = None                # the front page's forecast; None: off or failed
     status: list[SourceStatus] = field(default_factory=list)
 
     def run(self, name: str, fn: Callable[[], Any], count: Callable[[Any], int] = len) -> Any:
@@ -74,17 +73,11 @@ def _ms(start: float) -> int:
 
 def fetch_all(cfg: dict[str, Any], client: Client, now: dt.datetime | None = None,
               itad_key: str | None = None) -> Harvest:
-    from . import critics, feeds, hackernews, itad, steam, weather
+    from . import critics, feeds, hackernews, itad, steam
 
     now = now or dt.datetime.now(dt.timezone.utc)
     src = cfg.get("sources") or {}
     h = Harvest(fetched_at=now)
-
-    weather_cfg = cfg.get("weather") or {}
-    if weather_cfg.get("enabled"):
-        h.weather = h.run(f"Weather (Open-Meteo, {weather_cfg['place']})",
-                          lambda: weather.forecast(client, weather_cfg, cfg["schedule"]["timezone"], now),
-                          count=lambda w: 1 + len(w["days"]))
 
     hn_cfg = src.get("hackernews")
     if hn_cfg:

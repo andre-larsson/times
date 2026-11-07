@@ -22,41 +22,72 @@
 
   <div class="article-grid">
     <div class="article-main">
-      <p class="quiz-note">Pick an answer to see whether you're right. Every question comes from a story in the paper, linked with the answer.</p>
+      {% set n = quiz.questions | length %}
+      <div class="quiz-app" data-quiz="{{ quiz.edition_id }}">
+        <p class="quiz-note">Pick an answer to see whether you're right. Every question comes from a story in the paper, linked with the answer.</p>
 
-      <ol class="quiz" data-quiz="{{ quiz.edition_id }}">
-        {% for q in quiz.questions %}
-        {% set qn = loop.index %}
-        <li class="quiz-q sec-{{ q.section }}">
-          <fieldset class="quiz-fields">
-            <legend class="quiz-question">
-              <span class="quiz-label"><span class="quiz-num">{{ qn }}</span><span class="quiz-tag">{{ section_name(q.section) }}</span></span>
-              <span class="quiz-text">{{ q.question }}</span>
-            </legend>
-            <div class="quiz-options">
-              {% for opt in q.options %}
-              <label class="quiz-opt{% if loop.index0 == q.answer %} quiz-opt--right{% endif %}">
-                <input type="radio" name="q{{ qn }}" value="{{ loop.index0 }}">
-                <span class="quiz-opt-box"><span class="quiz-letter" aria-hidden="true">{{ 'ABCD'[loop.index0] }}</span><span class="quiz-opt-text">{{ opt }}</span></span>
-              </label>
-              {% endfor %}
+        {# The step-by-step flow (static/quiz.js): start, one question at a time, result. Without JavaScript
+           every question shows at once and CSS reveals the answers. #}
+        <div class="quiz-start" hidden>
+          <p class="quiz-start-count" data-quiz-progress>{{ n }} questions</p>
+          <p class="quiz-start-text">One question at a time, one try each. Every answer links to its story. Your answers and result are saved in this browser.</p>
+          <button class="btn btn--primary" type="button" data-quiz-start>Start the quiz</button>
+        </div>
+
+        <div class="quiz-nav" hidden>
+          <button class="quiz-arrow" type="button" data-quiz-prev aria-label="Previous question"><span aria-hidden="true">‹</span></button>
+          <p class="quiz-at">Question <span data-quiz-at>1</span> of {{ n }}</p>
+          <button class="quiz-arrow" type="button" data-quiz-next aria-label="Next question"><span aria-hidden="true">›</span></button>
+        </div>
+
+        <ol class="quiz">
+          {% for q in quiz.questions %}
+          {% set qn = loop.index %}
+          <li class="quiz-q sec-{{ q.section }}" tabindex="-1">
+            <fieldset class="quiz-fields">
+              <legend class="quiz-question">
+                <span class="quiz-label"><span class="quiz-num">{{ qn }}</span><span class="quiz-tag">{{ section_name(q.section) }}</span></span>
+                <span class="quiz-text">{{ q.question }}</span>
+              </legend>
+              <div class="quiz-options">
+                {% for opt in q.options %}
+                <label class="quiz-opt{% if loop.index0 == q.answer %} quiz-opt--right{% endif %}">
+                  <input type="radio" name="q{{ qn }}" value="{{ loop.index0 }}">
+                  <span class="quiz-opt-box"><span class="quiz-letter" aria-hidden="true">{{ 'ABCD'[loop.index0] }}</span><span class="quiz-opt-text">{{ opt }}</span></span>
+                </label>
+                {% endfor %}
+              </div>
+            </fieldset>
+            <div class="quiz-reveal" tabindex="-1">
+              <p class="quiz-verdict">
+                <span class="quiz-right"><span aria-hidden="true">✓</span> Right.</span>
+                <span class="quiz-wrong"><span aria-hidden="true">✗</span> Not quite. Right answer: {{ q.options[q.answer] }}</span>
+              </p>
+              {% if q.explanation %}<p class="quiz-explain">{{ q.explanation }}</p>{% endif %}
+              {% if q.story %}<a class="quiz-story" href="{{ q.story | article_url }}">{{ q.story.headline }} →</a>{% endif %}
+              <div class="quiz-advance"><button class="btn btn--primary" type="button" data-quiz-advance>Next question</button></div>
             </div>
-          </fieldset>
-          <div class="quiz-reveal">
-            <p class="quiz-verdict">
-              <span class="quiz-right"><span aria-hidden="true">✓</span> Right.</span>
-              <span class="quiz-wrong"><span aria-hidden="true">✗</span> Not quite. Right answer: {{ q.options[q.answer] }}</span>
-            </p>
-            {% if q.explanation %}<p class="quiz-explain">{{ q.explanation }}</p>{% endif %}
-            {% if q.story %}<a class="quiz-story" href="{{ q.story | article_url }}">{{ q.story.headline }} →</a>{% endif %}
-          </div>
-        </li>
-        {% endfor %}
-      </ol>
+          </li>
+          {% endfor %}
+        </ol>
 
-      <div class="quiz-score" hidden>
-        <p class="quiz-score-line" aria-live="polite"></p>
-        <button class="btn" type="button" data-quiz-reset>Start over</button>
+        <div class="quiz-end" hidden tabindex="-1">
+          <p class="quiz-end-kicker">Your result</p>
+          <p class="quiz-end-score"><span data-quiz-score>0</span> of {{ n }} right</p>
+          <p class="quiz-end-verdict" data-quiz-verdict></p>
+          <p class="quiz-end-time" data-quiz-time hidden></p>
+          <ol class="quiz-recap" aria-label="Your answers">
+            {% for q in quiz.questions %}
+            <li><button class="quiz-recap-item" type="button" data-quiz-goto="{{ loop.index0 }}">
+              <span class="quiz-recap-mark"><span aria-hidden="true" data-quiz-sym></span><span class="visually-hidden" data-quiz-word></span></span>
+              <span class="quiz-recap-num">{{ loop.index }}</span>
+              <span class="quiz-recap-text">{{ q.question }}</span>
+            </button></li>
+            {% endfor %}
+          </ol>
+          <p class="quiz-end-hint">Pick a question to see its answer and story.</p>
+          <button class="btn" type="button" data-quiz-reset>Take it again</button>
+        </div>
       </div>
 
       <section class="sources" aria-label="About this quiz">

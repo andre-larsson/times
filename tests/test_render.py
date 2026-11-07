@@ -34,7 +34,7 @@ def test_expected_pages_exist(site):
         "archive/index.html", "archive/2026-11-02/index.html", "archive/2026-11-03/index.html",
         "2026/11/03/kestrel-2-open-model-catches-big-labs/index.html",
         "2026/11/03/build-the-pc-this-winter/index.html", "opinion/index.html",
-        "quiz/index.html", "quiz/2026-11-03/index.html", "static/quiz.js",
+        "quiz/index.html", "quiz/2026-11-03/index.html", "static/quiz.js", "static/weather.js",
         "404.html", "feed.xml", "static/style.css", "static/favicon.svg",
     ]:
         assert (site / rel).is_file(), rel
@@ -67,7 +67,15 @@ def test_front_page_content(site):
     assert "Deal of the day" in html
     assert 'name="robots" content="noindex' in html
     assert "Design preview" in html  # fixtures are clearly marked
-    assert 'aria-label="Weather in Sample City"' in html and "Light rain" in html and ">Wed<" in html and "−1°" in html
+
+
+def test_weather_box_is_live_on_todays_front_page_only(site, cfg):
+    w = cfg["weather"]
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert f'data-place="{w["place"]}" data-lat="{w["latitude"]}" data-lon="{w["longitude"]}"' in html
+    assert "static/weather.js" in html and ">Weather data by Open-Meteo.com</a>" in html   # CC BY 4.0 credit
+    archived = (site / "archive" / "2026-11-03" / "index.html").read_text(encoding="utf-8")
+    assert "data-weather" not in archived and "static/weather.js" not in archived
 
 
 def test_quiz_page(site):
@@ -77,8 +85,13 @@ def test_quiz_page(site):
     assert 'href="/times/2026/11/03/kestrel-2-open-model-catches-big-labs/"' in html   # our article page
     assert 'href="https://example.com/pixel-courier/showcase"' in html                  # gaming news: the source
     assert "Not quite. Right answer: 71.4%<" in html
+    assert 'data-quiz="2026-11-03"' in html and html.count("data-quiz-advance") == 5     # one question at a time
+    assert "data-quiz-start" in html and html.count("data-quiz-goto=") == 5                  # start, result recap
     front = (site / "index.html").read_text(encoding="utf-8")
     assert 'aria-label="Quiz"' in front and "The Tuesday quiz" in front and ">Quiz</a>" in front   # rail card, nav
+    index = (site / "quiz" / "index.html").read_text(encoding="utf-8")
+    for page in (front, index):                  # cards get "Completed" from the result saved in the browser
+        assert 'data-quiz-card="2026-11-03"' in page and "data-quiz-done hidden" in page and "static/quiz.js" in page
     assert "The Tuesday quiz" in (site / "archive" / "index.html").read_text(encoding="utf-8")
     assert "/times/quiz/2026-11-03/" in (site / "feed.xml").read_text(encoding="utf-8")
 

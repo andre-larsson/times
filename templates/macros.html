@@ -70,37 +70,29 @@
 </ol>
 {%- endmacro %}
 
-{% macro deg(v) -%}{{ '−' if v < 0 }}{{ v | abs }}°{%- endmacro %}
-
 {% macro weather_box(w) -%}
-{%- set t = w.today -%}
-<section class="weather" aria-label="Weather in {{ w.place }}">
+{#- A shell: static/weather.js fetches the forecast live from Open-Meteo in the reader's browser, for
+    w.place or, once they ask for it, their own position. Hidden without JavaScript. #}
+<section class="weather" aria-label="Weather" data-weather data-place="{{ w.place }}" data-lat="{{ w.latitude }}" data-lon="{{ w.longitude }}" data-hours="{{ w.hours | join(',') }}" data-days="{{ w.days }}" hidden>
   {{ block_head('Weather', w.place) }}
-  <div class="weather-today">
-    <p class="weather-temps"><span class="weather-high"><span class="visually-hidden">High </span>{{ deg(t.high) }}</span><span class="weather-low"><span class="visually-hidden">, low </span>{{ deg(t.low) }}</span></p>
-    <div class="weather-summary">
-      <p class="weather-cond">{{ t.condition }}</p>
-      <p class="weather-detail">
-        <span>{% if t.precip_chance %}Precipitation {{ t.precip_chance }}%{% if t.precip_mm %}, {{ t.precip_mm }} mm{% endif %}{% else %}Dry{% endif %}</span>
-        <span>Wind {{ t.wind_ms }} m/s</span>
-      </p>
+  <p class="weather-status" data-weather-status aria-live="polite">Loading the forecast…</p>
+  <div data-weather-body hidden>
+    <div class="weather-today">
+      <p class="weather-temps"><span class="weather-high"><span class="visually-hidden">High </span><span data-w="high"></span></span><span class="weather-low"><span class="visually-hidden">, low </span><span data-w="low"></span></span></p>
+      <div class="weather-summary">
+        <p class="weather-cond" data-w="condition"></p>
+        <p class="weather-detail"><span data-w="now"></span><span data-w="precip"></span><span data-w="wind"></span></p>
+      </div>
     </div>
+    <ol class="weather-hours" data-w="hours"></ol>
+    <ol class="weather-days" data-w="days"></ol>
   </div>
-  {%- if w.hours %}
-  <ol class="weather-hours">
-    {%- for h in w.hours %}
-    <li class="weather-hour"><span class="weather-time">{{ h.time }}</span><span class="weather-hour-temp">{{ deg(h.temp) }}</span><span class="weather-hour-cond">{{ h.condition }}</span></li>
-    {%- endfor %}
-  </ol>
-  {%- endif %}
-  {%- if w.days %}
-  <ol class="weather-days">
-    {%- for d in w.days %}
-    <li class="weather-day"><span class="weather-day-name">{{ d.date | weekday }}</span><span class="weather-day-cond">{{ d.condition }}</span><span class="weather-day-temps">{{ deg(d.high) }} <span class="weather-low"><span class="visually-hidden">low </span>{{ deg(d.low) }}</span></span></li>
-    {%- endfor %}
-  </ol>
-  {%- endif %}
-  <p class="meta"><span>Sunrise {{ t.sunrise }}</span><span class="meta-sep" aria-hidden="true">·</span><span>Sunset {{ t.sunset }}</span><span class="meta-sep" aria-hidden="true">·</span><a class="meta-link" href="https://open-meteo.com/">Open-Meteo</a></p>
+  <p class="meta" data-w="sun" hidden></p>
+  <p class="meta">
+    <a class="meta-link" href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
+    <span class="meta-sep" aria-hidden="true" data-weather-where hidden>·</span>
+    <button class="meta-link link-button" type="button" data-weather-where hidden>Use my location</button>
+  </p>
 </section>
 {%- endmacro %}
 
@@ -237,12 +229,14 @@
 {# ── Quiz ───────────────────────────────────────────────────────────────── #}
 
 {% macro quiz_card(q, size='md') -%}
-<article class="column-card quiz-card sec-quiz">
+<article class="column-card quiz-card sec-quiz" data-quiz-card="{{ q.edition_id }}">
   {{ kicker(q) }}
   <h3 class="hl hl-{{ size }}"><a class="hl-link" href="{{ q | article_url }}">{{ q.headline }}</a></h3>
   {%- if q.dek %}
   <p class="teaser-text">{{ q.dek }}</p>
   {%- endif %}
-  <p class="meta"><span>{{ q.questions | length }} questions</span><span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ q.edition_generated_at | iso }}">{{ q.edition_generated_at | date_short }}</time></p>
+  <p class="meta"><span>{{ q.questions | length }} questions</span><span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ q.edition_generated_at | iso }}">{{ q.edition_generated_at | date_short }}</time>
+    {#- marked by static/quiz.js from the result saved in this browser #}
+    <span class="quiz-done" data-quiz-done hidden><span class="meta-sep" aria-hidden="true">·</span><span class="quiz-done-label"><span aria-hidden="true">✓</span> Completed</span> <span data-quiz-done-score></span></span></p>
 </article>
 {%- endmacro %}
