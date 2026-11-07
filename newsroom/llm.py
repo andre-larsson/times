@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -24,6 +25,7 @@ from typing import Any
 
 BACKENDS = ("api", "claude-code")
 WEB_MAX_REQUESTS = 6                  # a web turn that keeps pausing gives up after this many requests
+_LINK = re.compile(r"https?://[^\s<>\"'()\[\]{}|\\^`]+")
 
 
 class LLMError(Exception):
@@ -281,7 +283,7 @@ class LLM:
                       "input_schema": schema, "strict": True})
         effort = {"output_config": {"effort": self.effort[call.task]}} if self.effort.get(call.task) else {}
         messages: list[dict[str, Any]] = [{"role": "user", "content": user}]
-        looked: dict[str, list] = {"queries": [], "fetched": [], "results": [], "errors": []}
+        looked: dict[str, list] = {"queries": [], "fetched": [], "results": [], "linked": [], "errors": []}
         nudged = False
         for _ in range(WEB_MAX_REQUESTS):
             msg = self._create(model=call.model, max_tokens=max_tokens, tools=tools, messages=messages,
@@ -378,6 +380,9 @@ def _collect(content: list[Any], looked: dict[str, list]) -> None:
                 doc = getattr(c, "content", None)
                 looked["results"].append({"url": getattr(c, "url", ""), "title": getattr(doc, "title", "") or "",
                                           "page_age": "", "fetched": True})
+                source = getattr(doc, "source", None)            # links on a fetched page are real pages too
+                if getattr(source, "type", "") == "text":
+                    looked["linked"] += _LINK.findall(str(getattr(source, "data", "") or ""))
             else:
                 looked["errors"].append(f"fetch: {getattr(c, 'error_code', 'error')}")
 

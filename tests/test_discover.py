@@ -31,9 +31,10 @@ def search(query, *urls):
             NS(type="web_search_tool_result", content=[NS(url=u, title="t", page_age="") for u in urls])]
 
 
-def fetch(url):
+def fetch(url, text=""):
+    doc = NS(title="t", source=NS(type="text", data=text))
     return [NS(type="server_tool_use", name="web_fetch", input={"url": url}),
-            NS(type="web_fetch_tool_result", content=NS(type="web_fetch_result", url=url, content=NS(title="t")))]
+            NS(type="web_fetch_tool_result", content=NS(type="web_fetch_result", url=url, content=doc))]
 
 
 def report(*finds):
@@ -63,12 +64,14 @@ def test_pause_turn_report_and_cost():
            content=search("new chip kit", "https://example.com/news/kit", "https://example.org/old")
            + search("indie game", "https://example.net/game")),
         NS(stop_reason="tool_use", usage=usage(9000, 500, fetches=1),
-           content=fetch("https://example.com/news/kit") + [report(GOOD)]),
+           content=fetch("https://example.com/news/kit", "More: https://example.com/next. (https://example.org/x)")
+           + [report(GOOD)]),
     ], cfg)
     data, looked, call = llm.call_web("discover", "system", "user", discover.REPORT_SCHEMA, searches=3, fetches=3)
     assert data["finds"] == [GOOD]
     assert looked["queries"] == ["new chip kit", "indie game"] and looked["fetched"] == ["https://example.com/news/kit"]
     assert len(looked["results"]) == 4
+    assert looked["linked"] == ["https://example.com/next.", "https://example.org/x"]
     assert (call.requests, call.web_searches, call.web_fetches) == (2, 2, 1)
     assert call.usd == pytest.approx(price(cfg, call.model, 13000, 800) + 0.02)
     sent = llm._client.requests
@@ -117,9 +120,12 @@ def test_check_keeps_only_real_new_finds():
     kept, dropped = discover.check(finds, looked, known, {"https://example.org/a"}, limit=4)
     assert [f["title"] for f in kept] == [GOOD["title"]]
     assert [d["reason"] for d in dropped] == [
-        "no search or fetch returned this address", "the feeds already have this page",
+        "no search, fetched page or link on one has this address", "the feeds already have this page",
         "the feeds already have this story", "listed twice", "not a web address"]
     assert dropped[-1]["section"] == "tech"                                         # bad enum value replaced
+    linked = discover.check([dict(GOOD, url="https://example.com/blog/post")], {"results": [],
+                            "linked": ["https://example.com/blog/post."]}, [], set(), limit=4)
+    assert len(linked[0]) == 1                                                      # a link on a fetched page
     kept, dropped = discover.check([GOOD, dict(GOOD, title="Another", url="https://example.net/b")],
                                    looked, [], set(), limit=1)
     assert len(kept) == 1 and dropped[0]["reason"] == "over the limit of 1"

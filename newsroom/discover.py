@@ -82,6 +82,7 @@ def check(finds: list[dict[str, Any]], looked: dict[str, list], known: list[dict
           known_urls: set[str], limit: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Keep finds that link a page the tools returned and that the feeds don't already have."""
     returned = {canonical_url(r["url"]) for r in looked.get("results", []) if r.get("url")}
+    returned |= {canonical_url(u.rstrip(".,;:")) for u in looked.get("linked", [])}
     known_words = [words(k.get("title", "")) for k in known]
     kept: list[dict[str, Any]] = []
     dropped: list[dict[str, Any]] = []
@@ -94,7 +95,7 @@ def check(finds: list[dict[str, Any]], looked: dict[str, list], known: list[dict
         if not key:
             reason = "not a web address"
         elif key not in returned:
-            reason = "no search or fetch returned this address"
+            reason = "no search, fetched page or link on one has this address"
         elif key in known_urls:
             reason = "the feeds already have this page"
         elif any(similarity(title_words, kw) >= 0.6 and len(title_words & kw) >= 3 for kw in known_words):
@@ -189,6 +190,7 @@ def record(d: Discovery, now: dt.datetime, known: int) -> dict[str, Any]:
                    "cache_write": c.cache_write} if c else {},
         "queries": d.looked_at.get("queries", []), "fetched": d.looked_at.get("fetched", []),
         "tool_errors": d.looked_at.get("errors", []), "results": len(d.looked_at.get("results", [])),
+        "linked": len(d.looked_at.get("linked", [])),
         "finds": d.finds, "dropped": d.dropped,
     }
 

@@ -494,14 +494,14 @@ web search is $0.01 per search.
 | Briefs (one batched call) | Opus | $0.02 | $0.04 |
 | Gaming: blurbs, verdicts, video blurbs (one batched call) | Opus | $0.04 | $0.06 |
 | Deals: deal of the day + more deals (one call) | Opus | $0.04 | $0.06 |
-| Discovery, depth `light` (3 searches, 3 fetches) | Opus | $0.25 | $0.25 |
+| Discovery, depth `light` (3 searches, 3 fetches; measured once: $0.33) | Opus | $0.33 | $0.33 |
 | Opinion column, Wednesday and Sunday (~$0.45 each) | Opus + Fable | ~$4/month | ~$4/month |
 | News quiz, Tuesday and Saturday (~$0.35 each) | Opus | ~$3/month | ~$3/month |
 | **Per day / per month** | | **~$0.62 / ~$19** | **~$0.84 / ~$25** |
 
 - A month of busy days comes to ~$25, plus ~$4 for the Botroom if it's built, inside the $35 target. If
   spend still runs ahead of pace, the pacing guard makes some editions `reduced` (no discovery, fewer stories).
-- Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$4/month.
+- Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$5/month.
 - Rough estimates; phases 3 and 5 measure the real numbers.
 
 | Knob | Config | Default |
@@ -873,7 +873,26 @@ The real file is in the repo; this is its shape.
      `python -m newsroom discover --depth … --runs N`. The run summary shows the cost, searches, fetches, tokens
      and finds of each run; the log has one JSON record per run. `--dry-run` fetches the feeds and shows the
      prompt for free. Measurement spend isn't in `data/usage.json`, only in the Console.
-   - Then: put the measured depth into the edition (step 5 of the pipeline, full editions only, before triage).
+   - **First measurement, 2026-11-07** (Opus 5.5, one run per depth, [run](https://github.com/andre-larsson/times/actions/runs/42390294559)):
+
+     | Depth | Cost | Searches / fetches | Tokens: input, cache write, cache read, output | Kept | Per month if daily |
+     |---|---|---|---|---|---|
+     | light | $0.33 | 3 / 1 | 9k, 45k, 75k, 1k | 0 (its one find wrongly dropped, see below) | ~$9.90 |
+     | normal | $0.49 | 6 / 1 | 9k, 66k, 141k, 2k | 2 | ~$15 |
+     | deep | $0.85 | 12 / 0 | 9k, 110k, 350k, 3k | 5 | ~$25.70 |
+
+     - **Where the money goes:** cache writes, about 70% of every run. Each search adds 9–15k tokens of results,
+       which the server-side search loop writes to the prompt cache at $5/M; searches themselves are $0.01.
+       Cost grows roughly linearly with searches, so deep is the cheapest per find ($0.17 against $0.25).
+     - **The finds were real misses:** none of the seven was in any edition this week, among them OpenAI's
+       GPT-6 Cyber (its first model rated Critical for cyber risk), a METR report on AI speeding up AI research,
+       a 16-month DigiCert data exposure and a Barracuda pre-auth root exploit chain.
+     - **Opus barely fetches** (0–1 of the allowed 3–10). Once it fetched a blog's front page and took an
+       article's link from it; the check only trusted search results, so that find was dropped. Links on a
+       fetched page now count too.
+   - Next: a second round for the spread, and the cheaper options: Sonnet 5.5 (half the price per token) and
+     dynamic filtering (`web_search_20260209`+: Claude trims results in code before they enter context).
+   - Then: put the chosen depth into the edition (step 5 of the pipeline, full editions only, before triage).
 
 6. **Tune and polish**
    - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.
@@ -906,7 +925,7 @@ The real file is in the repo; this is its shape.
 
 Decided since the previous revision:
 - **Budget:** $35/month target, $40 hard stop (was $20/$25). The paper already runs ~$21 a month (editions
-  ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for daily discovery (~$7.60) and the Botroom (~$4).
+  ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for the Botroom (~$4) and daily discovery at `light` (~$10 measured).
 - **I Dream of Indie Games:** YouTube channel and blog review feed found.
 - **News preview images:** off for now. News stories use typographic covers; games and videos use Steam
   and YouTube images.
