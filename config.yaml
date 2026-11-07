@@ -77,7 +77,7 @@ models:
   quiz_check: claude-opus-5-5         # the copy desk checks each answer against its story
 
 budget:
-  monthly_usd: 35                     # paced over the calendar month; the Console workspace spend limit is $40
+  monthly_usd: 35                     # paced over the calendar month; the Console workspace spend limit is $50
   pace_allowance_usd: 2
   per_run_usd: 2.00                   # an edition (~$0.45) + discovery (~$0.32) + a column (~$0.45) is ~$1.25
   when_over_pace: reduced             # reduced | links | skip

@@ -6,7 +6,7 @@ A personal AI newspaper at **https://a403.space/times/**, covering **AI**, **tec
 Hacker News style, plus hardware), **gaming** (PC first) and **deals**. It looks and feels like a real
 Swedish evening tabloid, with its own identity. Claude writes English stories from the day's sources and
 links back to them. One edition every morning, paid for with the API credits included in my Max plan,
-**budgeted at $35/month, with a hard stop at $40**. With no budget or credits left, it still publishes, as a "links edition".
+**budgeted at $35/month, with a hard stop at $50**. With no budget or credits left, it still publishes, as a "links edition".
 
 ## Decisions so far
 
@@ -24,7 +24,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**; **Fable writes the opinion column**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
 | Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it, Opus fact-checks it. Format and focus rotate, so it stays varied |
 | Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
-| Budget | **$35/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $40. Raised from $20/$25 on 2026-11-07, so daily discovery and the Botroom fit |
+| Budget | **$35/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $50. Raised from $20/$25 on 2026-11-07, so daily discovery and the Botroom fit |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
 
@@ -474,11 +474,13 @@ From [API credits for Max, Ultra, and Team plans](https://platform.claude.com/do
 **Budget layers**
 1. **Target ($35):** `budget.monthly_usd: 35`. My own tally in `data/usage.json` (token usage × the price
    table), paced across the calendar month.
-2. **Hard stop ($40):** a Console workspace `times` with a $40/month spend limit, holding the API key.
+2. **Hard stop ($50):** a Console workspace `times` with a $50/month spend limit, holding the API key. It also
+   sees spend the paper's tally doesn't (local runs with the key, the discovery measurements: $7.15 on 2026-11-07
+   against $1.81 in `data/usage.json`), so the $15 gap above the target is a margin, not slack.
    This limit also resets on the 1st.
 3. **Backstop:** the credits themselves. With no card and auto-reload off, nothing can ever be charged.
 
-**Pacing:** calendar month, not the credit cycle. The paper uses at most $40 of the $100, so the refresh
+**Pacing:** calendar month, not the credit cycle. The paper uses at most $50 of the $100, so the refresh
 date doesn't matter. If other projects ever empty the balance, the pre-run probe sees "credit balance too
 low" and publishes a links edition.
 
@@ -664,7 +666,7 @@ models:
   probe:    claude-haiku-5-5
 
 budget:
-  monthly_usd: 35                   # paced over the calendar month; the workspace spend limit is $40
+  monthly_usd: 35                   # paced over the calendar month; the workspace spend limit is $50
   pace_allowance_usd: 2
   per_run_usd: 2.00
   when_over_pace: reduced
@@ -855,7 +857,7 @@ The real file is in the repo; this is its shape.
 4. **Go live** (partly done 2026-11-03: repo public, Pages on, HTTPS fixed, the links edition is live at
    https://a403.space/times/ and publishes itself every morning)
    - ✅ Fix HTTPS for `a403.space` (see *Hosting*).
-   - Create the Console workspace ($40 limit) and its key. Register an IsThereAnyDeal app for its key.
+   - Create the Console workspace ($50 limit) and its key. Register an IsThereAnyDeal app for its key.
    - ✅ `gh repo create andre-larsson/times --public`, pushed.
    - ✅ Enable Pages (`build_type=workflow`). Add the `ANTHROPIC_API_KEY` and `ITAD_API_KEY` secrets.
    - ✅ Run "Check sources" and Edition with `mode=links`. After phase 3: `mode=full`.
@@ -933,7 +935,7 @@ The real file is in the repo; this is its shape.
 
 | Risk | Mitigation |
 |---|---|
-| Spend exceeds the target | Pacing → `reduced` → links; $40 workspace hard stop; per-run cap |
+| Spend exceeds the target | Pacing → `reduced` → links; $50 workspace hard stop; per-run cap |
 | Looking too much like Expressen | Own logo, palette, fonts and layout; only general tabloid conventions are borrowed |
 | Quiet days look empty, or busy days get bloated | Newsworthiness thresholds + editor + min/max per tier |
 | Same event covered by several articles | Triage groups them; featured stories combine their sources |
@@ -945,7 +947,7 @@ The real file is in the repo; this is its shape.
 | Deals advice that's wrong or out of date | Price and timestamp shown; "prices change"; lowest-ever data from IsThereAnyDeal; no affiliate links |
 | Summaries state things the source doesn't say | Prompts limit Claude to the provided text; "By Claude (AI)" byline; source links |
 | Prompt injection from fetched pages | Writing calls have no tools; JSON-schema outputs; sources always linked. Discovery, the one call with tools, can only search and read; its finds must link a page the tools returned, and then go through triage like any feed item |
-| Key secrets in a public repo | Not exposed to fork PRs; no `pull_request` trigger; Anthropic workspace capped at $40 |
+| Key secrets in a public repo | Not exposed to fork PRs; no `pull_request` trigger; Anthropic workspace capped at $50 |
 | Copyright | Summaries in my own words; briefs from short excerpts; store and YouTube images only (v1); `noindex` |
 | Late or dropped cron runs, 60-day auto-disable | Hourly due-check; data commits + enable call; Pi as last resort |
 
@@ -955,7 +957,7 @@ The real file is in the repo; this is its shape.
   $35 budget has room for it.
 
 Decided since the previous revision:
-- **Budget:** $35/month target, $40 hard stop (was $20/$25). The paper already runs ~$21 a month (editions
+- **Budget:** $35/month target, $50 hard stop in the Console (was $20/$25). The paper already runs ~$21 a month (editions
   ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for the Botroom (~$4) and daily discovery (`normal` with dynamic filtering, ~$9.70 measured).
 - **I Dream of Indie Games:** YouTube channel and blog review feed found.
 - **News preview images:** off for now. News stories use typographic covers; games and videos use Steam
