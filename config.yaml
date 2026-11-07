@@ -48,14 +48,14 @@ deals:
   mix: { popular: 5, hidden: 3, genre: 2 }   # where "more" comes from (ITAD); genres take turns by day
 
 search:
-  depth: light                        # off | light | normal | deep (discovery isn't in the edition yet: phase 5)
+  depth: normal                       # discovery in full editions: off | light | normal | deep (see depths)
   discovery_every_days: 1
   depths:                             # per discovery run; finds = the most kept. Measure: python -m newsroom discover
     light:  { searches: 3,  fetches: 3,  finds: 4 }
     normal: { searches: 6,  fetches: 5,  finds: 6 }
     deep:   { searches: 12, fetches: 10, finds: 10 }
   fetch_tokens: 6000                  # cap on each fetched page in Claude's context
-  dynamic_filtering: false            # true: newer tool versions; Claude trims results in code first
+  dynamic_filtering: true             # newer tool versions: Claude trims results in code first (~35% cheaper)
   candidates_scored: 300
   max_item_age_hours: 36
   max_fulltext_chars: 12000
@@ -79,7 +79,7 @@ models:
 budget:
   monthly_usd: 35                     # paced over the calendar month; the Console workspace spend limit is $40
   pace_allowance_usd: 2
-  per_run_usd: 1.25
+  per_run_usd: 2.00                   # an edition (~$0.45) + discovery (~$0.32) + a column (~$0.45) is ~$1.25
   when_over_pace: reduced             # reduced | links | skip
 
 llm:
@@ -155,6 +155,8 @@ sources:
                      /audio/, /pro/], keep_paths: [/pro/security/] }       # TechRadar Pro is mostly B2B columns
     - { name: Tom's Hardware, url: "https://www.tomshardware.com/feeds.xml", sections: [tech], weight: 1.0,
         skip_paths: [/deals/, /best-picks/] }
+    - { name: The Hacker News, url: "https://feeds.feedburner.com/TheHackersNews", sections: [tech, ai], weight: 0.9 }
+    - { name: BleepingComputer, url: "https://www.bleepingcomputer.com/feed/", sections: [tech, ai], weight: 0.9 }
     - { name: MISSIL,        url: "https://www.missil.se/feed/", sections: [gaming], language: sv,
         reviews_url: "/spelrecensioner/", title_is_game: true, multi_platform: true,
         skip_categories: [FILMNYHET, Petters blogg], skip_paths: [/retro/] }   # MISSIL Retro: old games

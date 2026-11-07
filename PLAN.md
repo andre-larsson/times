@@ -42,6 +42,8 @@ treat differently.
 | **Ars Technica** | `feeds.arstechnica.com/arstechnica/index`. Science, Space, Cars, Health and Culture are skipped (first category) | ✅ |
 | **TechRadar** | `techradar.com/feeds.xml`. Deals, buying guides and most of TechRadar Pro (B2B columns) are filtered by URL path; Pro security news stays | ✅ |
 | **Tom's Hardware** | `tomshardware.com/feeds.xml` | ✅ |
+| **The Hacker News** | `feeds.feedburner.com/TheHackersNews` (security news; added 2026-11-07, when half of discovery's finds were security stories) | ✅ |
+| **BleepingComputer** | `bleepingcomputer.com/feed/` (security news, 15 items) | ✅ |
 | **PCMag** | Direct feed blocked by bot protection (403). Use **Google News search for pcmag.com** instead: headline + short excerpt, so mostly briefs | ⚠️ workaround |
 | Extras for AI depth (optional) | Simon Willison's Weblog, Hugging Face blog, OpenAI / Google DeepMind blogs, Lobsters, LWN | to check |
 
@@ -664,7 +666,7 @@ models:
 budget:
   monthly_usd: 35                   # paced over the calendar month; the workspace spend limit is $40
   pace_allowance_usd: 2
-  per_run_usd: 1.25
+  per_run_usd: 2.00
   when_over_pace: reduced
 
 llm:
@@ -912,7 +914,12 @@ The real file is in the repo; this is its shape.
        SecurityWeek, watchTowr): the feeds have no security source, which a free RSS feed would fix.
      - **Recommendation:** `normal` with dynamic filtering, in every full edition: ~$0.32 a run, ~$9.70 a month,
        which fits the room left in the $35 target.
-   - Then: put the chosen depth into the edition (step 5 of the pipeline, full editions only, before triage).
+   - ✅ **In the edition from 2026-11-08:** `normal` with dynamic filtering, in every full edition (not `reduced`,
+     not on the claude-code backend), after the rule ranking and before triage. Finds join the candidates as
+     ordinary items and go through triage and the editor; a failed discovery is noted in the reason and the
+     edition goes on without it. The edition JSON keeps `discovery` (depth, searches, fetches, cost, queries,
+     kept and dropped URLs). `budget.per_run_usd` went from $1.25 to $2.00, since an edition, discovery and a
+     column together come to about $1.25. The Hacker News and BleepingComputer joined the feeds the same day.
 
 6. **Tune and polish**
    - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.

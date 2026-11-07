@@ -5,8 +5,9 @@ One Claude call with the API's web search and web fetch tools (Anthropic runs th
 treats them as data, and a find is kept only if its address is one the tools actually returned (no
 made-up links) and the feeds don't already have the story. API backend only.
 
-Not part of the edition yet: `python -m newsroom discover` (and the "Measure discovery" workflow)
-measures what each depth costs and finds, without publishing anything.
+In the edition (`for_edition`): full editions only, at search.depth, every search.discovery_every_days;
+the finds join the candidates before triage. `python -m newsroom discover` (and the "Measure discovery"
+workflow) measures what each depth costs and finds, without publishing anything.
 """
 
 from __future__ import annotations
@@ -24,8 +25,8 @@ from . import seen as seen_store
 from .desk import STR, arr, data_block, obj
 from .http import Client
 from .llm import LLM, Call, LLMError, Tally
-from .sources import fetch_all
-from .text import canonical_url, similarity, words
+from .sources import Harvest, Item, fetch_all
+from .text import canonical_url, domain, similarity, words
 
 SECTIONS = ["ai", "tech", "gaming"]
 DEPTHS: dict[str, dict[str, int]] = {      # per run: searches, page fetches, the most finds to keep
@@ -115,9 +116,48 @@ def check(finds: list[dict[str, Any]], looked: dict[str, list], known: list[dict
     return kept, dropped
 
 
-# ── measuring ────────────────────────────────────────────────────────────────
+# ── in the edition ───────────────────────────────────────────────────────────
 
-def what_we_have(cfg: dict[str, Any], harvest, data_dir: Path, now: dt.datetime) -> tuple[list[dict], set[str]]:
+def for_edition(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm: LLM,
+                seen: dict[str, str], recent: list[dict[str, Any]], now: dt.datetime) -> tuple[list[Item], dict]:
+    """Discovery for today's edition: (items to add to the candidates, stats for the edition JSON).
+
+    Runs only in full editions, on the API backend, at search.depth, every discovery_every_days.
+    Raises LLMError if the call fails; the caller notes it and carries on without discovery.
+    """
+    search = cfg.get("search") or {}
+    depth = str(search.get("depth") or "off")
+    if mode != "full" or depth == "off":
+        return [], {}
+    every = max(1, int(search.get("discovery_every_days", 1)))
+    if dt.date.fromisoformat(edition_id[:10]).toordinal() % every:
+        return [], {"skipped": f"runs every {every} days"}
+    if llm.backend != "api":
+        return [], {"skipped": "needs the api backend"}
+    known, known_urls = what_we_have(cfg, harvest, recent, seen, now)
+    d = run(llm, cfg, depth, known, known_urls, now)
+    c = d.call
+    stats = {"depth": depth, "filtering": d.filtering, "searches": c.web_searches if c else 0,
+             "fetches": c.web_fetches if c else 0, "usd": c.usd if c else 0.0,
+             "queries": d.looked_at.get("queries", []), "kept": [f["url"] for f in d.finds],
+             "dropped": [{"url": f["url"], "reason": f["reason"]} for f in d.dropped]}
+    return [to_item(f) for f in d.finds], stats
+
+
+def to_item(f: dict[str, Any]) -> Item:
+    """A find as a feed item. A bare publication date counts as noon UTC that day."""
+    try:
+        day = dt.date.fromisoformat(f.get("published") or "")
+        published = dt.datetime(day.year, day.month, day.day, 12, tzinfo=dt.timezone.utc)
+    except ValueError:
+        published = None
+    return Item(source=f.get("source") or domain(f["url"]), title=f["title"], url=f["url"], published_at=published,
+                excerpt=f.get("summary", ""), kind="news", sections=[f["section"]],
+                extra={"discovered": True, "why": f.get("why", "")})
+
+
+def what_we_have(cfg: dict[str, Any], harvest: Harvest, recent: list[dict[str, Any]], seen: dict[str, str],
+                 now: dt.datetime) -> tuple[list[dict], set[str]]:
     """The headlines the model is told the paper already has, and every URL to treat as known."""
     search = cfg.get("search") or {}
     hn_cfg = (cfg.get("sources") or {}).get("hackernews") or {}
@@ -125,11 +165,14 @@ def what_we_have(cfg: dict[str, Any], harvest, data_dir: Path, now: dt.datetime)
                                   max_age_hours=float(search.get("max_item_age_hours", 36)),
                                   min_points=int(hn_cfg.get("min_points", 100)))
     known = [{"source": c.item.source, "title": c.item.title} for c in cands if not c.weak][:KNOWN_MAX]
-    for ed in store.recent_headlines(data_dir, count=2):
+    for ed in recent:
         known += [{"source": f"The 403 Times, {ed['edition_id']}", "title": h} for h in ed["headlines"]]
-    urls = {canonical_url(i.url) for i in harvest.items} | {canonical_url(c.url) for c in cands}
-    urls |= set(seen_store.load(data_dir))
+    urls = {canonical_url(i.url) for i in harvest.items} | {canonical_url(c.url) for c in cands} | set(seen)
     return known, urls
+
+
+# ── measuring ────────────────────────────────────────────────────────────────
+
 
 
 def measure(cfg: dict[str, Any], data_dir: Path, depths: list[str], runs: int, out: Path | None,
@@ -155,7 +198,8 @@ def measure(cfg: dict[str, Any], data_dir: Path, depths: list[str], runs: int, o
     finally:
         if own:
             client.__exit__(None, None, None)
-    known, known_urls = what_we_have(cfg, harvest, data_dir, now)
+    known, known_urls = what_we_have(cfg, harvest, store.recent_headlines(data_dir, count=2),
+                                     seen_store.load(data_dir), now)
     user = data_block(known, "Headlines the paper's feeds brought in:")
     lines = [f"## Discovery, {now:%Y-%m-%d %H:%M} UTC", "",
              f"Feeds: {len(harvest.items)} items; {len(known)} headlines sent as already known "

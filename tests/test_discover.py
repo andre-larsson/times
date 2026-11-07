@@ -146,6 +146,27 @@ def test_check_keeps_only_real_new_finds():
     assert len(kept) == 1 and dropped[0]["reason"] == "over the limit of 1"
 
 
+def test_for_edition_skips():
+    cfg, h = load_config(), _harvest()
+    api = NS(backend="api")
+    assert discover.for_edition(cfg, h, "2026-11-03", "reduced", api, {}, [], NOW) == ([], {})
+    cfg["search"]["depth"] = "off"
+    assert discover.for_edition(cfg, h, "2026-11-03", "full", api, {}, [], NOW) == ([], {})
+    cfg["search"].update(depth="normal", discovery_every_days=2)
+    odd = "2026-11-03" if __import__("datetime").date(2026, 11, 3).toordinal() % 2 else "2026-11-04"
+    assert discover.for_edition(cfg, h, odd, "full", api, {}, [], NOW)[1] == {"skipped": "runs every 2 days"}
+    cfg["search"]["discovery_every_days"] = 1
+    cc = NS(backend="claude-code")
+    assert discover.for_edition(cfg, h, "2026-11-03", "full", cc, {}, [], NOW)[1] == {"skipped": "needs the api backend"}
+
+
+def test_to_item():
+    it = discover.to_item(dict(GOOD, source=""))
+    assert it.source == "example.com" and it.sections == ["tech"] and it.extra["discovered"]
+    assert it.published_at.isoformat() == "2026-11-02T12:00:00+00:00"
+    assert discover.to_item(dict(GOOD, published="")).published_at is None
+
+
 def test_depth_settings_from_config():
     cfg = load_config()
     assert discover.depth_settings(cfg, "light") == {"searches": 3, "fetches": 3, "finds": 4}
@@ -176,9 +197,10 @@ def test_measure_writes_records_and_summary(tmp_path, monkeypatch, capsys):
 
     out = tmp_path / "disc"
     cfg = load_config()
+    configured = cfg["search"]["dynamic_filtering"]
     text = discover.measure(cfg, tmp_path / "data", ["light", "deep"], 1, out, now=NOW,
-                            client=FakeClient({}), llm_factory=factory)
-    assert "dynamic_filtering" not in cfg["search"] or not cfg["search"]["dynamic_filtering"]
+                            client=FakeClient({}), llm_factory=factory, filtering=False)
+    assert cfg["search"]["dynamic_filtering"] == configured                         # overrides don't leak
     assert "Kept 1 of 1" in text and find["title"] in text and "Failed: no report" in text
     assert "| light · opus-5-5 | 1 | $" in text and "| deep · opus-5-5 | 0 (1 failed) |" in text
     recs = [json.loads(line) for line in (out / "runs.jsonl").read_text().splitlines()]

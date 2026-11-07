@@ -22,6 +22,11 @@ def _data(user: str):
     return json.loads(user.split("<data>\n", 1)[1].rsplit("\n</data>", 1)[0])
 
 
+DISCOVERED = {"title": "Example Labs ships a sandbox for AI agents", "url": "https://example.org/sandbox",
+              "source": "Example Labs", "published": "2026-11-02", "section": "ai",
+              "summary": "Example Labs released an open-source sandbox for AI agents.", "why": "Missed by the feeds."}
+
+
 class FakeLLM(LLM):
     """Answers every task with plausible canned JSON; `fail` maps task → exception to raise."""
     fail: dict[str, Exception] = {}
@@ -39,10 +44,27 @@ class FakeLLM(LLM):
         self.tally.record(call)
         return getattr(self, f"_{task}")(_data(user) if "<data>" in user else None)
 
+    def call_web(self, task, system, user, report_schema, *, searches, fetches, fetch_tokens=6000,
+                 filtering=False, max_tokens=None):
+        self.tally.check()
+        call = Call(task=task, model=self.model_for(task), backend=self.backend, input_tokens=9000,
+                    output_tokens=900, web_searches=searches, requests=1, usd=0.3, equivalent_usd=0.3)
+        if task in self.fail:
+            exc = self.fail[task]
+            call.ok, call.error = False, str(exc)
+            self.tally.record(call, exc)
+            raise exc
+        self.tally.record(call)
+        self.web_user = user
+        return ({"finds": [DISCOVERED, dict(DISCOVERED, title="Invented", url="https://example.com/invented")]},
+                {"queries": ["missing ai news"], "fetched": [], "results": [{"url": DISCOVERED["url"]}],
+                 "linked": [], "errors": []}, call)
+
     def _probe(self, _):
         return {"ok": True}
 
     def _triage(self, rows):
+        self.triaged = getattr(self, "triaged", []) + rows
         return {"items": [{"id": r["id"], "keep": True, "section": r["rule_section"], "kicker": "Dev",
                            "newsworthiness": max(2.5, 5 - i * 0.5), "event": r["id"], "title_en": r["title"]}
                           for i, r in enumerate(rows)]}
@@ -163,6 +185,38 @@ def test_full_edition(tmp_path, offline):
 
     pages = build(cfg, data, tmp_path / "site")
     assert pages > 8 and (tmp_path / "site" / "2026" / "11" / "03" / lead["slug"] / "index.html").exists()
+
+
+def test_discovery_in_full_editions(tmp_path, offline):
+    made = []
+
+    def make(cfg, backend, tally, env):
+        made.append(FakeLLM(cfg, backend, tally, env))
+        made[-1].fail = {}
+        return made[-1]
+
+    r = gen.generate(load_config(), tmp_path / "data", "full", now=NOW, env=KEY, client=offline, llm_factory=make)
+    ed = json.loads(store.edition_path(tmp_path / "data", r.edition_id).read_text())
+    d = ed["discovery"]
+    assert d["depth"] == "normal" and d["filtering"] and d["searches"] == 6 and d["kept"] == [DISCOVERED["url"]]
+    assert d["dropped"] == [{"url": "https://example.com/invented",
+                             "reason": "no search, fetched page or link on one has this address"}]
+    assert any(t["title"] == DISCOVERED["title"] and t["source"] == "Example Labs" for t in made[-1].triaged)
+    assert ed["llm"]["by_task"]["discover"]["calls"] == 1
+    assert "Headlines the paper's feeds brought in" in made[-1].web_user
+
+    r = gen.generate(load_config(), tmp_path / "reduced", "reduced", now=NOW, env=KEY, client=offline,
+                     llm_factory=factory())
+    ed = json.loads(store.edition_path(tmp_path / "reduced", r.edition_id).read_text())
+    assert "discovery" not in ed and "discover" not in ed["llm"]["by_task"]
+
+
+def test_discovery_failure_doesnt_stop_the_edition(tmp_path, offline):
+    r = gen.generate(load_config(), tmp_path / "data", "full", now=NOW, env=KEY, client=offline,
+                     llm_factory=factory({"discover": TransientError("web search is not enabled")}))
+    ed = json.loads(store.edition_path(tmp_path / "data", r.edition_id).read_text())
+    assert r.published and ed["mode"] == "full" and ed["stories"]
+    assert "discovery: web search is not enabled" in ed["reason"] and ed["discovery"]["error"]
 
 
 def test_writer_failure_gives_partial(tmp_path, offline):

@@ -1,6 +1,7 @@
-"""Full and reduced editions: triage → editor → full text → writers → assembly.
+"""Full and reduced editions: discovery → triage → editor → full text → writers → assembly.
 
 Failure handling (PLAN.md, "Run modes"):
+- Discovery fails → noted in the reason; the edition goes on with the feeds alone.
 - Triage or editor fails → AIUnavailable: the caller publishes a links edition instead.
 - A writer fails, or AI work stops (credit error, per-run budget, two failures in a row) → the
   finished parts are kept, unwritten stories become plain briefs from the source headline, gaming and
@@ -15,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
-from . import desk, links, rank
+from . import desk, discover, links, rank
 from .extract import fetch_texts, source_block
 from .http import Client
 from .llm import LLM, LLMError
@@ -71,6 +72,14 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
                                   min_points=int(hn_cfg.get("min_points", 100)))
     cands = [c for c in cands if not c.weak and not is_seen(seen, c.url)]
     cands = cands[: int(llm_cfg.get("max_candidates", 150))]
+
+    # 1b. discovery (Opus + web search, full editions): important stories the feeds missed
+    try:
+        found, discovery = discover.for_edition(cfg, harvest, edition_id, mode, llm, seen, recent, now)
+    except LLMError as exc:
+        found, discovery = [], {"error": str(exc)[:200]}
+        problems.append(f"discovery: {exc}")
+    cands += [rank.Candidate(item=it, section=it.sections[0], words=words(it.title)) for it in found]
     if not cands:
         raise AIUnavailable("no new candidates to write about")
     by_id = {f"c{i + 1}": c for i, c in enumerate(cands)}
@@ -212,6 +221,7 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
         "deals": deals,
         "sources": [s.__dict__ for s in harvest.status],
         "editor": editor_stats,
+        **({"discovery": discovery} if discovery else {}),
     }
     edition["llm"]["estimated_usd"] = edition["llm"]["equivalent_usd"]
     return Result(edition, seen_urls, problems)
