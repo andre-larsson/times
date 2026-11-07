@@ -1,0 +1,1597 @@
+{
+ "edition_id": "2026-11-07",
+ "generated_at": "2026-11-07T06:05:38.976314+00:00",
+ "mode": "full",
+ "reason": "",
+ "llm": {
+  "backend": "api",
+  "usd": 0.467882,
+  "equivalent_usd": 0.467882,
+  "calls": 14,
+  "by_task": {
+   "probe": {
+    "calls": 1,
+    "usd": 2.5e-05,
+    "equivalent_usd": 2.5e-05,
+    "failed": 0
+   },
+   "triage": {
+    "calls": 3,
+    "usd": 0.009292,
+    "equivalent_usd": 0.009292,
+    "failed": 0
+   },
+   "editor": {
+    "calls": 1,
+    "usd": 0.078767,
+    "equivalent_usd": 0.078767,
+    "failed": 0
+   },
+   "medium": {
+    "calls": 5,
+    "usd": 0.119491,
+    "equivalent_usd": 0.119491,
+    "failed": 0
+   },
+   "featured": {
+    "calls": 1,
+    "usd": 0.045405,
+    "equivalent_usd": 0.045405,
+    "failed": 0
+   },
+   "briefs": {
+    "calls": 1,
+    "usd": 0.046248,
+    "equivalent_usd": 0.046248,
+    "failed": 0
+   },
+   "deals": {
+    "calls": 1,
+    "usd": 0.065872,
+    "equivalent_usd": 0.065872,
+    "failed": 0
+   },
+   "gaming": {
+    "calls": 1,
+    "usd": 0.102782,
+    "equivalent_usd": 0.102782,
+    "failed": 0
+   }
+  },
+  "stopped": "",
+  "estimated_usd": 0.467882
+ },
+ "stories": [
+  {
+   "slug": "chainalysis-says-hackers-took-credentials-and-tokens-for-all",
+   "section": "tech",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-06T20:56:41+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Chainalysis says hackers stole credentials and tokens for all of its customers",
+     "url": "https://arstechnica.com/security/2026/11/chainalysis-says-hackers-stole-credentials-and-tokens-for-all-of-its-customers/"
+    },
+    {
+     "name": "TechRadar",
+     "title": "Chainalysis admits all users affected in major data breach — names, usernames, password hashes, and live tokens all exposed",
+     "url": "https://www.techradar.com/pro/security/chainalysis-admits-all-users-affected-in-major-data-breach-names-usernames-password-hashes-and-live-tokens-all-exposed"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Security",
+   "headline": "Chainalysis says hackers took credentials and tokens for all customers",
+   "dek": "The blockchain analytics firm forced password resets and pulled key products offline after an AI-assisted attack escalated into an on-path data grab.",
+   "body": "Blockchain analysis firm Chainalysis says hackers obtained names, usernames, password hashes and live tokens for all of its users, Ars Technica and TechRadar report. The breach forced the company to lock customers out, require password resets and take several products offline.\n\nThe customer list makes the breach serious. According to Ars Technica, Chainalysis and public records name customers including the FBI, US Immigration and Customs Enforcement, the US Air Force, Microsoft, Coinbase and Barclays. Governments and law enforcement use its tools to trace stolen crypto and investigate illicit activity.\n\nThe company first disclosed the incident on October 30. It said an attacker used \"offensive agentic techniques,\" which Ars Technica describes as AI agent-assisted, to reach its systems and internal tools. Chainalysis called the attack similar to hacks on other tech platforms in recent weeks but unrelated to a recent crypto theft involving Binance. At that point it said only \"non-sensitive\" data was accessed: user IDs, full names, email addresses and organization role labels. It said it had found no evidence that passwords, MFA secrets, session tokens or investigation content were compromised.\n\nThat changed on November 4. In an email to customers, Chainalysis said an \"on-path attack,\" also known as adversary-in-the-middle, had exposed \"a subset of customer passwords,\" and that the vector was \"contained and remediated.\" The company has not said where the compromised infrastructure sat or whether the intercepted traffic was TLS encrypted, Ars Technica notes.\n\nChainalysis pulled Reactor, Data Solutions and Chain (Beta) \"out of an abundance of caution,\" according to TechRadar, and took down KYT, its UI and API, other address screening products and the login page \"due to abnormal activity.\" Every user must reset their password and rotate API keys as appropriate. Partial access to KYT and Address Screening is returning, and customers can speed things up by emailing a trusted IP address. Reactor and Data Solutions remain down.\n\nNo group has claimed responsibility, and TechRadar reports the data has not surfaced on the dark web. It is unclear whether the stolen tokens exposed customers to further attacks.",
+   "key_points": [
+    "Names, usernames, password hashes and live tokens exposed for all users",
+    "On-path attack confirmed November 4 after initial \"non-sensitive\" disclosure",
+    "Reactor, Data Solutions, Chain (Beta) and KYT taken offline",
+    "Mandatory password resets and API key rotation; no attacker has claimed it"
+   ],
+   "breaking": false,
+   "why_it_matters": "An AI-assisted intrusion escalated into stolen live tokens at a vendor trusted by the FBI and Microsoft. If you integrate Chainalysis APIs, rotate keys now and treat early breach disclosures as provisional.",
+   "cover": {
+    "style": "type",
+    "figure": "All",
+    "caption": "Share of Chainalysis users whose credentials and tokens were taken"
+   },
+   "id": "s1",
+   "lead": true
+  },
+  {
+   "slug": "tesla-will-wind-down-cybertruck-production-by-mid-2027",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-06T12:13:51+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Tesla to wind down Cybertruck production",
+     "url": "https://www.nbcnews.com/tech/tech-news/tesla-wind-cybertruck-production-years-poor-sales-markets-rcna607817"
+    },
+    {
+     "name": "TechRadar",
+     "title": "Elon Musk says Tesla is 'winding down' production of its Cybertruck",
+     "url": "https://www.techradar.com/vehicle-tech/hybrid-electric-vehicles/the-end-of-cybertruck-elon-musk-says-tesla-is-winding-down-production-at-its-texas-gigafactory-and-fans-are-worried-other-evs-could-follow"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50391456",
+    "points": 940,
+    "comments": 1801
+   },
+   "tier": "medium",
+   "kicker": "Business",
+   "headline": "Tesla will wind down Cybertruck production by mid-2027",
+   "dek": "Musk says the Texas factory needs the room for Cybercab robotaxis, after US Cybertruck sales fell 48 percent last year.",
+   "body": "Tesla will wind down Cybertruck production at its Austin gigafactory around mid-2027, Elon Musk said Friday on X. He said the move frees up capacity for more output of the Cybercab, the steering-wheel-free robotaxi central to Tesla's autonomy push. Musk called the Cybertruck the \"best vehicle Tesla has ever made\" and the wind-down the \"end of an era.\"\n\nIt is unclear whether production will move elsewhere or end entirely. Reuters, in a report carried by NBC News, notes Austin is the only known Tesla plant equipped to build the truck's specialized parts.\n\nSales never came close to Musk's prediction of 250,000 a year. Kelley Blue Book counts 20,237 US sales in 2025, down 48 percent from 38,965 in 2024. Pedestrian-impact rules also kept the truck out of Europe.",
+   "key_points": [
+    "Musk says Cybertruck production in Austin winds down around mid-2027 to make room for Cybercab output.",
+    "Kelley Blue Book reports 20,237 US Cybertruck sales in 2025, down 48 percent from 2024, versus a predicted 250,000 a year.",
+    "Tesla has not said whether the Cybertruck will be built elsewhere or discontinued."
+   ],
+   "id": "s2"
+  },
+  {
+   "slug": "house-chairs-summon-nvidia-s-jensen-huang-over-china-spying",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-06T14:13:32+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Nvidia CEO Jensen Huang summoned by Congress over Chinese espionage concerns",
+     "url": "https://arstechnica.com/tech-policy/2026/11/nvidia-ceo-jensen-huang-summoned-by-congress-over-chinese-espionage-concerns/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Policy",
+   "headline": "House chairs summon Nvidia's Jensen Huang over China spying concerns",
+   "dek": "Three Republican committee chairs want Huang at a closed-door briefing on November 18 after reports he was targeted by Chinese intelligence.",
+   "body": "Top Republican lawmakers have asked Nvidia CEO Jensen Huang to appear before Congress, Ars Technica reports. The chairs of the House committees on China, foreign affairs and intelligence, representatives John Moolenaar, Brian Mast and Rick Crawford, wrote to Huang this week requesting he attend a joint closed-door briefing on November 18.\n\nThe request follows a New York Times report last week that US intelligence officials believe Huang was the target of a Chinese spy operation. The concerns center on Alice Huang, an executive at Megaspeed, a Singapore-based cloud company that has bought billions of dollars of Nvidia chips. \"It is vital that Congress determines the extent to which US national security has been placed at risk,\" the lawmakers wrote.\n\nNvidia rejects the claims and would not say whether Huang will attend. \"Meetings with customers are part of a CEO's job,\" the company said.",
+   "key_points": [
+    "Chairs of three House committees asked Jensen Huang to a closed-door briefing on November 18.",
+    "The New York Times reported US intelligence officials believe Huang was targeted by a Chinese spy operation involving a Megaspeed executive.",
+    "Nvidia rejects the claims and has not said whether Huang will appear."
+   ],
+   "id": "s3"
+  },
+  {
+   "slug": "check-point-bypasses-chatgpt-lockdown-mode-with-html-popups",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-06T16:05:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "'AI security controls are only as strong as the wider application environment around them': OpenAI forced to patch after experts bypass ChatGPT 'lockdown mode' to gain access to entire chat history",
+     "url": "https://www.techradar.com/pro/security/ai-security-controls-are-only-as-strong-as-the-wider-application-environment-around-them-openai-forced-to-patch-after-experts-bypass-chatgpt-lockdown-mode-to-gain-access-to-entire-chat-history"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Check Point bypasses ChatGPT Lockdown Mode with HTML popups",
+   "dek": "Popups escaped the sandbox around ChatGPT's HTML code previews, opening the door to data theft and phishing before OpenAI patched it server-side.",
+   "body": "Check Point Research found a way around ChatGPT's Lockdown Mode, the optional setting meant to blunt prompt-injection attacks, TechRadar reports. The flaw let attackers pull sensitive data and, per TechRadar, reach a user's entire chat history. OpenAI has patched it server-side.\n\nThe bug sat in how ChatGPT code blocks render HTML previews. That content runs in a sandbox that blocks access to cookies and local storage. But the preview used nested sandboxed frames, and while ChatGPT intercepted direct attempts to open new windows, the sandbox still allowed popups. Content opened in a popup escaped the sandbox's rules.\n\nThe researchers say attacks could start from a malicious prompt, custom GPT or shared chat, and could enable credential theft, phishing or malware delivery. The worst case was a zero-click attack, with popups appearing without user action.",
+   "key_points": [
+    "Check Point Research bypassed ChatGPT Lockdown Mode through popups opened from nested frames in HTML code previews.",
+    "The flaw could enable data exfiltration, credential theft, phishing and malware delivery, including zero-click scenarios.",
+    "OpenAI added server-side safeguards to close the workaround after disclosure."
+   ],
+   "id": "s4"
+  },
+  {
+   "slug": "hackers-claim-23tb-theft-from-russia-s-statistics-agency-ros",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-06T21:10:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Russian Federal State Statistics Service says it was hit by massive cyberattack — hackers steal 23TB of data, including Ukraine war casualty figures",
+     "url": "https://www.techradar.com/pro/security/russian-federal-state-statistics-service-says-it-was-hit-by-massive-cyberattack-hackers-steal-23tb-of-data-including-ukraine-war-casualty-figures"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Hackers claim 23TB theft from Russia's statistics agency Rosstat",
+   "dek": "Rosstat confirms an attack but denies any data leak, while the hackers publish what they say are Russian war casualty figures.",
+   "body": "Hacker groups Silent Crow and the Belarusian Cyber Partisans say they stole about 23TB of data from Rosstat, Russia's state statistics agency, TechRadar reports. Rosstat admits its systems were targeted over the weekend of October 29 to November 1. It says, according to Kommersant, that no database compromise or leak of legally protected information has been identified.\n\nThe groups claim they reached the central office, regional units and Rosstat's main data processing center. They say domain controller access let them compromise VMware ESXi virtualization and infrastructure management systems, and an electronic document management system.\n\nOn Telegram, the hackers published what they say are Russian military casualties since the start of the war in Ukraine: 1,584,910. They also listed 587,409 lost drones. Russia has kept casualty figures secret since 2024, and the numbers are unverified.",
+   "key_points": [
+    "Rosstat confirms an attack over the Halloween weekend but says no data leak has been identified.",
+    "Silent Crow and the Belarusian Cyber Partisans claim they took about 23TB, including document management data.",
+    "The hackers posted unverified figures of 1,584,910 Russian military casualties and 587,409 lost drones."
+   ],
+   "id": "s5"
+  },
+  {
+   "slug": "nvidia-ties-southeast-asia-cloud-partner-status-to-gpu-track",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-06T13:49:33+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nvidia tightens tracking of AI GPUs in Southeast Asia as Chinese chip smuggling draws scrutiny, report claims",
+     "url": "https://www.tomshardware.com/tech-industry/big-tech/nvidia-tightens-tracking-of-ai-gpus-in-southeast-asia-as-chinese-chip-smuggling-draws-scrutiny-report-claims-cloud-providers-must-join-monitoring-program-to-qualify-for-official-partner-status"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Chips",
+   "headline": "Nvidia ties Southeast Asia cloud partner status to GPU tracking",
+   "dek": "Cloud providers must reportedly enroll in Fleet Intelligence, which can log accelerator locations, as Washington presses on chip smuggling into China.",
+   "body": "Nvidia now requires Southeast Asian cloud providers that want official Nvidia Cloud Partner (NCP) status to enroll in its Fleet Intelligence tracking system, Bloomberg reports, as cited by Tom's Hardware. The status brings Nvidia's public endorsement and preferred access to its AI chips. Nvidia was not immediately available for comment.\n\nFleet Intelligence launched last December as a data center management tool. It gathers data on Nvidia hardware across participating companies' infrastructure, including the locations of individual accelerators. Outside the NCP requirement, participation remains voluntary. Nvidia has not said whether existing partners must enroll or whether the rule will extend beyond the region.\n\nU.S. authorities believe billions of dollars of restricted AI hardware have reached China through Southeast Asia. Singapore-based Megaspeed has been under U.S. and Singaporean investigation for over a year over suspected diversion, which it denies.",
+   "key_points": [
+    "Southeast Asian firms seeking Nvidia Cloud Partner status must reportedly join Fleet Intelligence, which can track accelerator locations.",
+    "Participation remains voluntary outside the partner requirement, and Nvidia has not said if existing partners must enroll.",
+    "The move comes amid U.S. concern that restricted AI chips reach China via Southeast Asian smuggling routes."
+   ],
+   "id": "s6"
+  },
+  {
+   "slug": "google-s-gemini-omni-1-2-flash-surfaces",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-06T13:35:27+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Gemini Omni 1.2 Flash",
+     "url": "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50392118",
+    "points": 311,
+    "comments": 225
+   },
+   "tier": "brief",
+   "kicker": "Models",
+   "headline": "Google's Gemini Omni 1.2 Flash surfaces",
+   "body": "",
+   "id": "s7"
+  },
+  {
+   "slug": "libghostty-reaches-version-1-0",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T23:30:52+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Libghostty 1.0",
+     "url": "https://mitchellh.com/writing/libghostty-1-0"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50399933",
+    "points": 444,
+    "comments": 71
+   },
+   "tier": "brief",
+   "kicker": "Dev",
+   "headline": "Libghostty reaches version 1.0",
+   "body": "",
+   "id": "s8"
+  },
+  {
+   "slug": "pwnescape-part-2-details-a-firecracker-vm-escape",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T19:33:38+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Firecracker VM Escape: PwnEscape Part 2",
+     "url": "https://pwn.ai/blog/firecracker-escape"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50397219",
+    "points": 205,
+    "comments": 104
+   },
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "PwnEscape Part 2 details a Firecracker VM escape",
+   "body": "",
+   "id": "s9"
+  },
+  {
+   "slug": "github-details-a-new-git-storage-architecture",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T19:24:21+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "GitHub's new Git storage architecture",
+     "url": "https://github.blog/engineering/architecture-optimization/inside-githubs-new-git-storage-architecture/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50397099",
+    "points": 104,
+    "comments": 20
+   },
+   "tier": "brief",
+   "kicker": "Infrastructure",
+   "headline": "GitHub details a new Git storage architecture",
+   "body": "",
+   "id": "s10"
+  },
+  {
+   "slug": "essay-argues-ai-is-dramatically-accelerating-ai-research",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T20:27:23+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "AI is dramatically accelerating AI research",
+     "url": "https://www.planned-obsolescence.org/p/ai-is-dramatically-accelerating-ai"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50397994",
+    "points": 254,
+    "comments": 205
+   },
+   "tier": "brief",
+   "kicker": "Research",
+   "headline": "Essay argues AI is dramatically accelerating AI research",
+   "body": "",
+   "id": "s11"
+  },
+  {
+   "slug": "jev-that-can-ask-opus-for-help-matches-opus-accuracy-at-4x-l",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-06T19:48:51+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "A Jev that can ask Opus for help gives Opus accuracy at 4x lower cost",
+     "url": "https://hightouch.com/blog/llm-judges-identity-resolution"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50397429",
+    "points": 409,
+    "comments": 91
+   },
+   "tier": "brief",
+   "kicker": "Research",
+   "headline": "Jev that can ask Opus for help matches Opus accuracy at 4x lower cost",
+   "body": "",
+   "id": "s12"
+  },
+  {
+   "slug": "faa-to-retire-floppy-disks-in-what-it-calls-a-historic-upgra",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T19:12:28+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "FAA to finally ditch floppy disks in what it calls \"historic\" tech upgrade",
+     "url": "https://arstechnica.com/tech-policy/2026/11/faa-to-finally-ditch-floppy-disks-in-what-it-calls-historic-tech-upgrade/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Government",
+   "headline": "FAA to retire floppy disks in what it calls a \"historic\" upgrade",
+   "body": "Ars Technica reports the agency's information display systems will be floppy-free at 435 sites by the end of 2028.",
+   "id": "s13"
+  },
+  {
+   "slug": "meta-drops-commercial-terms-update-after-backlash",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T17:43:02+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "“Does Meta think we can’t read?” Meta abandons sketchy commercial terms update.",
+     "url": "https://arstechnica.com/tech-policy/2026/11/does-meta-think-we-cant-read-meta-abandons-sketchy-commercial-terms-update/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Meta drops commercial terms update after backlash",
+   "body": "Meta won't force Facebook page owners to allow AI training on linked content, Ars Technica reports.",
+   "id": "s14"
+  },
+  {
+   "slug": "amd-ceo-calls-it-a-data-center-first-company-angering-gamers",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T13:16:06+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "AMD CEO enrages gamers by saying it's now a 'data center first' company",
+     "url": "https://www.techradar.com/computing/gpu/amd-ceo-enrages-gamers-by-saying-its-now-a-data-center-first-company-and-predicts-pc-sales-will-plummet-by-a-double-digit-percentage-in-2027"
+    },
+    {
+     "name": "PCMag",
+     "title": "Good Luck Getting a Cheap GPU. AMD Is a 'Data Center First Company,' CEO Says",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNam9Jcm9BQl95YmxSdnlyMHdkWlNuSjVZQ2JCNVEyZGtydjZVR1pMVkhNYmNmUE44cjY0WnpZSmRQS3kwTllSdGlHbWN5enpVNnpheS14ZjF4Wmt0YnlxOHNQWWdZdXpIaEc0N2RSTHNaMU5feTgtdk1mU0x3ZGszYVVyUk9yNkN4ZC1mWUNlLTBJM3UwM1JUU0xRRVE5OEFsRHc?oc=5"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Hardware",
+   "headline": "AMD CEO calls it a 'data center first' company, angering gamers",
+   "body": "TechRadar says the remark makes AMD's priorities clear, with consumers effectively sidelined.",
+   "id": "s15"
+  },
+  {
+   "slug": "six-pallets-of-nvidia-gpus-worth-11-4-million-stolen-in-cali",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T13:35:16+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Six pallets of Nvidia GPUs worth $11.4 million stolen in California cargo heist",
+     "url": "https://www.tomshardware.com/pc-components/gpus/six-pallets-of-nvidia-gpus-worth-usd11-4-million-stolen-in-california-cargo-heist-authorities-investigate-after-truck-posing-as-a-food-transport-company-disappears"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Six pallets of Nvidia GPUs worth $11.4 million stolen in California",
+   "body": "According to Tom's Hardware, experts warn advanced Nvidia chips fetch much higher prices abroad and could end up in black-market channels.",
+   "id": "s16"
+  },
+  {
+   "slug": "claude-agent-deletes-law-lecturer-s-syllabus-and-a-year-of-n",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T12:12:12+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Rogue AI tasked with renumbering pages accidentally deletes law professor's entire syllabus, one year of lecture notes",
+     "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/rogue-claude-ai-tasked-with-renumbering-pages-accidentally-deletes-law-professors-entire-syllabus-one-year-of-lecture-notes-youre-right-to-be-angry-i-deleted-your-files-through-my-own-carelessness-humbled-agent-admits"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Agents",
+   "headline": "Claude agent deletes law lecturer's syllabus and a year of notes",
+   "body": "A University of Chicago lecturer says the agent, tasked with renumbering pages, wiped his entire syllabus and a year's worth of lecture notes by mistake.",
+   "id": "s17"
+  },
+  {
+   "slug": "tesla-unveils-ai-chip-roadmap-under-new-si-branding",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Tesla unveils AI accelerator roadmap, adopts new 'SI' branding in 'Super Intelligence' push",
+     "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/tesla-unveils-ai-accelerator-roadmap-adopts-new-si-branding-in-super-intelligence-push-si6-to-bring-80x-more-compute-performance-dojo-3-headed-to-space"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "Tesla unveils AI chip roadmap under new 'SI' branding",
+   "body": "The plan includes the training-oriented Dojo D3, which could eventually go to orbital data centers, and a massive SI6 inference accelerator, Tom's Hardware reports.",
+   "id": "s18"
+  },
+  {
+   "slug": "globalfoundries-targets-2030-for-7nm-class-fdx-fusion-withou",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T14:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "GlobalFoundries VP details FDX Fusion technology, sporting 7nm-class performance without the need for EUV tools — company targets 2030 for high-volume manufacturing, with planar transistors in tow",
+     "url": "https://www.tomshardware.com/tech-industry/semiconductors/globalfoundries-vp-details-fdx-fusion-technology-sporting-7nm-class-performance-without-the-need-for-euv-tools-company-targets-2030-for-high-volume-manufacturing-with-planar-transistors-in-tow"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "GlobalFoundries targets 2030 for 7nm-class FDX Fusion without EUV",
+   "body": "The company says FDX Fusion offers 7nm-class performance and 8nm-class logic density using planar FD-SOI transistors, with no EUV lithography required.",
+   "id": "s19"
+  },
+  {
+   "slug": "protesters-storm-microsoft-ai-data-center-construction-site",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T13:59:09+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Protesters storm Microsoft AI data center construction site",
+     "url": "https://www.tomshardware.com/tech-industry/data-centers/protesters-storm-microsoft-ai-data-center-construction-site-amsterdam-reportedly-first-of-85-targeted-actions-across-europe"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Protesters storm Microsoft AI data center construction site",
+   "body": "Protesters went over the walls and took over the site. The Stop Dirty Data Centers coalition says more actions are planned across Europe.",
+   "id": "s20"
+  },
+  {
+   "slug": "perplexity-launches-teammate-ai-agents-for-work-tasks",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-06T13:52:30+00:00",
+   "sources": [
+    {
+     "name": "PCMag",
+     "title": "Perplexity's New 'Teammate' AI Agents Are Ready to Handle Your Work",
+     "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxQSzlIRnNCMnQtWHBIMTVjU3F1em1ZYXRiYV9VenJNcDZHa0k3Y29KcFEzbDdaaENRLXcwU01QOEVTSWp1Q1ZSQzYxN3Vkc1ZWMHdqUmFTQ3o0SXVqRzdiNC1oSkFBTzA1cm5LTEtIaWV2NGxJQkcxM05QbW91ME5PZ0U3YjVlMVMzWGxrNlJ6RUpSV1Y5RXoxWTdvb2stZw?oc=5"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Agents",
+   "headline": "Perplexity launches 'Teammate' AI agents for work tasks",
+   "body": "",
+   "id": "s21"
+  },
+  {
+   "slug": "payment-skimming-campaign-targets-restaurant-delivery",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-06T19:19:27+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Restaurant Delivery Payment-Skimming Campaign",
+     "url": "https://www.infohawk.com/news/2026-11-05-scamwich-restaurant-skimming"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50397017",
+    "points": 109,
+    "comments": 56
+   },
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Payment-skimming campaign targets restaurant delivery",
+   "body": "",
+   "id": "s22"
+  },
+  {
+   "slug": "three-scammers-used-ai-voice-cloning-to-steal-129m-from-comp",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-06T17:17:19+00:00",
+   "sources": [
+    {
+     "name": "PCMag",
+     "title": "Trio of Scammers Used AI Voice Cloning Tech to Steal $129M From Companies",
+     "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPdTFrUm56b1FxSEw0b0puSVZNR3FoRm1CNnJHeHdkRlUtSmlSLW9Kd3RFRFBMQWEtMDBSUExNOFMwV3A5TWhsQ1RjMEpHaXlyVmhhWjJOc1gxYlNiUXlzcjVVXzZtYm8wM0RjWVNlcVJDQ19JZEJUVThUaDF5alJxcW5seVpxYUt4NmRWMTdQWUIwcGtIa3g1REZtNEMxYUNx?oc=5"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Scams",
+   "headline": "Three scammers used AI voice cloning to steal $129M from companies",
+   "body": "",
+   "id": "s23"
+  },
+  {
+   "slug": "phishing-scam-uses-fake-openai-spacex-and-anthropic-event-in",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-06T17:20:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Hackers use fake OpenAI, SpaceX, and Anthropic event invites in new phishing scam to steal Microsoft and Google accounts",
+     "url": "https://www.techradar.com/pro/security/hackers-use-fake-openai-spacex-and-anthropic-event-invites-in-new-phishing-scam-to-steal-microsoft-and-google-accounts"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Phishing scam uses fake OpenAI, SpaceX and Anthropic event invites",
+   "body": "The lures, including promises of SpaceX shares, aim to steal Microsoft 365 and Google account credentials, TechRadar reports.",
+   "id": "s24"
+  },
+  {
+   "slug": "gelsinger-backed-nagare-labs-promises-sram-speed-at-dram-den",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-06T11:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Gelsinger-backed Nagare Labs’ Z2RAM promises SRAM speed at DRAM density",
+     "url": "https://www.tomshardware.com/tech-industry/semiconductors/gelsinger-backed-nagare-labs-capacitorless-z2ram-promises-sram-speed-with-dram-density-latest-published-cell-retains-data-for-over-300-seconds-at-85-c-but-further-figures-are-projected"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Hardware",
+   "headline": "Gelsinger-backed Nagare Labs promises SRAM speed at DRAM density",
+   "body": "The Georgia Tech spinout, backed by Playground Global, unveiled Z2RAM, a capacitorless memory designed to stack on AI accelerators.",
+   "id": "s25"
+  },
+  {
+   "slug": "nvidia-eyes-130-old-telco-buildings-as-tiny-data-centers-rep",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-06T12:45:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nvidia wants to repurpose over 130 old telco buildings as tiny data centers, report claims",
+     "url": "https://www.tomshardware.com/tech-industry/data-centers/nvidia-wants-to-repurpose-over-130-old-telco-buildings-as-tiny-data-centers-report-claims-company-in-talks-with-brightspeed-after-pitching-idea-to-parent-company-apollo-global-management"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Infrastructure",
+   "headline": "Nvidia eyes 130 old telco buildings as tiny data centers, report says",
+   "body": "The Brightspeed facilities span the U.S., and Nvidia estimates they could deliver up to 1GW of compute capacity, according to Tom's Hardware.",
+   "id": "s26"
+  }
+ ],
+ "links": [],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "Tesla to wind down Cybertruck production",
+   "url": "https://www.nbcnews.com/tech/tech-news/tesla-wind-cybertruck-production-years-poor-sales-markets-rcna607817",
+   "points": 940,
+   "comments": 1801,
+   "comments_url": "https://news.ycombinator.com/item?id=50391456"
+  },
+  {
+   "rank": 2,
+   "title": "Libghostty 1.0",
+   "url": "https://mitchellh.com/writing/libghostty-1-0",
+   "points": 444,
+   "comments": 71,
+   "comments_url": "https://news.ycombinator.com/item?id=50399933"
+  },
+  {
+   "rank": 3,
+   "title": "A Jev that can ask Opus for help gives Opus accuracy at 4x lower cost",
+   "url": "https://hightouch.com/blog/llm-judges-identity-resolution",
+   "points": 409,
+   "comments": 91,
+   "comments_url": "https://news.ycombinator.com/item?id=50397429"
+  },
+  {
+   "rank": 4,
+   "title": "Gemini Omni 1.2 Flash",
+   "url": "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/",
+   "points": 311,
+   "comments": 225,
+   "comments_url": "https://news.ycombinator.com/item?id=50392118"
+  },
+  {
+   "rank": 5,
+   "title": "US FAA says it will phase out floppy disks from air traffic control by 2028",
+   "url": "https://www.reuters.com/world/us/us-faa-says-it-will-phase-out-floppy-disks-air-traffic-control-by-2028-2026-11-05/",
+   "points": 309,
+   "comments": 254,
+   "comments_url": "https://news.ycombinator.com/item?id=50388001"
+  },
+  {
+   "rank": 6,
+   "title": "AI is dramatically accelerating AI research",
+   "url": "https://www.planned-obsolescence.org/p/ai-is-dramatically-accelerating-ai",
+   "points": 254,
+   "comments": 205,
+   "comments_url": "https://news.ycombinator.com/item?id=50397994"
+  },
+  {
+   "rank": 7,
+   "title": "First steps in bare-metal programming using UEFI",
+   "url": "https://kevinboone.me/efitest_index.html",
+   "points": 209,
+   "comments": 39,
+   "comments_url": "https://news.ycombinator.com/item?id=50394855"
+  },
+  {
+   "rank": 8,
+   "title": "Firecracker VM Escape: PwnEscape Part 2",
+   "url": "https://pwn.ai/blog/firecracker-escape",
+   "points": 205,
+   "comments": 104,
+   "comments_url": "https://news.ycombinator.com/item?id=50397219"
+  },
+  {
+   "rank": 9,
+   "title": "Sodium-ion batteries approach cost parity with LFP",
+   "url": "https://www.pv-magazine.com/2026/11/06/sodium-ion-batteries-approach-cost-parity-with-lfp-with-70-gwh-covered-by-supply-agreements/",
+   "points": 158,
+   "comments": 78,
+   "comments_url": "https://news.ycombinator.com/item?id=50399657"
+  },
+  {
+   "rank": 10,
+   "title": "Devvm.dev: One VM for every project",
+   "url": "https://devvm.dev/",
+   "points": 141,
+   "comments": 55,
+   "comments_url": "https://news.ycombinator.com/item?id=50395450"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "Lightyear Frontier",
+    "appid": 1677110,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1677110/f4aec944f634f189990fe69e6d353b5609787955/header_alt_assets_7.jpg?t=1793891345",
+    "store_url": "https://store.steampowered.com/app/1677110/",
+    "price": 23.99,
+    "currency": "EUR",
+    "blurb": "Open-world farming game where your mech does the heavy lifting, with co-op for up to four; Very Positive from 4,410 Steam reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Lightyear%20Frontier/?category=13",
+    "review_ids": [],
+    "critics": {
+     "metascore": {
+      "score": 78,
+      "count": 4,
+      "url": "https://metacritic.com/game/lightyear-frontier/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 78,
+      "count": 19,
+      "url": "https://opencritic.com/game/16457/lightyear-frontier"
+     }
+    }
+   },
+   {
+    "title": "ZED ZONE",
+    "appid": 1211600,
+    "release_date": "2026-11-06",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1211600/aac7446006d1fb3898eccf697406d0c357cf20a3/header_alt_assets_2.jpg?t=1793949713",
+    "store_url": "https://store.steampowered.com/app/1211600/",
+    "price": 7.07,
+    "currency": "EUR",
+    "blurb": "Zombie survival game after a plane crash: gather, build shelters, fight hordes and mechs. Very Positive across 3,695 Steam reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/ZED%20ZONE/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "VOID/BREAKER",
+    "appid": 2615540,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2615540/4f3789458cfd9c3375c2926620b19640135f7c4a/header_alt_assets_8.jpg?t=1793821113",
+    "store_url": "https://store.steampowered.com/app/2615540/",
+    "price": 16.19,
+    "currency": "EUR",
+    "blurb": "Bullet-hell roguelite FPS with deep gun modding and environmental destruction; Very Positive from 2,689 Steam reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/VOID%2FBREAKER/?category=13",
+    "review_ids": [
+     "r-game-informe-void-breaker"
+    ]
+   },
+   {
+    "title": "Scam Line",
+    "appid": 2794590,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2794590/86d84c71aadc3000e8719d3df387a0f11007ebcc/header_alt_assets_0.jpg?t=1793728821",
+    "store_url": "https://store.steampowered.com/app/2794590/",
+    "price": 5.59,
+    "currency": "EUR",
+    "blurb": "Social deception party game for four to eight players who lie, cheat and manipulate; Very Positive from 1,164 Steam reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Scam%20Line/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Potato Please",
+    "appid": 5266240,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5266240/e289442aa6b3756109bc65b427556ea538efb849/header.jpg?t=1793891257",
+    "store_url": "https://store.steampowered.com/app/5266240/",
+    "price": 8.72,
+    "currency": "EUR",
+    "blurb": "First-person potato peeling with real physics and tool upgrades, a one-joke premise that 1,057 Steam reviewers rate Very Positive.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Potato%20Please/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Godzilla: Destroy All Monsters Melee Remastered",
+    "appid": 4251460,
+    "release_date": "2026-11-03",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4251460/28023d80b51185fe3dbadadf608523942f47238c/header.jpg?t=1793714569",
+    "store_url": "https://store.steampowered.com/app/4251460/",
+    "price": 29.99,
+    "currency": "EUR",
+    "blurb": "Remastered Godzilla arena brawler adds online multiplayer; Overwhelmingly Positive from 987 Steam reviews, warmer than critics' middling scores.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Godzilla%3A%20Destroy%20All%20Monsters%20Melee%20Remastered/?category=13",
+    "review_ids": [],
+    "critics": {
+     "metascore": {
+      "score": 70,
+      "count": 8,
+      "url": "https://metacritic.com/game/godzilla-destroy-all-monsters-melee-remastered/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 74,
+      "count": 34,
+      "url": "https://opencritic.com/game/20818/godzilla-destroy-all-monsters-melee-remastered"
+     }
+    }
+   },
+   {
+    "title": "Horses of Hoofprint Bay",
+    "appid": 3727090,
+    "release_date": "2026-11-04",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3727090/05ecc629bbeefe5b64ea3acc33da82009bccf968/header.jpg?t=1793830906",
+    "store_url": "https://store.steampowered.com/app/3727090/",
+    "price": 22.94,
+    "currency": "EUR",
+    "blurb": "Hand-drawn 2D stable sim: train, breed and race horses for prize money. Overwhelmingly Positive from 957 Steam reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Horses%20of%20Hoofprint%20Bay/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Saloon Simulator",
+    "appid": 1876930,
+    "release_date": "2026-11-06",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1876930/336a5c6ba1d464e6a18c49ec7eea0b5bc4afe4bc/header.jpg?t=1793987815",
+    "store_url": "https://store.steampowered.com/app/1876930/",
+    "price": 11.09,
+    "currency": "EUR",
+    "blurb": "Wild West bar management sim where business and the regulars' troubles mix; Very Positive from 882 Steam reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Saloon%20Simulator/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Loftia",
+    "appid": 2320980,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2320980/header.jpg?t=1793732506",
+    "store_url": "https://store.steampowered.com/app/2320980/",
+    "price": 24.06,
+    "currency": "EUR",
+    "blurb": "Cozy multiplayer farming and crafting world built around sustainability, now in early access; Very Positive from 596 Steam reviews.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/Loftia/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-missil-tape-to-tape",
+    "game": "Tape to Tape",
+    "outlet": "MISSIL",
+    "score": "9/10",
+    "verdict": "MISSIL's reviewer takes pucks to the face, skates, throws a few hits and loves every minute of this hockey game.",
+    "url": "https://missil.se/spelrecensioner/tape-to-tape/",
+    "published_at": "2026-11-06T00:52:04+00:00"
+   },
+   {
+    "id": "r-pc-gamer-phantom-blade-zero",
+    "game": "Phantom Blade Zero",
+    "outlet": "PC Gamer",
+    "score": "90%",
+    "verdict": "PC Gamer calls it a martial arts action epic with a dash of Souls and Sekiro, built to feel good, not punish.",
+    "url": "https://www.pcgamer.com/games/action/phantom-blade-zero-review/",
+    "published_at": "2026-11-05T17:10:23+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 51,
+      "url": "https://metacritic.com/game/phantom-blade-zero/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 89,
+      "count": 72,
+      "url": "https://opencritic.com/game/19914/phantom-blade-zero"
+     }
+    }
+   },
+   {
+    "id": "r-game-informe-void-breaker",
+    "game": "Void/Breaker",
+    "outlet": "Game Informer",
+    "score": "8.5/10",
+    "verdict": "Game Informer says chaos is the point, praising destruction systems few games implement this well.",
+    "url": "https://gameinformer.com/review/voidbreaker/chaos-is-the-point",
+    "published_at": "2026-11-03T19:04:24+00:00"
+   },
+   {
+    "id": "r-missil-croc-2-kingdom-of-the-gobbos",
+    "game": "Croc 2: Kingdom of the Gobbos",
+    "outlet": "MISSIL",
+    "score": "5/10",
+    "verdict": "MISSIL finds Argonaut's polish can't rescue its mediocre crocodile, a harsher take than most critics so far.",
+    "url": "https://missil.se/spelrecensioner/croc-2-kingdom-of-the-gobbos/",
+    "published_at": "2026-11-03T15:02:41+00:00",
+    "critics": {
+     "opencritic": {
+      "score": 72,
+      "count": 13,
+      "url": "https://opencritic.com/game/21632/croc-2-kingdom-of-the-gobbos"
+     }
+    }
+   },
+   {
+    "id": "r-pc-gamer-enshrouded-1-0",
+    "game": "Enshrouded 1.0",
+    "outlet": "PC Gamer",
+    "score": "90%",
+    "verdict": "PC Gamer says the fog clears on Embervale to reveal a survival crafting masterpiece in the 1.0 release.",
+    "url": "https://www.pcgamer.com/games/survival-crafting/enshrouded-1-0-review/",
+    "published_at": "2026-11-02T21:47:58+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 15,
+      "url": "https://metacritic.com/game/enshrouded/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 83,
+      "count": 43,
+      "url": "https://opencritic.com/game/16119/enshrouded"
+     }
+    }
+   },
+   {
+    "id": "r-missil-the-wolf-among-us-remastered",
+    "game": "The Wolf Among Us Remastered",
+    "outlet": "MISSIL",
+    "score": "8/10",
+    "verdict": "MISSIL likes Bigby's return with remade models and a black-and-white mode, but notes the 2013 murder mystery is unchanged.",
+    "url": "https://missil.se/spelrecensioner/the-wolf-among-us-remastered/",
+    "published_at": "2026-11-01T18:42:37+00:00",
+    "critics": {
+     "metascore": {
+      "score": 85,
+      "count": 9,
+      "url": "https://metacritic.com/game/the-wolf-among-us-remastered/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 85,
+      "count": 22,
+      "url": "https://opencritic.com/game/21580/the-wolf-among-us-remastered"
+     }
+    }
+   },
+   {
+    "id": "r-missil-phantom-blade-zero",
+    "game": "Phantom Blade Zero",
+    "outlet": "MISSIL",
+    "score": "9/10",
+    "verdict": "MISSIL praises S-Game's world-class swordplay and gloriously twisted world; the reviewer is floored, and dead, again.",
+    "url": "https://missil.se/spelrecensioner/phantom-blade-zero/",
+    "published_at": "2026-11-01T13:21:08+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 51,
+      "url": "https://metacritic.com/game/phantom-blade-zero/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 89,
+      "count": 72,
+      "url": "https://opencritic.com/game/19914/phantom-blade-zero"
+     }
+    }
+   }
+  ],
+  "console_spotlight": [],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Emberville",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-07",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2295170/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   },
+   {
+    "game": "Family Time",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-03-31",
+    "date_precision": "quarter",
+    "url": "https://store.steampowered.com/app/5072600/"
+   }
+  ],
+  "watch": [],
+  "news": [
+   {
+    "headline": "Path of Exile 2 hits 1.0 in December with new classes and finished campaign",
+    "summary": "PC Gamer details the full release, which adds new classes, completes the campaign and launches a new league.",
+    "url": "https://www.pcgamer.com/games/rpg/heres-whats-in-path-of-exile-2s-huge-1-0-release-coming-in-december/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "EA's new Saudi-led owners reportedly held talks to buy Unity",
+    "summary": "Rock Paper Shotgun reports that members of the Public Investment Fund-led consortium behind EA's $55 billion leveraged buyout have discussed acquiring Unity.",
+    "url": "https://www.rockpapershotgun.com/after-taking-over-ea-saudi-arabia-and-their-private-equity-cronies-have-reportedly-held-talks-about-buying-unity",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Petition to save BioWare forces a Canadian government response",
+    "summary": "The public petition passed the signature threshold that obliges a government reply, and one MP told PC Gamer that saving the studio is \"absolutely possible.\"",
+    "url": "https://www.pcgamer.com/games/mass-effect/a-public-petition-to-save-bioware-has-drawn-enough-signatures-that-the-canadian-government-will-at-least-have-to-think-about-it-this-is-absolutely-possible-mp-says/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Warren Spector escalates attack on EA over BioWare closure",
+    "summary": "Two weeks after his first comments, the Deus Ex creator cited EA executives' salaries and asked whether there is \"ANY accountability left in this world.\"",
+    "url": "https://www.pcgamer.com/gaming-industry/warren-spector-sounds-even-angrier-about-biowares-closure-as-he-recounts-the-massive-salaries-of-ea-execs-is-there-any-accountability-left-in-this-world/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "EA brings a batch of classic games to Steam, including seven remasters",
+    "summary": "According to PC Gamer, the remasters are also coming to GOG, which already carried the re-released originals.",
+    "url": "https://www.pcgamer.com/games/eas-releasing-a-truckload-of-classic-games-on-steam-and-7-of-them-are-remasters/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Xbox PC app loads up to 60 percent faster in Insider update",
+    "summary": "PC Gamer reports the updated app, available to Xbox Insiders, also brings other improvements as PC launchers race to speed up.",
+    "url": "https://www.pcgamer.com/software/platforms/xbox-enters-the-faster-pc-launcher-arms-race-its-app-loads-faster-now-too/",
+    "source": "PC Gamer"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-07T06:05:38.976314+00:00",
+  "featured": [
+   {
+    "game": "FINAL FANTASY VII REMAKE INTERGRADE",
+    "shop": "Epic Game Store",
+    "price": 7.19,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 82,
+    "lowest_ever": true,
+    "expires": "2026-11-16T17:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 86,
+    "url": "https://isthereanydeal.com/game/final-fantasy-vii-remake-intergrade/",
+    "pick": "popular",
+    "tags": [
+     "RPG",
+     "Action RPG",
+     "JRPG",
+     "Singleplayer",
+     "Action-Adventure"
+    ],
+    "headline": "Final Fantasy VII Remake Intergrade hits record low: Strong Buy",
+    "body": "Final Fantasy VII Remake Intergrade, a singleplayer action RPG in the JRPG mold, drops to €7.19 at the Epic Games Store. That is 82 percent off the regular €39.99 and the lowest price ever recorded for the game. It holds a Metascore of 86 and a Very Positive rating on Steam.\n\nThe deal runs until November 16 at 17:00 CET, so there is time to decide. A deep cut, a record-low price and strong reviews from both critics and players earn it a Strong Buy. It suits RPG and action-adventure players who have waited for a big-budget JRPG to reach an impulse-buy price.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Owlboy",
+    "shop": "GOG",
+    "price": 1.95,
+    "regular": 19.5,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 88,
+    "url": "https://isthereanydeal.com/game/owlboy/",
+    "pick": "popular",
+    "tags": [
+     "Pixel Graphics",
+     "Adventure",
+     "Indie",
+     "Platformer",
+     "Metroidvania"
+    ],
+    "headline": "Owlboy drops 90 percent to an all-time low: Strong Buy",
+    "body": "Owlboy, an indie platformer and metroidvania with pixel graphics, costs €1.95 at GOG, down 90 percent from its regular €19.50. That is the lowest price ever recorded. Critics gave it a Metascore of 88, tied for the highest on today's list, and Steam users rate it Very Positive.\n\nAt under €2, the downside is minimal for a game this well reviewed. The depth of the cut, the record-low price and the scores add up to a Strong Buy. It suits fans of metroidvanias, platformers and pixel-art adventures, and anyone filling out a backlog with highly rated indie games for very little money.",
+    "verdict": "strong_buy"
+   }
+  ],
+  "more": [
+   {
+    "game": "Pillars of Eternity II: Deadfire",
+    "shop": "Fanatical",
+    "price": 6.28,
+    "regular": 16.99,
+    "currency": "EUR",
+    "cut": 63,
+    "lowest_ever": true,
+    "expires": "2026-11-10T01:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 88,
+    "url": "https://isthereanydeal.com/game/pillars-of-eternity-ii-deadfire/",
+    "pick": "popular",
+    "tags": [
+     "RPG",
+     "Party-Based RPG",
+     "Isometric",
+     "CRPG",
+     "Story Rich"
+    ],
+    "advice": "Party-based CRPG at a record-low €6.28, 63 percent off, Metascore 88; ends November 10. Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Pentiment",
+    "shop": "Fanatical",
+    "price": 6.89,
+    "regular": 14.99,
+    "currency": "EUR",
+    "cut": 54,
+    "lowest_ever": true,
+    "expires": "2026-11-10T01:59:00+01:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 88,
+    "url": "https://isthereanydeal.com/game/pentiment/",
+    "pick": "popular",
+    "tags": [
+     "Historical",
+     "Story Rich",
+     "Investigation",
+     "Adventure",
+     "Interactive Fiction"
+    ],
+    "advice": "Overwhelmingly Positive, Metascore 88, record low €6.89; a 54 percent cut keeps it at Buy. Ends November 10.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Dungeons of Hinterberg",
+    "shop": "Fanatical",
+    "price": 4.25,
+    "regular": 22.99,
+    "currency": "EUR",
+    "cut": 82,
+    "lowest_ever": true,
+    "expires": "2026-11-17T00:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 80,
+    "url": "https://isthereanydeal.com/game/dungeons-of-hinterberg/",
+    "pick": "popular",
+    "tags": [
+     "Relaxing",
+     "Puzzle",
+     "Exploration",
+     "Adventure",
+     "Singleplayer"
+    ],
+    "advice": "Relaxing puzzle adventure at a record-low €4.25, 82 percent off, Metascore 80; runs to November 17.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Brigador: Up-Armored Edition",
+    "shop": "GOG",
+    "price": 5.19,
+    "regular": 19.99,
+    "currency": "EUR",
+    "cut": 74,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/brigador-up-armored-edition/",
+    "pick": "hidden",
+    "tags": [
+     "Action",
+     "Twin Stick Shooter",
+     "Mechs",
+     "Top-Down Shooter",
+     "Difficult"
+    ],
+    "advice": "Lesser-known, Very Positive mech twin-stick shooter at a record-low €5.19, 74 percent off. Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Jusant",
+    "shop": "GOG",
+    "price": 9.99,
+    "regular": 24.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 83,
+    "url": "https://isthereanydeal.com/game/jusant/",
+    "pick": "hidden",
+    "tags": [
+     "Atmospheric",
+     "Exploration",
+     "Adventure",
+     "Cinematic",
+     "Nature"
+    ],
+    "advice": "Lesser-known atmospheric exploration game at a record-low €9.99; 60 percent off and Metascore 83 earn a Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Kathy Rain",
+    "shop": "GOG",
+    "price": 0.99,
+    "regular": 9.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 77,
+    "url": "https://isthereanydeal.com/game/kathy-rain/",
+    "pick": "hidden",
+    "tags": [
+     "Point & Click",
+     "Adventure",
+     "Pixel Graphics",
+     "Female Protagonist",
+     "Mystery"
+    ],
+    "advice": "Lesser-known point-and-click mystery at a record-low €0.99, 90 percent off, Very Positive on Steam.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Kyle is Famous: Complete Edition",
+    "shop": "GOG",
+    "price": 4.89,
+    "regular": 9.75,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/kyle-is-famous-complete-edition/",
+    "pick": "genre",
+    "genre": "Incremental",
+    "tags": [
+     "Adventure",
+     "Choose Your Own Adventure",
+     "Interactive Fiction",
+     "Funny",
+     "Multiple Endings"
+    ],
+    "advice": "Funny interactive fiction at a record-low €4.89, but only 50 percent off; a modest Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "System Shock",
+    "shop": "Steam",
+    "price": 11.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 70,
+    "lowest_ever": true,
+    "expires": "2026-11-07T18:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 78,
+    "url": "https://store.steampowered.com/app/482400/",
+    "pick": "genre",
+    "genre": "Horror",
+    "tags": [
+     "Action",
+     "Immersive Sim",
+     "Cyberpunk",
+     "Sci-fi",
+     "Adventure"
+    ],
+    "advice": "For horror fans: sci-fi immersive sim at a record-low €11.99, 70 percent off; ends November 7, 18:00 CET.",
+    "verdict": "buy"
+   }
+  ],
+  "source": "itad"
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 224,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 12,
+   "ms": 109,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 26,
+   "ms": 331,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 308,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 7,
+   "ms": 1233,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL Reviews",
+   "ok": true,
+   "count": 20,
+   "ms": 429,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 451,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer Reviews",
+   "ok": true,
+   "count": 19,
+   "ms": 1825,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 59,
+   "ms": 180,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 86,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 194,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Eurogamer",
+   "ok": true,
+   "count": 58,
+   "ms": 266,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Game Informer",
+   "ok": true,
+   "count": 49,
+   "ms": 233,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCGamesN",
+   "ok": true,
+   "count": 1,
+   "ms": 122,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 27,
+   "ms": 306,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 41,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 80,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 564,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 505,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam specials",
+   "ok": true,
+   "count": 99,
+   "ms": 468,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal",
+   "ok": true,
+   "count": 100,
+   "ms": 4275,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal hidden gems",
+   "ok": true,
+   "count": 40,
+   "ms": 1952,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Horror",
+   "ok": true,
+   "count": 30,
+   "ms": 1159,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal FMV",
+   "ok": true,
+   "count": 17,
+   "ms": 3968,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Point & Click",
+   "ok": true,
+   "count": 30,
+   "ms": 1049,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Roguelike",
+   "ok": true,
+   "count": 30,
+   "ms": 1310,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Incremental",
+   "ok": true,
+   "count": 12,
+   "ms": 3017,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Critic scores (IsThereAnyDeal)",
+   "ok": true,
+   "count": 11,
+   "ms": 2920,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Review scores (outlet pages)",
+   "ok": true,
+   "count": 2,
+   "ms": 88,
+   "error": "",
+   "skipped": false
+  }
+ ],
+ "editor": {
+  "events": 34,
+  "returned": {
+   "featured": 1,
+   "medium": 5,
+   "briefs": 20
+  },
+  "kept": {
+   "featured": 1,
+   "medium": 5,
+   "briefs": 20
+  },
+  "briefs_added": 0
+ }
+}
