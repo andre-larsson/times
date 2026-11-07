@@ -304,3 +304,12 @@ def test_brief_top_up_skips_used_gaming_and_repeated_events():
     assert [r["event"] for r in rows] == ["d", "e"]                       # a used, b gaming, c a repeat
     assert ai_edition._brief_top_up({**assignments, "briefs": [{"event": x} for x in "xyz"]},
                                     sent, {}, recent, limits) == []       # enough briefs: nothing added
+
+
+@pytest.mark.parametrize("figure, ok", [
+    ("40%", True), ("+18%", True), ("$6.34B", True), ("2 pts", True), ("1.2 million", True), ("~70B", True),
+    ("−3%", True), ("€1,000", True), (" 29M ", True),
+    ("All", False), ("Zero", False), ("GPT-5", False), ("", False), ("Q3", False),
+])
+def test_cover_figure_must_be_a_number(figure, ok):
+    assert ai_edition.is_cover_figure(figure) is ok

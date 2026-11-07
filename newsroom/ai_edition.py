@@ -10,6 +10,7 @@ Failure handling (PLAN.md, "Run modes"):
 from __future__ import annotations
 
 import datetime as dt
+import re
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any, Callable
@@ -361,9 +362,20 @@ def _story(a: dict[str, Any], tier: str, out: dict[str, Any], slugs: set[str]) -
     if tier == "featured":
         s["breaking"] = a["breaking"]
         s["why_it_matters"] = out.get("why_it_matters", "")
-        if out.get("cover_figure"):
-            s["cover"] = {"style": "type", "figure": out["cover_figure"], "caption": out.get("cover_caption", "")}
+        if is_cover_figure(out.get("cover_figure", "")):
+            s["cover"] = {"style": "type", "figure": out["cover_figure"].strip(),
+                          "caption": out.get("cover_caption", "")}
     return s
+
+
+# A number, optionally signed, approximate or in a currency, followed by any unit: "40%", "$6.34B", "2 pts",
+# "~70B", "1.2 million". Words ("All", "Zero") and names that merely contain a digit ("GPT-5") are rejected.
+_COVER_FIGURE = re.compile(r"[+\-−~≈<>]?[$€£¥]?\d")
+
+
+def is_cover_figure(figure: str) -> bool:
+    """The writer's cover figure is shown only when it starts with a number; otherwise the kicker cover is used."""
+    return bool(_COVER_FIGURE.match(figure.strip()))
 
 
 def _brief(a: dict[str, Any], b: dict[str, Any], slugs: set[str]) -> dict[str, Any]:
