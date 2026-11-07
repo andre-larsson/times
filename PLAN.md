@@ -864,7 +864,7 @@ The real file is in the repo; this is its shape.
    *Done when* the next 07:45 edition publishes by itself.
 
 5. **Discovery** (web search). Measure the real cost per depth.
-   - ✅ **Built 2026-11-07, not in the edition yet:** `newsroom/discover.py` + `prompts/discover.md`. One Opus call
+   - ✅ **Built 2026-11-07:** `newsroom/discover.py` + `prompts/discover.md`. One Opus call
      with the API's `web_search_20250305` and `web_fetch_20250910` tools (`max_uses` per depth, each page capped
      at `search.fetch_tokens`, 6,000) and a strict `report` tool for the answer, since web search always adds
      citations. It sees the ~150 headlines the feeds and the last two editions already have, and looks for up to
