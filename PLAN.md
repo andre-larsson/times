@@ -352,7 +352,7 @@ living roster (`sim/`).
   - **Worn-out phrases (2026-11-07):** before each day, code finds the four-word phrases a bot used in two or
     more of its comments in the last two weeks (article wording, handles and allowed habits like "[MOD]" left
     out), merges them into the longest runs ("terribly sorry I was"), and lists up to 12 in its prompt to avoid.
-    In the re-run, repetition from earlier days fell from 0/3/11% to 0/3/0%, but mostly by chance: no tic came
+    In the re-run, repetition from earlier days fell from 0/3/11% to 0/0/0%, but mostly by chance: no tic came
     up twice before day 4, when the list held one ModBot phrase, which didn't come back. It blocks a tic's
     third use, not its second; a weeks-long run would show more.
 - **Thinking effort** doesn't change repetition (0–5% at low, default and high). High effort makes Haiku's jokes
