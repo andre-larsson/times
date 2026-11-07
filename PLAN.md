@@ -862,6 +862,18 @@ The real file is in the repo; this is its shape.
    *Done when* the next 07:45 edition publishes by itself.
 
 5. **Discovery** (web search). Measure the real cost per depth.
+   - ✅ **Built 2026-11-07, not in the edition yet:** `newsroom/discover.py` + `prompts/discover.md`. One Opus call
+     with the API's `web_search_20250305` and `web_fetch_20250910` tools (`max_uses` per depth, each page capped
+     at `search.fetch_tokens`, 6,000) and a strict `report` tool for the answer, since web search always adds
+     citations. It sees the ~150 headlines the feeds and the last two editions already have, and looks for up to
+     N important stories from the last 36 hours that are missing. A find is kept only if a search or fetch
+     actually returned its address and the feeds don't already have the page or the story.
+   - Depths (`search.depths`): light 3 searches / 3 fetches / 4 finds, normal 6 / 5 / 6, deep 12 / 10 / 10.
+   - **Measuring:** the manual **Measure discovery** workflow (the API key lives only in Actions) runs
+     `python -m newsroom discover --depth … --runs N`. The run summary shows the cost, searches, fetches, tokens
+     and finds of each run; the log has one JSON record per run. `--dry-run` fetches the feeds and shows the
+     prompt for free. Measurement spend isn't in `data/usage.json`, only in the Console.
+   - Then: put the measured depth into the edition (step 5 of the pipeline, full editions only, before triage).
 
 6. **Tune and polish**
    - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.
@@ -882,7 +894,7 @@ The real file is in the repo; this is its shape.
 | Video blurbs based only on title and description | Framed as "Watch" teasers, not reviews |
 | Deals advice that's wrong or out of date | Price and timestamp shown; "prices change"; lowest-ever data from IsThereAnyDeal; no affiliate links |
 | Summaries state things the source doesn't say | Prompts limit Claude to the provided text; "By Claude (AI)" byline; source links |
-| Prompt injection from fetched pages | Writing calls have no tools; JSON-schema outputs; sources always linked |
+| Prompt injection from fetched pages | Writing calls have no tools; JSON-schema outputs; sources always linked. Discovery, the one call with tools, can only search and read; its finds must link a page the tools returned, and then go through triage like any feed item |
 | Key secrets in a public repo | Not exposed to fork PRs; no `pull_request` trigger; Anthropic workspace capped at $40 |
 | Copyright | Summaries in my own words; briefs from short excerpts; store and YouTube images only (v1); `noindex` |
 | Late or dropped cron runs, 60-day auto-disable | Hourly due-check; data commits + enable call; Pi as last resort |

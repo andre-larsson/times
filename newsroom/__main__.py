@@ -48,6 +48,16 @@ def main(argv: list[str] | None = None) -> int:
                        help="Claude backend (default: llm.backend in config.yaml, or $NEWSROOM_LLM). "
                             "claude-code uses `claude -p` on your subscription; local development only")
 
+    disc_p = sub.add_parser("discover", help="measure discovery: fetch the feeds, then let Opus search the web "
+                            "for stories they missed, at each depth. API only, costs money; publishes nothing")
+    add_data_dir(disc_p)
+    disc_p.add_argument("--depth", action="append", help="light, normal or deep (repeatable; default: all three)")
+    disc_p.add_argument("--runs", type=int, default=1, help="runs per depth (default 1)")
+    disc_p.add_argument("--out", type=Path, default=ROOT / "_work" / "discovery",
+                        help="append the measurements to OUT/runs.jsonl (default: _work/discovery)")
+    disc_p.add_argument("--dry-run", action="store_true",
+                        help="fetch the feeds and show the prompt; no Claude call, no cost")
+
     src_p = sub.add_parser("sources", help="fetch every source once and report what came back")
     src_p.add_argument("--dump", type=Path, help="write everything fetched to this JSON file")
 
@@ -80,6 +90,13 @@ def main(argv: list[str] | None = None) -> int:
         if args.dump and result.harvest:
             dump_harvest(result.harvest, args.dump)
         write_github_outputs(result)
+        return 0
+
+    if args.command == "discover":
+        from .discover import measure
+
+        print(measure(cfg, args.data_dir, args.depth or ["light", "normal", "deep"], max(1, args.runs),
+                      args.out, dry_run=args.dry_run))
         return 0
 
     if args.command == "sources":

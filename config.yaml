@@ -48,8 +48,13 @@ deals:
   mix: { popular: 5, hidden: 3, genre: 2 }   # where "more" comes from (ITAD); genres take turns by day
 
 search:
-  depth: light                        # off | light | normal | deep
+  depth: light                        # off | light | normal | deep (discovery isn't in the edition yet: phase 5)
   discovery_every_days: 1
+  depths:                             # per discovery run; finds = the most kept. Measure: python -m newsroom discover
+    light:  { searches: 3,  fetches: 3,  finds: 4 }
+    normal: { searches: 6,  fetches: 5,  finds: 6 }
+    deep:   { searches: 12, fetches: 10, finds: 10 }
+  fetch_tokens: 6000                  # cap on each fetched page in Claude's context
   candidates_scored: 300
   max_item_age_hours: 36
   max_fulltext_chars: 12000
@@ -86,7 +91,8 @@ llm:
   timeout_seconds: 240
   reduced: { featured_max: 1, medium_max: 3 }
   max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000,
-                opinion_pick: 8000, opinion: 16000, opinion_check: 8000, quiz: 12000, quiz_check: 8000 }
+                opinion_pick: 8000, opinion: 16000, opinion_check: 8000, quiz: 12000, quiz_check: 8000,
+                discover: 12000 }
                                       # a hard cap on thinking + text (Claude 5 models always think); you pay for what's used
   effort: { opinion_pick: high, opinion: high, opinion_check: high, quiz_check: high }
                                       # per task; unset = the model's default (Opus 5.5: medium, Fable 5.1: high)

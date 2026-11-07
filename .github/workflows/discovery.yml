@@ -1,0 +1,46 @@
+# Manual: measure what discovery (Opus + the API's web search and web fetch) costs and finds at each depth,
+# from a GitHub runner with the production API key. Nothing is published or committed: the report goes to
+# the run summary, and one JSON record per run goes to the log ("discovery-record:" lines).
+# Costs real API credits, roughly $0.25–1.50 per run depending on depth. Not counted in data/usage.json.
+
+name: Measure discovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      depths:
+        description: "depths to run, space-separated (light normal deep)"
+        type: string
+        default: "light normal deep"
+      runs:
+        description: "runs per depth"
+        type: choice
+        options: ["1", "2", "3"]
+        default: "1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: discovery
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          enable-cache: true
+      - name: Run discovery at each depth
+        run: |
+          set -o pipefail -f
+          args=()
+          for d in $DEPTHS; do args+=(--depth "$d"); done
+          uv run --locked python -m newsroom discover "${args[@]}" --runs "$RUNS" | tee -a "$GITHUB_STEP_SUMMARY"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DEPTHS: ${{ inputs.depths }}
+          RUNS: ${{ inputs.runs }}

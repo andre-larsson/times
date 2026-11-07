@@ -5,6 +5,9 @@ Two backends:
 - "claude-code": `claude -p` on this machine, drawing on the Claude subscription (local development
   only; refused inside GitHub Actions). Its usage is logged with the API-equivalent cost but never
   counted against the monthly budget.
+
+`call` is the normal structured call with no tools. `call_web` (discovery only, API only) adds the API's
+web search and web fetch tools, which Anthropic runs, and takes the answer from a strict `report` tool.
 """
 
 from __future__ import annotations
@@ -20,6 +23,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 BACKENDS = ("api", "claude-code")
+WEB_MAX_REQUESTS = 6                  # a web turn that keeps pausing gives up after this many requests
 
 
 class LLMError(Exception):
@@ -50,6 +54,9 @@ class Call:
     output_tokens: int = 0
     cache_read: int = 0
     cache_write: int = 0
+    web_searches: int = 0             # web search requests ($10 per 1,000 on top of tokens)
+    web_fetches: int = 0              # web fetch requests (tokens only)
+    requests: int = 0                 # API requests in this call (a web turn can pause and resume)
     usd: float = 0.0                  # what the API charged (0 for claude-code)
     equivalent_usd: float = 0.0       # what it would cost on the API
     seconds: float = 0.0
@@ -158,6 +165,32 @@ class LLM:
         self.tally.record(call)
         return data
 
+    def call_web(self, task: str, system: str, user: str, report_schema: dict[str, Any], *, searches: int,
+                 fetches: int, fetch_tokens: int = 6000,
+                 max_tokens: int | None = None) -> tuple[dict[str, Any], dict[str, Any], Call]:
+        """One call with web search and web fetch; Claude hands in its answer through a `report` tool.
+
+        Returns (the report, what Claude looked at, the call with its cost). "Looked at" holds the
+        search queries, the fetched URLs, every result the tools returned (url, title, page_age) and
+        tool errors. API backend only: `claude -p` has no equivalent server tools.
+        """
+        if self.backend != "api":
+            raise LLMError("web search needs the api backend")
+        self.tally.check()
+        call = Call(task=task, model=self.model_for(task), backend=self.backend)
+        max_tokens = int(max_tokens or self.max_tokens.get(task, 12000))
+        start = time.monotonic()
+        try:
+            data, looked = self._call_api_web(call, system, user, report_schema, searches, fetches,
+                                              fetch_tokens, max_tokens)
+        except LLMError as exc:
+            call.ok, call.error, call.seconds = False, str(exc)[:300], round(time.monotonic() - start, 1)
+            self.tally.record(call, exc)
+            raise
+        call.seconds = round(time.monotonic() - start, 1)
+        self.tally.record(call)
+        return data, looked, call
+
     def probe(self) -> None:
         """Cheapest possible real request: raises CreditError if the key or credits don't work."""
         if self.backend == "claude-code":
@@ -180,19 +213,13 @@ class LLM:
             self._client = anthropic.Anthropic(api_key=key, max_retries=2, timeout=self.timeout)
         return self._client
 
-    def _call_api(self, call: Call, system: str, user: str, schema: dict[str, Any], max_tokens: int) -> dict:
+    def _create(self, **kwargs: Any):
+        """messages.create, with API errors mapped to CreditError / TransientError."""
         import anthropic
 
         client = self._client_api()
         try:
-            msg = client.messages.create(
-                model=call.model,
-                max_tokens=max_tokens,
-                system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-                messages=[{"role": "user", "content": user}],
-                output_config={"format": {"type": "json_schema", "schema": schema},
-                               **({"effort": self.effort[call.task]} if self.effort.get(call.task) else {})},
-            )
+            return client.messages.create(**kwargs)
         except anthropic.AuthenticationError as exc:
             raise CreditError(f"authentication failed ({exc.status_code})") from exc
         except anthropic.PermissionDeniedError as exc:
@@ -209,17 +236,75 @@ class LLM:
         except anthropic.APIStatusError as exc:
             raise TransientError(f"API error {exc.status_code}") from exc
 
+    def _add_usage(self, call: Call, msg: Any) -> None:
+        """Add one response's usage to the call and re-price it (tokens, plus $0.01 per web search)."""
         u = msg.usage
-        call.input_tokens = u.input_tokens or 0
-        call.output_tokens = u.output_tokens or 0
-        call.cache_read = getattr(u, "cache_read_input_tokens", 0) or 0
-        call.cache_write = getattr(u, "cache_creation_input_tokens", 0) or 0
-        call.usd = call.equivalent_usd = price(self.cfg, call.model, call.input_tokens, call.output_tokens,
-                                               call.cache_read, call.cache_write)
+        call.requests += 1
+        call.input_tokens += u.input_tokens or 0
+        call.output_tokens += u.output_tokens or 0
+        call.cache_read += getattr(u, "cache_read_input_tokens", 0) or 0
+        call.cache_write += getattr(u, "cache_creation_input_tokens", 0) or 0
+        tools = getattr(u, "server_tool_use", None)
+        if tools is not None:
+            call.web_searches += getattr(tools, "web_search_requests", 0) or 0
+            call.web_fetches += getattr(tools, "web_fetch_requests", 0) or 0
+        per_search = float((self.cfg.get("pricing") or {}).get("web_search_per_1000", 10.0)) / 1000
+        call.usd = call.equivalent_usd = round(
+            price(self.cfg, call.model, call.input_tokens, call.output_tokens, call.cache_read, call.cache_write)
+            + call.web_searches * per_search, 6)
+
+    def _call_api(self, call: Call, system: str, user: str, schema: dict[str, Any], max_tokens: int) -> dict:
+        msg = self._create(
+            model=call.model,
+            max_tokens=max_tokens,
+            system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": user}],
+            output_config={"format": {"type": "json_schema", "schema": schema},
+                           **({"effort": self.effort[call.task]} if self.effort.get(call.task) else {})},
+        )
+        self._add_usage(call, msg)
         if msg.stop_reason == "max_tokens":
             raise TransientError(f"output cut off at max_tokens={max_tokens}")
         text = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
         return _parse(text)
+
+    def _call_api_web(self, call: Call, system: str, user: str, schema: dict[str, Any], searches: int,
+                      fetches: int, fetch_tokens: int, max_tokens: int) -> tuple[dict, dict]:
+        # Basic tool versions: results go straight into context, so the cost per depth is predictable.
+        # Web search always cites its sources, so the answer comes through a strict client tool rather
+        # than a JSON-schema response format.
+        tools: list[dict[str, Any]] = [{"type": "web_search_20250305", "name": "web_search", "max_uses": searches}]
+        if fetches > 0:
+            tools.append({"type": "web_fetch_20250910", "name": "web_fetch", "max_uses": fetches,
+                          "max_content_tokens": fetch_tokens})
+        tools.append({"name": "report", "description": "Hand in your finished answer. Call it once, at the end.",
+                      "input_schema": schema, "strict": True})
+        effort = {"output_config": {"effort": self.effort[call.task]}} if self.effort.get(call.task) else {}
+        messages: list[dict[str, Any]] = [{"role": "user", "content": user}]
+        looked: dict[str, list] = {"queries": [], "fetched": [], "results": [], "errors": []}
+        nudged = False
+        for _ in range(WEB_MAX_REQUESTS):
+            msg = self._create(model=call.model, max_tokens=max_tokens, tools=tools, messages=messages,
+                               system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+                               **effort)
+            self._add_usage(call, msg)
+            _collect(msg.content, looked)
+            report = next((b for b in msg.content
+                           if getattr(b, "type", "") == "tool_use" and getattr(b, "name", "") == "report"), None)
+            if report is not None:
+                data = report.input if isinstance(report.input, dict) else _parse(str(report.input))
+                return data, looked
+            if msg.stop_reason == "max_tokens":
+                raise TransientError(f"output cut off at max_tokens={max_tokens}")
+            messages.append({"role": "assistant", "content": msg.content})
+            if msg.stop_reason == "pause_turn":          # a long search turn: send it back to continue
+                continue
+            if nudged:
+                raise TransientError("no report, even after a reminder")
+            messages.append({"role": "user", "content": "Call the report tool now with what you found. "
+                                                        "No more searches."})
+            nudged = True
+        raise TransientError(f"no report after {WEB_MAX_REQUESTS} requests")
 
     # ── claude-code backend ──────────────────────────────────────────────────
 
@@ -269,6 +354,32 @@ class LLM:
         if isinstance(data, dict):
             return data
         return _parse(str(result.get("result") or ""))
+
+
+def _collect(content: list[Any], looked: dict[str, list]) -> None:
+    """Note the queries, fetches, results and tool errors in one response's content blocks."""
+    for b in content:
+        kind = getattr(b, "type", "")
+        if kind == "server_tool_use":
+            inp = getattr(b, "input", None) or {}
+            if getattr(b, "name", "") == "web_search" and inp.get("query"):
+                looked["queries"].append(str(inp["query"]))
+            elif getattr(b, "name", "") == "web_fetch" and inp.get("url"):
+                looked["fetched"].append(str(inp["url"]))
+        elif kind == "web_search_tool_result":
+            if isinstance(b.content, list):
+                looked["results"] += [{"url": getattr(r, "url", ""), "title": getattr(r, "title", ""),
+                                       "page_age": getattr(r, "page_age", "") or ""} for r in b.content]
+            else:
+                looked["errors"].append(f"search: {getattr(b.content, 'error_code', 'error')}")
+        elif kind == "web_fetch_tool_result":
+            c = b.content
+            if getattr(c, "type", "") == "web_fetch_result":
+                doc = getattr(c, "content", None)
+                looked["results"].append({"url": getattr(c, "url", ""), "title": getattr(doc, "title", "") or "",
+                                          "page_age": "", "fetched": True})
+            else:
+                looked["errors"].append(f"fetch: {getattr(c, 'error_code', 'error')}")
 
 
 def _parse(text: str) -> dict[str, Any]:
