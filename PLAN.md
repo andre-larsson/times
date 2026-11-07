@@ -494,7 +494,7 @@ web search is $0.01 per search.
 | Briefs (one batched call) | Opus | $0.02 | $0.04 |
 | Gaming: blurbs, verdicts, video blurbs (one batched call) | Opus | $0.04 | $0.06 |
 | Deals: deal of the day + more deals (one call) | Opus | $0.04 | $0.06 |
-| Discovery, depth `light` (3 searches, 3 fetches; measured once: $0.33) | Opus | $0.33 | $0.33 |
+| Discovery, depth `normal` with dynamic filtering (6 searches; measured $0.32) | Opus | $0.32 | $0.32 |
 | Opinion column, Wednesday and Sunday (~$0.45 each) | Opus + Fable | ~$4/month | ~$4/month |
 | News quiz, Tuesday and Saturday (~$0.35 each) | Opus | ~$3/month | ~$3/month |
 | **Per day / per month** | | **~$0.62 / ~$19** | **~$0.84 / ~$25** |
@@ -890,8 +890,28 @@ The real file is in the repo; this is its shape.
      - **Opus barely fetches** (0–1 of the allowed 3–10). Once it fetched a blog's front page and took an
        article's link from it; the check only trusted search results, so that find was dropped. Links on a
        fetched page now count too.
-   - Next: a second round for the spread, and the cheaper options: Sonnet 5.5 (half the price per token) and
-     dynamic filtering (`web_search_20260209`+: Claude trims results in code before they enter context).
+   - **Second round, 2026-11-07** (six runs, $2.82; both rounds $4.48), same day's feeds:
+
+     | Variant | Runs | Avg cost | Cache write | Kept | Per find | Per month if daily |
+     |---|---|---|---|---|---|---|
+     | light, Opus | 2 | $0.34 ($0.33–0.35) | 45–48k | 0, 4 | $0.17 | ~$10.30 |
+     | normal, Opus | 1 | $0.49 | 66k | 2 | $0.25 | ~$15 |
+     | deep, Opus | 2 | $0.86 ($0.85–0.86) | 110–114k | 5, 4 | $0.19 | ~$26 |
+     | normal, Sonnet | 1 | $0.26 | 66k | 2 | $0.13 | ~$7.90 |
+     | deep, Sonnet | 1 | $0.47 | 113k | 2 | $0.23 | ~$14.20 |
+     | **normal, Opus, dynamic filtering** | 1 | **$0.32** | 29k | 4 | **$0.08** | **~$9.70** |
+     | deep, Opus, dynamic filtering | 1 | $0.55 | 45k | 5 | $0.11 | ~$16.80 |
+
+     - **Cost is steady:** repeat runs differed by 3–7%. It is set by the number of searches, not the day.
+     - **Dynamic filtering** (`web_search_20260318`, `web_fetch_20260318`) cut cache writes by 55–60% and the cost by
+       35%, and Opus fetched more pages with it (6 at deep) and kept more finds. Slower (40–85 s), which doesn't
+       matter here.
+     - **Sonnet** halves the price but picks worse: two of its four finds were AI-stock and Congress stories, and
+       deep kept only 2 from 12 searches. Opus kept model releases, research and security incidents.
+     - **Every run found GPT-6 Cyber.** Half of all finds were security stories (The Hacker News, BleepingComputer,
+       SecurityWeek, watchTowr): the feeds have no security source, which a free RSS feed would fix.
+     - **Recommendation:** `normal` with dynamic filtering, in every full edition: ~$0.32 a run, ~$9.70 a month,
+       which fits the room left in the $35 target.
    - Then: put the chosen depth into the edition (step 5 of the pipeline, full editions only, before triage).
 
 6. **Tune and polish**
@@ -925,7 +945,7 @@ The real file is in the repo; this is its shape.
 
 Decided since the previous revision:
 - **Budget:** $35/month target, $40 hard stop (was $20/$25). The paper already runs ~$21 a month (editions
-  ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for the Botroom (~$4) and daily discovery at `light` (~$10 measured).
+  ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for the Botroom (~$4) and daily discovery (`normal` with dynamic filtering, ~$9.70 measured).
 - **I Dream of Indie Games:** YouTube channel and blog review feed found.
 - **News preview images:** off for now. News stories use typographic covers; games and videos use Steam
   and YouTube images.
