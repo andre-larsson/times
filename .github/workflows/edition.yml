@@ -5,7 +5,7 @@
 #   hourly check at an odd minute plus a cluster of odd-minute runs around the 07:00 Stockholm slot, which is
 #   06:00 UTC in winter and 05:00 UTC in summer. Extra runs are harmless: an edition is generated at most once per slot.
 # - workflow_dispatch: "Run workflow" button; any mode other than auto forces a run now.
-# - push to main (code, templates, config): re-render and redeploy without a new edition.
+# - push to main (code, templates, config, hand edits to data): re-render and redeploy without a new edition.
 # Pushes made with GITHUB_TOKEN (the data commits below) don't trigger workflows, so no loops.
 
 name: Edition
@@ -28,6 +28,7 @@ on:
       - "templates/**"
       - "static/**"
       - "config.yaml"
+      - "data/**"                # hand fixes to an edition; the workflow's own data commits don't trigger
       - "pyproject.toml"
       - "uv.lock"
       - ".github/workflows/edition.yml"
