@@ -92,6 +92,11 @@
    ],
    "breaking": false,
    "why_it_matters": "An AI-assisted intrusion escalated into stolen live tokens at a vendor trusted by the FBI and Microsoft. If you integrate Chainalysis APIs, rotate keys now and treat early breach disclosures as provisional.",
+   "cover": {
+    "style": "type",
+    "figure": "100%",
+    "caption": "Share of Chainalysis users whose credentials and tokens were taken"
+   },
    "id": "s1",
    "lead": true
   },
