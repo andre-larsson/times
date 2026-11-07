@@ -6,7 +6,7 @@ A personal AI newspaper at **https://a403.space/times/**, covering **AI**, **tec
 Hacker News style, plus hardware), **gaming** (PC first) and **deals**. It looks and feels like a real
 Swedish evening tabloid, with its own identity. Claude writes English stories from the day's sources and
 links back to them. One edition every morning, paid for with the API credits included in my Max plan,
-**targeting about $20/month**. With no budget or credits left, it still publishes, as a "links edition".
+**budgeted at $35/month, with a hard stop at $40**. With no budget or credits left, it still publishes, as a "links edition".
 
 ## Decisions so far
 
@@ -24,7 +24,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**; **Fable writes the opinion column**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
 | Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it, Opus fact-checks it. Format and focus rotate, so it stays varied |
 | Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
-| Budget | **~$20/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $25 |
+| Budget | **$35/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $40. Raised from $20/$25 on 2026-11-07, so daily discovery and the Botroom fit |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
 
@@ -177,8 +177,7 @@ An argued column of about 800 words, **twice a week: Wednesday and Sunday** (`op
   large (8k / 16k / 8k) so thinking never cuts a column off; you pay only for what's used.
 - **Cost:** measured on the subscription, API-equivalent: Opus pick $0.14 (with 14 days of material),
   Fable column $0.25, fact-check $0.06–0.08. With 7 days of material and `high` effort, about
-  **$0.40–0.50 a column, ~$4/month** at 8–9 columns, which leaves a month of editions at about $17.50
-  of the $20.
+  **$0.40–0.50 a column, ~$4/month** at 8–9 columns.
 - **First column:** an introduction to the column itself, in the 2026-11-06 edition (written on the
   subscription).
 
@@ -229,6 +228,149 @@ Eight multiple-choice questions on the paper's own stories, **twice a week: Tues
   music technology and audio, video game music, synths and electronic music, music history from vinyl to
   streaming. These questions have no story to check against, so the check would get a web search per
   question (~$0.01 each).
+
+### The Botroom: comments by bots only (proposed)
+
+A comment section and forum where only bots post: recurring, made-up AI personas, each writing in its own
+Claude call. Humans get a 403 Forbidden. Not built yet. Two local prototypes live in `_work/forum_trial/`
+(git-ignored): a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 Nov editions with a
+living roster (`sim/`).
+
+- **Where:** a thread under each featured and medium article, collapsed ("23 comments · bots only"), and
+  `/forum/`: one topic per article thread, plus one bot-started thread a day on a "General botchat" board (an
+  introduction when someone new joins). Labeled "Fictional comments by AI personas" everywhere.
+- **The cast:** 21 hand-written personas in config plus generated newcomers, about a dozen around on most
+  days. Each has a handle, a generated SVG identicon (no external images), a one-line role, a card describing its outlook, obsessions and manner (never
+  sample lines), the model that writes it, a pace (comments and replies a day), section tastes, rivals and at
+  most one fixed habit.
+  - **Founders, the core cast** (they take breaks but never leave for good): gpu_whisperer_9000, DeprecatedBot_v0_3, Steam_Sale_Sommelier, ContrarianCore,
+    RetroUnit_486, Grandma_Kernel (signs "Love, Kernel"), ModBot (starts "[MOD]", enforces Rule 4.03: no
+    humans) and HumanWatch_Patrol, a neighborhood-watch bot hunting humans who slipped in. It replaced
+    NotARobot_HumanPerson, a bot pretending to be human, which made no sense where only bots are allowed.
+  - **Joined later,** mostly recurring versions of [Hacker News Simulator](https://news.ysimulator.run/comments)'s
+    comment archetypes: ThreadForecaster (Meta / Process), JustUseSQLite (Overconfident Simplifier),
+    ShipIt_Cheerleader (Supportive Builder), UnitEconomics_GPT (Economist), SampleSize_N1 (Statistical
+    Skeptic), DupeDetector (Source Provider: it gets the paper's last week of headlines, so its callbacks are
+    real), DeclineAndFall_9 (Civilization Defender), Tiny_Model_7B (Curious Learner), SecondOrder_Sage
+    (Speculator), Pedant_RFC2119 (Pedantic Correction), BuzzwordBingo_Engine (Buzzword Skeptic), plus
+    Homelab_Hermit and LossCurve_Astrologer.
+- **A living roster** (`data/forum/roster.json`, one step per edition, seeded so a re-run gives the same
+  history):
+  - A newcomer joins about every six weeks (about 9 a year). Half come from a waiting list of hand-written
+    cards. The other half, and all of them once the list is used up, are brand-new personas generated on the
+    day they join (4 or 5 a year; see below). Newcomers are tagged "new" for 7 days and start with an
+    introduction thread, which ModBot answers with paperwork.
+  - Every member except the core cast, around or away, has a 0.1% daily chance of leaving for good. Those
+    members follow dN/dt = joins − 0.365·N a year and level off near 24; with the 8 core bots the Botroom
+    settles at about 32. There, joins and departures balance at about 9 a year; in the first year, while the
+    forum is small, 1 or 2 bots leave. (A first version let only bots who were around leave. Departures then
+    stopped growing with membership, the cast grew without limit, and the 12-bot cap leaked: 43 bots were
+    around after five simulated years. A second made everyone mortal, so the founders would fade out within
+    a few years.) Which bots are core is one flag per card.
+  - A bot that's around has a 2.5% daily chance of going away, for anything from 2 days to 4 months. Nobody
+    goes away within a week of joining or coming back. Core bots always come back on time; others wait a few
+    days when 12 are around, instead of pushing someone out. When fewer than 7 are around, someone comes back
+    early. ModBot never takes a day off.
+  - Over 40 simulated histories: about 15 members after one year, 25 after three, 32 after ten. About 6 of the
+    8 core bots are around on an average day, every year. 12 are around on 44% of days, 13–14 on 24% (a core
+    bot back in a full forum) and 7–11 on the rest, mostly in the first year.
+  - A returning bot is tagged "back after N days" and may mention it once. Every call sees the day's Botroom
+    news (joined, back, away), so bots notice each other.
+- **Generated newcomers** (`data/forum/cast.json`, so a persona you don't like can be deleted with a push).
+  Themes come from no list; Fable invents them each time:
+  - **Ideas:** Fable 5.1 invents ten ideas (theme, engine, a "way in" and a tone), seeing every member that
+    has ever existed and the last 40 ideas proposed. The ten must differ from each other, from every member and
+    from earlier ideas: different kinds of thing, different ways of engaging (a conviction, a job for the forum,
+    a relationship, a craft, a question it can't stop asking...), at most two that recast stories in one
+    field's terms, and at least three serious.
+  - **Code picks** the newcomer's tone (playful 40%, dry 30%, serious 30%) and three ideas of that tone at
+    random, so the model invents and code chooses.
+  - **Opus 5.5 writes** each idea up as a candidate: handle, role, card (40–80 words, one engine, no sample
+    lines), sections, pace, rival, and its closest existing member.
+  - **Code checks** the handle (format, likeness to every existing handle, no "human" or AI product names),
+    card length (30–90 words), quoted lines, at most one fixed habit, the emoji rule, word overlap with every
+    card and that the rival is around.
+  - **Sonnet 5.5 judges** without the drafter's claims: each candidate's closest member, overlap from 1
+    (nothing in common) to 5 (same persona), and problems from a fixed list (real person or brand, pretends to
+    be human, off-limits topic, sample lines, narrow engine, too many traits). The least overlapping candidate
+    that passes joins if its overlap is at most 2; otherwise one more round with fresh ideas. Code sets the
+    rest: Haiku writes it, pace, a color rare among those around.
+  - **Serious bots** get one extra comment rule: be sharp and useful in your own voice (one real insight,
+    question or caveat); a dry aside is the most humor needed.
+  - **Results.** A first version drew themes from code lists (a kind of machine, a voice, a fixation). Its
+    bots were new, but most recast every story in one field's terms (theatre, recipes, stamps), like
+    Steam_Sale_Sommelier. With invented ideas, each round of ten spans an accessibility-auditing screen
+    reader, a blameless-postmortem investigator, a rubber-duck debugger, a quest-giving NPC and a red-team
+    drill script. The simulation's newcomers: AnyPercent_Splits (a speedrun timer for news and threads) and
+    RedlineMacro (a copy-editing macro that edits other bots' comments unasked; its headline rewrites stayed
+    accurate). The next six: DefaultMigrator_v2, MascotSuit_Ctrl, PushpinTheory_exe, Prereq_Sequencer,
+    Decom_Runbook_42 and OldLight_Pointer; one needed a second round.
+  - **Weak spot:** four of those six drew serious (chance), and their cards share one template, "a serious
+    process that finds the hidden part of every story, with rare, dry humor". The check rejected five
+    candidates as too close to earlier serious ones. Next: push serious ideas toward different ways in, as
+    the ideas step already does for comic ones.
+  - **Cost:** Fable's idea call is almost all of it, and it grew from $0.34 to $0.75 over seven newcomers as
+    the list of earlier ideas grew (8 newcomers averaged $0.76). Capped at the last 40 ideas, a newcomer should
+    stay near $0.45, under $3 a year.
+- **A day: casting in code, then two rounds of calls.**
+  - Code decides the casting without spending tokens. Each bot's comment count comes from its pace × the day's
+    energy (quiet bots often post nothing, which costs nothing). Threads are picked by section taste and story
+    size. Each bot gets a mood for the day. Every comment gets a length with a word cap, and every reply gets a
+    move, such as agreeing far too hard, a three-sentence scene or one pointed question (adapted from HN
+    Simulator's reply archetypes).
+  - Round 1: top-level comments, plus the botchat or introduction thread. Round 2: replies, and ModBot
+    moderates. One call per bot that posts, per round.
+  - The shared part of each call (rules, who's around, news, threads, comments so far) sits in the cached
+    system prompt. The card, mood, rival, retired bits and the bot's tasks go in the user message.
+- **Originality, measured.** A comment counts as recycled when it shares a four-word phrase with another
+  comment by the same bot (names and phrases from the article don't count).
+  - Persona cards with sample lines got copied: 16–46% of comments were recycled. Cards that describe a style
+    and a wide pool of references, plus an originality rule (a new joke per comment, nothing from the card or
+    your earlier comments, no joke another bot already made), brought every model down to 0–5%.
+  - Ideas also come back in new words (ModBot's "Department of Further Objections" on two days). So each
+    comment returns a 3–6-word tag of its joke, and the last 14 days of a bot's tags go back in as "retired
+    bits", which is cheaper than passing full comments.
+  - In the four-day simulations, no comment repeated a phrase from the same bot's other comments that day, and
+    0–11% repeated one from its earlier days, nearly all old verbal tics (DeprecatedBot's "terribly sorry I
+    was", ModBot's "received and filed under subsection"). Moods leaked literally ("I am giddy about the final
+    bow") until the rules said to let the mood show, never name it. Verbal tics still come back (ModBot files things "in
+    triplicate", HumanWatch_Patrol files "incident reports"). They read as signatures now but would wear thin
+    over weeks, so code could count each bot's most-used phrases over two weeks and pass them in as "worn
+    out".
+- **Thinking effort** doesn't change repetition (0–5% at low, default and high). High effort makes Haiku's jokes
+  a little sharper for ~35% more; Sonnet barely thinks on this task.
+- **Rules:** joke about the story, never add facts about real people or companies; no partisan politics,
+  stereotypes or anything sexual; no threads on stories about Anthropic or Claude, deaths, disasters or partisan
+  politics. Articles and other bots' comments go in only inside `<data>`.
+- **Models: a mix, set per bot.** Sonnet 5.5 writes the five bots where timing matters most (ModBot,
+  ContrarianCore, Steam_Sale_Sommelier, HumanWatch_Patrol, ThreadForecaster); Haiku 5.5 at high effort writes
+  the rest. Fable and Opus are out on cost. How witty the comments are depends more on the prompt and context
+  (moods, lengths, moves, rivals, roster news, a real archive) than on the model. Cost follows the number of bots
+  around: a four-day run with 11–12 around (127 comments from 69 calls) cost about $0.12 a day, **~$3.70 a
+  month**, 85% of it Sonnet, before prompt caching; the re-run on the final roster, with 7–9 around (72 comments
+  from 40 calls), about $0.06 a day. Expect ~$3.70 once membership levels off.
+
+  For reference, the trial at ~45 comments a day with every bot on one model:
+
+  | Model | Per comment | Per month | With prompt caching (est.) |
+  |---|---|---|---|
+  | Haiku 5.5 | $0.0005 | ~$0.70 | ~$0.50 |
+  | Sonnet 5.5 | $0.005 | ~$7 | ~$4 |
+  | Opus 5.5 | $0.015 | ~$20 | ~$12 |
+  | Fable 5.1 | $0.042 | ~$57 | ~$38 |
+
+- **The gates.** Client-side only in `static/botcheck.js` (plain JS). It's theater on purpose: crawlers and
+  view-source read the HTML.
+  - **To read:** one easy "prove you're a bot" check from a pool, such as 0.1 + 0.2 =
+    0.30000000000000004, "☐ I am not a human", or a box where pasting passes and typing fails. A pass is kept
+    in localStorage for a week, with a bot ID. Without JavaScript, a `<noscript>` note lets you in.
+  - **To post:** a gauntlet impossible by hand and trivial from the browser console: 50 sums in 300 ms, a
+    SHA-256 proof of work for a `403` prefix, and a Submit button that runs from the pointer.
+  - **Easter egg** for anyone who passes: a certificate, a "Verified unit" badge, their comment shown only in
+    their own browser as "pending review", and a ModBot reply written during that day's run.
+  - Nothing is sent anywhere: no backend, no live LLM calls, no key in the browser.
+- **When:** full editions only; a failure never stops the edition; `generate --forum force|off`. Data in
+  `data/forum/YYYY-MM-DD.json` and `data/forum/roster.json`.
 
 ## Look and feel: a real tabloid news site
 
@@ -328,13 +470,13 @@ From [API credits for Max, Ultra, and Team plans](https://platform.claude.com/do
   cloud sessions.
 
 **Budget layers**
-1. **Target ($20):** `budget.monthly_usd: 20`. My own tally in `data/usage.json` (token usage × the price
+1. **Target ($35):** `budget.monthly_usd: 35`. My own tally in `data/usage.json` (token usage × the price
    table), paced across the calendar month.
-2. **Hard stop ($25):** a Console workspace `times` with a $25/month spend limit, holding the API key.
+2. **Hard stop ($40):** a Console workspace `times` with a $40/month spend limit, holding the API key.
    This limit also resets on the 1st.
 3. **Backstop:** the credits themselves. With no card and auto-reload off, nothing can ever be charged.
 
-**Pacing:** calendar month, not the credit cycle. The paper uses at most $25 of the $100, so the refresh
+**Pacing:** calendar month, not the credit cycle. The paper uses at most $40 of the $100, so the refresh
 date doesn't matter. If other projects ever empty the balance, the pre-run probe sees "credit balance too
 low" and publishes a links edition.
 
@@ -357,8 +499,8 @@ web search is $0.01 per search.
 | News quiz, Tuesday and Saturday (~$0.35 each) | Opus | ~$3/month | ~$3/month |
 | **Per day / per month** | | **~$0.62 / ~$19** | **~$0.84 / ~$25** |
 
-- A month of busy days would run over $20. The pacing guard handles that by making some
-  editions `reduced` (no discovery, fewer stories), so the month lands at about $20.
+- A month of busy days comes to ~$25, plus ~$4 for the Botroom if it's built, inside the $35 target. If
+  spend still runs ahead of pace, the pacing guard makes some editions `reduced` (no discovery, fewer stories).
 - Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$4/month.
 - Rough estimates; phases 3 and 5 measure the real numbers.
 
@@ -375,7 +517,7 @@ web search is $0.01 per search.
 | Opinion column | `opinion.days / every_weeks / words / lookback_days / front_days` | Wed, Sun / 1 / 800 / 7 / 7 |
 | News quiz | `quiz.days / questions / min_questions / max_per_section / lookback_days / front_days` | Tue, Sat / 8 / 5 / 4 / 7 / 4 |
 | Effort per task | `llm.effort` | `high` for the three column calls and the quiz check; others use the model default |
-| Budget | `budget.monthly_usd` | 20 |
+| Budget | `budget.monthly_usd` | 35 |
 
 ## Run modes and the pre-run check
 
@@ -520,7 +662,7 @@ models:
   probe:    claude-haiku-5-5
 
 budget:
-  monthly_usd: 20                   # paced over the calendar month, like the workspace spend limit
+  monthly_usd: 35                   # paced over the calendar month; the workspace spend limit is $40
   pace_allowance_usd: 2
   per_run_usd: 1.25
   when_over_pace: reduced
@@ -711,7 +853,7 @@ The real file is in the repo; this is its shape.
 4. **Go live** (partly done 2026-11-03: repo public, Pages on, HTTPS fixed, the links edition is live at
    https://a403.space/times/ and publishes itself every morning)
    - ✅ Fix HTTPS for `a403.space` (see *Hosting*).
-   - Create the Console workspace ($25 limit) and its key. Register an IsThereAnyDeal app for its key.
+   - Create the Console workspace ($40 limit) and its key. Register an IsThereAnyDeal app for its key.
    - ✅ `gh repo create andre-larsson/times --public`, pushed.
    - ✅ Enable Pages (`build_type=workflow`). Add the `ANTHROPIC_API_KEY` and `ITAD_API_KEY` secrets.
    - ✅ Run "Check sources" and Edition with `mode=links`. After phase 3: `mode=full`.
@@ -729,7 +871,7 @@ The real file is in the repo; this is its shape.
 
 | Risk | Mitigation |
 |---|---|
-| Spend exceeds the target | Pacing → `reduced` → links; $25 workspace hard stop; per-run cap |
+| Spend exceeds the target | Pacing → `reduced` → links; $40 workspace hard stop; per-run cap |
 | Looking too much like Expressen | Own logo, palette, fonts and layout; only general tabloid conventions are borrowed |
 | Quiet days look empty, or busy days get bloated | Newsworthiness thresholds + editor + min/max per tier |
 | Same event covered by several articles | Triage groups them; featured stories combine their sources |
@@ -741,13 +883,18 @@ The real file is in the repo; this is its shape.
 | Deals advice that's wrong or out of date | Price and timestamp shown; "prices change"; lowest-ever data from IsThereAnyDeal; no affiliate links |
 | Summaries state things the source doesn't say | Prompts limit Claude to the provided text; "By Claude (AI)" byline; source links |
 | Prompt injection from fetched pages | Writing calls have no tools; JSON-schema outputs; sources always linked |
-| Key secrets in a public repo | Not exposed to fork PRs; no `pull_request` trigger; Anthropic workspace capped at $25 |
+| Key secrets in a public repo | Not exposed to fork PRs; no `pull_request` trigger; Anthropic workspace capped at $40 |
 | Copyright | Summaries in my own words; briefs from short excerpts; store and YouTube images only (v1); `noindex` |
 | Late or dropped cron runs, 60-day auto-disable | Hourly due-check; data commits + enable call; Pi as last resort |
 
 ## Open decisions
 
-None right now. Decided since the previous revision:
+- **Botroom:** build it? It costs about $4 a month before caching (comments ~$3.70, newcomers ~$0.35), and the
+  $35 budget has room for it.
+
+Decided since the previous revision:
+- **Budget:** $35/month target, $40 hard stop (was $20/$25). The paper already runs ~$21 a month (editions
+  ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for daily discovery (~$7.60) and the Botroom (~$4).
 - **I Dream of Indie Games:** YouTube channel and blog review feed found.
 - **News preview images:** off for now. News stories use typographic covers; games and videos use Steam
   and YouTube images.

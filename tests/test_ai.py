@@ -197,6 +197,7 @@ def test_probe_failure_and_no_key(tmp_path, offline):
 
 def test_budget_pacing(tmp_path, offline):
     cfg = load_config()
+    cfg["budget"]["monthly_usd"] = 20                                   # the figures below assume $20
     data = tmp_path / "data"
     data.mkdir()
     (data / "usage.json").write_text(json.dumps({"months": {"2026-11": {"usd": 5.0, "runs": []}}}))

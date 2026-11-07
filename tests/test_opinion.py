@@ -96,7 +96,9 @@ def test_no_column_when_not_due_or_reduced(tmp_path, offline):  # noqa: F811
     data = tmp_path / "reduced"
     data.mkdir()
     (data / "usage.json").write_text(json.dumps({"months": {"2026-11": {"usd": 5.0, "runs": []}}}))
-    r = gen.generate(_cfg(days=["tue"]), data, "auto", now=NOW, env=KEY, client=offline, llm_factory=factory())
+    cfg = _cfg(days=["tue"])
+    cfg["budget"]["monthly_usd"] = 20                                   # $5 is ahead of pace on day 3
+    r = gen.generate(cfg, data, "auto", now=NOW, env=KEY, client=offline, llm_factory=factory())
     ed = json.loads(store.edition_path(data, r.edition_id).read_text())
     assert ed["mode"] == "reduced" and "opinion" not in ed
 
