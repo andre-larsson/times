@@ -97,6 +97,14 @@ opinion:                              # the opinion column: Opus picks a topic, 
   lookback_days: 7                    # the editions a topic is picked from
   front_days: 7                       # how long the latest column stays on the front page
 
+weather:                              # the front page's weather box: Open-Meteo, no key, fetched with each edition
+  enabled: true
+  place: Stockholm
+  latitude: 59.33
+  longitude: 18.07
+  hours: [9, 12, 15, 18]              # the "later today" strip, local time (only hours still ahead are shown)
+  days: 2                             # days after today
+
 links:                                # the no-AI links edition
   per_section: 12                     # AI and Tech headline lists
   max_per_source: 4                   # per section, so one busy feed can't fill it

@@ -66,8 +66,9 @@
       {% endif %}
     </div>
 
-    {% if briefs or column %}
-    <aside class="rail" aria-label="Opinion and latest news">
+    {% if briefs or column or weather %}
+    <aside class="rail" aria-label="Weather, opinion and latest news">
+      {% if weather %}{{ m.weather_box(weather) }}{% endif %}
       {% if column %}
       <section aria-label="Opinion">{{ m.column_card(column) }}</section>
       {% endif %}

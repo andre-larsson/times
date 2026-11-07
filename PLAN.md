@@ -71,6 +71,12 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 | **IsThereAnyDeal** | Official API (`/deals/v2` with a JSON filter: cut ≥ 50%, within 10% of the historical low, games only, Steam ≥ 80% with ≥ 500 reviews; plus a hidden-gems list and one list per genre group, using `tagsUnion` with ITAD's tag names such as "Point & Click" and "Roguelike"; then `/games/info/v2` for Steam rating, Metascore and tags, looked up once per game per run, about 60 requests in all). Free key by registering an app at isthereanydeal.com; personal and public use allowed; 1000 requests per 5 minutes. Store links: Steam's own page for Steam deals, otherwise the ITAD game page (no affiliate redirects). Credited on the page. Live since 2026-11-06. ITAD prices Sweden in EUR. Its percent ranges need an explicit `max: 100` (a null max reads as 0 and matches nothing, despite the spec) | ✅ |
 | Steam specials | Popular games on sale. **Fallback** when there's no ITAD key: same cut and rating filters, but no lowest-ever data | ✅ |
 
+### Weather
+
+| Source | How | Status |
+|---|---|---|
+| **Open-Meteo** | One forecast request per edition (`/v1/forecast`, no key, data CC BY 4.0, credited in the box) for the place in `config.yaml` → `weather` (Stockholm). Stored in the edition as `weather`: today's high/low, condition (WMO code → word), precipitation chance and amount, max wind (m/s), sunrise/sunset; the configured hours still ahead today (09, 12, 15, 18); the next two days. Shown at the top of the front page's rail, in every mode. A failed fetch only drops the box | ✅ |
+
 ### Draft interests (editable)
 
 ```
@@ -540,7 +546,11 @@ pricing:                            # USD per million tokens (Nov 2026)
 }
 ```
 
-`opinion` is only present on the days a column runs.
+`opinion` is only present on the days a column runs. `weather` (see *Sources → Weather*) is missing when
+the forecast couldn't be fetched:
+`{ "place": "Stockholm", "today": { "date", "high", "low", "code", "condition", "precip_chance", "precip_mm",
+"wind_ms", "sunrise", "sunset" }, "hours": [ { "time": "12:00", "temp", "code", "condition", "precip_chance" } ],
+"days": [ { "date", "high", "low", "code", "condition", "precip_chance" } ] }`.
 
 **seen.json rules:** items dropped by triage are marked seen right away; items written up are marked
 seen once written; link-only items stay unseen, so a later full edition can still use them.

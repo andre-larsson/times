@@ -1588,5 +1588,61 @@
    "briefs": 20
   },
   "briefs_added": 0
+ },
+ "weather": {
+  "place": "Stockholm",
+  "today": {
+   "date": "2026-11-07",
+   "high": 5,
+   "low": 2,
+   "code": 3,
+   "condition": "Cloudy",
+   "precip_chance": 0,
+   "precip_mm": 0,
+   "wind_ms": 5,
+   "sunrise": "07:21",
+   "sunset": "15:40"
+  },
+  "hours": [
+   {
+    "time": "12:00",
+    "temp": 4,
+    "code": 0,
+    "condition": "Clear",
+    "precip_chance": 0
+   },
+   {
+    "time": "15:00",
+    "temp": 5,
+    "code": 0,
+    "condition": "Clear",
+    "precip_chance": 0
+   },
+   {
+    "time": "18:00",
+    "temp": 3,
+    "code": 2,
+    "condition": "Partly cloudy",
+    "precip_chance": 0
+   }
+  ],
+  "days": [
+   {
+    "date": "2026-11-08",
+    "high": 5,
+    "low": 1,
+    "code": 3,
+    "condition": "Cloudy",
+    "precip_chance": 0
+   },
+   {
+    "date": "2026-11-09",
+    "high": 6,
+    "low": 3,
+    "code": 3,
+    "condition": "Cloudy",
+    "precip_chance": 0
+   }
+  ]
  }
 }

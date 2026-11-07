@@ -15,8 +15,9 @@
     {% endif %}
     {% endfor %}
   </div>
-  {% if hn_top or column %}
-  <aside class="rail sec-tech" aria-label="Opinion and Hacker News">
+  {% if hn_top or column or weather %}
+  <aside class="rail sec-tech" aria-label="Weather, opinion and Hacker News">
+    {% if weather %}{{ m.weather_box(weather) }}{% endif %}
     {% if column %}
     <section aria-label="Opinion">{{ m.column_card(column) }}</section>
     {% endif %}

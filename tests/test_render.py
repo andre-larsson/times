@@ -66,6 +66,7 @@ def test_front_page_content(site):
     assert "Deal of the day" in html
     assert 'name="robots" content="noindex' in html
     assert "Design preview" in html  # fixtures are clearly marked
+    assert 'aria-label="Weather in Sample City"' in html and "Light rain" in html and ">Wed<" in html and "−1°" in html
 
 
 def test_links_edition_renders(tmp_path, cfg):

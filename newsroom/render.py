@@ -121,7 +121,7 @@ class SiteBuilder:
             date_when=self.date_when, time=self.time, iso=self.iso, num=self.num, money=self.money,
             paragraphs=self.paragraphs, domain=self.domain, rating_class=self.rating_class,
             edition_name=self.edition_name, article_url=self.article_url, when=self.when,
-            score_parts=self.score_parts,
+            score_parts=self.score_parts, weekday=self.weekday,
         )
 
     # urls and names
@@ -186,6 +186,11 @@ class SiteBuilder:
         if not d:
             return ""
         return f"{d:%H:%M}" if d.date() == self.now.astimezone(self.tz).date() else f"{d.day} {d:%b} {d:%H:%M}"
+
+    @staticmethod
+    def weekday(value: Any) -> str:
+        """A calendar date ("2026-11-08") as its short day name: "Sun"."""
+        return f"{dt.date.fromisoformat(str(value)[:10]):%a}" if value else ""
 
     def iso(self, value: Any) -> str:
         ts = parse_ts(value)
@@ -267,6 +272,7 @@ class SiteBuilder:
             "deals": edition.get("deals") or {},
             "links_by_section": links_by_section,
             "column": self.column_for(edition),
+            "weather": edition.get("weather"),
         }
 
 

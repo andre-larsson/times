@@ -63,7 +63,7 @@ would pick it up and bill its own usage to it. In GitHub Actions they are reposi
 ```
 config.yaml          every tuning knob: schedule, story counts, sources and filters, models, budget
 newsroom/            Python package: `python -m newsroom <command>`
-  sources/           fetchers: RSS feeds, Google News, YouTube, Hacker News, Steam, IsThereAnyDeal, critic scores
+  sources/           fetchers: RSS feeds, Google News, YouTube, Hacker News, Steam, IsThereAnyDeal, critic scores, weather
   rank.py            rule-based sections, junk filters, same-story clustering, scoring
   links.py           the links edition (and the gaming/deals blocks)
   generate.py        due check → pre-run check → fetch → build → save; GitHub Actions outputs

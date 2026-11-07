@@ -86,6 +86,8 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
                 mode, reason = fallback, f"AI unavailable: {exc}"
         if edition is None and mode == "links":
             edition = build_links_edition(cfg, harvest, edition_id, previous=previous, reason=reason)
+        if edition is not None and harvest.weather:
+            edition["weather"] = harvest.weather
         column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
     finally:
         if own_client:
@@ -173,6 +175,6 @@ def dump_harvest(harvest: Harvest, path: Path) -> None:
     path.write_text(json.dumps({
         "fetched_at": harvest.fetched_at.isoformat(),
         "items": [i.to_json() for i in harvest.items],
-        "hn": harvest.hn, "steam": harvest.steam, "itad": harvest.itad,
+        "hn": harvest.hn, "steam": harvest.steam, "itad": harvest.itad, "weather": harvest.weather,
         "status": [s.__dict__ for s in harvest.status],
     }, ensure_ascii=False, indent=1), encoding="utf-8")

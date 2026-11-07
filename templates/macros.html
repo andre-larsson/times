@@ -70,6 +70,40 @@
 </ol>
 {%- endmacro %}
 
+{% macro deg(v) -%}{{ '−' if v < 0 }}{{ v | abs }}°{%- endmacro %}
+
+{% macro weather_box(w) -%}
+{%- set t = w.today -%}
+<section class="weather" aria-label="Weather in {{ w.place }}">
+  {{ block_head('Weather', w.place) }}
+  <div class="weather-today">
+    <p class="weather-temps"><span class="weather-high"><span class="visually-hidden">High </span>{{ deg(t.high) }}</span><span class="weather-low"><span class="visually-hidden">, low </span>{{ deg(t.low) }}</span></p>
+    <div class="weather-summary">
+      <p class="weather-cond">{{ t.condition }}</p>
+      <p class="weather-detail">
+        <span>{% if t.precip_chance %}Precipitation {{ t.precip_chance }}%{% if t.precip_mm %}, {{ t.precip_mm }} mm{% endif %}{% else %}Dry{% endif %}</span>
+        <span>Wind {{ t.wind_ms }} m/s</span>
+      </p>
+    </div>
+  </div>
+  {%- if w.hours %}
+  <ol class="weather-hours">
+    {%- for h in w.hours %}
+    <li class="weather-hour"><span class="weather-time">{{ h.time }}</span><span class="weather-hour-temp">{{ deg(h.temp) }}</span><span class="weather-hour-cond">{{ h.condition }}</span></li>
+    {%- endfor %}
+  </ol>
+  {%- endif %}
+  {%- if w.days %}
+  <ol class="weather-days">
+    {%- for d in w.days %}
+    <li class="weather-day"><span class="weather-day-name">{{ d.date | weekday }}</span><span class="weather-day-cond">{{ d.condition }}</span><span class="weather-day-temps">{{ deg(d.high) }} <span class="weather-low"><span class="visually-hidden">low </span>{{ deg(d.low) }}</span></span></li>
+    {%- endfor %}
+  </ol>
+  {%- endif %}
+  <p class="meta"><span>Sunrise {{ t.sunrise }}</span><span class="meta-sep" aria-hidden="true">·</span><span>Sunset {{ t.sunset }}</span><span class="meta-sep" aria-hidden="true">·</span><a class="meta-link" href="https://open-meteo.com/">Open-Meteo</a></p>
+</section>
+{%- endmacro %}
+
 {% macro block_head(title, sub='', href='') -%}
 <div class="block-head">
   <h2 class="block-title">{% if href %}<a href="{{ href }}">{{ title }}</a>{% else %}{{ title }}{% endif %}</h2>
