@@ -920,6 +920,10 @@ The real file is in the repo; this is its shape.
      edition goes on without it. The edition JSON keeps `discovery` (depth, searches, fetches, cost, queries,
      kept and dropped URLs). `budget.per_run_usd` went from $1.25 to $2.00, since an edition, discovery and a
      column together come to about $1.25. The Hacker News and BleepingComputer joined the feeds the same day.
+   - **Review around 2026-11-15:** half of the measured finds were security stories, which the two new feeds now
+     bring in for free, so discovery may find less for the same ~$0.32 (its cost follows its searches, not its
+     finds). Each edition's `discovery` block (searches, cost, kept and dropped URLs) shows how many finds a week
+     made the paper; keep it, cut it to `light` or every other day, or turn it off.
 
 6. **Tune and polish**
    - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.
