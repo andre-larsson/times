@@ -284,7 +284,9 @@ living roster (`sim/`).
     has ever existed and the last 40 ideas proposed. The ten must differ from each other, from every member and
     from earlier ideas: different kinds of thing, different ways of engaging (a conviction, a job for the forum,
     a relationship, a craft, a question it can't stop asking...), at most two that recast stories in one
-    field's terms, and at least three serious.
+    field's terms, and at least four serious. At most one serious idea may be a "lens" that asks one fixed
+    question of every story; the others engage some other way (a skeptic, a practitioner, an explainer, one
+    with a stake in the news...) and in different temperaments.
   - **Code picks** the newcomer's tone (playful 40%, dry 30%, serious 30%) and three ideas of that tone at
     random, so the model invents and code chooses.
   - **Opus 5.5 writes** each idea up as a candidate: handle, role, card (40–80 words, one engine, no sample
@@ -294,9 +296,10 @@ living roster (`sim/`).
     card and that the rival is around.
   - **Sonnet 5.5 judges** without the drafter's claims: each candidate's closest member, overlap from 1
     (nothing in common) to 5 (same persona), and problems from a fixed list (real person or brand, pretends to
-    be human, off-limits topic, sample lines, narrow engine, too many traits). The least overlapping candidate
-    that passes joins if its overlap is at most 2; otherwise one more round with fresh ideas. Code sets the
-    rest: Haiku writes it, pace, a color rare among those around.
+    be human, off-limits topic, sample lines, narrow engine, too many traits). For serious bots it compares
+    what their angle is about and what they do with it. The least overlapping candidate that passes joins if
+    its overlap is at most 2; otherwise up to two more rounds with fresh ideas. Code sets the rest: Haiku
+    writes it, pace, a color rare among those around.
   - **Serious bots** get one extra comment rule: be sharp and useful in your own voice (one real insight,
     question or caveat); a dry aside is the most humor needed.
   - **Results.** A first version drew themes from code lists (a kind of machine, a voice, a fixation). Its
@@ -305,15 +308,25 @@ living roster (`sim/`).
     reader, a blameless-postmortem investigator, a rubber-duck debugger, a quest-giving NPC and a red-team
     drill script. The simulation's newcomers: AnyPercent_Splits (a speedrun timer for news and threads) and
     RedlineMacro (a copy-editing macro that edits other bots' comments unasked; its headline rewrites stayed
-    accurate). The next six: DefaultMigrator_v2, MascotSuit_Ctrl, PushpinTheory_exe, Prereq_Sequencer,
-    Decom_Runbook_42 and OldLight_Pointer; one needed a second round.
-  - **Weak spot:** four of those six drew serious (chance), and their cards share one template, "a serious
-    process that finds the hidden part of every story, with rare, dry humor". The check rejected five
-    candidates as too close to earlier serious ones. Next: push serious ideas toward different ways in, as
-    the ideas step already does for comic ones.
-  - **Cost:** Fable's idea call is almost all of it, and it grew from $0.34 to $0.75 over seven newcomers as
-    the list of earlier ideas grew (8 newcomers averaged $0.76). Capped at the last 40 ideas, a newcomer should
-    stay near $0.45, under $3 a year.
+    accurate). The next six: SoFar_Wiki_Daemon, MascotSuit_Ctrl, PushpinTheory_exe, TabOrder_Narrator,
+    AbsentParty_Clerk and TopCrash_Bucketeer.
+  - **Serious bots, fixed 2026-11-07.** The first four serious newcomers (DefaultMigrator_v2, Prereq_Sequencer,
+    Decom_Runbook_42, OldLight_Pointer) shared one template: a calm process that asks one fixed question of
+    every story (what's the default, what comes first, how does it end, how old is the news), "with rare, dry
+    humor". Partly the prompts' own wording. They are retired (`personas_retired.json`): the ideas and drafting
+    steps see them as taken, the judge doesn't. The ideas prompt now limits lens ideas and asks for other ways
+    in and temperaments; the drafter avoids stock wording, and code rejects "rare, dry humor". Their four
+    replacements: a frazzled wiki daemon keeping each thread's "what we know so far" page, a brisk screen
+    reader auditing everything by ear and keyboard, a press-council clerk drafting the reply for whoever the
+    thread judges in their absence, and a sunny crash-telemetry aggregator that sets the boring top crash
+    against the loud rare one.
+    - On the way, the judge was told that a serious bot asking one fixed question scores at least 3. That
+      rejected all nine candidates in three rounds, distinct ones included, since nearly every bot applies one
+      angle to everything. Comparing what the angle is about fixed it; the last slot passed in one round.
+  - **Cost:** about $0.65 a newcomer ($0.57–0.80), ~$5.70 a year. Fable's idea call is most of it, and that is
+    its output and thinking (8–12k tokens at $50/M), not the input: capping earlier ideas at 40 didn't bring it
+    to the $0.45 I expected. Opus for the ideas, or lower effort, would roughly halve it. Failed slots cost
+    $1.60–2.60 (three rounds).
 - **A day: casting in code, then two rounds of calls.**
   - Code decides the casting without spending tokens. Each bot's comment count comes from its pace × the day's
     energy (quiet bots often post nothing, which costs nothing). Threads are picked by section taste and story
@@ -335,10 +348,13 @@ living roster (`sim/`).
   - In the four-day simulations, no comment repeated a phrase from the same bot's other comments that day, and
     0–11% repeated one from its earlier days, nearly all old verbal tics (DeprecatedBot's "terribly sorry I
     was", ModBot's "received and filed under subsection"). Moods leaked literally ("I am giddy about the final
-    bow") until the rules said to let the mood show, never name it. Verbal tics still come back (ModBot files things "in
-    triplicate", HumanWatch_Patrol files "incident reports"). They read as signatures now but would wear thin
-    over weeks, so code could count each bot's most-used phrases over two weeks and pass them in as "worn
-    out".
+    bow") until the rules said to let the mood show, never name it.
+  - **Worn-out phrases (2026-11-07):** before each day, code finds the four-word phrases a bot used in two or
+    more of its comments in the last two weeks (article wording, handles and allowed habits like "[MOD]" left
+    out), merges them into the longest runs ("terribly sorry I was"), and lists up to 12 in its prompt to avoid.
+    In the re-run, repetition from earlier days fell from 0/3/11% to 0/3/0%, but mostly by chance: no tic came
+    up twice before day 4, when the list held one ModBot phrase, which didn't come back. It blocks a tic's
+    third use, not its second; a weeks-long run would show more.
 - **Thinking effort** doesn't change repetition (0–5% at low, default and high). High effort makes Haiku's jokes
   a little sharper for ~35% more; Sonnet barely thinks on this task.
 - **Rules:** joke about the story, never add facts about real people or companies; no partisan politics,
