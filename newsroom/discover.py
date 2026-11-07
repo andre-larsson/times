@@ -11,6 +11,7 @@ measures what each depth costs and finds, without publishing anything.
 
 from __future__ import annotations
 
+import copy
 import datetime as dt
 import json
 import sys
@@ -49,6 +50,7 @@ class Discovery:
     looked_at: dict[str, list] = field(default_factory=dict)       # queries, fetched, results, errors
     call: Call | None = None
     error: str = ""
+    filtering: bool = False
 
 
 def depth_settings(cfg: dict[str, Any], depth: str) -> dict[str, int]:
@@ -70,12 +72,14 @@ def run(llm: LLM, cfg: dict[str, Any], depth: str, known: list[dict[str, str]], 
         now: dt.datetime) -> Discovery:
     """One discovery call at this depth. Raises LLMError if the call fails."""
     s = depth_settings(cfg, depth)
-    fetch_tokens = int((cfg.get("search") or {}).get("fetch_tokens", 6000))
+    search = cfg.get("search") or {}
+    filtering = bool(search.get("dynamic_filtering", False))
     report, looked, call = llm.call_web(
         "discover", system_prompt(cfg, s, now.date()), data_block(known, "Headlines the paper's feeds brought in:"),
-        REPORT_SCHEMA, searches=s["searches"], fetches=s["fetches"], fetch_tokens=fetch_tokens)
+        REPORT_SCHEMA, searches=s["searches"], fetches=s["fetches"],
+        fetch_tokens=int(search.get("fetch_tokens", 6000)), filtering=filtering)
     finds, dropped = check(report.get("finds") or [], looked, known, known_urls, s["finds"])
-    return Discovery(depth, s, finds, dropped, looked, call)
+    return Discovery(depth, s, finds, dropped, looked, call, filtering=filtering)
 
 
 def check(finds: list[dict[str, Any]], looked: dict[str, list], known: list[dict[str, str]],
@@ -130,9 +134,18 @@ def what_we_have(cfg: dict[str, Any], harvest, data_dir: Path, now: dt.datetime)
 
 def measure(cfg: dict[str, Any], data_dir: Path, depths: list[str], runs: int, out: Path | None,
             dry_run: bool = False, now: dt.datetime | None = None, env: dict[str, str] | None = None,
-            client: Client | None = None, llm_factory: Callable[..., LLM] = LLM) -> str:
-    """Run discovery `runs` times at each depth against today's feeds. Returns a Markdown report."""
+            client: Client | None = None, llm_factory: Callable[..., LLM] = LLM,
+            model: str | None = None, filtering: bool | None = None) -> str:
+    """Run discovery `runs` times at each depth against today's feeds. Returns a Markdown report.
+
+    `model` and `filtering` override models.discover and search.dynamic_filtering for this measurement.
+    """
     now = now or dt.datetime.now(dt.timezone.utc)
+    cfg = copy.deepcopy(cfg)
+    if model:
+        cfg.setdefault("models", {})["discover"] = model
+    if filtering is not None:
+        cfg.setdefault("search", {})["dynamic_filtering"] = filtering
     for d in depths:
         depth_settings(cfg, d)                         # fail fast on a bad depth
     own = client is None
@@ -163,11 +176,11 @@ def measure(cfg: dict[str, Any], data_dir: Path, depths: list[str], runs: int, o
                 d = run(llm, cfg, depth, known, known_urls, now)
             except LLMError as exc:
                 d = Discovery(depth, depth_settings(cfg, depth), call=tally.calls[-1] if tally.calls else None,
-                              error=str(exc))
+                              error=str(exc), filtering=bool((cfg.get("search") or {}).get("dynamic_filtering")))
             rec = record(d, now, len(known))
             records.append(rec)
             print("discovery-record: " + json.dumps(rec, ensure_ascii=False), file=sys.stderr)
-            lines += describe(d, f"{depth}, run {i + 1}" if runs > 1 else depth)
+            lines += describe(d, variant(rec) + (f", run {i + 1}" if runs > 1 else ""))
     if out is not None:
         out.mkdir(parents=True, exist_ok=True)
         with (out / "runs.jsonl").open("a", encoding="utf-8") as fh:
@@ -182,7 +195,7 @@ def record(d: Discovery, now: dt.datetime, known: int) -> dict[str, Any]:
     c = d.call
     return {
         "at": now.isoformat(timespec="seconds"), "depth": d.depth, "settings": d.settings, "known": known,
-        "ok": not d.error, "error": d.error,
+        "ok": not d.error, "error": d.error, "filtering": d.filtering,
         "model": c.model if c else "", "usd": c.usd if c else 0.0, "seconds": c.seconds if c else 0.0,
         "requests": c.requests if c else 0, "searches": c.web_searches if c else 0,
         "fetches": c.web_fetches if c else 0,
@@ -193,6 +206,12 @@ def record(d: Discovery, now: dt.datetime, known: int) -> dict[str, Any]:
         "linked": len(d.looked_at.get("linked", [])),
         "finds": d.finds, "dropped": d.dropped,
     }
+
+
+def variant(rec: dict[str, Any]) -> str:
+    """'deep · opus-5-5', or 'deep · sonnet-5-5 · filtered' with dynamic filtering."""
+    model = (rec.get("model") or "").removeprefix("claude-")
+    return " · ".join([rec["depth"], model] + (["filtered"] if rec.get("filtering") else []))
 
 
 def describe(d: Discovery, label: str) -> list[str]:
@@ -217,11 +236,11 @@ def describe(d: Discovery, label: str) -> list[str]:
 
 
 def summary(records: list[dict[str, Any]], title: str) -> list[str]:
-    lines = [f"### {title}", "", "| Depth | Runs | Avg cost | Range | Searches | Fetches | Input tokens | Kept |",
+    lines = [f"### {title}", "", "| Variant | Runs | Avg cost | Range | Searches | Fetches | Input tokens | Kept |",
              "|---|---|---|---|---|---|---|---|"]
-    for depth in dict.fromkeys(r["depth"] for r in records):
-        rs = [r for r in records if r["depth"] == depth and r["ok"]]
-        failed = sum(1 for r in records if r["depth"] == depth and not r["ok"])
+    for depth in dict.fromkeys(variant(r) for r in records):
+        rs = [r for r in records if variant(r) == depth and r["ok"]]
+        failed = sum(1 for r in records if variant(r) == depth and not r["ok"])
         if not rs:
             lines.append(f"| {depth} | 0 ({failed} failed) | | | | | | |")
             continue

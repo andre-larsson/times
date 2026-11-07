@@ -105,6 +105,21 @@ def test_gives_up_after_a_second_miss_and_needs_the_api():
         cc.call_web("discover", "s", "u", discover.REPORT_SCHEMA, searches=1, fetches=0)
 
 
+def test_filtering_uses_the_newer_tools_and_keeps_the_container():
+    llm = web_llm([
+        NS(stop_reason="pause_turn", usage=usage(2000, 100, searches=1), container=NS(id="cntr_1"),
+           content=[NS(type="server_tool_use", name="code_execution", input={"code": "print(1)"})]
+           + search("q", "https://example.com/news/kit")),
+        NS(stop_reason="tool_use", usage=usage(2500, 100), container=NS(id="cntr_1"), content=[report(GOOD)]),
+    ])
+    data, looked, call = llm.call_web("discover", "s", "u", discover.REPORT_SCHEMA, searches=3, fetches=2,
+                                      filtering=True)
+    sent = llm._client.requests
+    assert [t.get("type") for t in sent[0]["tools"]] == ["web_search_20260318", "web_fetch_20260318", None]
+    assert "container" not in sent[0] and sent[1]["container"] == "cntr_1"
+    assert data["finds"] == [GOOD] and looked["queries"] == ["q"] and call.web_searches == 1
+
+
 def test_check_keeps_only_real_new_finds():
     looked = {"results": [{"url": u} for u in ("https://example.com/news/kit", "https://www.example.org/a/",
                                                 "https://example.net/b")]}
@@ -160,10 +175,12 @@ def test_measure_writes_records_and_summary(tmp_path, monkeypatch, capsys):
         return llm
 
     out = tmp_path / "disc"
-    text = discover.measure(load_config(), tmp_path / "data", ["light", "deep"], 1, out, now=NOW,
+    cfg = load_config()
+    text = discover.measure(cfg, tmp_path / "data", ["light", "deep"], 1, out, now=NOW,
                             client=FakeClient({}), llm_factory=factory)
+    assert "dynamic_filtering" not in cfg["search"] or not cfg["search"]["dynamic_filtering"]
     assert "Kept 1 of 1" in text and find["title"] in text and "Failed: no report" in text
-    assert "| light | 1 | $" in text and "| deep | 0 (1 failed) |" in text
+    assert "| light · opus-5-5 | 1 | $" in text and "| deep · opus-5-5 | 0 (1 failed) |" in text
     recs = [json.loads(line) for line in (out / "runs.jsonl").read_text().splitlines()]
     assert [r["depth"] for r in recs] == ["light", "deep"] and recs[0]["searches"] == 3 and not recs[1]["ok"]
     assert capsys.readouterr().err.count("discovery-record: ") == 2
@@ -171,3 +188,10 @@ def test_measure_writes_records_and_summary(tmp_path, monkeypatch, capsys):
     dry = discover.measure(load_config(), tmp_path / "data", ["normal"], 1, out, dry_run=True, now=NOW,
                            client=FakeClient({}))
     assert "no Claude call" in dry and "at most 6 searches" in dry
+
+    script["light"] = [NS(stop_reason="tool_use", usage=usage(100, 10), content=[report()])]
+    order = iter(["light"])
+    text = discover.measure(cfg, tmp_path / "data", ["light"], 1, None, now=NOW, client=FakeClient({}),
+                            llm_factory=factory, model="claude-sonnet-5-5", filtering=True)
+    assert "| light · sonnet-5-5 · filtered | 1 |" in text
+    assert cfg["models"]["discover"] == "claude-opus-5-5"                          # the override didn't leak

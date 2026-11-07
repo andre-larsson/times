@@ -17,13 +17,18 @@ on:
         type: choice
         options: ["1", "2", "3"]
         default: "1"
+      model:
+        description: "model (default: models.discover in config.yaml)"
+        type: choice
+        options: ["default", "claude-opus-5-5", "claude-sonnet-5-5"]
+        default: "default"
+      filtering:
+        description: "dynamic filtering (Claude trims search results in code first)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
-
-concurrency:
-  group: discovery
-  cancel-in-progress: false
 
 jobs:
   measure:
@@ -39,8 +44,12 @@ jobs:
           set -o pipefail -f
           args=()
           for d in $DEPTHS; do args+=(--depth "$d"); done
+          if [ "$MODEL" != "default" ]; then args+=(--model "$MODEL"); fi
+          if [ "$FILTERING" = "true" ]; then args+=(--filtering); fi
           uv run --locked python -m newsroom discover "${args[@]}" --runs "$RUNS" | tee -a "$GITHUB_STEP_SUMMARY"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DEPTHS: ${{ inputs.depths }}
           RUNS: ${{ inputs.runs }}
+          MODEL: ${{ inputs.model }}
+          FILTERING: ${{ inputs.filtering }}

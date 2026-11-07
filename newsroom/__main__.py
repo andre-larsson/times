@@ -55,6 +55,10 @@ def main(argv: list[str] | None = None) -> int:
     disc_p.add_argument("--runs", type=int, default=1, help="runs per depth (default 1)")
     disc_p.add_argument("--out", type=Path, default=ROOT / "_work" / "discovery",
                         help="append the measurements to OUT/runs.jsonl (default: _work/discovery)")
+    disc_p.add_argument("--model", help="model for this measurement (default: models.discover)")
+    disc_p.add_argument("--filtering", action=argparse.BooleanOptionalAction, default=None,
+                        help="dynamic filtering: Claude trims results in code before reading them "
+                             "(default: search.dynamic_filtering)")
     disc_p.add_argument("--dry-run", action="store_true",
                         help="fetch the feeds and show the prompt; no Claude call, no cost")
 
@@ -96,7 +100,7 @@ def main(argv: list[str] | None = None) -> int:
         from .discover import measure
 
         print(measure(cfg, args.data_dir, args.depth or ["light", "normal", "deep"], max(1, args.runs),
-                      args.out, dry_run=args.dry_run))
+                      args.out, dry_run=args.dry_run, model=args.model, filtering=args.filtering))
         return 0
 
     if args.command == "sources":

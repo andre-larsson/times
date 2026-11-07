@@ -55,6 +55,7 @@ search:
     normal: { searches: 6,  fetches: 5,  finds: 6 }
     deep:   { searches: 12, fetches: 10, finds: 10 }
   fetch_tokens: 6000                  # cap on each fetched page in Claude's context
+  dynamic_filtering: false            # true: newer tool versions; Claude trims results in code first
   candidates_scored: 300
   max_item_age_hours: 36
   max_fulltext_chars: 12000

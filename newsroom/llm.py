@@ -168,13 +168,15 @@ class LLM:
         return data
 
     def call_web(self, task: str, system: str, user: str, report_schema: dict[str, Any], *, searches: int,
-                 fetches: int, fetch_tokens: int = 6000,
+                 fetches: int, fetch_tokens: int = 6000, filtering: bool = False,
                  max_tokens: int | None = None) -> tuple[dict[str, Any], dict[str, Any], Call]:
         """One call with web search and web fetch; Claude hands in its answer through a `report` tool.
 
         Returns (the report, what Claude looked at, the call with its cost). "Looked at" holds the
         search queries, the fetched URLs, every result the tools returned (url, title, page_age) and
-        tool errors. API backend only: `claude -p` has no equivalent server tools.
+        tool errors. `filtering` uses the newer tool versions, where Claude can trim results in code
+        (dynamic filtering) before they enter its context. API backend only: `claude -p` has no
+        equivalent server tools.
         """
         if self.backend != "api":
             raise LLMError("web search needs the api backend")
@@ -184,7 +186,7 @@ class LLM:
         start = time.monotonic()
         try:
             data, looked = self._call_api_web(call, system, user, report_schema, searches, fetches,
-                                              fetch_tokens, max_tokens)
+                                              fetch_tokens, filtering, max_tokens)
         except LLMError as exc:
             call.ok, call.error, call.seconds = False, str(exc)[:300], round(time.monotonic() - start, 1)
             self.tally.record(call, exc)
@@ -271,13 +273,16 @@ class LLM:
         return _parse(text)
 
     def _call_api_web(self, call: Call, system: str, user: str, schema: dict[str, Any], searches: int,
-                      fetches: int, fetch_tokens: int, max_tokens: int) -> tuple[dict, dict]:
-        # Basic tool versions: results go straight into context, so the cost per depth is predictable.
+                      fetches: int, fetch_tokens: int, filtering: bool, max_tokens: int) -> tuple[dict, dict]:
+        # Basic tool versions put every result straight into context. The filtering versions run the tools
+        # from code execution (no extra charge beyond tokens), so Claude can keep only what it needs.
         # Web search always cites its sources, so the answer comes through a strict client tool rather
         # than a JSON-schema response format.
-        tools: list[dict[str, Any]] = [{"type": "web_search_20250305", "name": "web_search", "max_uses": searches}]
+        search_type, fetch_type = ("web_search_20260318", "web_fetch_20260318") if filtering else \
+            ("web_search_20250305", "web_fetch_20250910")
+        tools: list[dict[str, Any]] = [{"type": search_type, "name": "web_search", "max_uses": searches}]
         if fetches > 0:
-            tools.append({"type": "web_fetch_20250910", "name": "web_fetch", "max_uses": fetches,
+            tools.append({"type": fetch_type, "name": "web_fetch", "max_uses": fetches,
                           "max_content_tokens": fetch_tokens})
         tools.append({"name": "report", "description": "Hand in your finished answer. Call it once, at the end.",
                       "input_schema": schema, "strict": True})
@@ -285,11 +290,14 @@ class LLM:
         messages: list[dict[str, Any]] = [{"role": "user", "content": user}]
         looked: dict[str, list] = {"queries": [], "fetched": [], "results": [], "linked": [], "errors": []}
         nudged = False
+        container: dict[str, str] = {}
         for _ in range(WEB_MAX_REQUESTS):
             msg = self._create(model=call.model, max_tokens=max_tokens, tools=tools, messages=messages,
                                system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-                               **effort)
+                               **effort, **container)
             self._add_usage(call, msg)
+            if getattr(getattr(msg, "container", None), "id", None):   # code execution: keep its container
+                container = {"container": msg.container.id}
             _collect(msg.content, looked)
             report = next((b for b in msg.content
                            if getattr(b, "type", "") == "tool_use" and getattr(b, "name", "") == "report"), None)
