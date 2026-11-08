@@ -1,7 +1,7 @@
 {
  "months": {
   "2026-11": {
-   "usd": 1.808007,
+   "usd": 3.109019,
    "runs": [
     {
      "at": "2026-11-04T18:15:30.109715+00:00",
@@ -259,6 +259,96 @@
       "output": 27233,
       "cache_read": 3618,
       "cache_write": 18137
+     }
+    },
+    {
+     "at": "2026-11-08T06:05:39.130264+00:00",
+     "edition_id": "2026-11-08",
+     "mode": "full",
+     "backend": "api",
+     "usd": 1.301012,
+     "equivalent_usd": 1.301012,
+     "calls": 18,
+     "by_task": {
+      "probe": {
+       "calls": 1,
+       "usd": 2.5e-05,
+       "equivalent_usd": 2.5e-05,
+       "failed": 0
+      },
+      "discover": {
+       "calls": 1,
+       "usd": 0.334529,
+       "equivalent_usd": 0.334529,
+       "failed": 0
+      },
+      "triage": {
+       "calls": 3,
+       "usd": 0.008519,
+       "equivalent_usd": 0.008519,
+       "failed": 0
+      },
+      "editor": {
+       "calls": 1,
+       "usd": 0.074447,
+       "equivalent_usd": 0.074447,
+       "failed": 0
+      },
+      "medium": {
+       "calls": 4,
+       "usd": 0.087929,
+       "equivalent_usd": 0.087929,
+       "failed": 0
+      },
+      "featured": {
+       "calls": 2,
+       "usd": 0.080144,
+       "equivalent_usd": 0.080144,
+       "failed": 0
+      },
+      "briefs": {
+       "calls": 1,
+       "usd": 0.03624,
+       "equivalent_usd": 0.03624,
+       "failed": 0
+      },
+      "deals": {
+       "calls": 1,
+       "usd": 0.056708,
+       "equivalent_usd": 0.056708,
+       "failed": 0
+      },
+      "gaming": {
+       "calls": 1,
+       "usd": 0.08929,
+       "equivalent_usd": 0.08929,
+       "failed": 0
+      },
+      "opinion_pick": {
+       "calls": 1,
+       "usd": 0.115678,
+       "equivalent_usd": 0.115678,
+       "failed": 0
+      },
+      "opinion": {
+       "calls": 1,
+       "usd": 0.324025,
+       "equivalent_usd": 0.324025,
+       "failed": 0
+      },
+      "opinion_check": {
+       "calls": 1,
+       "usd": 0.093478,
+       "equivalent_usd": 0.093478,
+       "failed": 0
+      }
+     },
+     "stopped": "",
+     "tokens": {
+      "input": 86575,
+      "output": 35663,
+      "cache_read": 164903,
+      "cache_write": 57456
      }
     }
    ]
