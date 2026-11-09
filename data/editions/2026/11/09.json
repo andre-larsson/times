@@ -1,0 +1,1520 @@
+{
+ "edition_id": "2026-11-09",
+ "generated_at": "2026-11-09T06:05:39.337793+00:00",
+ "mode": "full",
+ "reason": "",
+ "llm": {
+  "backend": "api",
+  "usd": 0.731801,
+  "equivalent_usd": 0.731801,
+  "calls": 13,
+  "by_task": {
+   "probe": {
+    "calls": 1,
+    "usd": 2.5e-05,
+    "equivalent_usd": 2.5e-05,
+    "failed": 0
+   },
+   "discover": {
+    "calls": 1,
+    "usd": 0.31612,
+    "equivalent_usd": 0.31612,
+    "failed": 0
+   },
+   "triage": {
+    "calls": 2,
+    "usd": 0.005891,
+    "equivalent_usd": 0.005891,
+    "failed": 0
+   },
+   "editor": {
+    "calls": 1,
+    "usd": 0.066791,
+    "equivalent_usd": 0.066791,
+    "failed": 0
+   },
+   "medium": {
+    "calls": 4,
+    "usd": 0.107742,
+    "equivalent_usd": 0.107742,
+    "failed": 0
+   },
+   "featured": {
+    "calls": 1,
+    "usd": 0.052202,
+    "equivalent_usd": 0.052202,
+    "failed": 0
+   },
+   "briefs": {
+    "calls": 1,
+    "usd": 0.037048,
+    "equivalent_usd": 0.037048,
+    "failed": 0
+   },
+   "deals": {
+    "calls": 1,
+    "usd": 0.063396,
+    "equivalent_usd": 0.063396,
+    "failed": 0
+   },
+   "gaming": {
+    "calls": 1,
+    "usd": 0.082586,
+    "equivalent_usd": 0.082586,
+    "failed": 0
+   }
+  },
+  "stopped": "",
+  "estimated_usd": 0.731801
+ },
+ "stories": [
+  {
+   "slug": "jensen-huang-admits-affair-as-nvidia-board-opens-spy-probe",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T21:27:29+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nvidia CEO Jensen Huang admits to having an affair with suspected Chinese spy",
+     "url": "https://www.tomshardware.com/pc-components/gpus/nvidia-ceo-jensen-huang-admits-to-having-an-affair-with-suspected-chinese-spy-jensen-apologizes-in-letter-to-staff-company-board-forms-independent-committee-to-investigate"
+    },
+    {
+     "name": "PCMag",
+     "title": "Nvidia Investigating CEO Over Relationship With Alleged Chinese Spy",
+     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNWXdlTzIzZW9lVldlS0NFUExGLXRuMVlQQnFSOVRpbTlXNERVUnVPbWUxRTZNLVJSQkJFTFpMYlNXa1F1Z0ROd2hPb1NNMGY1WHlHYkdsNG5nSUJONnNJT0dlam5CYzRSanM2NFFzLU1aT1QwbXc2amdDSFJUVTJXV1RvbXRvaXdvOE9Ha0FjSzVyX1ZJR2lBYXZNNVo?oc=5"
+    },
+    {
+     "name": "Hacker News",
+     "title": "Nvidia CEO Jensen Huang's letter to staff about affair",
+     "url": "https://nvidianews.nvidia.com/news/a-message-to-our-company"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50418016",
+    "points": 484,
+    "comments": 520
+   },
+   "tier": "featured",
+   "kicker": "Business",
+   "headline": "Jensen Huang admits affair as Nvidia board opens spy probe",
+   "dek": "Nvidia's CEO apologized to staff for infidelity after reports tied him to a suspected Chinese agent; independent directors will investigate.",
+   "body": "Nvidia CEO Jensen Huang has admitted to being unfaithful to his wife in a letter to staff. Nvidia's board has opened an independent investigation after reports that he was the target of a foreign intelligence effort. Tom's Hardware reports that the affair was with a woman US intelligence believes is a Chinese spy. The board said late Sunday that it has no reason to believe national security or Nvidia secrets were compromised, and that it remains confident in Huang and his leadership team.\n\n\"I was unfaithful to my wife. My actions hurt her and our children. There is no excuse for what I did,\" Huang wrote. Huang has been married to Lori Huang for 41 years. The letter does not name the other woman. On the security concerns, he said he supports the investigation and \"will cooperate fully.\"\n\nThe board said a committee of independent directors, assisted by outside counsel, will oversee the probe and \"examine all available information.\" It added that US national and economic security is \"paramount\" to Nvidia and its shareholders.\n\nThe first reports surfaced Friday. According to Tom's Hardware, US intelligence agencies believe Huang had a romantic relationship with Alice Huang, also known as Huang Le, a former executive at Singapore-based Megaspeed. She was allegedly recruited by China's Ministry of State Security to gather information and help Chinese companies obtain restricted AI GPUs. Megaspeed has been accused of smuggling $2 billion worth of AI chips into China through its subsidiary Speedmatrix. The alleged intelligence operation has not been independently confirmed. Nvidia earlier rejected suggestions of improper dealings, saying Huang meets thousands of customers and those interactions do not involve sensitive information. Chinese officials have called the espionage allegations unfounded.\n\nThe case lands on a CEO who has openly opposed limits on AI GPU sales to China. Huang recently called the \"China hawk\" label \"a badge of shame,\" drawing criticism from administration figures and other tech executives, including Palantir's CEO.\n\nWhat happens next is unclear. Tom's Hardware points to Intel's Brian Krzanich, who resigned in 2018 after an internal investigation found a relationship that broke company policy. Nvidia's board has said only that it will provide further updates as appropriate.",
+   "key_points": [
+    "Huang admitted infidelity in a letter to Nvidia staff",
+    "Independent directors and outside counsel will lead the board's investigation",
+    "Board sees no sign secrets or national security were compromised",
+    "Alleged spy is a former executive at chip-smuggling suspect Megaspeed"
+   ],
+   "breaking": false,
+   "why_it_matters": "Nvidia's CEO is the industry's loudest voice against China chip export limits, so a spy probe could shape GPU export policy and the company's leadership stability.",
+   "cover": {
+    "style": "type",
+    "figure": "$2B",
+    "caption": "AI chips Megaspeed is accused of smuggling into China"
+   },
+   "id": "s1",
+   "lead": true
+  },
+  {
+   "slug": "goldman-sachs-pulls-claude-code-from-its-bankers-and-traders",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-08T18:16:07+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Goldman Sachs is pulling Claude Code from its bankers and traders",
+     "url": "https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50415628",
+    "points": 691,
+    "comments": 384
+   },
+   "tier": "medium",
+   "kicker": "Business",
+   "headline": "Goldman Sachs pulls Claude Code from its bankers and traders",
+   "dek": "New internal guidance limits AI coding agents to the bank's roughly 12,000 engineers, months after its CIO praised trader-built tools.",
+   "body": "Goldman Sachs has restricted Anthropic's Claude Code and Microsoft's GitHub to its engineers, cutting off most traders and bankers, Bloomberg News reports. Internal guidance updated in October followed a review of productivity and risk concerns. Strats, who span trading, quant research and engineering, keep access. Goldman's in-house AI assistant remains available firmwide.\n\nSome traders are frustrated, according to Bloomberg. They had used the tools to monitor client flows, model market moves and positions, and build presentation material. As recently as July, CIO Marco Argenti was promoting \"vibe coding\" by non-technical staff.\n\nThe move comes as Goldman and Morgan Stanley lead underwriting on Anthropic's IPO, per its October 26 S-1 filing. Goldman also removed Claude for Hong Kong bankers in April, citing contract terms. The Hacker News thread drew 691 points and 384 comments.",
+   "key_points": [
+    "Goldman's October guidance limits Claude Code and GitHub to engineers, about 12,000 of roughly 47,000 staff, Bloomberg reports.",
+    "Traders had used the tools to track client flows and model positions; strats keep access.",
+    "Goldman is a lead underwriter on Anthropic's IPO, according to the S-1 filed October 26."
+   ],
+   "id": "s2"
+  },
+  {
+   "slug": "chinese-firms-cleared-for-nvidia-h200-chips-have-empty-offic",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T13:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Two Chinese companies cleared to buy banned Nvidia AI chips have empty offices and unknown addresses",
+     "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/two-chinese-companies-cleared-to-buy-banned-nvidia-ai-chips-have-empty-offices-and-unknown-addresses-investigation-reveals-businesses-have-ties-to-sanctioned-chinese-military-suppliers"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Chips",
+   "headline": "Chinese firms cleared for Nvidia H200 chips have empty offices",
+   "dek": "A New York Times investigation links New Matrix and Maginfra to US-sanctioned firms, raising doubts about how export licenses are vetted.",
+   "body": "Two Chinese companies approved by the US to buy Nvidia H200 AI chips appear to operate from empty offices, according to a New York Times investigation reported by Tom's Hardware. The offices of New Matrix and Maginfra held only some furniture. People working nearby said they had never heard of the firms or seen anyone there.\n\nBoth have ties to sanctioned companies. New Matrix founder Li Bin and two other primary owners are connected to Wise Road, a private equity firm sanctioned for helping Beijing acquire sensitive chip technology. Maginfra is suspected of links to Inspur, blacklisted since 2023 for supporting China's military. Neither is the final user. Both are supposed to build AI servers for customers who remain unknown.\n\nAround two dozen firms have won approval since President Trump reversed his export ban in exchange for a 25 percent cut of sales. \"I have a ton of concerns that neither the Commerce Department or Nvidia is doing the due diligence needed,\" former National Security Council China director Liza Tobin told the Times.",
+   "key_points": [
+    "New Matrix and Maginfra, approved to buy Nvidia H200 chips, appear to have empty offices, the New York Times reports.",
+    "New Matrix's owners are tied to sanctioned Wise Road; Maginfra is suspected of links to blacklisted Inspur.",
+    "Around two dozen Chinese firms have received H200 licenses since the US reversed its ban for a 25 percent cut of sales."
+   ],
+   "id": "s3"
+  },
+  {
+   "slug": "cpu-z-data-shows-64gb-ram-systems-down-18-percent-as-prices",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T12:40:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "PC's with 64GB of RAM plummet 18% as memory prices soar",
+     "url": "https://www.tomshardware.com/pc-components/ram/pcs-with-64gb-of-ram-plummet-18-percent-as-memory-prices-soar-cpu-z-install-base-data-shows-ddr4-making-a-surprise-comeback"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Hardware",
+   "headline": "CPU-Z data shows 64GB RAM systems down 18 percent as prices climb",
+   "dek": "Buyers are shifting to 16GB and 24GB kits and sticking with DDR4 as AI demand pushes memory prices higher, Tom's Hardware reports.",
+   "body": "PCs with 64GB of RAM fell 18 percent year over year in CPU-Z's active user base, while 32GB setups slipped 2.5 percent, Tom's Hardware reports. It is the first noticeable decline in higher-capacity configurations the CPU-Z developer has recorded. Tom's Hardware blames DDR4 and DDR5 prices driven up by the AI rush for DRAM supply.\n\nSmaller kits are gaining. 16GB configurations rebounded 12.9 percent, 8GB grew 5.5 percent and 24GB rose 19.7 percent. 32GB still leads with a 37.2 percent share, ahead of 16GB at 33 percent. 64GB sits at 7.3 percent.\n\nDDR4 grew 6 percent to a 54.5 percent share, while DDR5 fell 2.9 percent to 32.9 percent. Older Zen 3 chips such as the Ryzen 5 5500 are climbing too. The figures reflect systems running CPU-Z, not retail sales.",
+   "key_points": [
+    "64GB configurations fell 18 percent and 32GB fell 2.5 percent year over year in CPU-Z's user base.",
+    "16GB rose 12.9 percent, 8GB 5.5 percent and 24GB 19.7 percent as buyers trade down.",
+    "DDR4 grew 6 percent to 54.5 percent share; DDR5 fell 2.9 percent to 32.9 percent."
+   ],
+   "id": "s4"
+  },
+  {
+   "slug": "iris-ohyama-breach-may-expose-data-of-7-7-million-shoppers",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-08T15:43:08+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "Iris Ohyama data cloud breach exposes info of 7.7 million customers",
+     "url": "https://www.bleepingcomputer.com/news/security/iris-ohyama-data-cloud-breach-exposes-info-of-77-million-customers/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Iris Ohyama breach may expose data of 7.7 million shoppers",
+   "dek": "Attackers accessed a third-party cloud service behind the Iris Plaza store, putting names, addresses, birth dates and encrypted passwords at risk.",
+   "body": "Japanese household goods maker Iris Ohyama says personal data of about 7.7 million people may have been exposed after unauthorized access to an external cloud service used by its Iris Plaza online store, BleepingComputer reports. Those affected include up to 5.8 million current and former registered members and 1.9 million non-members.\n\nThe exposed data may include full names, physical addresses, phone numbers, email addresses, gender, dates of birth and account passwords. The company says active members' passwords are stored encrypted, without naming the scheme, and that no credit card data was kept in the affected service.\n\nIris Ohyama suspended Iris Plaza and related systems on October 28 and notified police and Japan's Personal Information Protection Commission on October 29. As of November 5, it had no reports of misuse. A spokesperson told BleepingComputer the attacker has not made contact and remains unidentified.",
+   "key_points": [
+    "About 7.7 million people affected: up to 5.8 million current and former members and 1.9 million non-members.",
+    "Names, addresses, phone numbers, emails, birth dates and encrypted passwords may be exposed; no credit card data was stored there.",
+    "Iris Plaza has been suspended since October 28; no misuse reported as of November 5."
+   ],
+   "id": "s5"
+  },
+  {
+   "slug": "outlook-com-rejects-email-from-domains-without-dmarc",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T19:20:32+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Outlook.com is rejecting email from domains without DMARC",
+     "url": "https://mailroute.net/blog/outlook-rejecting-email-without-dmarc"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50416158",
+    "points": 333,
+    "comments": 249
+   },
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Outlook.com rejects email from domains without DMARC",
+   "body": "",
+   "id": "s6"
+  },
+  {
+   "slug": "ketchup-offers-an-open-source-sketchup-alternative-in-rust-a",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T22:35:35+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "KetchUp – Open-source SketchUp alternative built with Rust and WebGPU",
+     "url": "https://ketchup3d.github.io/app/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50418176",
+    "points": 355,
+    "comments": 94
+   },
+   "tier": "brief",
+   "kicker": "Open source",
+   "headline": "KetchUp offers an open-source SketchUp alternative in Rust and WebGPU",
+   "body": "",
+   "id": "s7"
+  },
+  {
+   "slug": "linux-7-5-removes-the-last-intel-mmx-code-from-the-kernel",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T14:40:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "The end of an era as Linux 7.5 purges the last 30-year-old Intel MMX optimizations from Pentium age",
+     "url": "https://www.tomshardware.com/software/linux/the-end-of-an-era-as-linux-7-5-purges-the-last-30-year-old-intel-mmx-optimizations-from-pentium-age-open-source-os-retires-ancient-1997-pentium-instructions-to-streamline-code"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Kernel",
+   "headline": "Linux 7.5 removes the last Intel MMX code from the kernel",
+   "body": "Tom's Hardware reports that kernel developers are dropping the final optimizations for Intel's 30-year-old MultiMedia eXtensions, a holdover from the Pentium era.",
+   "id": "s8"
+  },
+  {
+   "slug": "scott-hanselman-s-open-source-tool-shows-what-s-eating-your",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T13:40:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Open-source GPU task manager reveals exactly what's eating your VRAM",
+     "url": "https://www.tomshardware.com/pc-components/gpus/open-source-gpu-task-manager-reveals-exactly-whats-eating-your-vram-microsoft-vps-new-gpu-taskman-tool-reveals-every-process-using-your-gpu-how-much-memory-each-uses-and-breaks-down-ai-and-llm-workloads"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Open source",
+   "headline": "Scott Hanselman's open-source tool shows what's eating your VRAM",
+   "body": "The Microsoft VP released gputaskman, a GPU task manager, as an open-source project on GitHub, according to Tom's Hardware.",
+   "id": "s9"
+  },
+  {
+   "slug": "dux-is-a-free-open-source-wayland-desktop-shell",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T19:08:51+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Dux: Free, open-source Wayland desktop shell with file manager and theming",
+     "url": "https://duxlabs.dev/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50416053",
+    "points": 238,
+    "comments": 75
+   },
+   "tier": "brief",
+   "kicker": "Open source",
+   "headline": "Dux is a free, open-source Wayland desktop shell",
+   "body": "The shell includes its own file manager and theming support.",
+   "id": "s10"
+  },
+  {
+   "slug": "diamond-foundry-makes-first-200mm-single-crystal-diamond-waf",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-08T15:25:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Diamond Foundry creates world's first 200mm single-crystal diamond wafer",
+     "url": "https://www.tomshardware.com/pc-components/cooling/diamond-foundry-creates-worlds-first-200mm-single-crystal-diamond-wafer-massive-gem-aims-to-solve-ai-chip-cooling-crisis-envisioned-as-a-cooling-material-for-semiconductors"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Hardware",
+   "headline": "Diamond Foundry makes first 200mm single-crystal diamond wafer",
+   "body": "The wafer is designed to pull heat away from AI processors and keep hotspots from forming, Tom's Hardware reports.",
+   "id": "s11"
+  },
+  {
+   "slug": "llama-modchip-runs-284b-deepseek-model-on-64gb-of-ram-no-gpu",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T10:22:04+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU",
+     "url": "https://github.com/synchopate/llama-modchip"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50411961",
+    "points": 402,
+    "comments": 180
+   },
+   "tier": "brief",
+   "kicker": "Local AI",
+   "headline": "Llama-modchip runs 284B DeepSeek model on 64GB of RAM, no GPU",
+   "body": "",
+   "id": "s12"
+  },
+  {
+   "slug": "homelabber-runs-2-8-trillion-parameter-kimi-k3-on-cpu-with-o",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T12:20:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Homelabber uses second-gen Optane memory sticks to run a 2.8-trillion-parameter AI model on CPU alone",
+     "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/homelabber-uses-second-gen-optane-memory-sticks-to-run-a-2-8-trillion-parameter-ai-model-on-cpu-alone-warns-that-optanes-extreme-heat-can-burn-out-nearby-memory-dram-used-blower-fans-to-prevent-melting-ram"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Local AI",
+   "headline": "Homelabber runs 2.8-trillion-parameter Kimi K3 on CPU with Optane",
+   "body": "A Reddit user ran Moonshot AI's model CPU-only on Optane PMem 200 using a 1-bit quant, reaching 0.85 tokens per second, Tom's Hardware reports.",
+   "id": "s13"
+  },
+  {
+   "slug": "developer-writes-about-switching-from-claude-to-pi",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T03:11:48+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Goodbye Claude, hello Pi",
+     "url": "https://caleb.software/posts/claude-to-pi.html"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50410107",
+    "points": 728,
+    "comments": 448
+   },
+   "tier": "brief",
+   "kicker": "Dev",
+   "headline": "Developer writes about switching from Claude to Pi",
+   "body": "",
+   "id": "s14"
+  },
+  {
+   "slug": "150-to-200-arrested-after-microsoft-data-center-protest-turn",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T13:20:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Hundreds arrested after Microsoft data center protest turns violent",
+     "url": "https://www.tomshardware.com/tech-industry/data-centers/hundreds-arrested-after-microsoft-data-center-protest-turns-violent-stop-dirty-data-centers-coalition-demands-halt-to-ai-data-center-expansion-dutch-police-seize-break-in-tools-suspected-stolen-items-from-construction-site"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Protests",
+   "headline": "150 to 200 arrested after Microsoft data center protest turns violent",
+   "body": "Tom's Hardware reports it is unclear which group entered the construction site first.",
+   "id": "s15"
+  },
+  {
+   "slug": "nvidia-marks-20-years-of-the-geforce-8800-gtx-with-free-stea",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T14:20:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nvidia released its 8800 GTX GPU 20 years ago today, celebrates with Steam game homage",
+     "url": "https://www.tomshardware.com/pc-components/gpus/nvidia-released-its-8800-gtx-gpu-20-years-ago-today-celebrates-with-steam-game-homage-interactive-demos-eye-watering-minimum-requirements-include-rtx-4070-32gb-ram-and-30gb-storage"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Hardware",
+   "headline": "Nvidia marks 20 years of the GeForce 8800 GTX with free Steam demo",
+   "body": "The card launched on this day in 2006. Nvidia is celebrating with a demanding interactive demo available free on Steam.",
+   "id": "s16"
+  },
+  {
+   "slug": "iphone-keeps-a-gray-list-of-words-it-won-t-auto-complete",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T11:30:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "The iPhone has a 'gray list' of words and phrases that won't auto-complete",
+     "url": "https://www.techradar.com/phones/ios/a-very-light-touch-form-of-censorship-the-iphone-has-a-gray-list-of-words-and-phrases-that-apple-wont-auto-complete-for-you"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Privacy",
+   "headline": "iPhone keeps a 'gray list' of words it won't auto-complete",
+   "body": "Researchers and reporters found that some words and phrases are blocked from auto-complete and swipe typing, TechRadar reports.",
+   "id": "s17"
+  },
+  {
+   "slug": "paper-examines-clashes-between-a-language-s-creator-and-its",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T23:28:01+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "When a language's creator and its owners strongly disagree [pdf]",
+     "url": "https://isocpp.org/files/papers/P4454R0.pdf"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50418818",
+    "points": 104,
+    "comments": 89
+   },
+   "tier": "brief",
+   "kicker": "Languages",
+   "headline": "Paper examines clashes between a language's creator and its owners",
+   "body": "",
+   "id": "s18"
+  },
+  {
+   "slug": "paul-ford-argues-the-web-is-more-than-enough",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T19:48:32+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "The Web Is More Than Enough, by Paul Ford",
+     "url": "https://ftrain.com/aboard-the-web-is-more-than-enough"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50416456",
+    "points": 111,
+    "comments": 61
+   },
+   "tier": "brief",
+   "kicker": "Essay",
+   "headline": "Paul Ford argues the web is more than enough",
+   "body": "",
+   "id": "s19"
+  },
+  {
+   "slug": "pocket-ukrainian-receiver-taps-russian-drone-video-up-to-six",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-08T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Pocket-sized Ukrainian receiver intercepts Russian strike drone video feeds up to six miles away",
+     "url": "https://www.tomshardware.com/tech-industry/drones/pocket-sized-ukrainian-receiver-intercepts-russian-strike-drone-video-feeds-up-to-six-miles-away-device-only-slightly-heavier-than-a-smartphone-intercepts-analog-video-signals-sent-to-russian-operators"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Defense",
+   "headline": "Pocket Ukrainian receiver taps Russian drone video up to six miles away",
+   "body": "The D·Vision SDR covers 500 MHz to 8.7 GHz, including the 4.1 to 4.5 GHz band Russian Molniya strike drones use to talk to operators.",
+   "id": "s20"
+  }
+ ],
+ "links": [],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "Goodbye Claude, hello Pi",
+   "url": "https://caleb.software/posts/claude-to-pi.html",
+   "points": 728,
+   "comments": 448,
+   "comments_url": "https://news.ycombinator.com/item?id=50410107"
+  },
+  {
+   "rank": 2,
+   "title": "Goldman Sachs is pulling Claude Code from its bankers and traders",
+   "url": "https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers",
+   "points": 691,
+   "comments": 384,
+   "comments_url": "https://news.ycombinator.com/item?id=50415628"
+  },
+  {
+   "rank": 3,
+   "title": "Nvidia CEO Jensen Huang's letter to staff about affair",
+   "url": "https://nvidianews.nvidia.com/news/a-message-to-our-company",
+   "points": 484,
+   "comments": 520,
+   "comments_url": "https://news.ycombinator.com/item?id=50418016"
+  },
+  {
+   "rank": 4,
+   "title": "Declarative Dragging",
+   "url": "https://declarative-dragging.github.io/",
+   "points": 449,
+   "comments": 58,
+   "comments_url": "https://news.ycombinator.com/item?id=50368481"
+  },
+  {
+   "rank": 5,
+   "title": "Llama-modchip: 284B DeepSeek on 64GB RAM, no GPU",
+   "url": "https://github.com/synchopate/llama-modchip",
+   "points": 402,
+   "comments": 180,
+   "comments_url": "https://news.ycombinator.com/item?id=50411961"
+  },
+  {
+   "rank": 6,
+   "title": "KetchUp – Open-source SketchUp alternative built with Rust and WebGPU",
+   "url": "https://ketchup3d.github.io/app/",
+   "points": 355,
+   "comments": 94,
+   "comments_url": "https://news.ycombinator.com/item?id=50418176"
+  },
+  {
+   "rank": 7,
+   "title": "Outlook.com is rejecting email from domains without DMARC",
+   "url": "https://mailroute.net/blog/outlook-rejecting-email-without-dmarc",
+   "points": 333,
+   "comments": 249,
+   "comments_url": "https://news.ycombinator.com/item?id=50416158"
+  },
+  {
+   "rank": 8,
+   "title": "Writing as a thinking tool",
+   "url": "http://muratbuffalo.blogspot.com/2026/11/writing-as-thinking-tool.html",
+   "points": 320,
+   "comments": 84,
+   "comments_url": "https://news.ycombinator.com/item?id=50412067"
+  },
+  {
+   "rank": 9,
+   "title": "RIP, Harvest",
+   "url": "https://aphyr.com/posts/427-rip-harvest",
+   "points": 239,
+   "comments": 70,
+   "comments_url": "https://news.ycombinator.com/item?id=50420035"
+  },
+  {
+   "rank": 10,
+   "title": "Dux: Free, open-source Wayland desktop shell with file manager and theming",
+   "url": "https://duxlabs.dev/",
+   "points": 238,
+   "comments": 75,
+   "comments_url": "https://news.ycombinator.com/item?id=50416053"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "ROB RUN",
+    "appid": 4262460,
+    "release_date": "2026-11-04",
+    "steam_rating": "Mixed",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4262460/db8e0cf43c9475b96fb9446b4908de79fcb9f619/header.jpg?t=1793811654",
+    "store_url": "https://store.steampowered.com/app/4262460/",
+    "price": null,
+    "currency": "EUR",
+    "blurb": "Early access crime sandbox for thousands of players; the week's most-reviewed launch, but Steam players are split.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/ROB%20RUN/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Lightyear Frontier",
+    "appid": 1677110,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1677110/f4aec944f634f189990fe69e6d353b5609787955/header_alt_assets_7.jpg?t=1793891345",
+    "store_url": "https://store.steampowered.com/app/1677110/",
+    "price": 23.99,
+    "currency": "EUR",
+    "blurb": "Relaxing open-world farming game where a mech does the heavy lifting, with co-op for up to four players.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Lightyear%20Frontier/?category=13",
+    "review_ids": [],
+    "critics": {
+     "metascore": {
+      "score": 78,
+      "count": 4,
+      "url": "https://metacritic.com/game/lightyear-frontier/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 78,
+      "count": 20,
+      "url": "https://opencritic.com/game/16457/lightyear-frontier"
+     }
+    }
+   },
+   {
+    "title": "ZED ZONE",
+    "appid": 1211600,
+    "release_date": "2026-11-06",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1211600/aac7446006d1fb3898eccf697406d0c357cf20a3/header_alt_assets_2.jpg?t=1794035207",
+    "store_url": "https://store.steampowered.com/app/1211600/",
+    "price": 7.07,
+    "currency": "EUR",
+    "blurb": "Zombie survival crafting after a plane crash: build shelters, upgrade skills and fight hordes and mechs.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/ZED%20ZONE/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Potato Please",
+    "appid": 5266240,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5266240/e289442aa6b3756109bc65b427556ea538efb849/header.jpg?t=1794167289",
+    "store_url": "https://store.steampowered.com/app/5266240/",
+    "price": 8.72,
+    "currency": "EUR",
+    "blurb": "A first-person potato peeling game with real physics, and a surprise hit with Steam players.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Potato%20Please/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Horses of Hoofprint Bay",
+    "appid": 3727090,
+    "release_date": "2026-11-04",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3727090/05ecc629bbeefe5b64ea3acc33da82009bccf968/header.jpg?t=1793830906",
+    "store_url": "https://store.steampowered.com/app/3727090/",
+    "price": 22.94,
+    "currency": "EUR",
+    "blurb": "Hand-drawn 2D horse stable sim with breeding, training and competitions, rated Overwhelmingly Positive on Steam.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Horses%20of%20Hoofprint%20Bay/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Godzilla: Destroy All Monsters Melee Remastered",
+    "appid": 4251460,
+    "release_date": "2026-11-03",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4251460/28023d80b51185fe3dbadadf608523942f47238c/header.jpg?t=1793714569",
+    "store_url": "https://store.steampowered.com/app/4251460/",
+    "price": 29.99,
+    "currency": "EUR",
+    "blurb": "Remastered Godzilla arena brawler adds online multiplayer; players are far warmer than critics.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Godzilla%3A%20Destroy%20All%20Monsters%20Melee%20Remastered/?category=13",
+    "review_ids": [],
+    "critics": {
+     "metascore": {
+      "score": 70,
+      "count": 8,
+      "url": "https://metacritic.com/game/godzilla-destroy-all-monsters-melee-remastered/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 74,
+      "count": 37,
+      "url": "https://opencritic.com/game/20818/godzilla-destroy-all-monsters-melee-remastered"
+     }
+    }
+   },
+   {
+    "title": "Road Rash™: 30th Anniversary Edition",
+    "appid": 2448570,
+    "release_date": "2026-11-05",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2448570/a12ed683c51938590f28400c89cd8c8204e1e8db/header.jpg?t=1793986604",
+    "store_url": "https://store.steampowered.com/app/2448570/",
+    "price": 4.99,
+    "currency": "EUR",
+    "blurb": "First digital release of the combat racing classic, with a relicensed soundtrack and up to 60 fps.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Road%20Rash%E2%84%A2%3A%2030th%20Anniversary%20Edition/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Loftia",
+    "appid": 2320980,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2320980/header.jpg?t=1794115632",
+    "store_url": "https://store.steampowered.com/app/2320980/",
+    "price": 24.06,
+    "currency": "EUR",
+    "blurb": "Cozy multiplayer farming and crafting world built around sustainability, now in early access.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/Loftia/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Mycelarium",
+    "appid": 5181520,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5181520/5b6220116b49c7e7a968cc608d32e47bc8fe722f/header.jpg?t=1793964125",
+    "store_url": "https://store.steampowered.com/app/5181520/",
+    "price": 3.91,
+    "currency": "EUR",
+    "blurb": "Relaxing incremental game about growing an underground fungal network and automating mushroom production.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Mycelarium/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-missil-tape-to-tape",
+    "game": "Tape to Tape",
+    "outlet": "MISSIL",
+    "score": "9/10",
+    "verdict": "MISSIL's reviewer takes pucks to the face, skates, scores goals and loves every minute of this hockey game.",
+    "url": "https://missil.se/spelrecensioner/tape-to-tape/",
+    "published_at": "2026-11-06T00:52:04+00:00"
+   },
+   {
+    "id": "r-pc-gamer-phantom-blade-zero",
+    "game": "Phantom Blade Zero",
+    "outlet": "PC Gamer",
+    "score": "90%",
+    "verdict": "PC Gamer calls it a martial arts action epic with a dash of Souls and Sekiro that favors feeling good over punishment.",
+    "url": "https://www.pcgamer.com/games/action/phantom-blade-zero-review/",
+    "published_at": "2026-11-05T17:10:23+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 52,
+      "url": "https://metacritic.com/game/phantom-blade-zero/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 89,
+      "count": 75,
+      "url": "https://opencritic.com/game/19914/phantom-blade-zero"
+     }
+    }
+   },
+   {
+    "id": "r-game-informe-void-breaker",
+    "game": "Void/Breaker",
+    "outlet": "Game Informer",
+    "score": "8.5/10",
+    "verdict": "Game Informer says few games implement destruction this well, and the chaos is exactly the point.",
+    "url": "https://gameinformer.com/review/voidbreaker/chaos-is-the-point",
+    "published_at": "2026-11-03T19:04:24+00:00"
+   },
+   {
+    "id": "r-missil-croc-2-kingdom-of-the-gobbos",
+    "game": "Croc 2: Kingdom of the Gobbos",
+    "outlet": "MISSIL",
+    "score": "5/10",
+    "verdict": "MISSIL finds Argonaut's polish can't lift a second outing for a mediocre crocodile, harsher than most critics.",
+    "url": "https://missil.se/spelrecensioner/croc-2-kingdom-of-the-gobbos/",
+    "published_at": "2026-11-03T15:02:41+00:00",
+    "critics": {
+     "opencritic": {
+      "score": 67,
+      "count": 15,
+      "url": "https://opencritic.com/game/21632/croc-2-kingdom-of-the-gobbos"
+     }
+    }
+   },
+   {
+    "id": "r-pc-gamer-enshrouded-1-0",
+    "game": "Enshrouded 1.0",
+    "outlet": "PC Gamer",
+    "score": "90%",
+    "verdict": "PC Gamer says the full release clears the fog to reveal a survival crafting masterpiece.",
+    "url": "https://www.pcgamer.com/games/survival-crafting/enshrouded-1-0-review/",
+    "published_at": "2026-11-02T21:47:58+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 15,
+      "url": "https://metacritic.com/game/enshrouded/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 83,
+      "count": 43,
+      "url": "https://opencritic.com/game/16119/enshrouded"
+     }
+    }
+   },
+   {
+    "id": "r-missil-the-wolf-among-us-remastered",
+    "game": "The Wolf Among Us Remastered",
+    "outlet": "MISSIL",
+    "score": "8/10",
+    "verdict": "MISSIL likes the remade models and black-and-white mode, though the 2013 murder mystery itself is unchanged.",
+    "url": "https://missil.se/spelrecensioner/the-wolf-among-us-remastered/",
+    "published_at": "2026-11-01T18:42:37+00:00",
+    "critics": {
+     "metascore": {
+      "score": 84,
+      "count": 11,
+      "url": "https://metacritic.com/game/the-wolf-among-us-remastered/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 85,
+      "count": 22,
+      "url": "https://opencritic.com/game/21580/the-wolf-among-us-remastered"
+     }
+    }
+   },
+   {
+    "id": "r-missil-phantom-blade-zero",
+    "game": "Phantom Blade Zero",
+    "outlet": "MISSIL",
+    "score": "9/10",
+    "verdict": "MISSIL praises world-class sword fights and a fabulously twisted world, echoing near-universal critical acclaim.",
+    "url": "https://missil.se/spelrecensioner/phantom-blade-zero/",
+    "published_at": "2026-11-01T13:21:08+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 52,
+      "url": "https://metacritic.com/game/phantom-blade-zero/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 89,
+      "count": 75,
+      "url": "https://opencritic.com/game/19914/phantom-blade-zero"
+     }
+    }
+   }
+  ],
+  "console_spotlight": [],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Emberville",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-07",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2295170/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   },
+   {
+    "game": "Family Time",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-03-31",
+    "date_precision": "quarter",
+    "url": "https://store.steampowered.com/app/5072600/"
+   }
+  ],
+  "watch": [],
+  "news": [
+   {
+    "headline": "Sega server hack leaves Japanese arcades dark for a week",
+    "summary": "Some arcade venues in Japan went quiet for a week after a hack on Sega's servers, Tom's Hardware reports.",
+    "url": "https://www.tomshardware.com/video-games/japanese-arcades-suffer-week-long-blackout-following-sega-server-hack-bandai-namco-titles-resume-trial-operations-as-sega-games-remain-offline",
+    "source": "Tom's Hardware"
+   },
+   {
+    "headline": "WoW: Forever launch ran on 70,480 CPU cores and 251TB of RAM",
+    "summary": "Tom's Hardware details the hardware that kept millions of World of Warcraft: Forever players online at launch.",
+    "url": "https://www.tomshardware.com/video-games/pc-gaming/wow-forever-launch-used-70-480-cpu-cores-and-251-terabytes-of-ram-3-924-virtual-machines-powered-one-of-world-of-warcrafts-smoothest-launches-ever",
+    "source": "Tom's Hardware"
+   },
+   {
+    "headline": "EA's Saudi owner aims to buy part of Unity Software",
+    "summary": "MISSIL reports EA's Saudi owner is targeting a stake in Unity, extending Saudi Arabia's growing reach in the games industry.",
+    "url": "https://missil.se/nyheter/saudiarabiens-pif-siktar-pa-att-kopa-delar-av-unity-software/",
+    "source": "MISSIL"
+   },
+   {
+    "headline": "Warhammer Blood Bowl slips into early 2027",
+    "summary": "The next Blood Bowl game has been delayed into early 2027, PC Gamer reports.",
+    "url": "https://www.pcgamer.com/games/sports/warhammer-blood-bowl-has-been-delayed-into-2027/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Original composer shares Mass Effect 5 score that will never be used",
+    "summary": "One of the original Mass Effect composers released a trailer of planned music, calling it a goodbye after EA shut down BioWare and cancelled Mass Effect 5.",
+    "url": "https://www.rockpapershotgun.com/this-trailer-is-my-way-of-saying-goodbye-have-a-listen-to-the-mass-effect-5-score-that-could-have-been-courtesy-of-one-of-the-original-games-composers",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Jackbox Games rules out AI: 'All that is done by people'",
+    "summary": "CEO Mike Bilder told PC Gamer the studio has no intention of using AI in development.",
+    "url": "https://www.pcgamer.com/gaming-industry/game-development/jackbox-games-isnt-interested-in-ai-development-all-that-is-done-by-people-and-we-have-no-intention-of-changing-that/",
+    "source": "PC Gamer"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-09T06:05:39.337793+00:00",
+  "featured": [
+   {
+    "game": "FINAL FANTASY VII REMAKE INTERGRADE",
+    "shop": "Epic Game Store",
+    "price": 7.19,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 82,
+    "lowest_ever": true,
+    "expires": "2026-11-16T17:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 86,
+    "url": "https://isthereanydeal.com/game/final-fantasy-vii-remake-intergrade/",
+    "pick": "popular",
+    "tags": [
+     "RPG",
+     "Action RPG",
+     "JRPG",
+     "Singleplayer",
+     "Action-Adventure"
+    ],
+    "headline": "Final Fantasy VII Remake Intergrade hits a record low: Strong Buy",
+    "body": "Final Fantasy VII Remake Intergrade, a single-player action RPG in the JRPG mold, costs €7.19 at the Epic Game Store. That is 82 percent off its regular €39.99 and the lowest price ever recorded for the game. The reviews support the cut: Very Positive on Steam and a Metascore of 86, the highest of any game in today's deals.\n\nThe offer runs until November 16 at 17:00 CET, so there is a full week to decide. At less than a fifth of the usual price, a top-rated game at its all-time low rates a Strong Buy. It suits players who like story-driven action RPGs and have not yet played it.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Streets of Rogue",
+    "shop": "Fanatical",
+    "price": 1.94,
+    "regular": 19.5,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": "2026-11-17T00:59:00+01:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/streets-of-rogue/",
+    "pick": "genre",
+    "genre": "Roguelike",
+    "tags": [
+     "Roguelite",
+     "Action Roguelike",
+     "Pixel Graphics",
+     "Multiplayer",
+     "RPG"
+    ],
+    "headline": "Streets of Rogue falls to €1.94, its lowest ever: Strong Buy",
+    "body": "Streets of Rogue, an action roguelike with pixel graphics, RPG elements and multiplayer, costs €1.94 at Fanatical. That is 90 percent off its regular €19.50 and the lowest price on record. Steam users rate it Overwhelmingly Positive, the top score Steam gives.\n\nThe deal ends November 17 at 00:59 CET. A record-low price, a 90 percent cut and one of the best Steam ratings in today's list earn it a Strong Buy. It is the pick for roguelike fans, and the multiplayer tag makes it a candidate for playing with friends as well as alone.",
+    "verdict": "strong_buy"
+   }
+  ],
+  "more": [
+   {
+    "game": "Dungeons of Hinterberg",
+    "shop": "Fanatical",
+    "price": 4.25,
+    "regular": 22.99,
+    "currency": "EUR",
+    "cut": 82,
+    "lowest_ever": true,
+    "expires": "2026-11-17T00:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 80,
+    "url": "https://isthereanydeal.com/game/dungeons-of-hinterberg/",
+    "pick": "popular",
+    "tags": [
+     "Relaxing",
+     "Puzzle",
+     "Exploration",
+     "Adventure",
+     "Singleplayer"
+    ],
+    "advice": "Dungeons of Hinterberg at €4.25, an 82 percent cut and a record low, with a Metascore of 80.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Metro Exodus",
+    "shop": "Epic Game Store",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": "2026-11-09T18:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 82,
+    "url": "https://isthereanydeal.com/game/metro-exodus/",
+    "pick": "popular",
+    "tags": [
+     "Post-apocalyptic",
+     "FPS",
+     "Singleplayer",
+     "Story Rich",
+     "Open World"
+    ],
+    "advice": "Metro Exodus at €2.99, 90 percent off, lowest ever, Metascore 82; ends November 9 at 18:00 CET.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Noita",
+    "shop": "GOG",
+    "price": 7.59,
+    "regular": 18.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 76,
+    "url": "https://isthereanydeal.com/game/noita/",
+    "pick": "popular",
+    "tags": [
+     "Physics",
+     "Roguelike",
+     "Difficult",
+     "Pixel Graphics",
+     "Dungeon Crawler"
+    ],
+    "advice": "Noita at €7.59 is its lowest ever and Overwhelmingly Positive, but the 60 percent cut is modest.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Graveyard Keeper",
+    "shop": "Fanatical",
+    "price": 1.94,
+    "regular": 19.5,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": "2026-11-17T00:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 69,
+    "url": "https://isthereanydeal.com/game/graveyard-keeper/",
+    "pick": "popular",
+    "tags": [
+     "Pixel Graphics",
+     "Crafting",
+     "RPG",
+     "Simulation",
+     "Management"
+    ],
+    "advice": "Graveyard Keeper at €1.94, 90 percent off and a record low; Metascore of 69 tempers it.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Brigador: Up-Armored Edition",
+    "shop": "GOG",
+    "price": 5.19,
+    "regular": 19.99,
+    "currency": "EUR",
+    "cut": 74,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/brigador-up-armored-edition/",
+    "pick": "hidden",
+    "tags": [
+     "Action",
+     "Twin Stick Shooter",
+     "Mechs",
+     "Top-Down Shooter",
+     "Difficult"
+    ],
+    "advice": "Brigador, a lesser-known mech twin-stick shooter, at €5.19, a record low with a 74 percent cut.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Jusant",
+    "shop": "GOG",
+    "price": 9.99,
+    "regular": 24.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 83,
+    "url": "https://isthereanydeal.com/game/jusant/",
+    "pick": "hidden",
+    "tags": [
+     "Atmospheric",
+     "Exploration",
+     "Adventure",
+     "Cinematic",
+     "Nature"
+    ],
+    "advice": "Jusant at €9.99, a record low with a Metascore of 83, though the cut is only 60 percent.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Kathy Rain",
+    "shop": "GOG",
+    "price": 0.99,
+    "regular": 9.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 77,
+    "url": "https://isthereanydeal.com/game/kathy-rain/",
+    "pick": "hidden",
+    "tags": [
+     "Point & Click",
+     "Adventure",
+     "Pixel Graphics",
+     "Female Protagonist",
+     "Mystery"
+    ],
+    "advice": "Kathy Rain, a lesser-known point-and-click mystery, at €0.99: 90 percent off and its lowest ever.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Timber Rush",
+    "shop": "Steam",
+    "price": 2.49,
+    "regular": 4.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": true,
+    "expires": "2026-11-22T19:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://store.steampowered.com/app/4298880/",
+    "pick": "genre",
+    "genre": "Incremental",
+    "tags": [
+     "Casual",
+     "Idler",
+     "Indie",
+     "Relaxing",
+     "Strategy"
+    ],
+    "advice": "For incremental fans, Timber Rush at €2.49 is its lowest ever, though the cut is just 50 percent.",
+    "verdict": "buy"
+   }
+  ],
+  "source": "itad"
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 246,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 11,
+   "ms": 149,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 18,
+   "ms": 510,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 425,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "The Hacker News",
+   "ok": true,
+   "count": 50,
+   "ms": 158,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "BleepingComputer",
+   "ok": true,
+   "count": 15,
+   "ms": 66,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 10,
+   "ms": 1345,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL Reviews",
+   "ok": true,
+   "count": 20,
+   "ms": 507,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 278,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer Reviews",
+   "ok": true,
+   "count": 19,
+   "ms": 2324,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 59,
+   "ms": 234,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 91,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 209,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Eurogamer",
+   "ok": true,
+   "count": 58,
+   "ms": 245,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Game Informer",
+   "ok": true,
+   "count": 49,
+   "ms": 220,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCGamesN",
+   "ok": true,
+   "count": 0,
+   "ms": 139,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 15,
+   "ms": 282,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 53,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 103,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 690,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 476,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam specials",
+   "ok": true,
+   "count": 100,
+   "ms": 478,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal",
+   "ok": true,
+   "count": 100,
+   "ms": 3954,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal hidden gems",
+   "ok": true,
+   "count": 40,
+   "ms": 1840,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Horror",
+   "ok": true,
+   "count": 30,
+   "ms": 1280,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal FMV",
+   "ok": true,
+   "count": 16,
+   "ms": 4323,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Point & Click",
+   "ok": true,
+   "count": 30,
+   "ms": 1015,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Roguelike",
+   "ok": true,
+   "count": 30,
+   "ms": 1204,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Incremental",
+   "ok": true,
+   "count": 14,
+   "ms": 3056,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Critic scores (IsThereAnyDeal)",
+   "ok": true,
+   "count": 10,
+   "ms": 3059,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Review scores (outlet pages)",
+   "ok": true,
+   "count": 2,
+   "ms": 71,
+   "error": "",
+   "skipped": false
+  }
+ ],
+ "editor": {
+  "events": 21,
+  "returned": {
+   "featured": 1,
+   "medium": 4,
+   "briefs": 15
+  },
+  "kept": {
+   "featured": 1,
+   "medium": 4,
+   "briefs": 15
+  },
+  "briefs_added": 0
+ },
+ "discovery": {
+  "depth": "normal",
+  "filtering": true,
+  "searches": 6,
+  "fetches": 5,
+  "usd": 0.31612,
+  "queries": [
+   "GPU CPU announcement November 2026",
+   "AI model release November 8 2026",
+   "open source release November 2026 Hacker News",
+   "security vulnerability exploited November 9 2026",
+   "PC game review November 2026",
+   "Steam game launch reviews this week November 2026"
+  ],
+  "kept": [],
+  "dropped": []
+ }
+}
