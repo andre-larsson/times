@@ -436,7 +436,7 @@ logo, color palette, fonts, icons and exact layout are all our own.
 
 **Cover price** (2026-11-09): a price tag in the masthead, like a printed paper's: what the edition cost to
 write, every Claude call at API prices (`llm.equivalent_usd`, which includes the column, quiz and Botroom calls;
-a Botroom day run on its own adds its `cost`). "Free" for a links edition. It links to a footer note: the publisher pays it through the Claude subscription,
+a Botroom day run on its own adds its `cost`). "Free" for a links edition. It links to a footer note: the publisher pays it in API credits,
 so reading is free for everyone. The archive lists every edition's price. Columns and quizzes written on the subscription before they
 ran in the workflow (6 and 7 Nov) aren't in their editions' tally, so those two prices are low.
 
