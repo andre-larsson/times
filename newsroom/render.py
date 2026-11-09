@@ -18,6 +18,7 @@ from . import ROOT, forum
 from .forum import look as forum_look
 from .forum import roster as forum_roster
 from .search import build_index
+from .text import slugify
 
 TIERS = ("featured", "medium", "brief")
 PAGE_TIERS = ("featured", "medium")            # tiers that get their own article page
@@ -79,6 +80,32 @@ def link_reviews(gaming: dict[str, Any]) -> dict[str, Any]:
     return gaming
 
 
+VERDICT_RANK = {"strong_buy": 0, "buy": 1, "hold": 3, "avoid": 4}   # no rating (links edition) sits after Buy
+
+
+def deals_view(deals: dict[str, Any], top_n: int) -> dict[str, Any]:
+    """The deals as the pages show them, ranked: the deal(s) of the day, the top picks (the best-rated
+    `top_n`), then the rest by list (Popular, Hidden gems, each genre): its rated deals, ranked, and its
+    unrated ones (`more`, the Deals page's "More" disclosure). Within a rating the list keeps its own order,
+    which interleaves the lists. Every game appears once."""
+    rated = sorted(deals.get("more") or [], key=lambda d: VERDICT_RANK.get(d.get("verdict") or "", 2))
+    lists: dict[str, dict[str, Any]] = {}
+
+    def lst(name: str) -> dict[str, Any]:
+        return lists.setdefault(name, {"name": name, "slug": slugify(name), "rated": [], "more": []})
+
+    for shelf in deals.get("shelves") or []:
+        lst(shelf["name"])["more"] += shelf.get("deals") or []
+    for d in rated[top_n:]:
+        name = "Hidden gems" if d.get("pick") == "hidden" else d.get("genre") or "Popular"
+        lst(name)["rated"].append(d)
+    shown = [x for x in lists.values() if x["rated"] or x["more"]]
+    return {
+        "featured": deals.get("featured") or [], "top": rated[:top_n], "lists": shown,
+        "count": len(deals.get("featured") or []) + len(rated) + sum(len(x["more"]) for x in shown),
+    }
+
+
 def _guard_out_dir(out_dir: Path) -> None:
     """Refuse to wipe anything that looks like the project itself."""
     out, root = out_dir.resolve(), ROOT.resolve()
@@ -123,13 +150,14 @@ class SiteBuilder:
             section_name=self.section_name, build_id=hashlib.sha1(css).hexdigest()[:8],
             js_id=hashlib.sha1(js).hexdigest()[:8],
             verdicts=VERDICTS, edition_time=(cfg["schedule"].get("editions") or [""])[0],
+            deals_view=lambda deals: deals_view(deals or {}, int((cfg.get("deals") or {}).get("top_picks", 8))),
         )
         self.env.filters.update(
             local=self.local, date_long=self.date_long, date_short=self.date_short,
             date_when=self.date_when, time=self.time, iso=self.iso, num=self.num, money=self.money,
             paragraphs=self.paragraphs, domain=self.domain, rating_class=self.rating_class,
             edition_name=self.edition_name, article_url=self.article_url, when=self.when,
-            score_parts=self.score_parts, price=self.price,
+            score_parts=self.score_parts, price=self.price, slug=slugify,
         )
 
     # urls and names
@@ -421,11 +449,15 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     # Deals
     deal_eds = [e for e in newest_first if e.get("deals")]
     current_deals = deal_eds[0]["deals"] if deal_eds else {}
+    # earlier deals of the day still running: once each (the newest), and not if today's page lists the game
+    seen = {d.get("game") for d in current_deals.get("featured", []) + current_deals.get("more", [])}
+    seen |= {d.get("game") for s in current_deals.get("shelves") or [] for d in s.get("deals") or []}
     still_active = []
     for ed in deal_eds[1:8]:
         for d in ed["deals"].get("featured", []):
             exp = parse_ts(d.get("expires"))
-            if exp and exp > b.now:
+            if exp and exp > b.now and d.get("game") not in seen:
+                seen.add(d.get("game"))
                 still_active.append(d)
     b.write("deals/", "deals.html", active="deals", section=b.sections["deals"], **common,
             deals=current_deals, still_active=still_active)

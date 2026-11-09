@@ -192,7 +192,8 @@
   <div class="deal-main">
     <a class="deal-name" href="{{ d.url }}">{{ d.game }}</a>
     <p class="meta">{{ pick(d) }}<span>{{ d.shop }}</span>{% if d.steam_rating %}<span class="meta-sep" aria-hidden="true">·</span>{{ rating(d.steam_rating) }}{% endif %}{% if d.expires %}<span class="meta-sep" aria-hidden="true">·</span><span>Ends {{ d.expires | date_short }}</span>{% endif %}</p>
-    {%- if d.advice %}<p class="deal-advice">{{ verdict(d.verdict) }} {{ d.advice }}</p>{% endif %}
+    {%- if d.advice %}<p class="deal-advice">{{ verdict(d.verdict) }} {{ d.advice }}</p>
+    {%- elif d.tags %}<p class="deal-tags">{{ d.tags[:3] | join(' · ') }}</p>{% endif %}
   </div>
   {{ price(d, 'sm') }}
 </li>

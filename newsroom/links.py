@@ -258,6 +258,7 @@ def mix_deals(deals: list[dict[str, Any]], mix: dict[str, Any], limit: int, genr
     `mix.popular` from the popular list, then `mix.hidden` hidden gems and `mix.genre` genre picks (one
     per genre; the genres take turns by day, skipping one with nothing today). Every game appears once,
     and slots a pool can't fill go to the next popular deals. Each deal gets `pick` (and `genre`).
+    The kinds are interleaved, so the front page's first few rows are a fair sample of the list.
     """
     def pool(name: str) -> list[dict[str, Any]]:
         return [x for x in deals if name in (x.get("pools") or ["popular"])]
@@ -287,7 +288,62 @@ def mix_deals(deals: list[dict[str, Any]], mix: dict[str, Any], limit: int, genr
             slots -= len(extra) - before
     chosen = {x["itad_id"] for x in extra}
     rest = [{**x, "pick": "popular"} for x in popular if x["itad_id"] not in chosen]
-    return (rest[: max(0, limit - len(extra))] + extra)[:limit]
+    return interleave(rest[: max(0, limit - len(extra))],
+                      [x for x in extra if x["pick"] == "hidden"],
+                      [x for x in extra if x["pick"] == "genre"])[:limit]
+
+
+def interleave(*lists: list[Any]) -> list[Any]:
+    """Merge lists evenly, each in its own order: 10, 5 and 5 items come out as A B C A, A B C A, ...
+    (ties go to the earlier list)."""
+    lists = tuple(lst for lst in lists if lst)
+    pos = [0] * len(lists)
+    out: list[Any] = []
+    while len(out) < sum(map(len, lists)):
+        k = min((i for i in range(len(lists)) if pos[i] < len(lists[i])), key=lambda i: pos[i] / len(lists[i]))
+        out.append(lists[k][pos[k]])
+        pos[k] += 1
+    return out
+
+
+def deal_shelves(deals: list[dict[str, Any]], taken: set[str], genres: list[str], per_shelf: int
+                 ) -> list[tuple[str, str, list[dict[str, Any]]]]:
+    """The rest of today's deals for the Deals page, one shelf per ITAD list: popular, hidden gems, then
+    each genre. Returns (pool, name, deals) per shelf that has any; `deals` is already filtered and in order.
+
+    Every game appears once on the page: the rated list keeps its games, and a game on several lists goes
+    on the most specific shelf (a genre, then hidden gems, then popular)."""
+    if per_shelf <= 0:
+        return []
+    taken = set(taken)
+
+    def fill(pool: str) -> list[dict[str, Any]]:
+        out = []
+        for x in deals:
+            if len(out) >= per_shelf:
+                break
+            if pool in (x.get("pools") or ["popular"]) and x["itad_id"] not in taken:
+                taken.add(x["itad_id"])
+                out.append(x)
+        return out
+
+    shelves = {f"genre:{g}": (g, fill(f"genre:{g}")) for g in genres}
+    shelves["hidden"] = ("Hidden gems", fill("hidden"))
+    shelves["popular"] = ("Popular", fill("popular"))
+    order = ["popular", "hidden"] + [f"genre:{g}" for g in genres]
+    return [(p, *shelves[p]) for p in order if shelves[p][1]]
+
+
+def _itad_row(x: dict[str, Any]) -> dict[str, Any]:
+    """A deal as the edition stores it (the rated list and the shelves)."""
+    return {
+        "game": x["game"], "shop": x["shop"], "price": x["price"], "regular": x["regular"],
+        "currency": x["currency"], "cut": x["cut"], "lowest_ever": x["lowest_ever"],
+        "expires": x.get("expires"), "steam_rating": x.get("steam_rating", ""),
+        "metascore": x.get("metascore"), "url": store_url(x) or x.get("itad_url", ""),
+        **({"pick": x["pick"]} if x.get("pick") else {}), **({"genre": x["genre"]} if x.get("genre") else {}),
+        **({"tags": x["tags"]} if x.get("tags") else {}),
+    }
 
 
 def deals_block(cfg: dict[str, Any], harvest: Harvest) -> dict[str, Any]:
@@ -306,15 +362,14 @@ def deals_block(cfg: dict[str, Any], harvest: Harvest) -> dict[str, Any]:
         deals.sort(key=lambda x: (not x.get("new_low"), not x.get("lowest_ever"),
                                   x.get("rank") or 10**6, -(x.get("steam_count") or 0)))
         genres = list(((cfg.get("sources") or {}).get("itad", {}).get("genres") or {}).get("tags") or {})
+        rated = mix_deals(deals, d.get("mix") or {}, limit, genres, harvest.fetched_at.date())
         block["source"] = "itad"
-        block["more"] = [{
-            "game": x["game"], "shop": x["shop"], "price": x["price"], "regular": x["regular"],
-            "currency": x["currency"], "cut": x["cut"], "lowest_ever": x["lowest_ever"],
-            "expires": x.get("expires"), "steam_rating": x.get("steam_rating", ""),
-            "metascore": x.get("metascore"), "url": store_url(x) or x.get("itad_url", ""),
-            "pick": x["pick"], **({"genre": x["genre"]} if x.get("genre") else {}),
-            **({"tags": x["tags"]} if x.get("tags") else {}),
-        } for x in mix_deals(deals, d.get("mix") or {}, limit, genres, harvest.fetched_at.date())]
+        block["more"] = [_itad_row(x) for x in rated]
+        block["shelves"] = [
+            {"pool": pool, "name": name, "deals": [_itad_row(x) for x in rows]}
+            for pool, name, rows in deal_shelves(deals, {x["itad_id"] for x in rated}, genres,
+                                                 int(d.get("shelves", 0)))
+        ]
         return block
 
     specials = [gm for gm in harvest.steam.get("specials") or []

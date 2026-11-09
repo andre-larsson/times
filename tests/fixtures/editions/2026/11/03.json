@@ -275,7 +275,27 @@
       { "game": "Second Dawn", "shop": "Epic", "price": 17.99, "regular": 59.99, "currency": "EUR", "cut": 70, "lowest_ever": true, "expires": "2026-11-05T16:00:00Z",
         "steam_rating": "Very Positive", "verdict": "strong_buy", "advice": "A big open-world RPG at its lowest price; budget 60 hours.", "url": "https://example.com/epic/second-dawn" },
       { "game": "Quiet Orchard", "shop": "Steam", "price": 6.49, "regular": 12.99, "currency": "EUR", "cut": 50, "lowest_ever": false, "expires": "2026-11-10T17:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "hold", "advice": "Lovely farming game, but it's been 60% off twice this year.", "url": "https://example.com/steam/quiet-orchard" }
+        "steam_rating": "Very Positive", "verdict": "hold", "advice": "Lovely farming game, but it's been 60% off twice this year.", "url":"https://example.com/steam/quiet-orchard" }
+    ],
+    "shelves": [
+      { "pool": "popular", "name": "Popular", "deals": [
+        { "game": "Harbor Lights Tycoon", "shop": "Steam", "price": 5.99, "regular": 19.99, "currency": "EUR", "cut": 70, "lowest_ever": true,
+          "expires": "2026-11-12T17:00:00Z", "steam_rating": "Very Positive", "tags": ["Management", "City Builder", "Relaxing", "Singleplayer"],
+          "url": "https://example.com/steam/harbor-lights-tycoon" },
+        { "game": "Ninefold Skies", "shop": "GOG", "price": 8.99, "regular": 29.99, "currency": "EUR", "cut": 70, "lowest_ever": false,
+          "expires": null, "steam_rating": "Overwhelmingly Positive", "tags": ["RPG", "Open World", "Story Rich"],
+          "url": "https://example.com/gog/ninefold-skies" }
+      ] },
+      { "pool": "hidden", "name": "Hidden gems", "deals": [
+        { "game": "Quiet Lamplighter", "shop": "Steam", "price": 2.49, "regular": 9.99, "currency": "EUR", "cut": 75, "lowest_ever": true,
+          "expires": null, "steam_rating": "Very Positive", "tags": ["Puzzle", "Atmospheric"],
+          "url": "https://example.com/steam/quiet-lamplighter" }
+      ] },
+      { "pool": "genre:Point & Click", "name": "Point & Click", "deals": [
+        { "game": "The Velvet Inkwell", "shop": "GOG", "price": 1.99, "regular": 11.99, "currency": "EUR", "cut": 83, "lowest_ever": true,
+          "expires": null, "steam_rating": "Very Positive", "tags": ["Point & Click", "Detective", "Hand-drawn"],
+          "url": "https://example.com/gog/the-velvet-inkwell" }
+      ] }
     ]
   },
   "opinion": {

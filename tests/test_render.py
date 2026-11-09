@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import re
+import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -142,6 +144,27 @@ def test_deals_use_ratings_not_imperatives(site):
     assert '<span class="chip chip--pick">Horror</span>' in html
 
 
+def test_deals_are_ranked_top_picks_first_then_by_list(site, cfg):
+    html = (site / "deals" / "index.html").read_text(encoding="utf-8")
+    top = html[html.index('id="top-picks"'):html.index('id="list-popular"')]
+    ranked = [g for g in ("Second Dawn", "Copperline", "Garden Wars", "Night Shift Diner", "Pale Signal",
+                          "Quiet Orchard", "Riftwalker")]                 # Strong Buy, Buy ×3, Hold ×2, Avoid
+    assert sorted(ranked, key=top.index) == ranked
+    more = html[html.index('<details class="shelf-more">'):]
+    for game in ("Harbor Lights Tycoon", "Quiet Lamplighter", "The Velvet Inkwell"):  # unrated: behind "More"
+        assert game in more and game not in top, game
+    assert "2 deals" in html and "Management · City Builder · Relaxing<" in html    # unrated rows: Steam tags
+    ids = set(re.findall(r'id="([^"]+)"', html))
+    jumps = re.findall(r'href="#([^"]+)"', html)
+    assert {"top-picks", "list-popular", "list-hidden-gems", "list-point-click"} <= set(jumps) <= ids
+
+    front = (site / "index.html").read_text(encoding="utf-8")
+    band = front[front.index('class="band band--deals'):]
+    assert band.count('class="deal-row"') <= cfg["deals"]["top_picks"]
+    assert "Harbor Lights Tycoon" not in band and "<details" not in band      # the lists are on the Deals page
+    assert "All 12 deals" in band and 'href="/times/deals/"' in band          # 1 + 7 rated + 4 unrated
+
+
 def test_gaming_shows_critic_averages_and_outlet_scores(site):
     html = (site / "gaming" / "index.html").read_text(encoding="utf-8")
     assert ('<a class="critic critic--positive" href="https://example.com/opencritic/hollow-lantern" '
@@ -197,3 +220,19 @@ def test_cover_price(site):
     ed["llm"]["by_task"]["forum_haiku"] = {}
     assert edition_price(ed, day) == 0.7                                            # already in the edition's tally
     assert edition_price({}, day) is None
+
+
+def test_earlier_deals_of_the_day_show_once_and_not_when_listed_today(tmp_path, cfg):
+    data = tmp_path / "data"
+    shutil.copytree(FIXTURES, data)
+    path = data / "editions" / "2026" / "11" / "02.json"
+    ed = json.loads(path.read_text(encoding="utf-8"))
+    deal = {"shop": "Steam", "price": 2.0, "regular": 10.0, "currency": "EUR", "cut": 80, "lowest_ever": True,
+            "expires": "2099-01-01T00:00:00Z", "verdict": "buy", "url": "https://example.com/steam/x"}
+    ed["deals"]["featured"] = [{**deal, "game": "Orbital Freight Co."},           # today's deal of the day
+                               {**deal, "game": "Lantern Keep"}, {**deal, "game": "Lantern Keep"}]
+    path.write_text(json.dumps(ed), encoding="utf-8")
+    build(cfg, data_dir=data, out_dir=tmp_path / "site", preview=True)
+    html = (tmp_path / "site" / "deals" / "index.html").read_text(encoding="utf-8")
+    earlier = html[html.index("Earlier picks, still running"):]
+    assert earlier.count(">Lantern Keep<") == 1 and "Orbital Freight Co." not in earlier

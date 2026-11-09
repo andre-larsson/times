@@ -610,6 +610,48 @@ a.critic:hover { text-decoration: underline; }
 .deal-name { font: 800 1.25rem/1.1 var(--font-head); }
 .deal-name:hover { text-decoration: underline; }
 .deal-advice { margin-top: 2px; font: 400 0.9375rem/1.45 var(--font-body); color: var(--ink-2); }
+.deal-tags { font: 400 0.875rem/1.4 var(--font-ui); color: var(--ink-3); }   /* unrated deals: Steam tags instead of a note */
+.deals-all { margin-top: var(--s-4); }
+
+/* Deals page: a jump list, then one section per ITAD list: its rated deals, then "More" (unrated) */
+.shelf-nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin-bottom: var(--s-5); }
+.shelf-nav-label { font: 600 0.8125rem/1.3 var(--font-ui); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.shelf-nav .chip { padding: var(--s-2) var(--s-3) 6px; background: var(--paper); }   /* 24px+ tap target */
+.shelf-nav .chip:hover { background: var(--sec); border-color: var(--sec); color: #fff; }
+.shelf-count { font-weight: 500; font-variant-numeric: tabular-nums; }
+#top-picks, .deal-shelf { scroll-margin-top: var(--s-4); }
+.deal-shelf { margin-top: var(--s-7); }
+.deal-shelf .chip--pick { display: none; }   /* the section title already names the list */
+.shelf-title {
+  font: 800 1.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.01em;
+  border-top: 4px solid var(--sec); padding-top: var(--s-3); margin-bottom: var(--s-4);
+}
+.shelf-more > summary {
+  display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-1) var(--s-3);
+  min-height: 48px; padding: 14px var(--s-4) 10px; border: 2px solid var(--ink); cursor: pointer; list-style: none;
+  font: 800 1.0625rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.05em;
+}
+.shelf-more > summary::-webkit-details-marker { display: none; }
+.shelf-more > summary::before { content: "+"; }
+.shelf-more[open] > summary::before { content: "−"; }
+.shelf-more > summary:hover { background: var(--ink); color: var(--paper); }
+.shelf-more-note { font: 500 0.8125rem/1 var(--font-ui); text-transform: none; letter-spacing: 0; color: var(--ink-3); }
+.shelf-more > summary:hover .shelf-more-note { color: inherit; }
+.deal-list--columns + .shelf-more { margin-top: var(--s-4); }
+.shelf-more[open] > summary { margin-bottom: var(--s-4); }
+@media (max-width: 719px) { .shelf-more > summary { display: flex; } }   /* full width, like .btn */
+@media (min-width: 720px) {
+  .deal-list--columns, .deal-list--compact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-6); }
+  .deal-list--columns .deal-row:nth-child(2), .deal-list--compact .deal-row:nth-child(2) { border-top: 0; padding-top: 0; }
+}
+@media (min-width: 1024px) {
+  .deal-list--compact { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .deal-list--compact .deal-row:nth-child(3) { border-top: 0; padding-top: 0; }
+}
+.deal-list--compact .deal-row { gap: var(--s-3); padding-block: var(--s-2); }
+.deal-list--compact .deal-row:first-child { padding-top: 0; }
+.deal-list--compact .deal-name { font-size: 1.0625rem; }
+.deal-list--compact .price--sm .price-now { font-size: 1.25rem; }
 
 /* ── Links edition ───────────────────────────────────────────────────────── */
 .links-columns { gap: var(--s-6); }

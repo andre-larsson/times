@@ -1,8 +1,10 @@
 {% import "macros.html" as m with context %}
-<div class="deals-grid{% if not deals.featured %} deals-grid--list{% endif %}">
-  {% if deals.featured %}
+{# The deal(s) of the day and the top picks; on the front page (full = false) also a link to every deal #}
+{% set dv = deals_view(deals) %}
+<div class="deals-grid{% if not dv.featured %} deals-grid--list{% endif %}">
+  {% if dv.featured %}
   <div class="dotd-stack">
-    {% for d in deals.featured %}
+    {% for d in dv.featured %}
     <article class="dotd">
       <span class="kicker">Deal of the day</span>
       <h3 class="hl hl-lg"><a class="hl-link" href="{{ d.url }}">{{ d.headline or d.game }}</a></h3>
@@ -22,12 +24,15 @@
   </div>
   {% endif %}
 
-  {% if deals.more %}
-  <section class="more-deals" aria-label="More deals">
-    <h3 class="sub-head">More deals</h3>
+  {% if dv.top %}
+  <section class="more-deals" id="top-picks" aria-labelledby="top-picks-title">
+    <h3 class="sub-head" id="top-picks-title">Top picks</h3>
     <ul class="deal-list">
-      {% for d in deals.more %}{{ m.deal_row(d) }}{% endfor %}
+      {% for d in dv.top %}{{ m.deal_row(d) }}{% endfor %}
     </ul>
+    {% if not full and dv.lists %}
+    <a class="btn deals-all" href="{{ url('deals/') }}">All {{ dv.count }} deals →</a>
+    {% endif %}
   </section>
   {% endif %}
 </div>

@@ -111,7 +111,7 @@
       <h2 class="band-title"><a href="{{ url('deals/') }}">Deals</a></h2>
       <p class="band-sub">{{ sections.deals.blurb }} Prices checked {{ deals.checked_at | time }}; they change.</p>
     </div>
-    {% include "partials/deals_blocks.html" %}
+    {% with full = false %}{% include "partials/deals_blocks.html" %}{% endwith %}
   </div>
 </section>
 {% endif %}

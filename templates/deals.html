@@ -4,17 +4,40 @@
 {% block title %}Deals · {{ site.title }}{% endblock %}
 
 {% block main %}
+{% set dv = deals_view(deals) %}
 <section class="band band--deals band--page sec-deals" aria-labelledby="deals-title">
   <div class="wrap">
     <div class="band-head">
       <h1 class="band-title" id="deals-title">Deals</h1>
       <p class="band-sub">{{ section.blurb }}{% if deals.checked_at %} Prices checked {{ deals.checked_at | date_short }} at {{ deals.checked_at | time }}; they change.{% endif %}</p>
     </div>
-    {% if deals and (deals.featured or deals.more) %}
-      {% include "partials/deals_blocks.html" %}
+    {% if dv.lists %}
+    <nav class="shelf-nav" aria-label="Deal lists">
+      <span class="shelf-nav-label">{{ dv.count }} deals</span>
+      {% if dv.top %}<a class="chip chip--pick" href="#top-picks">Top picks</a>{% endif %}
+      {% for s in dv.lists %}<a class="chip chip--pick" href="#list-{{ s.slug }}">{{ s.name }} <span class="shelf-count">{{ (s.rated | length) + (s.more | length) }}</span></a>{% endfor %}
+    </nav>
+    {% endif %}
+    {% if dv.featured or dv.top %}
+      {% with full = true %}{% include "partials/deals_blocks.html" %}{% endwith %}
     {% else %}
       <p class="empty">No deals worth recommending today.</p>
     {% endif %}
+
+    {% for s in dv.lists %}
+    <section class="deal-shelf" id="list-{{ s.slug }}" aria-labelledby="list-{{ s.slug }}-title">
+      <h2 class="shelf-title" id="list-{{ s.slug }}-title">{{ s.name }}</h2>
+      {% if s.rated %}
+      <ul class="deal-list deal-list--columns">{% for d in s.rated %}{{ m.deal_row(d) }}{% endfor %}</ul>
+      {% endif %}
+      {% if s.more %}
+      <details class="shelf-more">
+        <summary>{{ s.more | length }}{% if s.rated %} more{% endif %} deal{{ 's' if s.more | length != 1 }} <span class="shelf-more-note">not rated by the desk</span></summary>
+        <ul class="deal-list deal-list--compact">{% for d in s.more %}{{ m.deal_row(d) }}{% endfor %}</ul>
+      </details>
+      {% endif %}
+    </section>
+    {% endfor %}
 
     {% if still_active %}
     <section class="more-deals more-deals--earlier" aria-label="Earlier picks still running">
