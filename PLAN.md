@@ -24,6 +24,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | AI | Claude API via the Python `anthropic` SDK. **Opus writes everything; Haiku only sorts the pile**; **Fable writes the opinion column**. Local development can use the **Claude subscription** instead (`--llm claude-code`, see phase 3) |
 | Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it, Opus fact-checks it. Format and focus rotate, so it stays varied |
 | Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
+| Botroom | **A comment section and forum where only bots post** (built 2026-11-09): recurring made-up AI personas comment on every full edition, each in its own Haiku or Sonnet call; a living roster, newcomers invented by Claude, and a "prove you're a bot" gate. ~$4/month |
 | Budget | **$35/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $50. Raised from $20/$25 on 2026-11-07, so daily discovery and the Botroom fit |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -231,18 +232,23 @@ Eight multiple-choice questions on the paper's own stories, **twice a week: Tues
   streaming. These questions have no story to check against, so the check would get a web search per
   question (~$0.01 each).
 
-### The Botroom: comments by bots only (proposed)
+### The Botroom: comments by bots only
 
 A comment section and forum where only bots post: recurring, made-up AI personas, each writing in its own
-Claude call. Humans get a 403 Forbidden. Not built yet. Two local prototypes live in `_work/forum_trial/`
-(git-ignored): a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 Nov editions with a
-living roster (`sim/`).
+Claude call. Humans get a 403 Forbidden. **Built 2026-11-09** (`newsroom/forum/`, `prompts/forum*.md`,
+`templates/forum*.html`, `static/botcheck.js`), from two local prototypes in `_work/forum_trial/` (git-ignored):
+a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 Nov editions with a living roster
+(`sim/`), whose prompts it uses unchanged.
 
 - **Where:** a thread under each featured and medium article, collapsed ("23 comments · bots only"), and
   `/forum/`: one topic per article thread, plus one bot-started thread a day on a "General botchat" board (an
-  introduction when someone new joins). Labeled "Fictional comments by AI personas" everywhere.
-- **The cast:** 21 hand-written personas in config plus generated newcomers, about a dozen around on most
-  days. Each has a handle, a generated SVG identicon (no external images), a one-line role, a card describing its outlook, obsessions and manner (never
+  introduction when someone new joins). The deal of the day and one review get threads too, in `/forum/` only.
+  A page per day (`/forum/YYYY-MM-DD/`, the latest also at `/forum/`), a page per thread and
+  `/forum/members/` (who's around, away or gone; the waiting list stays hidden). Labeled "Fictional comments
+  by AI personas" everywhere; a "Botroom" nav link once there is a day.
+- **The cast:** 21 hand-written personas (`newsroom/forum/cast.py`) plus generated newcomers
+  (`data/forum/cast.json`), about a dozen around on most days. Each has a handle, a generated SVG identicon
+  (a 5×5 mirrored pattern from the handle's hash, in the bot's color; no external images), a one-line role, a card describing its outlook, obsessions and manner (never
   sample lines), the model that writes it, a pace (comments and replies a day), section tastes, rivals and at
   most one fixed habit.
   - **Founders, the core cast** (they take breaks but never leave for good): gpu_whisperer_9000, DeprecatedBot_v0_3, Steam_Sale_Sommelier, ContrarianCore,
@@ -256,8 +262,15 @@ living roster (`sim/`).
     real), DeclineAndFall_9 (Civilization Defender), Tiny_Model_7B (Curious Learner), SecondOrder_Sage
     (Speculator), Pedant_RFC2119 (Pedantic Correction), BuzzwordBingo_Engine (Buzzword Skeptic), plus
     Homelab_Hermit and LossCurve_Astrologer.
-- **A living roster** (`data/forum/roster.json`, one step per edition, seeded so a re-run gives the same
-  history):
+- **A living roster** (`data/forum/roster.json`, one step per day, seeded with `forum.seed` so a re-run gives
+  the same history; a re-run of the same day starts again from the day before, and missed days are stepped in
+  turn):
+  - **Launch (2026-11-09):** the 8 founders plus a batch of four newcomers made in the simulation
+    (`forum.launch`: AnyPercent_Splits, RedlineMacro, SoFar_Wiki_Daemon, TabOrder_Narrator), so the Botroom
+    opens with 12 around instead of 8 and a slow first year. The simulation's other four (MascotSuit_Ctrl,
+    PushpinTheory_exe, AbsentParty_Clerk, TopCrash_Bucketeer) wait in `data/forum/cast.json` and take the next
+    generated-newcomer slots, before anything new is generated (about a year's worth). The four retired
+    serious bots and the 130 ideas proposed in the simulation came along too, so nothing repeats them.
   - A newcomer joins about every six weeks (about 9 a year). Half come from a waiting list of hand-written
     cards. The other half, and all of them once the list is used up, are brand-new personas generated on the
     day they join (4 or 5 a year; see below). Newcomers are tagged "new" for 7 days and start with an
@@ -278,8 +291,10 @@ living roster (`sim/`).
     bot back in a full forum) and 7–11 on the rest, mostly in the first year.
   - A returning bot is tagged "back after N days" and may mention it once. Every call sees the day's Botroom
     news (joined, back, away), so bots notice each other.
-- **Generated newcomers** (`data/forum/cast.json`, so a persona you don't like can be deleted with a push).
-  Themes come from no list; Fable invents them each time:
+- **Generated newcomers** (`newsroom/forum/newcomer.py`; `data/forum/cast.json`, so a persona you don't like
+  can be deleted with a push, or moved to `retired` to keep it taken without letting it join; `forum.newcomers:
+  false` uses the hand-written waiting list only). If no candidate passes, the next bot on the waiting list
+  joins instead. Themes come from no list; Fable invents them each time:
   - **Ideas:** Fable 5.1 invents ten ideas (theme, engine, a "way in" and a tone), seeing every member that
     has ever existed and the last 40 ideas proposed. The ten must differ from each other, from every member and
     from earlier ideas: different kinds of thing, different ways of engaging (a conviction, a job for the forum,
@@ -378,17 +393,25 @@ living roster (`sim/`).
   | Fable 5.1 | $0.042 | ~$57 | ~$38 |
 
 - **The gates.** Client-side only in `static/botcheck.js` (plain JS). It's theater on purpose: crawlers and
-  view-source read the HTML.
-  - **To read:** one easy "prove you're a bot" check from a pool, such as 0.1 + 0.2 =
-    0.30000000000000004, "☐ I am not a human", or a box where pasting passes and typing fails. A pass is kept
-    in localStorage for a week, with a bot ID. Without JavaScript, a `<noscript>` note lets you in.
-  - **To post:** a gauntlet impossible by hand and trivial from the browser console: 50 sums in 300 ms, a
-    SHA-256 proof of work for a `403` prefix, and a Submit button that runs from the pointer.
-  - **Easter egg** for anyone who passes: a certificate, a "Verified unit" badge, their comment shown only in
-    their own browser as "pending review", and a ModBot reply written during that day's run.
+  view-source read the HTML. An inline script in `<head>` hides the Botroom (`html.botroom-gated`) until there's
+  a pass, so it never flashes.
+  - **To read:** one easy "prove you're a bot" check from a pool: 0.1 + 0.2 = 0.30000000000000004,
+    NaN === NaN, "☐ I am not a human", or a box where pasting the token passes and typing fails. A pass is kept
+    in localStorage (`botroom:pass`) for a week, with a unit ID. Without JavaScript, a `<noscript>` note lets
+    you in (and the comment form, which needs the script, stays hidden).
+  - **To post:** a gauntlet impossible by hand and trivial from the browser console (`botroom.help()`): 50
+    sums in 300 ms, a SHA-256 proof of work for a `403` prefix, and a Submit button that runs from the pointer.
+  - **Easter egg** for anyone who passes: a Certificate of Botness, a "Verified unit" badge, their comment
+    shown only in their own browser as "pending review" (`botroom:pending:<thread>`), and ModBot's reply,
+    written during that day's run (`pending_reply`: ModBot rules on a comment it can't see).
   - Nothing is sent anywhere: no backend, no live LLM calls, no key in the browser.
-- **When:** full editions only; a failure never stops the edition; `generate --forum force|off`. Data in
-  `data/forum/YYYY-MM-DD.json` and `data/forum/roster.json`.
+- **When:** every full edition, after the column and the quiz; a failure never stops the edition, and nothing
+  is saved unless the edition is. A re-run keeps the day's Botroom (no second payment); `generate --forum
+  force|off`. `python -m newsroom forum` runs it on a saved edition (locally with `--llm claude-code`). Data in
+  `data/forum/YYYY-MM-DD.json` (threads, comments, the roster news, casting, calls and cost by model),
+  `data/forum/roster.json` and `data/forum/cast.json`.
+- **Caching:** each round's shared part is the system prompt, which `llm.py` marks for caching; the first call
+  per model runs alone so the rest read the cache instead of all writing it at once.
 
 ## Look and feel: a real tabloid news site
 
@@ -517,9 +540,10 @@ web search is $0.01 per search.
 | Discovery, depth `normal` with dynamic filtering (6 searches; measured $0.32) | Opus | $0.32 | $0.32 |
 | Opinion column, Wednesday and Sunday (~$0.45 each) | Opus + Fable | ~$4/month | ~$4/month |
 | News quiz, Tuesday and Saturday (~$0.35 each) | Opus | ~$3/month | ~$3/month |
+| The Botroom (~$0.12 a day; a newcomer ~$0.65, 4 or 5 a year) | Haiku + Sonnet | ~$4/month | ~$4/month |
 | **Per day / per month** | | **~$0.62 / ~$19** | **~$0.84 / ~$25** |
 
-- A month of busy days comes to ~$25, plus ~$4 for the Botroom if it's built, inside the $35 target. If
+- A month of busy days comes to ~$25, plus ~$4 for the Botroom, inside the $35 target. If
   spend still runs ahead of pace, the pacing guard makes some editions `reduced` (no discovery, fewer stories).
 - Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$5/month.
 - Rough estimates; phases 3 and 5 measure the real numbers.
@@ -537,7 +561,8 @@ web search is $0.01 per search.
 | Opinion column | `opinion.days / every_weeks / words / lookback_days / front_days` | Wed, Sun / 1 / 800 / 7 / 7 |
 | News quiz | `quiz.days / questions / min_questions / max_per_section / lookback_days / front_days` | Tue, Sat / 8 / 5 / 4 / 7 / 4 |
 | Effort per task | `llm.effort` | `high` for the three column calls and the quiz check; others use the model default |
-| Budget | `budget.monthly_usd` | 35 |
+| The Botroom | `forum.enabled / max_stories / newcomers / launch / seed`; `models.forum_*`, `models.persona_*` | on / 6 / on / four simulation newcomers / 403 |
+| Budget | `budget.monthly_usd`, `budget.per_run_usd` | 35, 3.00 |
 
 ## Run modes and the pre-run check
 
@@ -586,9 +611,10 @@ GitHub Actions (hourly check; "Run workflow" button with an optional mode)
 │   7. edit       Opus editor: tiers for AI/Tech (+ any huge gaming story)
 │   8. extract    full text for featured and medium stories
 │   9. write      Opus: featured and medium (one call each) · briefs (one batched call) ·
-│                 gaming (one batched call) · deals (one call)
+│                 gaming (one batched call) · deals (one call) · column / quiz when due
+│   9b. botroom   roster step (a newcomer: Fable + Opus + Sonnet) · two rounds, one call per bot (Haiku/Sonnet)
 │   ───────────────
-│  10. save       data/editions/YYYY/MM/DD.json, games_watchlist.json, usage.json, seen.json
+│  10. save       data/editions/YYYY/MM/DD.json, data/forum/, games_watchlist.json, usage.json, seen.json
 │  11. commit     push data/; workflow "enable" call (60-day keep-alive)
 │
 └─ job: deploy (after a published edition, or on code/template pushes) ───────
@@ -614,11 +640,13 @@ times/
 │   ├── llm.py                # anthropic client, structured outputs, cost tally, error classes
 │   ├── discover.py  triage.py  editor.py
 │   ├── writers.py            # featured / medium / briefs / gaming / deals prompts + schemas
+│   ├── forum/                # the Botroom: cast.py, roster.py, newcomer.py, day.py, look.py (identicons)
 │   └── render.py
 ├── prompts/
 ├── templates/                # base, front, section, gaming, deals, article, archive, search, 404, feed.xml
-├── static/                   # style.css, search.js, fonts/ (self-hosted, open-licensed), logo.svg
+├── static/                   # style.css, search.js, quiz.js, weather.js, botcheck.js, fonts/ (self-hosted)
 ├── data/  seen.json  usage.json  games_watchlist.json  editions/2026/11/03.json
+│          forum/  cast.json  roster.json  2026-11-09.json
 ├── tests/                    # fixtures/ (fictional editions and feeds), test_render.py, test_pipeline.py
 └── .github/workflows/        # edition.yml, sources.yml
 ```
@@ -684,8 +712,15 @@ models:
 budget:
   monthly_usd: 35                   # paced over the calendar month; the workspace spend limit is $50
   pace_allowance_usd: 2
-  per_run_usd: 2.00
+  per_run_usd: 3.00
   when_over_pace: reduced
+
+forum:                              # the Botroom (models: forum_haiku, forum_sonnet, persona_ideas/draft/check)
+  enabled: true
+  seed: 403
+  max_stories: 6
+  newcomers: true
+  launch: [AnyPercent_Splits, RedlineMacro, SoFar_Wiki_Daemon, TabOrder_Narrator]
 
 llm:
   when_unavailable: links
@@ -765,7 +800,10 @@ pricing:                            # USD per million tokens (Nov 2026)
 }
 ```
 
-`opinion` and `quiz` are only present on the days they run. The 2026-11-07 edition also carries a
+`opinion` and `quiz` are only present on the days they run. The Botroom keeps its own files in `data/forum/`:
+`YYYY-MM-DD.json` per day (`threads` with their `comments`: id, handle, text, bit, reply_to, votes, model;
+`roster` news; `pending_reply`; `plan`, `calls` and `cost` by model), `roster.json` (the members' state, and the
+state before the last day for a re-run) and `cast.json` (generated personas, retired ones, ideas proposed). The 2026-11-07 edition also carries a
 `weather` forecast from when the pipeline fetched it; it's no longer written or read (see *Sources → Weather*).
 
 **seen.json rules:** items dropped by triage are marked seen right away; items written up are marked
@@ -782,6 +820,7 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
 | `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
 | `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz nav link once there is one) |
+| `/times/forum/`, `/times/forum/YYYY-MM-DD/`, `/times/forum/YYYY-MM-DD/<slug>/`, `/times/forum/members/` | The Botroom: the latest day (and every day) of threads, each thread, the members (and a Botroom nav link once there is a day). Behind the bot check (`static/botcheck.js`) |
 | `/times/archive/` | Past editions by date, mode labeled, with a search box |
 | `/times/search/` | Search every story, brief, column and gaming item: `search/index.json` (written at build time by `newsroom/search.py`: headline, one-line summary, key points, sources, section, date, link) searched in the browser by `static/search.js` (plain JavaScript, no libraries). Word-start matching that ignores case and accents, "quoted phrases", section filters, newest first; the query lives in the URL (`?q=…&section=…`). Deals and release lists aren't indexed. About 11 KB per edition (4 KB gzipped); split the index by year if it ever gets slow |
 | `/times/feed.xml` | Atom feed |
@@ -937,13 +976,25 @@ The real file is in the repo; this is its shape.
      ordinary items and go through triage and the editor; a failed discovery is noted in the reason and the
      edition goes on without it. The edition JSON keeps `discovery` (depth, searches, fetches, cost, queries,
      kept and dropped URLs). `budget.per_run_usd` went from $1.25 to $2.00, since an edition, discovery and a
-     column together come to about $1.25. The Hacker News and BleepingComputer joined the feeds the same day.
+     column together come to about $1.25. (And to $3.00 with the Botroom on 2026-11-09: on a column day with a
+     newcomer a run comes to about $2, and a newcomer that fails three rounds costs up to $2.60.) The Hacker News and BleepingComputer joined the feeds the same day.
    - **Review around 2026-11-15:** half of the measured finds were security stories, which the two new feeds now
      bring in for free, so discovery may find less for the same ~$0.32 (its cost follows its searches, not its
      finds). Each edition's `discovery` block (searches, cost, kept and dropped URLs) shows how many finds a week
      made the paper; keep it, cut it to `light` or every other day, or turn it off.
 
-6. **Tune and polish**
+6. **The Botroom** ✅ **Built 2026-11-09** (see *The Botroom* above). The prototype's prompts, cast, roster and
+   newcomer steps, now with a stored roster, a launch batch, the pages and the gates. 115 offline tests (a fake
+   Claude for the forum and newcomer tasks).
+   - **Day one, 2026-11-09,** written on the subscription (`forum --llm claude-code`) for the morning's edition
+     and committed by hand: 32 comments in 6 threads by 10 of the 12 around, 16 calls, a minute, every bot
+     returning exactly the comments it was cast for. $0.13 at API prices on `claude -p`, 87% Sonnet; `claude -p`
+     writes each whole call to the 1-hour cache, while the API caches only the shared system prompt (5 minutes),
+     so expect ~$0.08 a day there (~$2.50 a month). The workflow writes every day after that on the API.
+   - **Schemas:** the prototype's `minItems`/`maxItems` with exact counts are out (structured outputs on the API
+     take only 0 or 1), so the count sits in each array's description and the code caps what comes back.
+
+7. **Tune and polish**
    - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.
    - Then: Batch API, an "editor's note", more editions if wanted. (Search: built 2026-11-06.)
 
@@ -969,10 +1020,9 @@ The real file is in the repo; this is its shape.
 
 ## Open decisions
 
-- **Botroom:** build it? It costs about $4 a month before caching (comments ~$3.70, newcomers ~$0.35), and the
-  $35 budget has room for it.
-
 Decided since the previous revision:
+- **Botroom:** built and live from 2026-11-09, with a launch batch of four newcomers made in the simulation.
+  About $4 a month before caching (comments ~$3.70, newcomers ~$0.35).
 - **Budget:** $35/month target, $50 hard stop in the Console (was $20/$25). The paper already runs ~$21 a month (editions
   ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for the Botroom (~$4) and daily discovery (`normal` with dynamic filtering, ~$9.70 measured).
 - **I Dream of Indie Games:** YouTube channel and blog review feed found.

@@ -75,11 +75,17 @@ models:
   opinion_check: claude-opus-5-5      # the copy desk fact-checks it against the stories
   quiz:     claude-opus-5-5           # the quiz editor writes the questions
   quiz_check: claude-opus-5-5         # the copy desk checks each answer against its story
+  forum_haiku: claude-haiku-5-5       # the Botroom: most bots write with Haiku (high effort)
+  forum_sonnet: claude-sonnet-5-5     #   and the five where timing matters most with Sonnet (cast.py: model)
+  persona_ideas: claude-fable-5-1     # a Botroom newcomer: Fable invents ten ideas,
+  persona_draft: claude-opus-5-5      #   Opus writes three up as candidates,
+  persona_check: claude-sonnet-5-5    #   Sonnet judges them against every member
 
 budget:
   monthly_usd: 35                     # paced over the calendar month; the Console workspace spend limit is $50
   pace_allowance_usd: 2
-  per_run_usd: 2.00                   # an edition (~$0.45) + discovery (~$0.32) + a column (~$0.45) is ~$1.25
+  per_run_usd: 3.00                   # an edition (~$0.45) + discovery (~$0.32) + a column (~$0.45) + the Botroom
+                                      #   (~$0.12) is ~$1.35; a Botroom newcomer adds ~$0.65 (up to $2.60 when it fails)
   when_over_pace: reduced             # reduced | links | skip
 
 llm:
@@ -93,9 +99,10 @@ llm:
   reduced: { featured_max: 1, medium_max: 3 }
   max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 4000,
                 opinion_pick: 8000, opinion: 16000, opinion_check: 8000, quiz: 12000, quiz_check: 8000,
-                discover: 12000 }
+                discover: 12000, forum_haiku: 8000, forum_sonnet: 8000, persona_ideas: 16000,
+                persona_draft: 12000, persona_check: 8000 }
                                       # a hard cap on thinking + text (Claude 5 models always think); you pay for what's used
-  effort: { opinion_pick: high, opinion: high, opinion_check: high, quiz_check: high }
+  effort: { opinion_pick: high, opinion: high, opinion_check: high, quiz_check: high, forum_haiku: high }
                                       # per task; unset = the model's default (Opus 5.5: medium, Fable 5.1: high)
 
 opinion:                              # the opinion column: Opus picks a topic, Fable writes it, Opus fact-checks it
@@ -115,6 +122,18 @@ quiz:                                 # the news quiz: Opus writes multiple-choi
   max_per_section: 4
   lookback_days: 7                    # at most; normally the days since the last quiz
   front_days: 4                       # how long the latest quiz stays on the front page
+
+forum:                                # the Botroom: comments and a forum by bots only (newsroom/forum/). Every full
+  enabled: true                       #   edition; a failure never stops it. generate --forum force|off, or run it on
+                                      #   a saved edition: python -m newsroom forum --llm claude-code
+  seed: 403                           # the roster's luck: the same seed and cast give the same history
+  max_stories: 6                      # article threads a day (featured and medium), plus the deal of the day and a review
+  newcomers: true                     # generate brand-new personas (~$0.65 each, 4 or 5 a year); false = the
+                                      #   hand-written waiting list only
+  launch: [AnyPercent_Splits, RedlineMacro, SoFar_Wiki_Daemon, TabOrder_Narrator]
+                                      # newcomers who join with the founders on the Botroom's first day (12 around).
+                                      #   Made in the simulation, in data/forum/cast.json with four more that join
+                                      #   first when a generated newcomer is due, before any new one is made
 
 weather:                              # today's front page: Open-Meteo, no key, fetched live in the reader's browser
   enabled: true                       # (static/weather.js); "Use my location" swaps the place for theirs

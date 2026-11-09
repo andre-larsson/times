@@ -11,7 +11,7 @@ from typing import Any
 
 from typing import Callable
 
-from . import ai_edition, budget, opinion, preflight, quiz, schedule, store
+from . import ai_edition, budget, forum, opinion, preflight, quiz, schedule, store
 from . import seen as seen_store
 from .http import Client
 from .links import build_links_edition
@@ -21,6 +21,7 @@ from .sources import Harvest, fetch_all
 MODES = ("auto", "full", "reduced", "links", "skip")
 OPINION = ("auto", "force", "off")    # auto = when due (opinion.days / every_weeks) in a full edition
 QUIZ = ("auto", "force", "off")       # auto = when due (quiz.days / every_weeks) in a full edition
+FORUM = ("auto", "force", "off")      # auto = every full edition (forum.enabled)
 MIN_LINKS_TO_PUBLISH = 5          # below this the sources are probably down: keep the last edition
 
 
@@ -35,18 +36,22 @@ class Result:
     llm: dict[str, Any] | None = None
     column: str = ""                  # the opinion column's headline, or why it wasn't written
     quiz: str = ""                    # the quiz's size, or why it wasn't written
+    forum: str = ""                   # the Botroom's day, or why it wasn't written
 
 
 def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
              now: dt.datetime | None = None, env: dict[str, str] | None = None,
              client: Client | None = None, backend: str | None = None,
-             llm_factory: Callable[..., LLM] = LLM, column: str = "auto", quiz_mode: str = "auto") -> Result:
+             llm_factory: Callable[..., LLM] = LLM, column: str = "auto", quiz_mode: str = "auto",
+             forum_mode: str = "auto") -> Result:
     if requested not in MODES:
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
     if column not in OPINION:
         raise ValueError(f"opinion must be one of {', '.join(OPINION)}")
     if quiz_mode not in QUIZ:
         raise ValueError(f"quiz must be one of {', '.join(QUIZ)}")
+    if forum_mode not in FORUM:
+        raise ValueError(f"forum must be one of {', '.join(FORUM)}")
     now = now or dt.datetime.now(dt.timezone.utc)
     env = dict(os.environ) if env is None else env
     sched = cfg["schedule"]
@@ -92,6 +97,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
             edition = build_links_edition(cfg, harvest, edition_id, previous=previous, reason=reason)
         column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
         quiz_note = _quiz(cfg, data_dir, edition, mode, llm, quiz_mode) if edition else ""
+        botroom = _forum(cfg, data_dir, edition, mode, llm, forum_mode) if edition else forum.Outcome()
     finally:
         if own_client:
             client.__exit__(None, None, None)
@@ -107,7 +113,9 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
                       harvest=harvest, llm=tally.summary())
     path = store.save_edition(data_dir, edition)
     seen_store.save(data_dir, seen, now)
-    return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note, quiz_note)
+    forum.save(data_dir, botroom)
+    return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note, quiz_note,
+                  botroom.note)
 
 
 def _opinion(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
@@ -156,8 +164,46 @@ def _quiz(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: st
     return f"not written: {outcome.note}" if outcome.note else ""
 
 
+def _forum(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
+           requested: str) -> forum.Outcome:
+    """The Botroom's day for this edition (saved with the edition). Its note is a line for the report."""
+    if requested != "force" and forum.load_day(data_dir, edition["edition_id"][:10]):
+        return forum.Outcome(note="kept today's Botroom")       # re-running today: don't pay twice
+    skip = _skip_extra(edition, mode, requested)
+    if skip is not None:
+        return forum.Outcome(note=skip)
+    if requested == "auto" and not forum.enabled(cfg):
+        return forum.Outcome()
+    try:
+        out = forum.write(cfg, llm, edition, data_dir, store.all_editions(data_dir))
+    except Exception as exc:                         # the Botroom is optional: never lose the edition over it
+        out = forum.Outcome(note=f"not written: {type(exc).__name__}: {str(exc)[:200]}")
+    _record_llm(edition, llm)
+    return out
+
+
+def run_forum(cfg: dict[str, Any], data_dir: Path, edition_id: str | None = None, backend: str | None = None,
+              force: bool = False, env: dict[str, str] | None = None,
+              llm_factory: Callable[..., LLM] = LLM) -> str:
+    """`python -m newsroom forum`: the Botroom for a saved edition (the latest by default), without
+    generating anything else. Its cost goes to usage.json like an edition's. Returns a line for the report."""
+    env = dict(os.environ) if env is None else env
+    edition = store.load_edition(data_dir, edition_id) if edition_id else store.latest_edition(data_dir)
+    if not edition:
+        return f"Botroom: no edition {edition_id or 'saved yet'}"
+    if not force and forum.load_day(data_dir, edition["edition_id"][:10]):
+        return f"Botroom {edition['edition_id']}: already written (use --force to replace it)"
+    backend = backend or env.get("NEWSROOM_LLM") or (cfg.get("llm") or {}).get("backend", "api")
+    tally = Tally(per_run_usd=float((cfg.get("budget") or {}).get("per_run_usd", 1.25)))
+    llm = llm_factory(cfg, backend, tally, env)
+    out = forum.write(cfg, llm, edition, data_dir, store.all_editions(data_dir))
+    forum.save(data_dir, out)
+    budget.record_run(data_dir, dt.datetime.now(dt.timezone.utc), edition["edition_id"], "forum", backend, tally)
+    return f"Botroom {edition['edition_id']}: {out.note}"
+
+
 def _skip_extra(edition: dict[str, Any], mode: str, requested: str) -> str | None:
-    """Whether the column or the quiz stays out of this edition: a line for the report ("" says nothing),
+    """Whether the column, the quiz or the Botroom stays out of this edition: a line for the report ("" says nothing),
     or None to go ahead and write it if it's due."""
     if requested == "force" and edition["mode"] == "links":
         return "not written: a links edition has no Claude to write it"
@@ -180,6 +226,8 @@ def report(result: Result) -> str:
         lines.append(f"Opinion column {result.column}")
     if result.quiz:
         lines.append(f"Quiz {result.quiz}")
+    if result.forum:
+        lines.append(f"Botroom {result.forum}")
     if result.llm and result.llm.get("calls"):
         l = result.llm
         lines.append(f"Claude: {l['calls']} calls, ${l['usd']:.4f} charged, ${l['equivalent_usd']:.4f} API-equivalent"

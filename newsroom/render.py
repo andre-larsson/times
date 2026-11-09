@@ -14,7 +14,9 @@ from zoneinfo import ZoneInfo
 
 from jinja2 import ChainableUndefined, Environment, FileSystemLoader, select_autoescape
 
-from . import ROOT
+from . import ROOT, forum
+from .forum import look as forum_look
+from .forum import roster as forum_roster
 from .search import build_index
 
 TIERS = ("featured", "medium", "brief")
@@ -342,6 +344,23 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     if b.quizzes:
         b.add_nav("quiz", "Quiz", "quiz/")
 
+    # The Botroom: a thread under each article it commented on, and /forum/
+    forum_days = forum.load_days(data_dir)
+    members: dict[str, Any] = {}
+    article_threads: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
+    if forum_days:
+        b.add_nav("forum", "Botroom", "forum/")
+        members = forum_look.members(forum.full_cast(forum.load_generated(data_dir)), forum_roster.load(data_dir),
+                                     forum_days)
+        for x in forum_days:
+            def story_page(story: dict[str, Any], eid: str = x["edition_id"]) -> str | None:
+                path = article_path(eid, story["slug"])
+                return path if path in pages else None
+            forum_look.prepare_day(x, story_page)
+            for t in x["threads"]:
+                if t["article_path"]:
+                    article_threads[t["article_path"]] = (t, x)
+
     by_id = {e["edition_id"]: e for e in editions}
     if front_edition and front_edition not in by_id:
         raise SystemExit(f"Unknown edition {front_edition!r}; have {', '.join(by_id)}")
@@ -395,8 +414,10 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
             if s["tier"] not in PAGE_TIERS:
                 continue
             related = [r for r in recent if r["section"] == s["section"] and r is not s][:4]
+            thread, fday = article_threads.get(s["path"], (None, None))
             b.write(s["path"], "article.html", active=s["section"], story=s, edition=ed,
-                    related=related, briefs=latest_briefs, current_edition=ed)
+                    related=related, briefs=latest_briefs, current_edition=ed, thread=thread, forum_day=fday,
+                    members=members, pending=forum_look.pending_reply(fday) if fday else None)
 
     # Opinion: one page per column, and the list of all columns
     for col in b.columns:
@@ -415,6 +436,26 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
                 more_quizzes=[x for x in b.quizzes if x is not qz][:4], briefs=b.front_context(ed)["briefs"][:6])
     if b.quizzes:
         b.write("quiz/", "quiz_index.html", active="quiz", section=QUIZ_SECTION, **common, quizzes=b.quizzes)
+
+    # The Botroom: a page per day (the latest is /forum/), a page per thread, and the members
+    if forum_days:
+        newest_days = list(reversed(forum_days))
+        for i, x in enumerate(newest_days):
+            ed = by_id.get(x["edition_id"], front)
+            ctx = dict(active="forum", day=x, days=newest_days, members=members, current_edition=ed,
+                       newer=newest_days[i - 1] if i > 0 else None,
+                       older=newest_days[i + 1] if i + 1 < len(newest_days) else None)
+            if i == 0:
+                b.write("forum/", "forum.html", is_index=True, **ctx)
+            b.write(x["path"], "forum.html", is_index=False, **ctx)
+            pending = forum_look.pending_reply(x)
+            for t in x["threads"]:
+                b.write(t["path"], "forum_topic.html", active="forum", t=t, day=x, members=members,
+                        pending=pending, current_edition=ed)
+        order = lambda m: (not m["fixed"], not m["founding"], -m["comments"], m["handle"].lower())  # noqa: E731
+        groups = [(title, sorted((m for m in members.values() if m["status"] == status), key=order))
+                  for title, status in (("Around", "active"), ("Away", "away"), ("Left", "gone"))]
+        b.write("forum/members/", "forum_members.html", active="forum", groups=groups, current_edition=front)
 
     # Archive
     summaries = []

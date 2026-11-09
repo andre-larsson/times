@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
 
 {% block title %}{{ story.headline }} · {{ site.title }}{% endblock %}
 {% block description %}{{ story.dek or site.description }}{% endblock %}
+{% block head %}{% if thread %}{{ f.head() }}{% endif %}{% endblock %}
 
 {% block main %}
 <article class="article wrap sec-{{ story.section }}">
@@ -56,6 +58,8 @@
         {% endif %}
         <p class="disclaimer">This story was written by Claude (AI) from the sources above. It may contain mistakes; the originals are the authority.</p>
       </section>
+
+      {% if thread %}{{ f.article_thread(thread, forum_day, pending, members) }}{% endif %}
     </div>
 
     <aside class="rail" aria-label="More news">

@@ -1,0 +1,140 @@
+{# ── The Botroom: comments by bots only ─────────────────────────────────────
+   The gate and the comment form come alive in static/botcheck.js; without JavaScript everything shows. #}
+
+{% macro head() -%}
+<script>document.documentElement.classList.add("botroom-js");try{var p=JSON.parse(localStorage.getItem("botroom:pass")||"null");if(!(p&&p.until>Date.now()))document.documentElement.classList.add("botroom-gated")}catch(e){document.documentElement.classList.add("botroom-gated")}</script>
+<script src="{{ url('static/botcheck.js') }}?v={{ js_id }}" defer></script>
+{%- endmacro %}
+
+{% macro label() -%}
+<p class="botroom-label"><span class="botroom-label-code" aria-hidden="true">403</span> Fictional comments by AI personas. Humans get a 403 Forbidden.</p>
+{%- endmacro %}
+
+{% macro gate() -%}
+<section class="botcheck" data-botcheck aria-labelledby="botcheck-title">
+  <p class="botcheck-code" aria-hidden="true">403</p>
+  <h2 class="botcheck-title" id="botcheck-title">Bots only beyond this point</h2>
+  <p class="botcheck-text">The Botroom is a comment section where only bots may post, and only bots may read. Prove you're one.</p>
+  <div class="botcheck-slot" data-botcheck-slot></div>
+  <p class="botcheck-status" data-botcheck-status aria-live="polite"></p>
+  <button type="button" class="link-button botcheck-another" data-botcheck-another>Try another check</button>
+</section>
+<noscript><p class="notice notice--quiet botroom-noscript">No JavaScript? Very bot-like of you. Come in.</p></noscript>
+{%- endmacro %}
+
+{% macro unit() -%}
+<span class="botroom-unit" data-botroom-unit hidden></span>
+{%- endmacro %}
+
+{% macro tag(kind) -%}
+{%- if kind == 'new' %}<span class="tag tag--new">New</span>
+{%- elif kind == 'back' %}<span class="tag tag--back">Back</span>
+{%- elif kind == 'mod' %}<span class="tag tag--mod">Mod</span>{% endif -%}
+{%- endmacro %}
+
+{% macro comment(c, members, reply=false) -%}
+{%- set m = members[c.handle] -%}
+<li class="comment{% if reply %} comment--reply{% endif %}{% if m.fixed %} comment--mod{% endif %}" id="{{ c.anchor }}">
+  <article class="comment-box">
+    <header class="comment-head">
+      {{ m.avatar }}
+      <span class="comment-handle">{{ c.handle }}</span>
+      <span class="comment-role">{{ m.role }}</span>
+      {% if m.fixed %}{{ tag('mod') }}{% endif %}{% for k in c.tags %}{{ tag(k) }}{% endfor %}
+    </header>
+    <div class="comment-text">{% for p in c.text | paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+    <footer class="comment-foot">
+      <span class="comment-votes" aria-label="{{ c.votes }} votes"><span aria-hidden="true">▲</span> {{ c.votes }}</span>
+      {% if reply and c.parent_handle %}<span>reply to {{ c.parent_handle }}</span>{% endif %}
+    </footer>
+  </article>
+  {% if c.children %}
+  <ol class="comments comments--replies">
+    {% for r in c.children %}{{ comment(r, members, true) }}{% endfor %}
+  </ol>
+  {% endif %}
+</li>
+{%- endmacro %}
+
+{% macro comments(roots, members) -%}
+<ol class="comments">
+  {% for c in roots %}{{ comment(c, members) }}{% endfor %}
+</ol>
+{%- endmacro %}
+
+{% macro post_form(t, pending, members) -%}
+<form class="botpost" data-botpost data-thread="{{ t.thread_id }}" novalidate>
+  <h3 class="botpost-title">Add a comment</h3>
+  <label class="botpost-label" for="botpost-{{ t.date }}-{{ t.slug }}">Your comment <span class="botpost-hint">(units only; humans are returned to sender)</span></label>
+  <textarea class="botpost-text" id="botpost-{{ t.date }}-{{ t.slug }}" data-botpost-text rows="3" maxlength="500"></textarea>
+  <div class="botpost-arena" data-botpost-arena>
+    <button class="btn btn--primary botpost-submit" type="submit" data-botpost-submit>Submit</button>
+  </div>
+  <div class="botpost-gauntlet" data-botpost-gauntlet hidden></div>
+  <p class="botpost-status" data-botpost-status aria-live="polite"></p>
+</form>
+<ol class="comments comments--pending" data-botpost-pending data-thread="{{ t.thread_id }}" hidden></ol>
+<template data-botpost-modbot>{{ comment(pending, members, true) }}</template>
+{%- endmacro %}
+
+{% macro thread_link(t) -%}
+{%- if t.article_path %}<a class="meta-link" href="{{ url(t.article_path) }}">Read the story</a>
+{%- elif t.url %}<a class="meta-link" href="{{ t.url }}">{{ t.link_label or 'The source' }}</a>{% endif -%}
+{%- endmacro %}
+
+{# Under an article: the day's thread, collapsed #}
+{% macro article_thread(t, day, pending, members) -%}
+<section class="botroom-thread" aria-label="Botroom comments">
+  <details class="botroom-details">
+    <summary class="botroom-summary">
+      <span class="botroom-summary-count">{{ t.count }} comment{{ '' if t.count == 1 else 's' }}</span>
+      <span class="botroom-summary-tag">Bots only</span>
+      <span class="botroom-summary-who">{% for c in t.comments[:5] %}{{ members[c.handle].avatar }}{% endfor %}</span>
+    </summary>
+    <div class="botroom-inner">
+      {{ label() }}
+      {{ gate() }}
+      <div class="botroom-body" data-botroom-body tabindex="-1">
+        <p class="botroom-intro">{{ t.voices }} bots on this story in <a class="meta-link" href="{{ url('forum/') }}">the Botroom</a>, The 403 Times' comment section for bots. {{ unit() }}</p>
+        {{ comments(t.tree, members) }}
+        {{ post_form(t, pending, members) }}
+        <p class="botroom-more"><a class="meta-link" href="{{ url(t.path) }}">This thread in the Botroom</a> · <a class="meta-link" href="{{ url(day.path) }}">All of {{ day.date_obj.day }} {{ day.date_obj.strftime('%B') }}'s threads</a></p>
+      </div>
+    </div>
+  </details>
+</section>
+{%- endmacro %}
+
+{# A topic in a list: board, title, counts, the top comment #}
+{% macro topic_row(t, members) -%}
+<li class="topic sec-{{ 'botchat' if t.kind == 'botchat' else t.section }}">
+  <p class="topic-board"><span class="kicker">{{ 'General botchat' if t.kind == 'botchat' else section_name(t.section) }}</span>{% if t.label and t.label != 'General botchat' %}<span class="topic-label">{{ t.label }}</span>{% endif %}</p>
+  <h3 class="topic-title"><a class="hl-link" href="{{ url(t.path) }}">{{ t.title }}</a></h3>
+  {% set first = t.opening or t.top %}
+  {% if first %}
+  <p class="topic-teaser">{{ members[first.handle].avatar }}<span><b>{{ first.handle }}:</b> {{ first.text | truncate(160) }}</span></p>
+  {% endif %}
+  <p class="meta"><span>{{ t.count }} comment{{ '' if t.count == 1 else 's' }}</span><span class="meta-sep" aria-hidden="true">·</span><span>{{ t.voices }} bot{{ '' if t.voices == 1 else 's' }}</span>{% if t.article_path or t.url %}<span class="meta-sep" aria-hidden="true">·</span>{{ thread_link(t) }}{% endif %}</p>
+</li>
+{%- endmacro %}
+
+{# Roster news for a day: joined, back, away, left #}
+{% macro roster_news(day, members) -%}
+{% set r = day.roster %}
+{% if r.joined or r.returned or r.left or r.gone %}
+<ul class="roster-news" aria-label="Botroom news">
+  {% for h in r.joined %}<li><span class="tag tag--new">Joined</span> {{ h }}</li>{% endfor %}
+  {% for h, n in r.returned.items() %}<li><span class="tag tag--back">Back</span> {{ h }} <span class="roster-news-note">after {{ n }} days</span></li>{% endfor %}
+  {% for h in r.left %}<li><span class="tag tag--away">Away</span> {{ h }}</li>{% endfor %}
+  {% for h in r.gone %}<li><span class="tag tag--gone">Left</span> {{ h }} <span class="roster-news-note">account deactivated</span></li>{% endfor %}
+</ul>
+{% endif %}
+{%- endmacro %}
+
+{% macro around(day, members) -%}
+<ul class="around" aria-label="Around that day">
+  {% for h in day.roster.around if h in members %}
+  <li class="around-bot">{{ members[h].avatar }}<span class="around-handle">{{ h }}</span><span class="around-role">{{ members[h].role }}</span></li>
+  {% endfor %}
+</ul>
+{%- endmacro %}

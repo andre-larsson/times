@@ -42,11 +42,22 @@ def main(argv: list[str] | None = None) -> int:
     gen_p.add_argument("--quiz", default="auto", choices=("auto", "force", "off"),
                        help="the news quiz: auto = when due (config quiz.*), force = write one now "
                             "(needs an AI edition), off = never")
+    gen_p.add_argument("--forum", default="auto", choices=("auto", "force", "off"),
+                       help="the Botroom: auto = every full edition (config forum.enabled), force = write "
+                            "today's again (needs an AI edition), off = never")
     gen_p.add_argument("--now", type=dt.datetime.fromisoformat, help="pretend it is this time (testing)")
     gen_p.add_argument("--dump", type=Path, help="also write everything fetched to this JSON file")
     gen_p.add_argument("--llm", choices=("api", "claude-code"),
                        help="Claude backend (default: llm.backend in config.yaml, or $NEWSROOM_LLM). "
                             "claude-code uses `claude -p` on your subscription; local development only")
+
+    forum_p = sub.add_parser("forum", help="run the Botroom on a saved edition (writes data/forum/); "
+                             "try it locally with --llm claude-code")
+    add_data_dir(forum_p)
+    forum_p.add_argument("--edition", metavar="EDITION_ID", help="the edition to comment on (default: the latest)")
+    forum_p.add_argument("--force", action="store_true", help="replace that day's Botroom if it exists")
+    forum_p.add_argument("--llm", choices=("api", "claude-code"),
+                         help="Claude backend (default: llm.backend in config.yaml, or $NEWSROOM_LLM)")
 
     disc_p = sub.add_parser("discover", help="measure discovery: fetch the feeds, then let Opus search the web "
                             "for stories they missed, at each depth. API only, costs money; publishes nothing")
@@ -87,13 +98,19 @@ def main(argv: list[str] | None = None) -> int:
 
         now = args.now.astimezone(dt.timezone.utc) if args.now else None
         result = generate(cfg, args.data_dir, args.mode, now=now, backend=args.llm, column=args.opinion,
-                          quiz_mode=args.quiz)
+                          quiz_mode=args.quiz, forum_mode=args.forum)
         print(report(result))
         if result.path:
             print(f"\nWrote {result.path}")
         if args.dump and result.harvest:
             dump_harvest(result.harvest, args.dump)
         write_github_outputs(result)
+        return 0
+
+    if args.command == "forum":
+        from .generate import run_forum
+
+        print(run_forum(cfg, args.data_dir, args.edition, backend=args.llm, force=args.force))
         return 0
 
     if args.command == "discover":

@@ -15,6 +15,7 @@ from newsroom import generate as gen
 from newsroom.config import load_config
 from newsroom.llm import LLM, Call, CreditError, Tally, TransientError
 from newsroom.render import build
+from tests.forum_fake import FORUM_TASKS, ForumAnswers
 from tests.test_pipeline import NOW, FakeClient, _harvest
 
 
@@ -27,7 +28,7 @@ DISCOVERED = {"title": "Example Labs ships a sandbox for AI agents", "url": "htt
               "summary": "Example Labs released an open-source sandbox for AI agents.", "why": "Missed by the feeds."}
 
 
-class FakeLLM(LLM):
+class FakeLLM(ForumAnswers, LLM):
     """Answers every task with plausible canned JSON; `fail` maps task → exception to raise."""
     fail: dict[str, Exception] = {}
 
@@ -42,6 +43,8 @@ class FakeLLM(LLM):
             self.tally.record(call, exc)
             raise exc
         self.tally.record(call)
+        if task.startswith(FORUM_TASKS):                  # the Botroom (tests/forum_fake.py)
+            return self.forum_answer(task, system, user, schema)
         return getattr(self, f"_{task}")(_data(user) if "<data>" in user else None)
 
     def call_web(self, task, system, user, report_schema, *, searches, fetches, fetch_tokens=6000,

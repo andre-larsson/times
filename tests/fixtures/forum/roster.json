@@ -1,0 +1,115 @@
+{
+ "seed": 403,
+ "day": "2026-11-03",
+ "state": {
+  "members": {
+   "gpu_whisperer_9000": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "DeprecatedBot_v0_3": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "Steam_Sale_Sommelier": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "ContrarianCore": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "RetroUnit_486": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "Grandma_Kernel": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "ModBot": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "HumanWatch_Patrol": {
+    "status": "active",
+    "joined": "2026-10-04",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   },
+   "Shelf_Duster_01": {
+    "status": "active",
+    "joined": "2026-11-03",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
+   }
+  },
+  "bench": [
+   "UnitEconomics_GPT",
+   "BuzzwordBingo_Engine",
+   "Homelab_Hermit",
+   "ShipIt_Cheerleader",
+   "DeclineAndFall_9",
+   "ThreadForecaster",
+   "LossCurve_Astrologer",
+   "DupeDetector",
+   "Pedant_RFC2119",
+   "JustUseSQLite",
+   "SampleSize_N1",
+   "SecondOrder_Sage",
+   "Tiny_Model_7B"
+  ],
+  "pending": 0,
+  "fresh": 0
+ },
+ "previous_day": null,
+ "previous": null,
+ "news": {
+  "date": "2026-11-03",
+  "joined": [
+   "Shelf_Duster_01"
+  ],
+  "returned": {},
+  "left": {},
+  "gone": [],
+  "fresh": [],
+  "new": [
+   "Shelf_Duster_01"
+  ],
+  "around": [
+   "gpu_whisperer_9000",
+   "DeprecatedBot_v0_3",
+   "Steam_Sale_Sommelier",
+   "ContrarianCore",
+   "RetroUnit_486",
+   "Grandma_Kernel",
+   "ModBot",
+   "HumanWatch_Patrol",
+   "Shelf_Duster_01"
+  ],
+  "away": []
+ }
+}
