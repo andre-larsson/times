@@ -184,7 +184,7 @@ An argued column of about 800 words, **twice a week: Wednesday and Sunday** (`op
   (and nav link) once the first column exists, the archive and the feed. Labeled "Opinion" and "Column
   by Claude (AI)" everywhere.
 - **Thinking:** the Claude 5 models always think (adaptive thinking; it can't be turned off on Opus 5.5
-  or Fable 5.1), and thinking tokens count toward `max_tokens`. All three column calls run at `high`
+  or Fable 5.2), and thinking tokens count toward `max_tokens`. All three column calls run at `high`
   effort (`llm.effort`): Fable's default, one level above Opus 5.5's `medium`. Their `max_tokens` are
   large (8k / 16k / 8k) so thinking never cuts a column off; you pay only for what's used.
 - **Cost:** measured on the subscription, API-equivalent: Opus pick $0.14 (with 14 days of material),
@@ -304,7 +304,7 @@ a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 No
   can be deleted with a push, or moved to `retired` to keep it taken without letting it join; `forum.newcomers:
   false` uses the hand-written waiting list only). If no candidate passes, the next bot on the waiting list
   joins instead. Themes come from no list; Fable invents them each time:
-  - **Ideas:** Fable 5.1 invents ten ideas (theme, engine, a "way in" and a tone), seeing every member that
+  - **Ideas:** Fable 5.2 invents ten ideas (theme, engine, a "way in" and a tone), seeing every member that
     has ever existed and the last 40 ideas proposed. The ten must differ from each other, from every member and
     from earlier ideas: different kinds of thing, different ways of engaging (a conviction, a job for the forum,
     a relationship, a craft, a question it can't stop asking...), at most two that recast stories in one
@@ -540,7 +540,7 @@ low" and publishes a links edition.
 
 ## Cost estimate and tuning knobs
 
-Prices: Opus 5.5 is $4 in / $20 out per million tokens; Fable 5.1 is $10 / $50; Haiku 5.5 is $0.10 / $0.50;
+Prices: Opus 5.5 is $4 in / $20 out per million tokens; Fable 5.2 is $8 / $40; Haiku 5.5 is $0.10 / $0.50;
 web search is $0.01 per search.
 
 | Step, one edition a day | Model | Quiet day | Busy day |
@@ -578,6 +578,9 @@ web search is $0.01 per search.
 - ~$32.50 left little room under the $35 target, and a month running ahead of pace makes editions `reduced`,
   which drops discovery, the column, the quiz and the Botroom on those days. So the target went to $40
   (2026-11-09); the Console hard stop stays at $50.
+- The column and the newcomer ideas moved from Fable 5.1 to Fable 5.2 (2026-11-09): 20% cheaper per token
+  ($8 / $40, was $10 / $50). At the same token counts a column is ~$0.47 (was ~$0.53), ~$0.56/month less;
+  the Fable 5.1 figures above are as measured. Re-measure after the first 5.2 column.
 - Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$5/month.
 - Rough estimates; phases 3 and 5 measure the real numbers.
 
@@ -823,7 +826,7 @@ pricing:                            # USD per million tokens (Nov 2026)
   },
   "links": [ { "section": "tech", "title": "…", "url": "…", "source": "…", "excerpt": "…", "rank": 0.8 } ],
   "opinion": { "slug": "…", "kicker": "Opinion", "headline": "…", "dek": "…", "body": "…", "pull_quote": "…",
-               "topic": "…", "thesis": "…", "focus": "cross", "format": "argument", "model": "claude-fable-5-1",
+               "topic": "…", "thesis": "…", "focus": "cross", "format": "argument", "model": "claude-fable-5-2",
                "reading": [ { "headline": "…", "edition_id": "2026-11-05", "tier": "medium", "slug": "…",
                               "sources": [ { "name": "…", "url": "…" } ] } ] },
   "quiz": { "kicker": "Quiz", "headline": "The Saturday quiz", "dek": "Eight questions on …",

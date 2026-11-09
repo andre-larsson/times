@@ -73,13 +73,13 @@ models:
   discover: claude-opus-5-5
   probe:    claude-haiku-5-5
   opinion_pick: claude-opus-5-5       # the opinion editor picks the column's topic
-  opinion:  claude-fable-5-1          # the columnist writes it
+  opinion:  claude-fable-5-2          # the columnist writes it
   opinion_check: claude-opus-5-5      # the copy desk fact-checks it against the stories
   quiz:     claude-opus-5-5           # the quiz editor writes the questions
   quiz_check: claude-opus-5-5         # the copy desk checks each answer against its story
   forum_haiku: claude-haiku-5-5       # the Botroom: most bots write with Haiku (high effort)
   forum_sonnet: claude-sonnet-5-5     #   and the five where timing matters most with Sonnet (cast.py: model)
-  persona_ideas: claude-fable-5-1     # a Botroom newcomer: Fable invents ten ideas,
+  persona_ideas: claude-fable-5-2     # a Botroom newcomer: Fable invents ten ideas,
   persona_draft: claude-opus-5-5      #   Opus writes three up as candidates,
   persona_check: claude-sonnet-5-5    #   Sonnet judges them against every member
 
@@ -106,7 +106,7 @@ llm:
                 persona_draft: 12000, persona_check: 8000 }
                                       # a hard cap on thinking + text (Claude 5 models always think); you pay for what's used
   effort: { opinion_pick: high, opinion: high, opinion_check: high, quiz_check: high, forum_haiku: high }
-                                      # per task; unset = the model's default (Opus 5.5: medium, Fable 5.1: high)
+                                      # per task; unset = the model's default (Opus 5.5: medium, Fable 5.2: high)
 
 opinion:                              # the opinion column: Opus picks a topic, Fable writes it, Opus fact-checks it
   enabled: true
@@ -233,6 +233,7 @@ sources:
         Incremental: [Incremental, Idler, Clicker]
 
 pricing:                              # USD per million tokens (Nov 2026)
+  claude-fable-5-2:  { input: 8.00, output: 40.00, cache_read: 0.20, cache_write_5m: 10.00 }
   claude-fable-5-1:  { input: 10.00, output: 50.00, cache_read: 0.25, cache_write_5m: 12.50 }
   claude-opus-5-5:   { input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00 }
   claude-sonnet-5-5: { input: 2.00, output: 10.00, cache_read: 0.10, cache_write_5m: 2.50 }

@@ -57,7 +57,7 @@ def test_pick_schema_enforces_the_rotation():
     col = out.column
     assert col and col["format"] != "advice" and col["focus"] != "tech"
     assert len(col["reading"]) == 3                                     # the made-up id is dropped
-    assert col["pull_quote"] == "Two is the point." and col["model"] == "claude-fable-5-1"
+    assert col["pull_quote"] == "Two is the point." and col["model"] == "claude-fable-5-2"
 
 
 def test_forced_column_is_written_and_rendered(tmp_path, offline):  # noqa: F811
