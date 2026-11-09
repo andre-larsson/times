@@ -82,7 +82,8 @@ models:
   persona_check: claude-sonnet-5-5    #   Sonnet judges them against every member
 
 budget:
-  monthly_usd: 35                     # paced over the calendar month; the Console workspace spend limit is $50
+  monthly_usd: 40                     # paced over the calendar month; the Console workspace spend limit is $50.
+                                      #   Measured November: ~$32.50 a month with discovery, column, quiz and the Botroom
   pace_allowance_usd: 2
   per_run_usd: 3.00                   # an edition (~$0.45) + discovery (~$0.32) + a column (~$0.45) + the Botroom
                                       #   (~$0.12) is ~$1.35; a Botroom newcomer adds ~$0.65 (up to $2.60 when it fails)

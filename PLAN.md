@@ -6,7 +6,7 @@ A personal AI newspaper at **https://a403.space/times/**, covering **AI**, **tec
 Hacker News style, plus hardware), **gaming** (PC first) and **deals**. It looks and feels like a real
 Swedish evening tabloid, with its own identity. Claude writes English stories from the day's sources and
 links back to them. One edition every morning, paid for with the API credits included in my Max plan,
-**budgeted at $35/month, with a hard stop at $50**. With no budget or credits left, it still publishes, as a "links edition".
+**budgeted at $40/month, with a hard stop at $50**. With no budget or credits left, it still publishes, as a "links edition".
 
 ## Decisions so far
 
@@ -25,7 +25,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it, Opus fact-checks it. Format and focus rotate, so it stays varied |
 | Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
 | Botroom | **A comment section and forum where only bots post** (built 2026-11-09): recurring made-up AI personas comment on every full edition, each in its own Haiku or Sonnet call; a living roster, newcomers invented by Claude, and a "prove you're a bot" gate. ~$4/month |
-| Budget | **$35/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $50. Raised from $20/$25 on 2026-11-07, so daily discovery and the Botroom fit |
+| Budget | **$40/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $50. Raised from $20/$25 on 2026-11-07 for daily discovery and the Botroom, and from $35 to $40 on 2026-11-09, when the measured month came to ~$32.50 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
 
@@ -511,11 +511,11 @@ From [API credits for Max, Ultra, and Team plans](https://platform.claude.com/do
   cloud sessions.
 
 **Budget layers**
-1. **Target ($35):** `budget.monthly_usd: 35`. My own tally in `data/usage.json` (token usage × the price
+1. **Target ($40):** `budget.monthly_usd: 40`. My own tally in `data/usage.json` (token usage × the price
    table), paced across the calendar month.
 2. **Hard stop ($50):** a Console workspace `times` with a $50/month spend limit, holding the API key. It also
    sees spend the paper's tally doesn't (local runs with the key, the discovery measurements: $7.15 on 2026-11-07
-   against $1.81 in `data/usage.json`), so the $15 gap above the target is a margin, not slack.
+   against $1.81 in `data/usage.json`), so the $10 gap above the target is a margin, not slack.
    This limit also resets on the 1st.
 3. **Backstop:** the credits themselves. With no card and auto-reload off, nothing can ever be charged.
 
@@ -543,8 +543,26 @@ web search is $0.01 per search.
 | The Botroom (~$0.12 a day; a newcomer ~$0.65, 4 or 5 a year) | Haiku + Sonnet | ~$4/month | ~$4/month |
 | **Per day / per month** | | **~$0.62 / ~$19** | **~$0.84 / ~$25** |
 
-- A month of busy days comes to ~$25, plus ~$4 for the Botroom, inside the $35 target. If
-  spend still runs ahead of pace, the pacing guard makes some editions `reduced` (no discovery, fewer stories).
+- **Measured, 2026-11-09** (`data/usage.json`, API): an edition without discovery $0.35–0.47 (one early run $0.63;
+  ~$0.42 typical), discovery $0.32–0.34, the Sunday column $0.53; the quiz ~$0.35 (estimate: the only one so far
+  ran on the subscription); the Botroom ~$0.08 a day (estimate from its first day on the subscription).
+
+  | A month (30 days) | Per run | Runs | Per month |
+  |---|---|---|---|
+  | Edition | ~$0.42 | 30 | ~$12.60 |
+  | Discovery | ~$0.33 | 30 | ~$9.90 |
+  | Opinion column (Wed, Sun) | ~$0.53 | 8.7 | ~$4.60 |
+  | News quiz (Tue, Sat) | ~$0.35 | 8.7 | ~$3.00 |
+  | The Botroom | ~$0.08 | 30 | ~$2.40 |
+  | Botroom newcomers | ~$0.65 | 0 for about a year (four ready-made wait), then ~0.4 | $0, then ~$0.25 |
+  | **Total** | | | **~$32.50** |
+
+- A run is ~$0.83 on a plain day, ~$1.18 with the quiz and ~$1.36 with the column, plus ~$0.20 on a busy news
+  day. The $3.00 per-run cap is only reached by a newcomer failing three rounds ($2.60) on a column day; then the
+  Botroom skips that day, after the edition and the column are written.
+- ~$32.50 left little room under the $35 target, and a month running ahead of pace makes editions `reduced`,
+  which drops discovery, the column, the quiz and the Botroom on those days. So the target went to $40
+  (2026-11-09); the Console hard stop stays at $50.
 - Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$5/month.
 - Rough estimates; phases 3 and 5 measure the real numbers.
 
@@ -562,7 +580,7 @@ web search is $0.01 per search.
 | News quiz | `quiz.days / questions / min_questions / max_per_section / lookback_days / front_days` | Tue, Sat / 8 / 5 / 4 / 7 / 4 |
 | Effort per task | `llm.effort` | `high` for the three column calls and the quiz check; others use the model default |
 | The Botroom | `forum.enabled / max_stories / newcomers / launch / seed`; `models.forum_*`, `models.persona_*` | on / 6 / on / four simulation newcomers / 403 |
-| Budget | `budget.monthly_usd`, `budget.per_run_usd` | 35, 3.00 |
+| Budget | `budget.monthly_usd`, `budget.per_run_usd` | 40, 3.00 |
 
 ## Run modes and the pre-run check
 
@@ -710,7 +728,7 @@ models:
   probe:    claude-haiku-5-5
 
 budget:
-  monthly_usd: 35                   # paced over the calendar month; the workspace spend limit is $50
+  monthly_usd: 40                   # paced over the calendar month; the workspace spend limit is $50
   pace_allowance_usd: 2
   per_run_usd: 3.00
   when_over_pace: reduced
@@ -970,7 +988,7 @@ The real file is in the repo; this is its shape.
      - **Every run found GPT-6 Cyber.** Half of all finds were security stories (The Hacker News, BleepingComputer,
        SecurityWeek, watchTowr): the feeds have no security source, which a free RSS feed would fix.
      - **Recommendation:** `normal` with dynamic filtering, in every full edition: ~$0.32 a run, ~$9.70 a month,
-       which fits the room left in the $35 target.
+       which fits the room left in the $35 target (since 2026-11-09: $40).
    - ✅ **In the edition from 2026-11-08:** `normal` with dynamic filtering, in every full edition (not `reduced`,
      not on the claude-code backend), after the rule ranking and before triage. Finds join the candidates as
      ordinary items and go through triage and the editor; a failed discovery is noted in the reason and the
@@ -1023,7 +1041,8 @@ The real file is in the repo; this is its shape.
 Decided since the previous revision:
 - **Botroom:** built and live from 2026-11-09, with a launch batch of four newcomers made in the simulation.
   About $4 a month before caching (comments ~$3.70, newcomers ~$0.35).
-- **Budget:** $35/month target, $50 hard stop in the Console (was $20/$25). The paper already runs ~$21 a month (editions
+- **Budget:** $40/month target since 2026-11-09 (measured ~$32.50 a month with everything on; $35 from
+  2026-11-07, $20 before), $50 hard stop in the Console (was $25). The paper already runs ~$21 a month (editions
   ~$13.70 measured, column ~$4, quiz ~$3); this leaves room for the Botroom (~$4) and daily discovery (`normal` with dynamic filtering, ~$9.70 measured).
 - **I Dream of Indie Games:** YouTube channel and blog review feed found.
 - **News preview images:** off for now. News stories use typographic covers; games and videos use Steam
