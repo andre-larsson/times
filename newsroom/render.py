@@ -129,7 +129,7 @@ class SiteBuilder:
             date_when=self.date_when, time=self.time, iso=self.iso, num=self.num, money=self.money,
             paragraphs=self.paragraphs, domain=self.domain, rating_class=self.rating_class,
             edition_name=self.edition_name, article_url=self.article_url, when=self.when,
-            score_parts=self.score_parts,
+            score_parts=self.score_parts, price=self.price,
         )
 
     # urls and names
@@ -229,6 +229,15 @@ class SiteBuilder:
         return (m.group(1), m.group(2) or "") if m else None
 
     @staticmethod
+    def price(usd: Any) -> str:
+        """A cover price: "$0.73", or "Free" when no Claude call was made (a links edition)."""
+        try:
+            usd = float(usd)
+        except (TypeError, ValueError):
+            return ""
+        return "Free" if usd < 0.005 else f"${usd:.2f}"
+
+    @staticmethod
     def rating_class(rating: str | None) -> str:
         r = (rating or "").lower()
         if r in POSITIVE_RATINGS:
@@ -276,6 +285,18 @@ class SiteBuilder:
             "column": self.column_for(edition),
             "quiz": self.quiz_for(edition),
         }
+
+
+def edition_price(edition: dict[str, Any], forum_day: dict[str, Any] | None = None) -> float | None:
+    """The edition's "cover price": what its Claude calls cost at API prices (stories, discovery, column, quiz,
+    the Botroom). A Botroom day run on its own (`python -m newsroom forum`) adds its cost. None if unknown."""
+    llm = edition.get("llm") or {}
+    usd = next((llm[k] for k in ("equivalent_usd", "estimated_usd", "usd") if llm.get(k) is not None), None)
+    if usd is None:
+        return None
+    if forum_day and not any(t.startswith(("forum_", "persona_")) for t in llm.get("by_task") or {}):
+        usd += float((forum_day.get("cost") or {}).get("equivalent_usd") or 0)
+    return round(float(usd), 4)
 
 
 def _latest(items: list[dict[str, Any]], edition: dict[str, Any], days: int) -> dict[str, Any] | None:
@@ -360,6 +381,9 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
             for t in x["threads"]:
                 if t["article_path"]:
                     article_threads[t["article_path"]] = (t, x)
+    forum_by_edition = {x["edition_id"]: x for x in forum_days}
+    for ed in editions:                                  # the masthead's cover price
+        ed["price_usd"] = edition_price(ed, forum_by_edition.get(ed["edition_id"]))
 
     by_id = {e["edition_id"]: e for e in editions}
     if front_edition and front_edition not in by_id:

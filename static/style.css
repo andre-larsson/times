@@ -196,6 +196,15 @@ h1, h2, h3, h4 { margin: 0; }
   font: 600 0.9375rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.16em;
   color: var(--amber);
 }
+.masthead-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-2); }
+/* The cover price: what the edition's Claude calls cost (footer #price-note says so) */
+.price-tag {
+  padding: 4px var(--s-2) 2px; border: 2px solid var(--amber);
+  font: 600 0.8125rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.1em; color: var(--on-dark);
+}
+.price-tag b { font-weight: 800; font-size: 1.0625rem; letter-spacing: 0.02em; color: var(--amber); font-variant-numeric: tabular-nums; }
+.price-tag:hover { background: var(--amber); color: #17140f; }
+.price-tag:hover b { color: #17140f; }
 @media (min-width: 720px) {
   .masthead-inner { padding-block: var(--s-5); }
   .logo { font-size: 3.5rem; }
@@ -1042,6 +1051,8 @@ a.critic:hover { text-decoration: underline; }
 .archive-date { font: 800 1.375rem/1.1 var(--font-head); }
 .archive-date:hover { text-decoration: underline; }
 .archive-item .meta { grid-column: 1 / -1; }
+.archive-tags { display: flex; align-items: baseline; gap: var(--s-2); }
+.archive-price { font: 800 1.125rem/1 var(--font-head); font-variant-numeric: tabular-nums; }
 .mode { font: 800 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 6px 3px; border: 1px solid var(--rule); color: var(--ink-2); }
 .mode--links, .mode--partial, .mode--reduced { background: var(--amber-soft); color: var(--amber-ink); border-color: transparent; }
 

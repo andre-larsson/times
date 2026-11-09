@@ -180,3 +180,20 @@ def test_search_page_and_index(site, cfg):
     eds = [{"edition_id": "2026-11-01", "gaming": {"news": [same]}},
            {"edition_id": "2026-11-02", "gaming": {"news": [same]}}]
     assert [r["t"] for r in build_index(eds, lambda s: "#")] == ["2026-11-01"]   # first seen, listed once
+
+
+def test_cover_price(site):
+    from newsroom.render import SiteBuilder, edition_price
+
+    front = (site / "index.html").read_text(encoding="utf-8")
+    assert 'class="price-tag" href="#price-note">Price <b>$0.57</b>' in front     # $0.55 + the Botroom's $0.02
+    assert 'id="price-note"' in front
+    archive = (site / "archive" / "index.html").read_text(encoding="utf-8")
+    assert '<span class="archive-price">Free</span>' in archive                     # the links edition: no Claude
+    assert SiteBuilder.price(0.004) == "Free" and SiteBuilder.price(1.3) == "$1.30" and SiteBuilder.price(None) == ""
+    ed = {"llm": {"equivalent_usd": 0.7, "by_task": {"triage": {}}}}
+    day = {"cost": {"equivalent_usd": 0.1}}
+    assert edition_price(ed, day) == 0.8                                            # a Botroom run on its own adds
+    ed["llm"]["by_task"]["forum_haiku"] = {}
+    assert edition_price(ed, day) == 0.7                                            # already in the edition's tally
+    assert edition_price({}, day) is None

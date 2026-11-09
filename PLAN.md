@@ -434,6 +434,12 @@ logo, color palette, fonts, icons and exact layout are all our own.
 - Every section has its own label color for kickers and section bands (e.g. AI violet, Tech cyan,
   Gaming green, Deals magenta). The exact palette gets decided in phase 1.
 
+**Cover price** (2026-11-09): a price tag in the masthead, like a printed paper's: what the edition cost to
+write, every Claude call at API prices (`llm.equivalent_usd`, which includes the column, quiz and Botroom calls;
+a Botroom day run on its own adds its `cost`). "Free" for a links edition. It links to a footer note saying
+so, and the archive lists every edition's price. Columns and quizzes written on the subscription before they
+ran in the workflow (6 and 7 Nov) aren't in their editions' tally, so those two prices are low.
+
 **Kickers:** colored all-caps labels before headlines, such as **BREAKING:** (newsworthiness 5 only),
 **ANALYSIS**, **REVIEW**, **DEAL**, **WATCH**, **DEV**, **HARDWARE**.
 

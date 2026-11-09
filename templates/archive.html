@@ -23,7 +23,10 @@
     {% set ed = row.edition %}
     <li class="archive-item">
       <a class="archive-date" href="{{ url('archive/' ~ ed.edition_id ~ '/') }}">{{ ed.generated_at | date_long }}</a>
-      <span class="mode mode--{{ ed.mode }}">{{ {'full': 'Full edition', 'reduced': 'Reduced', 'partial': 'Partial', 'links': 'Links edition'}.get(ed.mode, ed.mode) }}</span>
+      <span class="archive-tags">
+        {% if ed.price_usd is number %}<span class="archive-price">{{ ed.price_usd | price }}</span>{% endif %}
+        <span class="mode mode--{{ ed.mode }}">{{ {'full': 'Full edition', 'reduced': 'Reduced', 'partial': 'Partial', 'links': 'Links edition'}.get(ed.mode, ed.mode) }}</span>
+      </span>
       <span class="meta">
         {% if row.counts.featured or row.counts.medium or row.counts.brief %}
         {{ row.counts.featured }} featured · {{ row.counts.medium }} stories · {{ row.counts.brief }} briefs

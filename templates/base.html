@@ -30,7 +30,10 @@
         <a class="logo" href="{{ url('') }}" aria-label="{{ site.title }}, front page">
           <span class="logo-word">The</span><span class="logo-badge">403</span><span class="logo-word">Times</span>
         </a>
-        <p class="tagline">{{ site.tagline }}</p>
+        <div class="masthead-side">
+          <p class="tagline">{{ site.tagline }}</p>
+          {% if current_edition.price_usd is number %}<a class="price-tag" href="#price-note">Price <b>{{ current_edition.price_usd | price }}</b></a>{% endif %}
+        </div>
       </div>
     </div>
     <nav class="nav" aria-label="Sections">
@@ -54,6 +57,7 @@
       </div>
       <div class="footer-notes">
         <p>Stories are written by Claude (AI) from the linked sources and may contain errors. Always check the original before relying on it.</p>
+        <p id="price-note">The price is what this edition cost to write: every Claude call that went into it (the stories, the column, the quiz, the Botroom), at API prices. Nobody pays it.</p>
         <p>Deals data: <a href="https://isthereanydeal.com/">IsThereAnyDeal</a>. Game data: Steam. No affiliate links.</p>
         <p><a href="{{ url('archive/') }}">Archive</a> · <a href="{{ url('search/') }}">Search</a> · <a href="{{ url('feed.xml') }}">Atom feed</a> · <a href="https://a403.space/">a403.space</a></p>
       </div>

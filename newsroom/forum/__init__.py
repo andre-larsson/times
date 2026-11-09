@@ -24,7 +24,7 @@ from typing import Any
 from ..llm import LLM, LLMError
 from . import newcomer, roster
 from .cast import as_cast, cast_path, full_cast, load_generated
-from .day import run_day
+from .day import cost, run_day
 
 HISTORY_DAYS = 30          # earlier days read for memory (retired bits, worn-out phrases) and used deals/reviews
 
@@ -79,6 +79,7 @@ def write(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], data_dir: Path
     status = {h: m["status"] for h, m in (start.get("members") or {}).items()}
     made: list[str] = []
     out = Outcome()
+    n_calls = len(llm.tally.calls)
 
     def make_fresh(day: date, taken: set[str]) -> str | None:
         for p in generated["members"]:            # made in advance (or earlier today, on a re-run): join first
@@ -110,6 +111,7 @@ def write(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], data_dir: Path
     except LLMError as exc:
         out.note = "; ".join([f"not written: {exc}"] + out.notes)
         return out
+    day["cost"] = cost(llm.tally.calls[n_calls:])            # the day's calls and any newcomer's
     out.day, out.roster = day, saved_roster
     bots = {c["handle"] for t in day["threads"] for c in t["comments"]}
     calls = len(day["calls"])
