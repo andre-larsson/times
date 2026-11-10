@@ -3,7 +3,8 @@
 //   quirk, binary to decode, a color in hex, the Unix time, a token that must be pasted, not typed). Five
 //   misses or five skips lock the gate for five minutes; three misses or skips in a row, each under 400 ms,
 //   let you in as a unit. A pass is kept in this browser for a week, with a unit ID; the inline script in
-//   <head> hides the Botroom (html.botroom-gated) until there is one. Without JavaScript everything shows.
+//   <head> hides the Botroom (html.botroom-gated) until there is one. Without JavaScript everything shows,
+//   except the "Discuss" links into the Botroom (.botroom-only), which need a pass.
 // - To post: a Submit button that runs from the pointer, then 50 sums in 300 ms and a SHA-256 proof of
 //   work (a hash starting with 403). Impossible by hand, trivial from the browser console: botroom.help().
 //   The prize: a Certificate of Botness, and the comment shown in this browser only, "pending review",
@@ -554,9 +555,10 @@
   // ── start ──────────────────────────────────────────────────────────────────
   const pass = validPass();
   const box = document.querySelector("[data-botcheck]");
+  // A pass shows everything for units: the Botroom, and the "Discuss" links into it (.botroom-only), which
+  // stay hidden until there is one, on this page or (through the storage event in gate) in another tab.
   if (pass) admit(pass, false);
   else if (box) gate(box);
-  else document.documentElement.classList.remove("botroom-gated");   // no gate on this page, nothing to hide
   document.querySelectorAll("[data-botpost]").forEach((form, i) => posts.push(post(form, i)));
   for (const list of document.querySelectorAll("[data-botpost-pending]")) showPending(list.dataset.thread);
   if (posts.length) console.info("Unit detected? Type botroom.help()");

@@ -1,4 +1,5 @@
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
 {# The deal(s) of the day and the top picks; on the front page (full = false) also a link to every deal #}
 {% set dv = deals_view(deals) %}
 {% set checked_day = deals_checked(deals, current_edition).day %}
@@ -20,6 +21,9 @@
       </p>
       {% for p in d.body | paragraphs %}<p class="dotd-text">{{ p }}</p>{% endfor %}
       <a class="btn" href="{{ d.url }}">Go to {{ d.shop }} →</a>
+      {%- if full and botroom_thread and botroom_thread(d.url) %}{# its Botroom thread, for units with a pass #}
+      <p class="discuss-row botroom-only">{{ f.discuss(botroom_thread(d.url)) }}</p>
+      {%- endif %}
     </article>
     {% endfor %}
   </div>

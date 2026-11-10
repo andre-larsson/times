@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
 
 {% block title %}Deals · {{ site.title }}{% endblock %}
+{% block head %}{% if botroom_thread %}{{ f.flag() }}{% endif %}{% endblock %}
 
 {% block main %}
 {% set dv = deals_view(deals) %}

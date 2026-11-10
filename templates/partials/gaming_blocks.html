@@ -1,4 +1,5 @@
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
 {% set n_games = 9 if full else 6 %}
 {% set n_reviews = 10 if full else 6 %}
 <div class="gaming-grid">
@@ -15,7 +16,7 @@
   <section class="gaming-reviews" aria-label="Reviews">
     <h3 class="sub-head">Reviews</h3>
     <ul class="review-list">
-      {% for r in gaming.reviews[:n_reviews] %}{{ m.review_item(r) }}{% endfor %}
+      {% for r in gaming.reviews[:n_reviews] %}{{ m.review_item(r, f.discuss(botroom_thread(r.url)) if full and botroom_thread and botroom_thread(r.url) else '') }}{% endfor %}
     </ul>
   </section>
   {% endif %}

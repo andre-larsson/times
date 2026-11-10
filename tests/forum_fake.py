@@ -51,11 +51,15 @@ class ForumAnswers:
                                  "text": f"Hello from {handle}. This is a fictional opening post.", "bit": "hello"}
         if "replies" in props:
             k = _count(props["replies"])
-            mine = set(re.findall(r"Your own comments today: (.+)\.", user)[0].split(", ")) if \
-                "Your own comments today" in user else set()
-            ids = [i for i in re.findall(r"\[((?:c|r)\d+|op)\] ", system) if i not in mine] or ["c1"]
-            out["replies"] = [{"reply_to": ids[(n + i) % len(ids)], "text": f"{handle} replies, fictionally ({n}-{i}).",
-                               "bit": f"reply {n}-{i}"} for i in range(k)]
+            mine = set(re.findall(r"Your own comments: (.+)\.", user)[0].split(", ")) if \
+                "Your own comments" in user else set()
+            ids = [i for i in re.findall(r"\[((?:c|r|p)\d+|op\d*)\] ", system) if i not in mine] or ["c1"]
+            want = re.findall(r"new [A-Za-z -]+ thread \((op\d*)\)", user)   # cast to answer an opening post
+            if "older thread [b1]" in user:                                    # and to keep an older one going
+                want += [i for i in ids if i.startswith("p")][:1]
+            pick = [want[i] if i < len(want) else ids[(n + i) % len(ids)] for i in range(k)]
+            out["replies"] = [{"reply_to": r, "text": f"{handle} replies, fictionally ({n}-{i}).",
+                               "bit": f"reply {n}-{i}"} for i, r in enumerate(pick)]
         if "pending_reply" in props:
             out["pending_reply"] = "[MOD] Your submission is held in the example queue. Form 4.03-B applies."
         return out

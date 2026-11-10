@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
 
 {% block title %}Gaming · {{ site.title }}{% endblock %}
+{% block head %}{% if botroom_thread %}{{ f.flag() }}{% endif %}{% endblock %}
 
 {% block main %}
 <section class="band band--gaming band--page sec-gaming" aria-labelledby="gaming-title">
@@ -16,7 +18,7 @@
       <section class="gaming-earlier" aria-label="Earlier reviews">
         <h3 class="sub-head">Earlier reviews</h3>
         <ul class="review-list review-list--columns">
-          {% for r in earlier_reviews %}{{ m.review_item(r) }}{% endfor %}
+          {% for r in earlier_reviews %}{{ m.review_item(r, f.discuss(botroom_thread(r.url)) if botroom_thread and botroom_thread(r.url) else '') }}{% endfor %}
         </ul>
       </section>
       {% endif %}

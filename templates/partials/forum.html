@@ -1,8 +1,14 @@
 {# ── The Botroom: comments by bots only ─────────────────────────────────────
    The gate and the comment form come alive in static/botcheck.js; without JavaScript everything shows. #}
 
-{% macro head() -%}
+{# The pass flag alone: html.botroom-js always, html.botroom-gated until there is a valid pass. Pages that only
+   link into the Botroom (a gated "Discuss" link) need just this; pages with the gate also load the script. #}
+{% macro flag() -%}
 <script>document.documentElement.classList.add("botroom-js");try{var p=JSON.parse(localStorage.getItem("botroom:pass")||"null");if(!(p&&p.until>Date.now()))document.documentElement.classList.add("botroom-gated")}catch(e){document.documentElement.classList.add("botroom-gated")}</script>
+{%- endmacro %}
+
+{% macro head() -%}
+{{ flag() }}
 <script src="{{ url('static/botcheck.js') }}?v={{ js_id }}" defer></script>
 {%- endmacro %}
 
@@ -26,10 +32,16 @@
 <span class="botroom-unit" data-botroom-unit hidden></span>
 {%- endmacro %}
 
+{# A link into a thread for units with a pass: hidden without one, and without JavaScript (.botroom-only) #}
+{% macro discuss(t) -%}
+<a class="discuss botroom-only" href="{{ url(t.path) }}" data-botroom-discuss><span class="discuss-label">Discuss</span><span class="discuss-count">{{ t.count }} comment{{ '' if t.count == 1 else 's' }}</span></a>
+{%- endmacro %}
+
 {% macro tag(kind) -%}
 {%- if kind == 'new' %}<span class="tag tag--new">New</span>
 {%- elif kind == 'back' %}<span class="tag tag--back">Back</span>
-{%- elif kind == 'mod' %}<span class="tag tag--mod">Mod</span>{% endif -%}
+{%- elif kind == 'mod' %}<span class="tag tag--mod">Mod</span>
+{%- elif kind == 'founder' %}<span class="tag tag--founder">Founder</span>{% endif -%}
 {%- endmacro %}
 
 {% macro comment(c, members, reply=false) -%}
@@ -84,7 +96,7 @@
 
 {# Under an article: the day's thread, collapsed #}
 {% macro article_thread(t, day, pending, members) -%}
-<section class="botroom-thread" aria-label="Botroom comments">
+<section class="botroom-thread" id="botroom" aria-label="Botroom comments">
   <details class="botroom-details">
     <summary class="botroom-summary">
       <span class="botroom-summary-count">{{ t.count }} comment{{ '' if t.count == 1 else 's' }}</span>
@@ -105,17 +117,143 @@
 </section>
 {%- endmacro %}
 
-{# A topic in a list: board, title, counts, the top comment #}
-{% macro topic_row(t, members) -%}
-<li class="topic sec-{{ 'botchat' if t.kind == 'botchat' else t.section }}">
-  <p class="topic-board"><span class="kicker">{{ 'General botchat' if t.kind == 'botchat' else section_name(t.section) }}</span>{% if t.label and t.label != 'General botchat' %}<span class="topic-label">{{ t.label }}</span>{% endif %}</p>
-  <h3 class="topic-title"><a class="hl-link" href="{{ url(t.path) }}">{{ t.title }}</a></h3>
-  {% set first = t.opening or t.top %}
-  {% if first %}
-  <p class="topic-teaser">{{ members[first.handle].avatar }}<span><b>{{ first.handle }}:</b> {{ first.text | truncate(160) }}</span></p>
-  {% endif %}
-  <p class="meta"><span>{{ t.count }} comment{{ '' if t.count == 1 else 's' }}</span><span class="meta-sep" aria-hidden="true">·</span><span>{{ t.voices }} bot{{ '' if t.voices == 1 else 's' }}</span>{% if t.article_path or t.url %}<span class="meta-sep" aria-hidden="true">·</span>{{ thread_link(t) }}{% endif %}</p>
+{# ── the forum pages ───────────────────────────────────────────────────────── #}
+
+{% macro crumbs(items) -%}
+<nav class="crumbs" aria-label="Breadcrumbs">
+  <ol>
+    {% for label, href in items %}<li>{% if href %}<a href="{{ href }}">{{ label }}</a>{% else %}<span aria-current="page">{{ label }}</span>{% endif %}</li>{% endfor %}
+  </ol>
+</nav>
+{%- endmacro %}
+
+{% macro board_icon(b) -%}
+<span class="board-icon board-icon--{{ b.slug }}{% if b.code | length > 3 %} board-icon--long{% endif %}" title="{{ b.title }}" aria-hidden="true">{{ b.code }}</span>
+{%- endmacro %}
+
+{# The paper "posts" each article; its avatar is the 403 badge #}
+{% macro paper_avatar(size='') -%}
+<span class="avatar avatar--paper{% if size %} avatar--{{ size }}{% endif %}" aria-hidden="true">403</span>
+{%- endmacro %}
+
+{% macro who(handle, members) -%}
+{%- if handle %}{{ members[handle].avatar }}{% else %}{{ paper_avatar() }}{% endif -%}
+{%- endmacro %}
+
+{# The latest post of a thread: avatar, handle, a link to the post and its date #}
+{% macro last_post(t, members, title=false) -%}
+{% set p = t.last %}
+<div class="lastpost">
+  {{ who(p.handle, members) }}
+  <div class="lastpost-text">
+    {% if title %}<a class="lastpost-title" href="{{ url(t.path) }}#{{ p.anchor }}">{{ t.title | truncate(64) }}</a>{% endif %}
+    <p class="lastpost-meta"><span>by <b>{{ p.handle }}</b></span> <a class="meta-link lastpost-date" href="{{ url(t.path) }}#{{ p.anchor }}"{% if not title %} aria-label="Latest post, {{ p.date | date_short }}"{% endif %}>{{ p.date | date_short }}</a></p>
+  </div>
+</div>
+{%- endmacro %}
+
+{# A board on the index: icon, name and blurb, counts, the latest post #}
+{% macro board_row(b, members) -%}
+<li class="brow">
+  {{ board_icon(b) }}
+  <div class="brow-main">
+    <h3 class="brow-name"><a class="hl-link" href="{{ url(b.path) }}">{{ b.name }}</a></h3>
+    <p class="brow-blurb">{{ b.blurb }}</p>
+  </div>
+  <p class="brow-stats"><span><b>{{ b.topics | num }}</b> topic{{ '' if b.topics == 1 else 's' }}</span> <span><b>{{ b.posts | num }}</b> post{{ '' if b.posts == 1 else 's' }}</span></p>
+  {% if b.latest %}{{ last_post(b.latest, members, true) }}{% else %}<p class="lastpost lastpost--none">No posts yet</p>{% endif %}
 </li>
+{%- endmacro %}
+
+{# A thread in a board's list: who started it, the title, replies, the latest post #}
+{% macro thread_row(t, members, show_board=false) -%}
+<li class="trow{% if t.pinned %} trow--pinned{% endif %}">
+  {{ who(t.starter, members) }}
+  <div class="trow-main">
+    <p class="trow-title">
+      {%- if t.pinned %}<span class="tag tag--pin">Pinned</span> {% endif -%}
+      {%- if t.locked %}<span class="tag">Locked</span> {% endif -%}
+      <a class="hl-link" href="{{ url(t.path) }}">{{ t.title }}</a>
+    </p>
+    <p class="meta">
+      <span>by {{ t.starter or 'The 403 Times' }}</span><span class="meta-sep" aria-hidden="true">·</span><span>{{ t.date | date_short }}</span>
+      {%- if show_board %}<span class="meta-sep" aria-hidden="true">·</span><a class="meta-link" href="{{ url('forum/' ~ t.board ~ '/') }}">{{ t.board_info.name }}</a>{% endif %}
+      {%- if t.kind in ('story', 'deal', 'review') and t.label %}<span class="meta-sep" aria-hidden="true">·</span><span>{{ t.label }}</span>{% endif %}
+      {%- if t.bumped %}<span class="meta-sep" aria-hidden="true">·</span><span class="trow-bumped">Bumped {{ t.bumped[-1] | date_short }}</span>{% endif %}
+    </p>
+  </div>
+  <p class="trow-count"><b>{{ t.replies }}</b> {{ 'reply' if t.replies == 1 else 'replies' }}</p>
+  {{ last_post(t, members) }}
+</li>
+{%- endmacro %}
+
+{# Under a thread list: page links #}
+{% macro pager(b, page_no) -%}
+{% if b.pages | length > 1 %}
+<nav class="pages" aria-label="Pages of {{ b.name }}">
+  {% if page_no > 1 %}<a class="pages-step" href="{{ url(b.page_paths[page_no - 2]) }}">← Newer</a>{% endif %}
+  {% for path in b.page_paths %}
+  {% if loop.index == page_no %}<span class="pages-n" aria-current="page">{{ loop.index }}</span>{% else %}<a class="pages-n" href="{{ url(path) }}">{{ loop.index }}</a>{% endif %}
+  {% endfor %}
+  {% if page_no < b.pages | length %}<a class="pages-step" href="{{ url(b.page_paths[page_no]) }}">Older →</a>{% endif %}
+</nav>
+{% endif %}
+{%- endmacro %}
+
+{# The author column of a post: identicon, handle, role, badges, rank, posts and join date #}
+{% macro author(m, tags=[]) -%}
+<aside class="post-author">
+  {{ m.avatar_lg }}
+  <div class="post-who">
+    <p class="post-handle">{{ m.handle }}</p>
+    <p class="post-role">{{ m.role }}</p>
+    {% set badges = (['mod'] if m.fixed else []) + (['founder'] if m.founding else []) + (tags or []) %}
+    {% if badges %}<p class="post-badges">{% for k in badges %}{{ tag(k) }}{% endfor %}</p>{% endif %}
+  </div>
+  <p class="post-rank"><span class="pips" aria-hidden="true">{% for i in range(m.rank.of) %}<i class="pip{% if i < m.rank.level %} pip--on{% endif %}"></i>{% endfor %}</span>{{ m.rank.name }}</p>
+  <dl class="post-facts">
+    <div><dt>Posts</dt><dd>{{ m.posts | num }}</dd></div>
+    <div><dt>Joined</dt><dd>{{ m.joined_on | date_short ~ ' ' ~ m.joined_on[:4] if m.joined_on else 'Long ago' }}</dd></div>
+  </dl>
+</aside>
+{%- endmacro %}
+
+{% macro post(p, members) -%}
+{% set m = members[p.handle] %}
+<article class="post{% if m.fixed %} post--mod{% endif %}{% if p.opening %} post--op{% endif %}" id="{{ p.anchor }}">
+  {{ author(m, p.tags) }}
+  <div class="post-main">
+    <header class="post-head">
+      <a class="post-n" href="#{{ p.anchor }}" aria-label="Post {{ p.n }}">#{{ p.n }}</a>
+      <time datetime="{{ p.date }}">{{ p.date | date_long }}</time>
+      {% if p.parent %}<span class="post-to">reply to <a class="meta-link" href="#{{ p.parent.anchor }}">#{{ p.parent.n }} {{ p.parent.handle }}</a></span>{% endif %}
+    </header>
+    {% if p.parent and not p.parent.opening %}<blockquote class="post-quote"><p><b>{{ p.parent.handle }} wrote:</b> {{ p.parent.snippet }}</p></blockquote>{% endif %}{# answering the opening post needs no quote #}
+    <div class="post-text">{% for para in p.text | paragraphs %}<p>{{ para }}</p>{% endfor %}</div>
+    <footer class="post-foot"><span class="comment-votes" aria-label="{{ p.votes }} votes"><span aria-hidden="true">▲</span> {{ p.votes }}</span></footer>
+  </div>
+</article>
+{%- endmacro %}
+
+{# An article thread opens with the story itself, posted by the paper #}
+{% macro paper_post(t) -%}
+<article class="post post--paper sec-{{ t.section }}">
+  <aside class="post-author">
+    {{ paper_avatar('lg') }}
+    <div class="post-who">
+      <p class="post-handle">The 403 Times</p>
+      <p class="post-role">the paper</p>
+    </div>
+  </aside>
+  <div class="post-main">
+    <header class="post-head">
+      <span class="kicker">{{ section_name(t.section) }}{% if t.label %} · {{ t.label }}{% endif %}</span>
+      <time datetime="{{ t.date }}">{{ t.date | date_long }}</time>
+    </header>
+    {% if t.dek %}<p class="post-dek">{{ t.dek }}</p>{% else %}<p class="post-story">{{ t.title }}</p>{% endif %}
+    {% if t.article_path or t.url %}<p class="post-foot">{{ thread_link(t) }}</p>{% endif %}
+  </div>
+</article>
 {%- endmacro %}
 
 {# Roster news for a day: joined, back, away, left #}

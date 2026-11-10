@@ -14,7 +14,8 @@ from newsroom import generate as gen
 from newsroom.config import load_config
 from newsroom.forum import cast as forum_cast
 from newsroom.forum import day as forum_day
-from newsroom.forum import look, newcomer, roster
+from newsroom.forum import boards, look, newcomer, roster
+from newsroom.forum import site as forum_site
 from newsroom.llm import Tally, TransientError
 from newsroom.render import build
 from tests.forum_fake import CARD, FakeForumLLM
@@ -43,6 +44,12 @@ def _edition(day: date = DAY):
 
 def _cast():
     return forum_cast.full_cast({"members": []})
+
+
+def users_of(llm, handles, marker):
+    """The user messages these bots got, for the task that contains `marker`."""
+    return [u for u in llm.users.get("forum_haiku", []) + llm.users.get("forum_sonnet", [])
+            if marker in u and any(f"Handle: {h}\n" in u for h in handles)]
 
 
 def _history(days: int, cast: dict, seed: int = 7, make_fresh=lambda d, taken: None, launch=()):
@@ -148,6 +155,67 @@ def test_memory_retires_bits_and_finds_worn_phrases():
     assert len(bits["ModBot"]) == 3                                         # 30 days ago is out of the window
 
 
+def test_old_days_are_mapped_to_boards():
+    assert boards.board_of({"kind": "story", "section": "ai"}) == "ai"
+    assert boards.board_of({"kind": "deal", "section": "deals"}) == "deals"
+    assert boards.board_of({"kind": "review", "section": "gaming"}) == "gaming"
+    assert boards.board_of({"kind": "botchat", "label": "Introductions"}) == "introductions"
+    assert boards.board_of({"kind": "botchat", "label": "General botchat"}) == "off-topic"
+    assert boards.board_of({"kind": "botchat", "board": "feature-requests"}) == "feature-requests"
+    assert {b for _, _, bs in boards.CATEGORIES for b in bs} == set(boards.BOARDS)    # every board in a category
+    assert [boards.site_board(DAY + timedelta(days=i), boards.SITE_BOARDS) for i in range(3)] == \
+        ["feature-requests", "site-feedback", "feature-requests"]                     # in turn, by day
+    assert boards.site_board(DAY, []) is None
+
+
+def test_site_facts_come_from_config_and_the_edition():
+    cfg = _cfg()
+    cfg["weather"]["place"] = "Exampleville"
+    text = forum_site.facts(cfg, _edition(), [_edition(DAY - timedelta(days=1)), _edition()])
+    for bit in ("AI, Tech, Gaming, Deals", "Exampleville", "Wednesday and Sunday", "Tuesday and Saturday",
+                "Not there (so a feature request can ask for it)", "2 editions so far, since 2026-11-02"):
+        assert bit in text, bit
+    cfg["opinion"]["enabled"] = False
+    assert "Opinion column" not in forum_site.facts(cfg, _edition(), [])
+
+
+def test_an_older_thread_picks_up_replies(tmp_path):
+    """A bot-started thread from yesterday is bumped: today's file gets a "bump" record whose replies point at
+    yesterday's posts by qualified id, and the pages merge them into the thread."""
+    cfg, data = _cfg(), tmp_path / "data"
+    store.save_edition(data, _edition(DAY))
+    store.save_edition(data, _edition(DAY + timedelta(days=1)))
+    first = forum.write(cfg, _llm(), _edition(DAY), data, [])
+    forum.save(data, first)
+    llm = _llm()
+    out = forum.write(cfg, llm, _edition(DAY + timedelta(days=1)), data, [])
+    forum.save(data, out)
+    bump = next(t for t in out.day["threads"] if t["kind"] == "bump")
+    origin = f"2026-11-03/{bump['slug']}"
+    assert bump["bump_of"] == origin and bump["board"] in boards.STARTED and bump["comments"]
+    before = {f"2026-11-03/{c['id']}": c for t in first.day["threads"] for c in t["comments"]}
+    assert all(c["reply_to"] in before and before[c["reply_to"]]["handle"] != c["handle"] for c in bump["comments"])
+    assert "An older thread, still going" in llm.forum_systems["forum_haiku"][-1]
+    started = {t["board"] for t in out.day["threads"] if t["kind"] == "botchat"}
+    assert started == {"site-feedback", "off-topic"}                                   # the other site board today
+    asked = "\n".join(llm.users["forum_haiku"] + llm.users["forum_sonnet"])
+    if "off-topic" in {t["board"] for t in first.day["threads"] if t["kind"] == "botchat"}:
+        assert "Already on this board" in asked                                       # yesterday's titles, to avoid
+
+    site_dir = tmp_path / "site"
+    build(cfg, data, site_dir)
+    page = (site_dir / "forum" / origin / "index.html").read_text(encoding="utf-8")
+    old = next(t for t in first.day["threads"] if t["slug"] == bump["slug"])
+    n = len(old["comments"]) + len(bump["comments"])
+    assert f'aria-label="Post {n}"' in page and f'aria-label="Post {n + 1}"' not in page   # one thread, numbered
+    assert all(f'id="c-2026-11-04-{c["id"]}"' in page for c in bump["comments"])
+    assert "Last post 4 Nov" in page
+    day2 = (site_dir / "forum" / "2026-11-04" / "index.html").read_text(encoding="utf-8")
+    assert "Still going" in day2 and f'href="/times/forum/{origin}/"' in day2
+    assert not (site_dir / "forum" / "2026-11-04" / bump["slug"]).exists() or \
+        any(t["slug"] == bump["slug"] for t in out.day["threads"] if t["kind"] != "bump")  # no page of its own
+
+
 def test_clean_text():
     assert forum_day.clean_text("Go to https://example.com now") == ""        # no links
     assert forum_day.clean_text("  one\n two \n\n\n three ") == "one two\n\nthree"
@@ -164,12 +232,26 @@ def test_a_day_of_comments():
     by_id = {c["id"]: c for t in day["threads"] for c in t["comments"]}
     for t in day["threads"]:
         for c in t["comments"]:
-            if c["reply_to"] is None and c["id"] != "op":
+            if c["reply_to"] is None and c["id"] != t["id"]:
                 assert t["id"] in plan[c["handle"]]["top"]                    # only threads it was cast for
             elif c["reply_to"]:
                 assert by_id[c["reply_to"]]["handle"] != c["handle"]          # never a reply to yourself
             assert c["votes"] >= 1 and c["text"]
     assert len(by_id) == day["comments"] and day["threads"][-1]["kind"] == "botchat"
+    started = {t["board"]: t for t in day["threads"] if t["kind"] == "botchat"}     # 2026-11-03: Feature requests
+    assert set(started) == {"feature-requests", "off-topic"} and [t["id"] for t in started.values()] == ["op", "op2"]
+    assert all(t["comments"][0]["id"] == t["id"] and len(t["comments"]) > 1 for t in started.values())
+    assert {t["board"] for t in day["threads"] if t["kind"] == "story"} <= {"ai", "tech", "gaming"}
+    starter = next(h for h, x in plan.items() if x["starter"] == "feature-requests")
+    systems = llm.forum_systems["forum_sonnet"] + llm.forum_systems["forum_haiku"]
+    asked = [u for u in llm.users["forum_haiku"] + llm.users["forum_sonnet"] if f"Handle: {starter}\n" in u][0]
+    assert 'start a thread on the "Feature requests" board' in asked
+    facts, brief = "Not there (so a feature request can ask for it)", "The 403 Times in brief: "
+    assert facts in asked and not any(facts in s for s in systems)                  # in full: the starter's message,
+    answerers = [h for h, x in plan.items() if x["answers"] == "feature-requests"]  # and the bots cast to answer
+    assert answerers and all(facts in u for u in users_of(llm, answerers, "Write exactly"))
+    assert all(brief in s for s in systems if "The threads so far" in s)            # round 2's shared part: in brief
+    assert not any(brief in s for s in systems if "The threads so far" not in s)    # round 1's: as before
     assert day["pending_reply"].startswith("[MOD]")
     assert set(day["cost"]["by_model"]) == {"claude-haiku-5-5", "claude-sonnet-5-5"}
     sonnet = {h for h, x in plan.items() if x["model"] == "sonnet"}
@@ -220,8 +302,9 @@ def test_a_newcomer_is_made_judged_and_saved(tmp_path, monkeypatch):
     assert p["tone"] in newcomer.TONES and p["review"]["overlap"] == 1 and len(saved["ideas"]) == 10
     assert {k: len(v) for k, v in llm.users.items() if k.startswith("persona")} == \
         {"persona_ideas": 1, "persona_draft": 1, "persona_check": 1}
-    intro = next(t for t in out.day["threads"] if t["kind"] == "botchat")
+    intro = next(t for t in out.day["threads"] if t.get("board") == "introductions")
     assert intro["label"] == "Introductions" and intro["comments"][0]["handle"] == "Shelf_Duster_01"
+    assert not any(t.get("board") == "off-topic" for t in out.day["threads"])   # the introduction replaces it
     assert "Shelf_Duster_01: tidies every thread (joined today)" in llm.forum_systems["forum_haiku"][0]
 
     again = _llm()                                                    # a re-run today: the same newcomer, free
@@ -279,8 +362,8 @@ def test_full_edition_gets_a_botroom_kept_on_rerun(tmp_path, offline):  # noqa: 
     assert gone                                    # the re-run's stories differ (the first run's were seen)
     build(cfg, data, site)                         # a thread whose story is gone keeps its topic page, unlinked
     topic = (site / "forum" / "2026-11-03" / gone[0]["slug"] / "index.html").read_text(encoding="utf-8")
-    byline = topic.split('class="byline"')[1].split("</p>")[0]
-    assert "<time" in byline and "Read the story" not in byline
+    head = topic.split('class="forum-head"')[1].split("</header>")[0]
+    assert "<time" in head and "Read the story" not in head
 
 
 def test_no_botroom_when_off_reduced_or_failing(tmp_path, offline):  # noqa: F811
@@ -337,6 +420,66 @@ def test_forum_pages(site):
     members = (site / "forum" / "members" / "index.html").read_text(encoding="utf-8")
     assert "Founding member" in members and "Invented by Claude" in members and "Written by Sonnet 5.5" in members
     assert "Tiny_Model_7B" not in members                                          # the waiting list stays hidden
+    assert "Fresh install" in members and "Legacy system" in members               # ranks, and their legend
+
+
+def test_the_board_index_and_board_pages(site):
+    index = (site / "forum" / "index.html").read_text(encoding="utf-8")
+    cats = re.findall(r'<h2 class="category-title" id="cat-[a-z-]+">([^<]+)</h2>', index)
+    assert cats == ["Front desk", "Article comments", "The 403 Times", "Lounge"]
+    for slug, b in boards.BOARDS.items():
+        assert f'href="/times/forum/{slug}/"' in index and (site / "forum" / slug / "index.html").is_file(), slug
+    assert "Newest member: <b>Shelf_Duster_01</b>" in index
+    feedback = (site / "forum" / "site-feedback" / "index.html").read_text(encoding="utf-8")
+    assert "The briefs list needs a" in feedback and 'aria-label="Breadcrumbs"' in feedback
+    assert 'href="/times/forum/#the-paper">The 403 Times</a>' in feedback            # Botroom › category › board
+    tech = (site / "forum" / "tech" / "index.html").read_text(encoding="utf-8")
+    assert "by The 403 Times" in tech and "Popular npm package hijacked" in tech     # the paper starts article threads
+    assert "Introducing myself" not in tech
+    ann = (site / "forum" / "announcements" / "index.html").read_text(encoding="utf-8")
+    assert ann.index("Read first: the rules") < ann.index("Notice: the Botroom now has boards")   # pinned on top
+    rules = (site / "forum" / "announcements" / "read-first-the-rules" / "index.html").read_text(encoding="utf-8")
+    assert "Rule 4.03. No humans." in rules and "This topic is locked" in rules and "data-botpost" not in rules
+
+
+def test_a_thread_is_numbered_posts_with_authors(site):
+    t = "forum/2026-11-03/the-briefs-list-needs-a-since-i-last-looked-line/index.html"
+    page = (site / t).read_text(encoding="utf-8")
+    assert [int(n) for n in re.findall(r'aria-label="Post (\d+)"', page)] == [1, 2, 3]
+    assert "reply to <a" in page and "ContrarianCore wrote:</b> Objection" in page    # what a reply answers
+    assert 'class="post post--op"' in page and 'class="post post--mod"' in page
+    assert "Posts" in page and "Joined" in page and 'class="pip pip--on"' in page
+    assert "Started by <b>RetroUnit_486</b>" in page
+    story = (site / "forum/2026-11-03/kestrel-2-open-model-catches-big-labs/index.html").read_text(encoding="utf-8")
+    assert 'class="post post--paper sec-ai"' in story and "Started by <b>The 403 Times</b>" in story
+    assert 'href="/times/2026/11/03/kestrel-2-open-model-catches-big-labs/">Read the story' in story
+
+
+def test_boards_paginate(tmp_path, monkeypatch):
+    monkeypatch.setattr(look, "PER_PAGE", 2)
+    build(load_config(), data_dir=FIXTURES, out_dir=tmp_path, preview=True)
+    first = (tmp_path / "forum" / "tech" / "index.html").read_text(encoding="utf-8")
+    assert 'href="/times/forum/tech/page/2/"' in first and "Older →" in first
+    second = (tmp_path / "forum" / "tech" / "page" / "2" / "index.html").read_text(encoding="utf-8")
+    assert "page 2 of 2" in second and 'href="/times/forum/tech/">' in second
+
+
+def test_discuss_links_need_a_pass(site):
+    page = (site / "2026/11/03/kestrel-2-open-model-catches-big-labs/index.html").read_text(encoding="utf-8")
+    head, body = page.split("</header>", 1)[0], page
+    assert 'class="discuss-row botroom-only"' in body
+    assert ('class="discuss botroom-only" href="/times/forum/2026-11-03/kestrel-2-open-model-catches-big-labs/"'
+            in body)
+    assert body.index('class="discuss-row') < body.index('class="article-grid"')        # by the byline, not below
+    css = (site / "static" / "style.css").read_text(encoding="utf-8")
+    assert "html:not(.botroom-js) .botroom-only, .botroom-gated .botroom-only { display: none !important; }" in css
+    deals = (site / "deals" / "index.html").read_text(encoding="utf-8")
+    assert 'href="/times/forum/2026-11-03/orbital-freight-co-hits-its-lowest-price-ever-strong-buy/"' in deals
+    assert 'classList.add("botroom-gated")' in deals and "botcheck.js" not in deals    # the flag only, no gate
+    front = (site / "index.html").read_text(encoding="utf-8")
+    assert "data-botroom-discuss" not in front
+    js = (ROOT / "static" / "botcheck.js").read_text(encoding="utf-8")
+    assert 'classList.remove("botroom-gated");   // no gate' not in js                 # no gate, no reveal
 
 
 def test_article_thread_is_collapsed_under_the_story(site):

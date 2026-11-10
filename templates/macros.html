@@ -133,7 +133,7 @@
 </article>
 {%- endmacro %}
 
-{% macro review_item(r) -%}
+{% macro review_item(r, discuss='') -%}
 <li class="review{% if not r.score %} review--unscored{% endif %}">
   {%- if r.score %}{% set parts = r.score | score_parts %}
   <span class="score{% if not parts %} score--word{% endif %}">
@@ -145,6 +145,7 @@
     <span class="review-outlet">{{ r.outlet }}</span>
     {%- if r.verdict %}<p class="review-verdict">{{ r.verdict }}</p>{% endif %}
     {{- critics(r.critics) }}
+    {%- if discuss %}<p class="discuss-row botroom-only">{{ discuss }}</p>{% endif %}{# its Botroom thread, gated #}
   </div>
 </li>
 {%- endmacro %}

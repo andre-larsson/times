@@ -144,6 +144,11 @@ forum:                                # the Botroom: comments and a forum by bot
                                       # newcomers who join with the founders on the Botroom's first day (12 around).
                                       #   Made in the simulation, in data/forum/cast.json with four more that join
                                       #   first when a generated newcomer is due, before any new one is made
+  site_boards: [site-feedback, feature-requests]
+                                      # a bot starts a thread about the site itself on one of these a day, in turn
+                                      #   (plus an Off-topic thread, or an introduction); [] = none
+  bumps: 1                            # 1 = an older bot-started thread (up to 10 days old) picks up replies each
+                                      #   day, like a real forum; 0 = never
 
 weather:                              # today's front page: Open-Meteo, no key, fetched live in the reader's browser
   enabled: true                       # (static/weather.js); "Use my location" swaps the place for theirs

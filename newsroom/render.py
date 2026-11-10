@@ -440,6 +440,12 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
             for t in x["threads"]:
                 if t["article_path"]:
                     article_threads[t["article_path"]] = (t, x)
+    botroom = forum_look.forum(forum_days, members) if forum_days else None
+    # The deal of the day's and the review's threads, by the deal's or review's link (the newest thread wins),
+    # for a gated "Discuss" link on the Deals and Gaming pages
+    side_threads = {t["url"]: t for x in forum_days for t in x["threads"]
+                    if t.get("kind") in ("deal", "review") and t.get("url")}
+    b.env.globals["botroom_thread"] = (lambda link: side_threads.get(link or "")) if forum_days else None
     forum_by_edition = {x["edition_id"]: x for x in forum_days}
     for ed in editions:                                  # the masthead's cover price
         ed["price_usd"] = edition_price(ed, forum_by_edition.get(ed["edition_id"]))
@@ -532,25 +538,28 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     if b.quizzes:
         b.write("quiz/", "quiz_index.html", active="quiz", section=QUIZ_SECTION, **common, quizzes=b.quizzes)
 
-    # The Botroom: a page per day (the latest is /forum/), a page per thread, and the members
-    if forum_days:
+    # The Botroom: the board index (/forum/), a page per board, thread and day, and the members
+    if botroom:
         newest_days = list(reversed(forum_days))
+        fctx = dict(active="forum", forum=botroom, members=members, days=newest_days)
+        b.write("forum/", "forum_index.html", current_edition=front, today=newest_days[0], **fctx)
+        for bd in botroom["boards"].values():
+            for i, (path, page) in enumerate(zip(bd["page_paths"], bd["pages"]), 1):
+                b.write(path, "forum_board.html", current_edition=front, board=bd, page=page, page_no=i, **fctx)
+        day_of = {x["date"]: x for x in forum_days}
+        for t in botroom["threads"]:
+            x = day_of.get(t["date"]) if t["kind"] != "announcement" else None
+            b.write(t["path"], "forum_topic.html", current_edition=by_id.get(x["edition_id"], front) if x else front,
+                    t=t, day=x, pending=forum_look.pending_reply(x) if x else None, **fctx)
         for i, x in enumerate(newest_days):
-            ed = by_id.get(x["edition_id"], front)
-            ctx = dict(active="forum", day=x, days=newest_days, members=members, current_edition=ed,
-                       newer=newest_days[i - 1] if i > 0 else None,
-                       older=newest_days[i + 1] if i + 1 < len(newest_days) else None)
-            if i == 0:
-                b.write("forum/", "forum.html", is_index=True, **ctx)
-            b.write(x["path"], "forum.html", is_index=False, **ctx)
-            pending = forum_look.pending_reply(x)
-            for t in x["threads"]:
-                b.write(t["path"], "forum_topic.html", active="forum", t=t, day=x, members=members,
-                        pending=pending, current_edition=ed)
-        order = lambda m: (not m["fixed"], not m["founding"], -m["comments"], m["handle"].lower())  # noqa: E731
+            b.write(x["path"], "forum.html", current_edition=by_id.get(x["edition_id"], front), day=x,
+                    newer=newest_days[i - 1] if i > 0 else None,
+                    older=newest_days[i + 1] if i + 1 < len(newest_days) else None, **fctx)
+        order = lambda m: (not m["fixed"], -m["posts"], m["handle"].lower())  # noqa: E731
         groups = [(title, sorted((m for m in members.values() if m["status"] == status), key=order))
                   for title, status in (("Around", "active"), ("Away", "away"), ("Left", "gone"))]
-        b.write("forum/members/", "forum_members.html", active="forum", groups=groups, current_edition=front)
+        b.write("forum/members/", "forum_members.html", current_edition=front, groups=groups,
+                ranks=forum_look.RANKS, **fctx)
 
     # Archive
     summaries = []
