@@ -1,12 +1,13 @@
 {% import "macros.html" as m with context %}
 {# The deal(s) of the day and the top picks; on the front page (full = false) also a link to every deal #}
 {% set dv = deals_view(deals) %}
+{% set checked_day = deals_checked(deals, current_edition).day %}
 <div class="deals-grid{% if not dv.featured %} deals-grid--list{% endif %}">
   {% if dv.featured %}
   <div class="dotd-stack">
     {% for d in dv.featured %}
     <article class="dotd">
-      <span class="kicker">Deal of the day</span>
+      <span class="kicker">{% if checked_day %}{{ checked_day }}'s deal{% else %}Deal of the day{% endif %}</span>
       <h3 class="hl hl-lg"><a class="hl-link" href="{{ d.url }}">{{ d.headline or d.game }}</a></h3>
       <div class="dotd-price">
         {{ m.price(d, 'lg') }}

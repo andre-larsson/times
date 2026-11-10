@@ -45,6 +45,9 @@ def main(argv: list[str] | None = None) -> int:
     gen_p.add_argument("--forum", default="auto", choices=("auto", "force", "off"),
                        help="the Botroom: auto = every full edition (config forum.enabled), force = write "
                             "today's again (needs an AI edition), off = never")
+    gen_p.add_argument("--deals", default="auto", choices=("auto", "force", "carry"),
+                       help="the deals: auto = check them on deals.days (or when the last check is stale) and "
+                            "carry the last check over on other days, force = check now, carry = keep the last check")
     gen_p.add_argument("--now", type=dt.datetime.fromisoformat, help="pretend it is this time (testing)")
     gen_p.add_argument("--dump", type=Path, help="also write everything fetched to this JSON file")
     gen_p.add_argument("--llm", choices=("api", "claude-code"),
@@ -98,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
 
         now = args.now.astimezone(dt.timezone.utc) if args.now else None
         result = generate(cfg, args.data_dir, args.mode, now=now, backend=args.llm, column=args.opinion,
-                          quiz_mode=args.quiz, forum_mode=args.forum)
+                          quiz_mode=args.quiz, forum_mode=args.forum, deals_mode=args.deals)
         print(report(result))
         if result.path:
             print(f"\nWrote {result.path}")

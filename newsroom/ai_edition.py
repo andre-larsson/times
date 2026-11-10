@@ -58,7 +58,9 @@ def _age_hours(item, now: dt.datetime) -> float | None:
 
 
 def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm: LLM, client: Client,
-          seen: dict[str, str], recent: list[dict[str, Any]]) -> Result:
+          seen: dict[str, str], recent: list[dict[str, Any]], deals: dict[str, Any] | None = None) -> Result:
+    """`deals`: today's deals block when the caller has it (deals.py); a block carried over from the last check
+    keeps its ratings, so there's no deals call."""
     now = harvest.fetched_at
     llm_cfg = cfg.get("llm") or {}
     search = cfg.get("search") or {}
@@ -136,7 +138,7 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
     # 5. writers, in parallel
     gaming_base = links.gaming_blocks(cfg, harvest, rank.build_candidates(
         [i for i in harvest.items if i.language == "en"], harvest.hn, now))
-    deals_base = links.deals_block(cfg, harvest)
+    deals_base = deals if deals is not None else links.deals_block(cfg, harvest)
     gaming_material, gaming_ids = _gaming_material(harvest, gaming_base, kept, by_id)
     deals_material, deal_ids = _deals_material(deals_base)
 
@@ -152,7 +154,7 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
         jobs.append(("briefs", None, lambda: desk.write_briefs(llm, cfg, brief_rows)))
     if any(gaming_material[k] for k in ("new_on_pc", "reviews", "watch", "news_candidates")):
         jobs.append(("gaming", None, lambda: desk.write_gaming(llm, cfg, gaming_material)))
-    if deals_material["deals"]:
+    if deals_material["deals"] and not deals_base.get("carried"):      # carried over: rated on its check day
         jobs.append(("deals", None, lambda: desk.write_deals(llm, cfg, deals_material)))
 
     outputs = _parallel(llm_cfg, [j[2] for j in jobs])

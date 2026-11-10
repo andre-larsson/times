@@ -64,3 +64,16 @@ def recent_headlines(data_dir: Path, exclude: str = "", count: int = 2) -> list[
         if len(out) >= count:
             break
     return out
+
+
+def previous_edition(data_dir: Path, before: str, key: str, limit: int = 14) -> dict[str, Any] | None:
+    """The newest of the last `limit` saved editions whose id sorts before `before` and that has `key` (the deals
+    carried over: re-running today's edition skips today's own file)."""
+    root = data_dir / "editions"
+    if not root.exists():
+        return None
+    editions = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(root.rglob("*.json"))[-limit:]]
+    for ed in sorted(editions, key=lambda e: e["edition_id"], reverse=True):
+        if ed["edition_id"] < before and ed.get(key):
+            return ed
+    return None

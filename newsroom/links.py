@@ -19,7 +19,9 @@ RATING_SCORE = {"overwhelmingly positive": 9, "very positive": 8, "positive": 7,
 
 
 def build_links_edition(cfg: dict[str, Any], harvest: Harvest, edition_id: str,
-                        previous: dict[str, Any] | None = None, reason: str = "") -> dict[str, Any]:
+                        previous: dict[str, Any] | None = None, reason: str = "",
+                        deals: dict[str, Any] | None = None) -> dict[str, Any]:
+    """`deals`: today's deals block when the caller has it (deals.py: checked today, or carried over)."""
     now = harvest.fetched_at
     search = cfg.get("search") or {}
     hn_cfg = (cfg.get("sources") or {}).get("hackernews") or {}
@@ -65,7 +67,7 @@ def build_links_edition(cfg: dict[str, Any], harvest: Harvest, edition_id: str,
         "links": links,
         "hn_top": hn_top,
         "gaming": gaming_blocks(cfg, harvest, cands),
-        "deals": deals_block(cfg, harvest),
+        "deals": deals if deals is not None else deals_block(cfg, harvest),
         "sources": [s.__dict__ for s in harvest.status],
     }
 

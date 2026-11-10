@@ -63,6 +63,11 @@ a brand-new persona joins (Fable invents ideas, Opus drafts, Sonnet judges). The
 `static/botcheck.js` asks readers to prove they're bots. `--forum off|force` on `generate`; see `forum:` in
 config.yaml and the Botroom section of PLAN.md.
 
+The deals are checked (fetched, and rated by Claude in AI editions) on Tuesdays and Fridays, when the week's
+new deals are in; the editions in between carry the last check over, minus deals that have ended. A missed or
+failed check day is made up by the next edition. `--deals force` checks now, `--deals carry` keeps the last
+check. See `deals.days` in config.yaml.
+
 `generate` without `--mode` (= `auto`) only builds an edition when a slot in `schedule.editions` has
 passed without one; that is what the hourly workflow runs. Local test runs should use
 `--data-dir _work/data` (git-ignored); `data/` is where the workflow commits real editions.
@@ -80,6 +85,7 @@ newsroom/            Python package: `python -m newsroom <command>`
   sources/           fetchers: RSS feeds, Google News, YouTube, Hacker News, Steam, IsThereAnyDeal, critic scores
   rank.py            rule-based sections, junk filters, same-story clustering, scoring
   links.py           the links edition (and the gaming/deals blocks)
+  deals.py           the deals cadence: check on deals.days, carry the last check over in between
   generate.py        due check → pre-run check → fetch → build → save; GitHub Actions outputs
   preflight.py       picks full / reduced / links / skip (key, budget pace, credit probe)
   ai_edition.py      triage → editor → full text → writers → assembly, with partial fallbacks

@@ -18,6 +18,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Sections | **AI** · **Tech** · **Gaming** · **Deals** |
 | Frequency | **One edition a day**, 07:00 Swedish time (`Europe/Stockholm`, so daylight saving is handled) |
 | Edition shape | 1–3 **featured** · 3+ **medium** · 10+ **briefs**, plus the **gaming** and **deals** sections, all sized by how much news there is |
+| Deals cadence | **Checked Tuesday and Friday** (`deals.days`): shops change their deals on Monday and Thursday evenings. The editions in between carry the last check over, minus deals that have ended (2026-11-10) |
 | Look | **Tabloid-style news site**, inspired by Swedish evening papers like Expressen but **not a copy**: own logo, colors, fonts and layout |
 | Language | **English** (Swedish sources such as MISSIL are summarized in English) |
 | Build / hosting | GitHub Actions → GitHub Pages (`actions/deploy-pages`) |
@@ -79,7 +80,7 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **Open-Meteo** | Fetched **live in the reader's browser** (`static/weather.js`, `/v1/forecast`, no key, `timezone=auto`), not by the pipeline. Shows the place in `config.yaml` → `weather` (Stockholm) until the reader presses "Use my location": the browser asks for permission, and the position is rounded to two decimals (~1 km) before it's sent. The choice and the last forecast (30 minutes, one place) are kept in localStorage; on later visits the position is only read when the permission still stands, so the page never opens with a prompt. Box: today's high/low, condition (WMO code → word), temperature now, precipitation chance and amount, max wind (m/s), the configured hours still ahead today (09, 12, 15, 18), the next two days, sunrise/sunset. Top of today's front-page rail only (archived front pages have none); hidden without JavaScript; a failed fetch shows one line. **Terms:** the free API is for non-commercial use (no ads or subscriptions: true here), under 10,000 calls a day per IP, which each reader's browser has to itself; data CC BY 4.0, so "Weather data by Open-Meteo.com" links to open-meteo.com next to the data | ✅ |
+| **Open-Meteo** | Fetched **live in the reader's browser** (`static/weather.js`, `/v1/forecast`, no key, `timezone=auto`), not by the pipeline. Shows the place in `config.yaml` → `weather` (Lund since 2026-11-10, was Stockholm; the site never guesses where a reader is) until the reader presses "Use my location" (a pin button next to the place name at the top of the box; until 2026-11-10 it was a small link under it): the browser asks for permission, and the position is rounded to two decimals (~1 km) before it's sent. The choice and the last forecast (30 minutes, one place) are kept in localStorage; on later visits the position is only read when the permission still stands, so the page never opens with a prompt. Box: today's high/low, condition (WMO code → word), temperature now, precipitation chance and amount, max wind (m/s), the configured hours still ahead today (09, 12, 15, 18), the next two days, sunrise/sunset. Top of today's front-page rail only (archived front pages have none); hidden without JavaScript; a failed fetch shows one line. **Terms:** the free API is for non-commercial use (no ads or subscriptions: true here), under 10,000 calls a day per IP, which each reader's browser has to itself; data CC BY 4.0, so "Weather data by Open-Meteo.com" links to open-meteo.com next to the data | ✅ |
 
 ### Draft interests (editable)
 
@@ -151,9 +152,32 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
     horror game" without inventing more.
 - **Earlier picks, still running:** earlier deals of the day (last week) that haven't ended, each once, and
   not when today's page already lists the game.
+- **Cadence: checked Tuesday and Friday** (`deals.days`, built 2026-11-10, `newsroom/deals.py`). The end times
+  of the 78 different deals in the editions of 3–10 November: Steam 30 (11 on Monday at 17:00–18:00 UTC, its
+  10:00 Pacific changeover, 4 on Thursday at 18:00, the rest publisher sales ending on other days), Fanatical 23
+  (17 on Monday 23:59 UTC, its weekly deals), Epic 4 (Monday afternoon), IndieGala 4 (Monday or Thursday 23:59),
+  Humble 3 (Thursday 18:00, one Monday). GOG, the most common shop in the rated list (27), and three small shops
+  give no end time. So most new deals are up by Monday evening and the rest by Thursday evening, and the Tuesday
+  and Friday 07:00 editions are the first to see them; Steam's seasonal sales start on Thursdays too. Nothing
+  contradicted that. Epic's weekly free games (Thursdays) don't show up: no deal had a price of 0. It is only a
+  week of data (ITAD since 7 November), so re-check after a month.
+  - On a check day the deals are fetched (the ITAD lists or Steam specials) and rated (the deals call). The other
+    editions fetch neither and make no deals call: they carry the last check's block over (its ratings, deals of
+    the day and `checked_at`), minus the deals that have ended since, marked `carried`. The Harvest status gets a
+    "Deals" row ("skipped — not checked today: carried over from Tue 10 Nov 07:05; next check Fri"), and the run
+    report a "Deals …" line.
+  - **Safety net:** the deals are checked anyway when a check day was missed (no edition, or its check found
+    nothing: then the last check is kept and the next edition tries again), when the last check is more than
+    `deals.max_age_days` (4) old, when every carried deal has ended, and in an AI edition after a check nobody
+    rated (a links edition, or a failed deals call). At most one check per check day. `generate --deals force`
+    checks now; `--deals carry` keeps the last check.
+  - **The Botroom** starts one thread per deal of the day: a carried deal already had its thread (forum/day.py
+    skips titles an earlier day used), so on a carried day the second deal of the day can get one, then none.
 - **Links:** plain store links, no affiliate links.
-- **Labels:** "Price checked 07:00. Prices change." Each deal is credited to IsThereAnyDeal.
-- **Cost:** written in one Opus call for the whole section.
+- **Labels:** "Prices checked 07:05; they change." on a check day; "Prices checked Tuesday 07:05; they change."
+  on the days after, where the deal of the day becomes "Tuesday's deal". The Deals page adds the next check
+  ("(next check Friday)"). Each deal is credited to IsThereAnyDeal.
+- **Cost:** written in one Opus call for the whole section, on check days only (~$0.07 measured).
 
 ### Opinion column
 
@@ -559,7 +583,7 @@ web search is $0.01 per search.
 | Medium (~$0.02 each) | Opus | 3 → $0.06 | 6 → $0.12 |
 | Briefs (one batched call) | Opus | $0.02 | $0.04 |
 | Gaming: blurbs, verdicts, video blurbs (one batched call) | Opus | $0.04 | $0.06 |
-| Deals: deal of the day + 20 rated deals (one call; ~$0.04 for 10) | Opus | $0.06 | $0.08 |
+| Deals: deal of the day + 20 rated deals (one call, Tuesday and Friday only; ~$0.07 measured, so ~$0.02 a day) | Opus | $0.02 | $0.02 |
 | Discovery, depth `normal` with dynamic filtering (6 searches; measured $0.32) | Opus | $0.32 | $0.32 |
 | Opinion column, Wednesday and Sunday (~$0.45 each) | Opus + Fable | ~$4/month | ~$4/month |
 | News quiz, Tuesday and Saturday (~$0.35 each) | Opus | ~$3/month | ~$3/month |
@@ -590,6 +614,9 @@ web search is $0.01 per search.
   ($8 / $40, was $10 / $50). At the same token counts a column is ~$0.47 (was ~$0.53), ~$0.56/month less;
   the Fable 5.1 figures above are as measured. Re-measure after the first 5.2 column.
 - Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$5/month.
+- Deals checked twice a week (from 2026-11-10, `deals.days`): the deals call ($0.04–0.08 measured, $0.08 with 20
+  rated deals) runs ~9 times a month instead of 30, so editions on the other days are ~$0.07 cheaper and a month
+  ~$1.50 lower (~$31 with everything on).
 - Rough estimates; phases 3 and 5 measure the real numbers.
 
 | Knob | Config | Default |
@@ -599,6 +626,7 @@ web search is $0.01 per search.
 | Newsworthiness bar | `edition.*.min_newsworthiness` | 4.5 / 3.5 / 2.5 |
 | Gaming blocks | `gaming.*` | see the gaming section above |
 | Deals | `deals.featured / more / top_picks / shelves / min_cut / near_low_pct / min_rating` | 1–2 / 5–20 / 8 / 8 per list / 50% / 10% / "Very Positive" |
+| Deals cadence | `deals.days / max_age_days`; `generate --deals auto\|force\|carry` | Tue, Fri / 4 |
 | Deals mix and genres | `deals.mix`, `sources.itad.hidden`, `sources.itad.genres` | 10 popular / 5 hidden gems / 5 genre picks; five genre groups |
 | Search depth and frequency | `search.depth`, `search.discovery_every_days` | `light`, 1 |
 | Models | `models.*` | Opus everywhere except Haiku triage and the Fable column (`opinion`) |
@@ -646,6 +674,7 @@ GitHub Actions (hourly check; "Run workflow" button with an optional mode)
 │   1. fetch      HN (Algolia) · Ars · TechRadar · Tom's Hardware · PCMag via Google News
 │                 MISSIL · PC Gamer · RPS · Eurogamer · Game Informer · PCGamesN · YouTube channel feeds
 │                 Steam store data · IsThereAnyDeal deals and critic scores · review pages (scores)
+│                 (deals lists only on check days, deals.py; the other days carry the last check over)
 │   2. normalize  canonical URL, title, excerpt, source, time, signals, language
 │   3. dedupe     against data/seen.json; age limits
 │   4. rank       rule-based (signals, recency, keywords, number of sources) → every mode
@@ -655,7 +684,7 @@ GitHub Actions (hourly check; "Run workflow" button with an optional mode)
 │   7. edit       Opus editor: tiers for AI/Tech (+ any huge gaming story)
 │   8. extract    full text for featured and medium stories
 │   9. write      Opus: featured and medium (one call each) · briefs (one batched call) ·
-│                 gaming (one batched call) · deals (one call) · column / quiz when due
+│                 gaming (one batched call) · deals (one call, check days) · column / quiz when due
 │   9b. botroom   roster step (a newcomer: Fable + Opus + Sonnet) · two rounds, one call per bot (Haiku/Sonnet)
 │   ───────────────
 │  10. save       data/editions/YYYY/MM/DD.json, data/forum/, games_watchlist.json, usage.json, seen.json
@@ -680,6 +709,7 @@ times/
 │   ├── sources/              # feeds.py (RSS, Google News, YouTube), hackernews.py, steam.py, itad.py
 │   ├── rank.py               # sections, junk filter, clustering (dedupe), scoring
 │   ├── links.py              # the links edition, and the gaming/deals blocks AI modes fall back to
+│   ├── deals.py              # the deals cadence: check on deals.days, carry the last check over in between
 │   ├── budget.py  preflight.py  extract.py  watchlist.py      (phase 3)
 │   ├── llm.py                # anthropic client, structured outputs, cost tally, error classes
 │   ├── discover.py  triage.py  editor.py
@@ -736,6 +766,8 @@ deals:
   min_steam_rating: "Very Positive"
   mix: { popular: 10, hidden: 5, genre: 5 }
   shelves: 8                        # Deals page: up to 8 more per list, unrated, behind "More"
+  days: [tue, fri]                  # check (fetch + rate) the deals in these editions; the rest carry it over
+  max_age_days: 4                   # safety net: check anyway when the last check is older
 
 search:
   depth: light                      # off | light | normal | deep
@@ -830,7 +862,8 @@ pricing:                            # USD per million tokens (Nov 2026)
     "featured": [ { "game": "…", "shop": "Steam", "price": 9.99, "regular": 39.99, "currency": "EUR", "cut": 75,
                     "lowest_ever": true, "expires": "…", "verdict": "strong_buy", "headline": "…", "body": "…", "url": "…" } ],
     "more": [ { "game": "…", "price": 4.99, "regular": 19.99, "cut": 75, "lowest_ever": false, "advice": "…", "url": "…" } ],
-    "checked_at": "2026-11-03T05:30:00Z"
+    "checked_at": "2026-11-03T05:30:00Z",
+    "carried": { "from": "2026-11-03", "ended": 2 }
   },
   "links": [ { "section": "tech", "title": "…", "url": "…", "source": "…", "excerpt": "…", "rank": 0.8 } ],
   "opinion": { "slug": "…", "kicker": "Opinion", "headline": "…", "dek": "…", "body": "…", "pull_quote": "…",
@@ -846,7 +879,9 @@ pricing:                            # USD per million tokens (Nov 2026)
 }
 ```
 
-`opinion` and `quiz` are only present on the days they run. The Botroom keeps its own files in `data/forum/`:
+`deals.carried` is only on editions that didn't check the deals (see *Deals section → Cadence*): `from` is the
+edition whose check it is, `ended` how many of its deals have ended since (they're left out), and `checked_at`
+stays the time of that check. `opinion` and `quiz` are only present on the days they run. The Botroom keeps its own files in `data/forum/`:
 `YYYY-MM-DD.json` per day (`threads` with their `comments`: id, handle, text, bit, reply_to, votes, model;
 `roster` news; `pending_reply`; `plan`, `calls` and `cost` by model), `roster.json` (the members' state, and the
 state before the last day for a re-run) and `cast.json` (generated personas, retired ones, ideas proposed). The 2026-11-07 edition also carries a
@@ -862,7 +897,7 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/` | Today's front page (layout above) |
 | `/times/ai/`, `/times/tech/` | Section front: colored band, recent featured and medium stories, briefs |
 | `/times/gaming/` | All gaming blocks, ~2 weeks of history, the full "Coming soon" list |
-| `/times/deals/` | Today's deals: deal(s) of the day, top picks, then each list (rated, then "More" unrated), plus earlier deals of the day still running |
+| `/times/deals/` | The latest deals check (Tuesday and Friday; carried over in between, minus ended deals): deal(s) of the day, top picks, then each list (rated, then "More" unrated), plus earlier deals of the day still running |
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
 | `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
 | `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz nav link once there is one) |
@@ -1057,7 +1092,7 @@ The real file is in the repo; this is its shape.
 | Steam data is an unofficial endpoint | Graceful fallback (the block hides itself); IsThereAnyDeal and the feeds cover the rest |
 | No Metacritic or OpenCritic API | Both averages via IsThereAnyDeal's game info; outlets' own scores from feeds or the review page's schema.org data; Steam rating alongside |
 | Video blurbs based only on title and description | Framed as "Watch" teasers, not reviews |
-| Deals advice that's wrong or out of date | Price and timestamp shown; "prices change"; lowest-ever data from IsThereAnyDeal; no affiliate links |
+| Deals advice that's wrong or out of date | Price and check time shown ("Prices checked Tuesday 07:05" between checks); ended deals dropped every edition; "prices change"; lowest-ever data from IsThereAnyDeal; no affiliate links |
 | Summaries state things the source doesn't say | Prompts limit Claude to the provided text; "By Claude (AI)" byline; source links |
 | Prompt injection from fetched pages | Writing calls have no tools; JSON-schema outputs; sources always linked. Discovery, the one call with tools, can only search and read; its finds must link a page the tools returned, and then go through triage like any feed item |
 | Key secrets in a public repo | Not exposed to fork PRs; no `pull_request` trigger; Anthropic workspace capped at $50 |
@@ -1067,6 +1102,8 @@ The real file is in the repo; this is its shape.
 ## Open decisions
 
 Decided since the previous revision:
+- **Deals twice a week** (2026-11-10): checked Tuesday and Friday, carried over in between (see *Deals section*).
+- **Weather home:** Lund (2026-11-10), was Stockholm. The schedule stays on Stockholm time (`Europe/Stockholm`).
 - **Botroom:** built and live from 2026-11-09, with a launch batch of four newcomers made in the simulation.
   About $4 a month before caching (comments ~$3.70, newcomers ~$0.35).
 - **Budget:** $40/month target since 2026-11-09 (measured ~$32.50 a month with everything on; $35 from

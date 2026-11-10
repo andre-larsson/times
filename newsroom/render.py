@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 from jinja2 import ChainableUndefined, Environment, FileSystemLoader, select_autoescape
 
 from . import ROOT, forum
+from . import deals as deal_days
 from .forum import look as forum_look
 from .forum import roster as forum_roster
 from .search import build_index
@@ -152,6 +153,7 @@ class SiteBuilder:
             verdicts=VERDICTS, edition_time=(cfg["schedule"].get("editions") or [""])[0],
             deals_view=lambda deals: deals_view(deals or {}, int((cfg.get("deals") or {}).get("top_picks", 8))),
         )
+        self.env.globals["deals_checked"] = self.deals_checked       # the deals labels: checked when, next check
         self.env.filters.update(
             local=self.local, date_long=self.date_long, date_short=self.date_short,
             date_when=self.date_when, time=self.time, iso=self.iso, num=self.num, money=self.money,
@@ -273,6 +275,21 @@ class SiteBuilder:
         if r in NEGATIVE_RATINGS:
             return "negative"
         return "mixed" if r else ""
+
+    def deals_checked(self, deals: dict[str, Any] | None, edition: dict[str, Any] | None) -> dict[str, str]:
+        """When the deals on `edition`'s pages were checked (deals.py carries a check over between check days):
+        `when` is "07:05" on the edition's own day, "Tuesday 07:05" within the week, else "3 Nov 07:05"; `day` is
+        "Tuesday", or "" when checked the same day; `next` is the next check day ("Friday"), or "" when every
+        edition checks."""
+        checked = self.local((deals or {}).get("checked_at"))
+        ref = self.local((edition or {}).get("generated_at")) or self.now.astimezone(self.tz)
+        if not checked:
+            return {"when": "", "day": "", "next": ""}
+        age = (ref.date() - checked.date()).days
+        day = "" if age <= 0 else f"{checked:%A}" if age < 7 else f"{checked.day} {checked:%b}"
+        nxt = deal_days.next_check(ref.date(), deal_days.settings(self.cfg)[0])
+        return {"when": f"{day} {checked:%H:%M}".strip(), "day": day if age < 7 else "",
+                "next": f"{nxt:%A}" if nxt else ""}
 
     def edition_name(self, edition: dict[str, Any]) -> str:
         d = self.local(edition.get("generated_at"))

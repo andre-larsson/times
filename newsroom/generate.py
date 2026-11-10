@@ -12,6 +12,7 @@ from typing import Any
 from typing import Callable
 
 from . import ai_edition, budget, forum, opinion, preflight, quiz, schedule, store
+from . import deals as deal_days
 from . import seen as seen_store
 from .http import Client
 from .links import build_links_edition
@@ -22,6 +23,7 @@ MODES = ("auto", "full", "reduced", "links", "skip")
 OPINION = ("auto", "force", "off")    # auto = when due (opinion.days / every_weeks) in a full edition
 QUIZ = ("auto", "force", "off")       # auto = when due (quiz.days / every_weeks) in a full edition
 FORUM = ("auto", "force", "off")      # auto = every full edition (forum.enabled)
+DEALS = deal_days.MODES               # auto = on deals.days (or the safety net), force = check now, carry = keep the last check
 MIN_LINKS_TO_PUBLISH = 5          # below this the sources are probably down: keep the last edition
 
 
@@ -37,13 +39,14 @@ class Result:
     column: str = ""                  # the opinion column's headline, or why it wasn't written
     quiz: str = ""                    # the quiz's size, or why it wasn't written
     forum: str = ""                   # the Botroom's day, or why it wasn't written
+    deals: str = ""                   # whether the deals were checked or carried over
 
 
 def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
              now: dt.datetime | None = None, env: dict[str, str] | None = None,
              client: Client | None = None, backend: str | None = None,
              llm_factory: Callable[..., LLM] = LLM, column: str = "auto", quiz_mode: str = "auto",
-             forum_mode: str = "auto") -> Result:
+             forum_mode: str = "auto", deals_mode: str = "auto") -> Result:
     if requested not in MODES:
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
     if column not in OPINION:
@@ -52,6 +55,8 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
         raise ValueError(f"quiz must be one of {', '.join(QUIZ)}")
     if forum_mode not in FORUM:
         raise ValueError(f"forum must be one of {', '.join(FORUM)}")
+    if deals_mode not in DEALS:
+        raise ValueError(f"deals must be one of {', '.join(DEALS)}")
     now = now or dt.datetime.now(dt.timezone.utc)
     env = dict(os.environ) if env is None else env
     sched = cfg["schedule"]
@@ -79,7 +84,10 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
     own_client = client is None
     client = client or Client()
     try:
-        harvest = fetch_all(cfg, client, now, itad_key=(env.get("ITAD_API_KEY") or "").strip() or None)
+        deals_plan = deal_days.plan(cfg, data_dir, edition_id, now, deals_mode, ai=mode in preflight.AI_MODES)
+        harvest = fetch_all(deal_days.fetch_config(cfg, deals_plan.refresh), client, now,
+                            itad_key=(env.get("ITAD_API_KEY") or "").strip() or None)
+        deals_block, deals_note = deal_days.block_for(cfg, harvest, deals_plan)
         previous = store.latest_edition(data_dir)
         if previous and previous.get("edition_id") == edition_id:
             previous = None                  # replacing today's edition: don't dedupe against it
@@ -88,13 +96,14 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
         if mode in preflight.AI_MODES:
             try:
                 result = ai_edition.build(cfg, harvest, edition_id, mode, llm, client, seen,
-                                          store.recent_headlines(data_dir, exclude=edition_id))
+                                          store.recent_headlines(data_dir, exclude=edition_id), deals=deals_block)
                 edition = result.edition
                 seen_store.mark(seen, result.seen_urls, now)
             except ai_edition.AIUnavailable as exc:
                 mode, reason = fallback, f"AI unavailable: {exc}"
         if edition is None and mode == "links":
-            edition = build_links_edition(cfg, harvest, edition_id, previous=previous, reason=reason)
+            edition = build_links_edition(cfg, harvest, edition_id, previous=previous, reason=reason,
+                                          deals=deals_block)
         column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
         quiz_note = _quiz(cfg, data_dir, edition, mode, llm, quiz_mode) if edition else ""
         botroom = _forum(cfg, data_dir, edition, mode, llm, forum_mode) if edition else forum.Outcome()
@@ -115,7 +124,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
     seen_store.save(data_dir, seen, now)
     forum.save(data_dir, botroom)
     return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note, quiz_note,
-                  botroom.note)
+                  botroom.note, deals_note)
 
 
 def _opinion(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
@@ -228,6 +237,8 @@ def report(result: Result) -> str:
         lines.append(f"Quiz {result.quiz}")
     if result.forum:
         lines.append(f"Botroom {result.forum}")
+    if result.deals:
+        lines.append(f"Deals {result.deals}")
     if result.llm and result.llm.get("calls"):
         l = result.llm
         lines.append(f"Claude: {l['calls']} calls, ${l['usd']:.4f} charged, ${l['equivalent_usd']:.4f} API-equivalent"

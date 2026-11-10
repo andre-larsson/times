@@ -109,7 +109,8 @@
   <div class="wrap">
     <div class="band-head">
       <h2 class="band-title"><a href="{{ url('deals/') }}">Deals</a></h2>
-      <p class="band-sub">{{ sections.deals.blurb }} Prices checked {{ deals.checked_at | time }}; they change.</p>
+      {% set checked = deals_checked(deals, edition) %}
+      <p class="band-sub">{{ sections.deals.blurb }}{% if checked.when %} Prices checked {{ checked.when }}; they change.{% endif %}</p>
     </div>
     {% with full = false %}{% include "partials/deals_blocks.html" %}{% endwith %}
   </div>

@@ -98,7 +98,7 @@ def fetch_all(cfg: dict[str, Any], client: Client, now: dt.datetime | None = Non
                                  lambda key=key: steam.fetch_list(client, steam_cfg, key, now)) or []
 
     itad_cfg = src.get("itad") or {}
-    if itad_cfg.get("enabled"):
+    if itad_cfg.get("enabled") and itad_cfg.get("deals", True):    # deals: False on days they carry over (deals.py)
         if itad_key:
             deals_cfg, cache, lists = cfg.get("deals") or {}, {}, []
             for q in itad.queries(itad_cfg, deals_cfg):

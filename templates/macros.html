@@ -74,7 +74,12 @@
 {#- A shell: static/weather.js fetches the forecast live from Open-Meteo in the reader's browser, for
     w.place or, once they ask for it, their own position. Hidden without JavaScript. #}
 <section class="weather" aria-label="Weather" data-weather data-place="{{ w.place }}" data-lat="{{ w.latitude }}" data-lon="{{ w.longitude }}" data-hours="{{ w.hours | join(',') }}" data-days="{{ w.days }}" hidden>
-  {{ block_head('Weather', w.place) }}
+  <div class="block-head">
+    <h2 class="block-title">Weather</h2>
+    <p class="block-sub">{{ w.place }}</p>
+    {#- next to the place it changes; static/weather.js shows it when the browser can locate #}
+    <button class="weather-where link-button" type="button" data-weather-where hidden>Use my location</button>
+  </div>
   <p class="weather-status" data-weather-status aria-live="polite">Loading the forecast…</p>
   <div data-weather-body hidden>
     <div class="weather-today">
@@ -88,11 +93,7 @@
     <ol class="weather-days" data-w="days"></ol>
   </div>
   <p class="meta" data-w="sun" hidden></p>
-  <p class="meta">
-    <a class="meta-link" href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
-    <span class="meta-sep" aria-hidden="true" data-weather-where hidden>·</span>
-    <button class="meta-link link-button" type="button" data-weather-where hidden>Use my location</button>
-  </p>
+  <p class="meta"><a class="meta-link" href="https://open-meteo.com/">Weather data by Open-Meteo.com</a></p>
 </section>
 {%- endmacro %}
 

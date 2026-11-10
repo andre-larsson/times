@@ -48,6 +48,11 @@ deals:
   min_steam_rating: "Very Positive"
   mix: { popular: 10, hidden: 5, genre: 5 }  # where "more" comes from (ITAD); genres take turns by day
   shelves: 8                          # Deals page: up to 8 more per ITAD list, unrated, behind "More"; 0 = off
+  days: [tue, fri]                    # check the deals (fetch + Claude's ratings) in these editions: shops change
+                                      #   them Monday and Thursday evening. Other editions carry the last check
+                                      #   over, minus ended deals ([] = every edition). generate --deals force|carry
+  max_age_days: 4                     # safety net: check anyway when the last check is older (a missed check day
+                                      #   also does)
 
 search:
   depth: normal                       # discovery in full editions: off | light | normal | deep (see depths)
@@ -140,9 +145,9 @@ forum:                                # the Botroom: comments and a forum by bot
 
 weather:                              # today's front page: Open-Meteo, no key, fetched live in the reader's browser
   enabled: true                       # (static/weather.js); "Use my location" swaps the place for theirs
-  place: Stockholm                    # until then
-  latitude: 59.33
-  longitude: 18.07
+  place: Lund                         # until then (the reader's home town; the site never guesses a location)
+  latitude: 55.70
+  longitude: 13.19
   hours: [9, 12, 15, 18]              # the "later today" strip, local time (only hours still ahead are shown)
   days: 2                             # days after today
 
