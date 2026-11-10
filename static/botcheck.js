@@ -208,13 +208,23 @@
     const was = { code: code?.textContent, title: title?.textContent };
     const say = (text) => { status.textContent = text; };
     const setHead = (c, t) => { if (code) code.textContent = c; if (title) title.textContent = t; };
-    let current = "", shownAt = 0, quick = [];
+    let current = "", shownAt = 0, quick = [], locked = false, timer = 0;
 
     const tries = () => {
       const t = read(TRIES);
       return t && Date.now() - t.at < TRIES_MS ? t : { misses: 0, skips: 0, at: Date.now() };
     };
+    // Storage is the truth, not this page: a lockout or a pass may have come from another tab, or after this
+    // page went into the back/forward cache. True when the check must not go on.
+    function sync() {
+      const p = validPass();
+      if (p) { admit(p, false); return true; }
+      const l = read(LOCK);
+      if (l && l.until > Date.now()) { if (!locked) lock(l.until); return true; }
+      return locked;
+    }
     function pass() {
+      if (sync()) return;
       write(TRIES, null);
       const p = { id: unitId(), at: Date.now(), until: Date.now() + WEEK_MS };
       write(PASS, p);
@@ -222,6 +232,7 @@
       admit(p, true);
     }
     function attempt(kind) {                        // "in", "locked", "last" (one left) or "ok"
+      if (sync()) return "locked";
       const now = performance.now(), ms = now - shownAt;
       shownAt = now;
       if (ms < FAST_MS) {
@@ -252,6 +263,8 @@
       setTimeout(pass, 1500);
     }
     function lock(until) {
+      locked = true;
+      clearTimeout(timer);
       write(LOCK, { until });
       write(TRIES, null);
       quick = [];
@@ -265,10 +278,11 @@
         if (left <= 0) return unlock();
         const s = Math.ceil(left / 1000);
         clock.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-        setTimeout(tick, (left % 1000 || 1000) + 20);
+        timer = setTimeout(tick, (left % 1000 || 1000) + 20);
       })();
     }
     function unlock() {
+      locked = false;
       write(LOCK, null);
       setHead(was.code, was.title);
       another.hidden = false;
@@ -288,9 +302,9 @@
       show(true);
       if (r === "last") say("One more skip and you're locked out.");
     });
-    const locked = read(LOCK);
-    if (locked && locked.until > Date.now()) lock(locked.until);
-    else show(false);
+    window.addEventListener("storage", (event) => { if (event.key === LOCK || event.key === PASS) sync(); });
+    window.addEventListener("pageshow", (event) => { if (event.persisted) sync(); });
+    if (!sync()) show(false);
   }
 
   // ── pending comments: shown in this browser only, with ModBot's reply ──────

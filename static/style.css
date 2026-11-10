@@ -862,6 +862,7 @@ a.critic:hover { text-decoration: underline; }
   grid-area: 1 / 1; justify-self: end; align-self: end;
   font: 600 0.875rem/1.4 var(--font-ui); color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px;
 }
+.botcheck-another { touch-action: manipulation; }   /* quick taps are taps, not a double-tap zoom */
 .botcheck-another:disabled { cursor: default; }
 .botroom-noscript { margin-top: 0; margin-bottom: var(--s-4); }
 .botroom-unit {
