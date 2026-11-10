@@ -1,0 +1,3261 @@
+{
+ "edition_id": "2026-11-10",
+ "generated_at": "2026-11-10T06:05:41.748153+00:00",
+ "mode": "full",
+ "reason": "",
+ "llm": {
+  "backend": "api",
+  "usd": 1.183556,
+  "equivalent_usd": 1.183556,
+  "calls": 37,
+  "by_task": {
+   "probe": {
+    "calls": 1,
+    "usd": 2.5e-05,
+    "equivalent_usd": 2.5e-05,
+    "failed": 0
+   },
+   "discover": {
+    "calls": 1,
+    "usd": 0.326123,
+    "equivalent_usd": 0.326123,
+    "failed": 0
+   },
+   "triage": {
+    "calls": 4,
+    "usd": 0.013373,
+    "equivalent_usd": 0.013373,
+    "failed": 0
+   },
+   "editor": {
+    "calls": 1,
+    "usd": 0.109403,
+    "equivalent_usd": 0.109403,
+    "failed": 0
+   },
+   "medium": {
+    "calls": 5,
+    "usd": 0.123954,
+    "equivalent_usd": 0.123954,
+    "failed": 0
+   },
+   "featured": {
+    "calls": 2,
+    "usd": 0.109676,
+    "equivalent_usd": 0.109676,
+    "failed": 0
+   },
+   "briefs": {
+    "calls": 1,
+    "usd": 0.053532,
+    "equivalent_usd": 0.053532,
+    "failed": 0
+   },
+   "gaming": {
+    "calls": 1,
+    "usd": 0.09617,
+    "equivalent_usd": 0.09617,
+    "failed": 0
+   },
+   "deals": {
+    "calls": 1,
+    "usd": 0.0824,
+    "equivalent_usd": 0.0824,
+    "failed": 0
+   },
+   "quiz": {
+    "calls": 1,
+    "usd": 0.139902,
+    "equivalent_usd": 0.139902,
+    "failed": 0
+   },
+   "quiz_check": {
+    "calls": 1,
+    "usd": 0.054253,
+    "equivalent_usd": 0.054253,
+    "failed": 0
+   },
+   "forum_sonnet": {
+    "calls": 4,
+    "usd": 0.059609,
+    "equivalent_usd": 0.059609,
+    "failed": 0
+   },
+   "forum_haiku": {
+    "calls": 14,
+    "usd": 0.015136,
+    "equivalent_usd": 0.015136,
+    "failed": 0
+   }
+  },
+  "stopped": "",
+  "estimated_usd": 1.183556
+ },
+ "stories": [
+  {
+   "slug": "anthropic-ships-claude-fable-5-2-tops-artificial-analysis-at",
+   "section": "ai",
+   "newsworthiness": 4.5,
+   "published_at": "2026-11-09T18:01:10+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Claude Fable 5.2 and Mythos 5.2",
+     "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+    },
+    {
+     "name": "Hacker News",
+     "title": "Claude Fable 5.2 scores 65 on Artificial Analysis, highest so far",
+     "url": "https://artificialanalysis.ai/models/claude-fable-5-2"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50429068",
+    "points": 404,
+    "comments": 719
+   },
+   "tier": "featured",
+   "kicker": "Models",
+   "headline": "Anthropic ships Claude Fable 5.2, tops Artificial Analysis at 65",
+   "dek": "The new flagship and its restricted twin, Mythos 5.2, cost less than 5.1, but independent testing finds Fable slow and very verbose.",
+   "body": "Anthropic released Claude Fable 5.2 and Claude Mythos 5.2 on November 9. Within hours, Artificial Analysis gave Fable 5.2 a score of 65 on its Intelligence Index, a result billed on Hacker News as the highest on the index so far. The median for models in its price tier is 40.\n\nThe two are the same underlying model. Fable carries cybersecurity and biology safeguards and is open to all users. Mythos is reserved for organizations admitted to Anthropic's Life Sciences and Cyber Verification Programs. Anthropic says both produce output up to 30 percent faster than the 5.1 versions and cost less: $8 per million input tokens and $40 per million output tokens. An optional fast mode speeds up generation by up to 2.5 times for $16 and $80.\n\nThe company's claims are ambitious. It says a team of 1,000 Fable 5.2 agents formalized the proof of Fermat's Last Theorem in 30 hours, against 11 days for an earlier research version of Claude. One engineer had the model coordinate over 1,000 subagents for eight days to build a prototype operating system that boots on a laptop. Anthropic also says Mythos 5.2 found 10.2 percent more vulnerabilities than Opus 5.5 on its internal CVE Rediscovery evaluation. None of these results have been independently verified.\n\nArtificial Analysis paints a costlier picture of Fable 5.2 at Max effort. It generated 275 million tokens running the index, against a median of 72.8 million. Each task took 46.4 minutes on average, versus a 12.6-minute median, and cost $26.54. Time to first answer token was nearly 216 seconds. The model has a 1 million token context window and accepts text and images.\n\nAnthropic itself does not pitch Fable as an everyday tool. It recommends starting most coding work on Opus 5.5 and moving up to Fable or Mythos for the most ambitious, open-ended jobs. Fable 5.2 can also act as an advisor to smaller models or orchestrate them. On the company's FrontierCode 2.0 test, Fable at High effort roughly matched Opus 5.5 at Max effort for about half the cost per task.",
+   "key_points": [
+    "Fable 5.2 scores 65 on Artificial Analysis Intelligence Index, tier median 40",
+    "Pricing drops to $8 input and $40 output per million tokens",
+    "Averages 46.4 minutes and $26.54 per index task at Max effort",
+    "Mythos 5.2 limited to verified cyber and life sciences organizations"
+   ],
+   "breaking": false,
+   "why_it_matters": "Developers get the top-scoring model at a lower per-token price, but its verbosity and slow tasks mean real bills and wait times can run high. Anthropic still points daily coding to Opus 5.5.",
+   "cover": {
+    "style": "type",
+    "figure": "65",
+    "caption": "Fable 5.2's Artificial Analysis Intelligence Index score"
+   },
+   "id": "s1",
+   "lead": true
+  },
+  {
+   "slug": "attackers-exploit-sshole-openssh-flaw-to-break-into-linux-sy",
+   "section": "tech",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-09T16:04:57+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "Hackers exploit SSHole OpenSSH flaw to breach Linux systems",
+     "url": "https://www.bleepingcomputer.com/news/security/hackers-exploit-sshole-openssh-flaw-to-breach-linux-systems/"
+    },
+    {
+     "name": "Ars Technica",
+     "title": "Vulnerability that lets hackers SSH into Linux devices is under active exploitation",
+     "url": "https://arstechnica.com/security/2026/11/vulnerability-that-lets-hackers-ssh-into-linux-devices-is-under-active-exploitation/"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Security",
+   "headline": "Attackers exploit SSHole OpenSSH flaw to break into Linux systems",
+   "dek": "Exploitation began the day a fix and proof-of-concept landed, with one group installing a Python backdoor on musl-based systems such as Alpine.",
+   "body": "Hackers are actively exploiting SSHole (CVE-2026-123158), an authentication bypass in OpenSSH on certain musl-based Linux systems, BleepingComputer and Ars Technica report. Attackers are using it to run commands, steal credentials and set up persistent access. Admins should update to OpenSSH 10.6p2 now.\n\nThe flaw, disclosed by researcher Ozgun Kultekin, lets attackers log in to accounts whose password hash is set to an asterisk (*), a common way to block password logins. According to BleepingComputer, an oversized password makes musl's password-hashing function return * on error, and OpenSSH treats that as a match. Exploitation requires specific authentication settings and does not affect accounts with valid password hashes. It can lead to root where the account has passwordless admin rights. Alpine, popular in cloud and virtual environments, is among the affected distributions.\n\nThe timeline was short. OpenSSH maintainers shipped the fix on November 5, and exploit code appeared about four hours later. GreyNoise recorded the first successful in-the-wild exploitation on November 7 at 00:46 UTC, roughly 40 hours after the patch. It logged 16 successful exploitation chains from six IP addresses, though the company says these are not representative of broader activity. Previdian saw 20 attempts from 13 IPs in nine countries, and watchTower tied exploitation to botnets and cryptomining. Finnish firm Defused saw only a small number of actors and called the activity not widespread.\n\nGreyNoise says a group it tracks as GT10 conducted \"mature intrusions\" into its honeypots in Southeast Asia, per Ars Technica. The attackers ran system and container reconnaissance, queried cloud metadata services, tried to read password hashes and root SSH keys, and edited authorized_keys files. One gained root and installed TAC Agent, a Python command-and-control implant with Chinese-language comments that Ars says appears to be AI-generated. GT10 installs Python3 where it is missing. In the observed case the implant never reached its C2 server. GreyNoise also gained access to a GT10 server that revealed potential other victims.\n\nBesides patching, admins can disable SSH password authentication on affected systems. BleepingComputer advises checking for unexpected successful password logins to accounts with * in /etc/shadow, unauthorized SSH keys, and TAC Agent files or startup services.",
+   "key_points": [
+    "OpenSSH 10.6p2 fixes SSHole, released November 5",
+    "Exploit code appeared about four hours after the patch",
+    "GreyNoise logged 16 successful exploitation chains from six IPs",
+    "Attackers installed TAC Agent, a Python backdoor, after gaining root"
+   ],
+   "breaking": false,
+   "why_it_matters": "Alpine and other musl-based images are everywhere in containers and cloud VMs, so check OpenSSH versions on any exposed instance today. Disabling SSH password authentication blocks the attack if patching has to wait.",
+   "cover": {
+    "style": "type",
+    "figure": "40 hrs",
+    "caption": "From the OpenSSH fix to the first confirmed successful attack"
+   },
+   "id": "s2"
+  },
+  {
+   "slug": "report-says-gemini-sends-personal-drive-files-and-emails-to",
+   "section": "ai",
+   "newsworthiness": 4.0,
+   "published_at": "2026-11-09T18:24:38+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Google Gemini routes personal Drive files and emails to human annotators",
+     "url": "https://github.com/thisisme6598/gemini_files/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50429426",
+    "points": 512,
+    "comments": 118
+   },
+   "tier": "medium",
+   "kicker": "Privacy",
+   "headline": "Report says Gemini sends personal Drive files and emails to reviewers",
+   "dek": "A GitHub write-up topping Hacker News says Google quietly dropped a 2023 promise that connected Gmail, Docs and Drive content stays away from human review.",
+   "body": "Google Gemini routes personal Drive files and emails into human review pipelines, according to a report published on GitHub that has drawn 512 points on Hacker News. The author says Google reversed a 2023 promise that personal Workspace content \"is not seen by human reviewers.\"\n\nThe report points to an updated Google Help page and an October 16 edit to the original 2023 blog post. According to the author, Google now warns that reviewers may see \"the email or file\" and advises users not to connect apps containing confidential information.\n\nThe author also claims that consumer Gemini with Connected Apps enabled can pull Workspace data during casual chat, without @Drive or @Gmail tags. In the author's own testing, results varied from no retrieval to full ingestion of an email's text.",
+   "key_points": [
+    "A GitHub report says Google edited its 2023 Gemini blog post on October 16 to allow human review of connected Drive and Gmail content.",
+    "According to the report, Google now advises against connecting apps that contain confidential information.",
+    "The author says personal data can be retrieved during casual chat without explicit @ tags, with inconsistent results across tests."
+   ],
+   "id": "s3"
+  },
+  {
+   "slug": "rosen-law-firm-files-class-action-against-nvidia-over-huang",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-10T00:03:08+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Law firm files class-action lawsuit against Nvidia after CEO Jensen Huang confirms affair with alleged Chinese spy",
+     "url": "https://www.tomshardware.com/tech-industry/big-tech/law-firm-files-class-action-lawsuit-against-nvidia-after-ceo-jensen-huang-confirms-affair-with-alleged-chinese-spy-more-to-come-as-multiple-other-law-firms-investigate-securities-fraud-following-stock-drop"
+    },
+    {
+     "name": "Ars Technica",
+     "title": "Nvidia CEO's affair becomes a national security problem",
+     "url": "https://arstechnica.com/tech-policy/2026/11/ceo-jensen-huang-admits-affair-as-nvidia-probes-possible-chinese-espionage/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Legal",
+   "headline": "Rosen Law Firm files class action against Nvidia over Huang affair",
+   "dek": "The securities-fraud suit says Nvidia misled investors about its CEO's relationship with an alleged Chinese spy, and more law firms are circling.",
+   "body": "Rosen Law Firm has filed the first securities class action against Nvidia after CEO Jensen Huang admitted an affair with Alice Huang, a Megaspeed executive US intelligence believes was working for China, Tom's Hardware reports. The suit claims Nvidia and Huang failed to disclose or misled investors about the relationship, lied when asked, raised national security concerns and damaged the company's reputation.\n\nOther firms, including Levi & Korsinsky and Schall, Brown & Schwartz, have opened investigations. They cite share drops of 5.5 to 5.88 percent in pre-market trading, and one firm points to an 8.8 percent intraday fall.\n\nHuang confirmed the affair in an internal message on Sunday, Ars Technica reports. Nvidia's board is opening an independent investigation into whether he was the target of a foreign intelligence effort.",
+   "key_points": [
+    "Rosen Law Firm filed the first class action, alleging Nvidia and Huang misled investors about the affair.",
+    "Several other law firms are investigating, citing Nvidia share drops of 5.5 to 8.8 percent.",
+    "Nvidia's board has opened an independent probe into whether Huang was targeted by foreign intelligence."
+   ],
+   "id": "s4"
+  },
+  {
+   "slug": "n-able-pulls-n-central-offline-after-30-plus-zero-days-go-pu",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-09T21:26:25+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "N-able takes cloud platform offline after 30+ \"zero-days\" published",
+     "url": "https://www.bleepingcomputer.com/news/security/n-able-takes-cloud-platform-offline-after-30-plus-zero-days-published/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "N-able pulls N-central offline after 30-plus zero-days go public",
+   "dek": "A researcher posted proof-of-concept exploits without warning N-able, saying earlier bug reports to the company went unpatched and unanswered.",
+   "body": "N-able has taken its hosted N-central environments offline in the Americas, Europe and Asia-Pacific and told on-premises customers to shut down their servers, BleepingComputer reports. The move follows researcher Sean Bales publishing more than 30 alleged zero-day flaws late Sunday, November 8, along with proof-of-concept exploits in a GitHub repository called Able2Shell.\n\nN-central is a remote monitoring and management platform used by MSPs and IT teams. The most critical chain, per Bales, uses an unauthenticated XXE flaw to reach remote code execution and create a rogue administrator account. N-able says it is validating a hotfix and has seen no active exploitation. It gave no restoration date.\n\nBales, who says AI helped find the bugs, skipped advance notice. He says earlier reports on another N-able product remain unpatched after five to six months. N-able did not address that claim.",
+   "key_points": [
+    "N-able took hosted N-central offline worldwide and advised on-prem customers to shut down servers after 30-plus alleged zero-days were published.",
+    "Researcher Sean Bales released exploits without notice, saying earlier N-able bug reports went unpatched; he says AI assisted the discovery.",
+    "N-able is developing a hotfix and reports no evidence of active exploitation, with updates promised every four hours."
+   ],
+   "id": "s5"
+  },
+  {
+   "slug": "nvidia-tells-cloud-partners-to-cap-chinese-customers-at-49-p",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-09T17:48:17+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Nvidia cracks down on overseas cloud AI GPU rentals for China",
+     "url": "https://www.tomshardware.com/tech-industry/policy/nvidia-cracks-down-on-overseas-cloud-ai-gpu-rentals-for-china-partners-face-51-percent-non-chinese-quota-as-black-market-b300-rack-prices-surge-to-usd2-8-million"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Policy",
+   "headline": "Nvidia tells cloud partners to cap Chinese customers at 49 percent",
+   "dek": "The reported rule targets overseas GPU rentals as Chinese firms buy more than 1 million gaming and workstation cards to fill the gap.",
+   "body": "Nvidia has told cloud partners worldwide that at least 51 percent of their services must go to non-Chinese firms, according to the Financial Times, as reported by Tom's Hardware. The instructions came verbally through sales and regional teams. Existing leases are unaffected, but new deals must comply. Nvidia has not confirmed or denied the rule.\n\nChinese labs have leaned on overseas rentals, especially in Southeast Asia. Tencent has a deal with Oracle to lease 100,000 GPUs there, and Moonshot has discussed renting Blackwell clusters of 8,000 or more GPUs in Europe. A Singapore-based group told the FT it is \"difficult to find enough non-Chinese clients outside the US.\"\n\nMeanwhile, Chinese companies have bought more than 1 million Nvidia gaming and workstation cards this year. A B300 rack selling for about $600,000 internationally reportedly fetched $2.8 million in China last month.",
+   "key_points": [
+    "Nvidia reportedly requires at least 51 percent of partners' cloud services to go to non-Chinese firms, applying to new deals globally.",
+    "Chinese firms have bought over 1 million Nvidia gaming and workstation GPUs this year and ordered more than 6 million RTX Pro 5500 cards.",
+    "A B300 rack priced around $600,000 abroad reportedly sold for $2.8 million in China last month."
+   ],
+   "id": "s6"
+  },
+  {
+   "slug": "amd-confirms-radeon-driver-utility-hammers-ssds-with-idle-wr",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T11:46:33+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "AMD admits GPU driver bug is writing data continuously, wearing out SSDs",
+     "url": "https://www.tomshardware.com/pc-components/gpu-drivers/amd-adrenalin-bug-could-be-writing-data-continuously-wearing-out-ssds-radeon-owner-claims-external-events-utility-used-up-1-percent-of-ssd-health-every-month-for-over-a-year"
+    },
+    {
+     "name": "PC Gamer",
+     "title": "AMD users are reporting a misfiring utility is eating SSD health by 1% a month. AMD says a fix is on the way for its GPU drivers",
+     "url": "https://www.pcgamer.com/hardware/graphics-cards/amd-users-are-reporting-a-misfiring-utility-is-eating-ssd-health-by-1-percent-a-month-amd-says-a-fix-is-on-the-way-for-its-gpu-drivers/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Hardware",
+   "headline": "AMD confirms Radeon driver utility hammers SSDs with idle writes",
+   "dek": "Users report the External Events Utility writing about 5MB/s on idle PCs and costing 1 percent of SSD health a month.",
+   "body": "AMD says it is fixing a bug in its External Events Utility, a service installed with Radeon drivers that users report writes to SSDs continuously, even on idle PCs. One user measured about 5MB/s of sustained writes. Another said the driver cost 1 percent of their SSD health every month for 16 months. An AMD representative on Reddit told users the issue \"should be fixed\" in the next driver release, which PC Gamer says is expected later this month.\n\nAt 5MB/s, a drive would log close to 13TB of host writes a month, Tom's Hardware calculates. It notes that caching and wear-leveling mean actual flash wear is unknown, and the 1 percent claim is unconfirmed. PC Gamer could not reproduce the bug.\n\nTo check, open Resource Monitor and look for sustained writes from atieclxx.exe or atiesrxx.exe.",
+   "key_points": [
+    "AMD acknowledged the bug on its forum on October 21 and says a driver fix is coming.",
+    "Users report idle writes of about 5MB/s and SSD health dropping about 1 percent a month.",
+    "Reported workarounds include disabling the AMD EEU service or turning off Resizable BAR."
+   ],
+   "id": "s7"
+  },
+  {
+   "slug": "qnap-says-more-nas-devices-hit-in-plex2shell-malware-attacks",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-09T16:34:22+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "QNAP says more NAS devices hit in worrying Plex2Shell malware attacks",
+     "url": "https://www.techradar.com/pro/security/qnap-says-more-nas-devices-hit-in-worrying-plex2shell-malware-attacks"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "QNAP says more NAS devices hit in Plex2Shell malware attacks",
+   "body": "TechRadar reports the bug is being exploited in the wild, with crypto scammers targeting multimedia archives. Owners should patch now.",
+   "id": "s8"
+  },
+  {
+   "slug": "default-admin-admin-password-let-researchers-unlock-cars-fro",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-09T11:27:53+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "Default 'admin:admin' Server Password Helps Researchers Hack Two Automakers, Unlock and Start Cars",
+     "url": "https://thehackernews.com/2026/11/default-adminadmin-server-password.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Default admin:admin password let researchers unlock cars from two automakers",
+   "body": "Two researchers found they could fully take over the login systems behind two car brands' mobile apps and access any customer's account, The Hacker News reports.",
+   "id": "s9"
+  },
+  {
+   "slug": "lnbits-tells-all-operators-to-shut-down-lightning-wallet-ser",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-09T10:01:21+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "LNbits Urges All Operators to Shut Down Their Bitcoin Lightning Wallet Servers Amid Attacks",
+     "url": "https://thehackernews.com/2026/11/lnbits-urges-all-operators-to-shut-down.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "LNbits tells all operators to shut down Lightning wallet servers",
+   "body": "The free, open-source Bitcoin Lightning wallet project says a wave of attacks means everyone running LNbits should take their servers offline now.",
+   "id": "s10"
+  },
+  {
+   "slug": "hacker-used-ai-agents-to-steal-taipei-emergency-dispatch-rec",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-09T09:01:50+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "Taiwan-Based Hacker Used BOSSAI AI Agents to Steal Taipei Emergency Dispatch Records",
+     "url": "https://thehackernews.com/2026/11/taiwan-based-hacker-used-bossai-ai.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Hacker used AI agents to steal Taipei emergency dispatch records",
+   "body": "A single Taiwan-based attacker using BOSSAI agents pulled dispatch records covering seven Taipei districts, according to Acronis's Threat Research Unit.",
+   "id": "s11"
+  },
+  {
+   "slug": "cisa-adds-sonicwall-sonicos-mfa-bypass-flaw-to-exploited-lis",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-09T06:05:24+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "CISA Flags SonicWall SonicOS MFA Bypass Flaw Amid Reports of Possible Exploitation",
+     "url": "https://thehackernews.com/2026/11/cisa-flags-sonicwall-sonicos-mfa-bypass.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "CISA adds SonicWall SonicOS MFA bypass flaw to exploited list",
+   "body": "The high-severity SonicOS vulnerability joins the Known Exploited Vulnerabilities catalog following reports of possible exploitation.",
+   "id": "s12"
+  },
+  {
+   "slug": "france-blames-iranian-hackers-for-supermarket-attacks-that-s",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T18:32:42+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "France blames Iranian hackers for supermarket attacks that sparked fires",
+     "url": "https://www.bleepingcomputer.com/news/security/france-blames-iranian-hackers-for-supermarket-attacks-that-sparked-fires/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "France blames Iranian hackers for supermarket attacks that sparked fires",
+   "body": "The October attacks disrupted refrigeration at more than 700 supermarkets and other retail sites, causing food losses, France says, linking them to Iranian state-backed hackers.",
+   "id": "s13"
+  },
+  {
+   "slug": "usps-now-offers-official-zip-code-boundary-polygons",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T19:58:59+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "USPS now offers official ZIP Code boundary polygons",
+     "url": "https://postalpro.usps.com/zcb"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50431058",
+    "points": 573,
+    "comments": 283
+   },
+   "tier": "brief",
+   "kicker": "Data",
+   "headline": "USPS now offers official ZIP Code boundary polygons",
+   "body": "",
+   "id": "s14"
+  },
+  {
+   "slug": "tpu-8tx-and-tpu-8i-max-unveiled",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T21:56:57+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "TPU 8tx and TPU 8i Max",
+     "url": "https://blog.google/innovation-and-ai/infrastructure-and-cloud/global-network/tpu-8i-max-and-8tx/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50432831",
+    "points": 239,
+    "comments": 72
+   },
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "TPU 8tx and TPU 8i Max unveiled",
+   "body": "",
+   "id": "s15"
+  },
+  {
+   "slug": "e-means-claims-to-beat-k-means-in-one-tenth-the-epochs",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T18:45:43+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "E-means: Outperforming k-means in one-tenth the epochs",
+     "url": "https://e-means.github.io/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50429734",
+    "points": 339,
+    "comments": 29
+   },
+   "tier": "brief",
+   "kicker": "Research",
+   "headline": "E-means claims to beat k-means in one-tenth the epochs",
+   "body": "",
+   "id": "s16"
+  },
+  {
+   "slug": "muse-ember-billed-as-smallest-most-efficient-muse-model-yet",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T17:58:46+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Muse Ember: Our smallest, most efficient model",
+     "url": "https://research.meta.ai/blog/muse-ember"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50429024",
+    "points": 279,
+    "comments": 116
+   },
+   "tier": "brief",
+   "kicker": "Models",
+   "headline": "Muse Ember billed as smallest, most efficient Muse model yet",
+   "body": "",
+   "id": "s17"
+  },
+  {
+   "slug": "anthropic-signs-3-4-billion-gas-turbine-deal-to-skip-six-yea",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T13:45:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Anthropic skips six-year waitlist with massive $3.4 billion gas turbine generator deal",
+     "url": "https://www.tomshardware.com/tech-industry/data-centers/anthropic-skips-six-year-waitlist-with-massive-usd3-4-billion-gas-turbine-generator-deal-firm-takes-over-onepwrs-orders-secures-1-7gw-of-capacity-to-power-ai-data-centers"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Infrastructure",
+   "headline": "Anthropic signs $3.4 billion gas turbine deal to skip six-year waitlist",
+   "body": "Anthropic is securing 1.7GW of gas-fired generators from OnePWR Solutions by taking over existing Caterpillar orders, Tom's Hardware reports, as long lead times push AI firms to build their own power.",
+   "id": "s18"
+  },
+  {
+   "slug": "synaptics-sends-cease-and-desist-to-open-source-displaylink",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T11:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Synaptics sends cease-and-desist order to creator of open-source DisplayLink driver, dares him to publicize its threats",
+     "url": "https://www.tomshardware.com/peripherals/docking-stations-hubs/synaptics-sends-cease-and-desist-order-to-creator-of-open-source-displaylink-driver-dares-him-to-publicize-its-threats-dev-reverse-engineers-displaylink-using-claude-ai-and-rust-synaptics-threatens-to-bill-creator-for-legal-documentation"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Open Source",
+   "headline": "Synaptics sends cease-and-desist to open-source DisplayLink driver author",
+   "body": "A hobbyist's effort to make DisplayLink work better on Linux is turning into a legal fight, Tom's Hardware reports, with Synaptics daring him to publicize its threats.",
+   "id": "s19"
+  },
+  {
+   "slug": "hackers-push-wallet-stealing-malware-via-ethersphere-s-bee-j",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T17:36:28+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "Hackers Compromise Ethersphere's bee-js and Swarm Desktop to Deliver Wallet-Stealing Malware",
+     "url": "https://thehackernews.com/2026/11/hackers-compromise-etherspheres-bee-js.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Hackers push wallet-stealing malware via Ethersphere's bee-js and Swarm Desktop",
+   "body": "Attackers abused the project's own release automation to publish malicious bee-js 13.3.0 and Swarm Desktop 0.56.2, tools for the Swarm decentralized storage network.",
+   "id": "s20"
+  },
+  {
+   "slug": "sb-1047-author-scott-wiener-wins-pelosi-s-seat-eyes-ai-regul",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "MIT Technology Review",
+     "title": "SB 1047 author Scott Wiener wins Pelosi's House seat, plans to push for AI regulation",
+     "url": "https://www.technologyreview.com/2026/11/09/1148182/nancy-pelosis-replacement-is-ready-to-regulate-ai/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "SB 1047 author Scott Wiener wins Pelosi's seat, eyes AI regulation",
+   "body": "Wiener, who also wrote SB 53, told MIT Technology Review he wants a strong federal AI regulator and hopes to serve on any congressional AI select committee.",
+   "id": "s21"
+  },
+  {
+   "slug": "attacker-abused-qubole-s-aws-access-to-breach-customer-accou",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T17:51:21+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "Hackers Exploit Qubole's Trusted AWS Access to Breach Customer Accounts and Steal Data",
+     "url": "https://thehackernews.com/2026/11/hackers-exploit-quboles-trusted-aws.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Attacker abused Qubole's AWS access to breach customer accounts",
+   "body": "The attacker broke into multiple Qubole customers' AWS accounts between October 14 and October 26 and stole stored secrets and data, cloud security firm Wiz says.",
+   "id": "s22"
+  },
+  {
+   "slug": "vanderbilt-university-responds-to-byod-ransomware-attack",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T23:52:12+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "Vanderbilt University hit in BYOD ransomware attack, data theft claimed",
+     "url": "https://www.bleepingcomputer.com/news/security/vanderbilt-university-hit-in-byod-ransomware-attack-data-theft-claimed/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Vanderbilt University responds to BYOD ransomware attack",
+   "body": "The BYOD gang claims it encrypted the university's databases and stole sensitive student, employee and research data, BleepingComputer reports.",
+   "id": "s23"
+  },
+  {
+   "slug": "texas-governor-elect-says-data-center-free-for-all-is-over",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-10T01:00:00+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Incoming Texas Governor tells AI firms the data center free-for-all is over",
+     "url": "https://www.techradar.com/ai-platforms-assistants/i-hate-the-way-they-are-taking-advantage-of-texas-incoming-texas-governor-warns-ai-firms-that-the-data-center-free-for-all-is-over"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Texas governor-elect says data center free-for-all is over",
+   "body": "She wants more public protections against AI data centers, according to TechRadar.",
+   "id": "s24"
+  },
+  {
+   "slug": "microsoft-plans-two-big-windows-11-interface-changes-one-div",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T15:27:19+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Microsoft plans two big Windows 11 interface changes — and one is divisive",
+     "url": "https://www.techradar.com/computing/windows/microsoft-plans-two-big-interface-changes-for-windows-11-one-sounds-useful-but-the-other-involving-ai-is-seriously-divisive"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Windows",
+   "headline": "Microsoft plans two big Windows 11 interface changes, one divisive",
+   "body": "New Copilot integration in the taskbar search box has drawn approval from some users, while others distrust Microsoft's motives, TechRadar reports.",
+   "id": "s25"
+  },
+  {
+   "slug": "payments-canada-launches-real-time-rail-payment-system",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-09T16:00:45+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Payments Canada announces launch of Canada's Real-Time Rail (RTR) payment system",
+     "url": "https://www.payments.ca/canada-launches-real-time-rail-bringing-247-payment-infrastructure-national-economy"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50427362",
+    "points": 503,
+    "comments": 277
+   },
+   "tier": "brief",
+   "kicker": "Infrastructure",
+   "headline": "Payments Canada launches Real-Time Rail payment system",
+   "body": "",
+   "id": "s26"
+  },
+  {
+   "slug": "sleep-trackers-use-brainwave-data-to-train-ai-without-explic",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-09T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "Wearable sleep trackers are using your brainwaves to train AI models without explicit user consent",
+     "url": "https://www.tomshardware.com/peripherals/wearable-tech/wearable-sleep-trackers-are-using-your-brainwaves-to-train-ai-models-without-explicit-user-consent-tens-of-millions-of-hours-of-eeg-data-harvested"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Privacy",
+   "headline": "Sleep trackers use brainwave data to train AI without explicit consent",
+   "body": "Wearable neurotech firms have collected millions of hours of brainwave recordings for AI training, Tom's Hardware reports, raising questions over consent, privacy and control of neural data.",
+   "id": "s27"
+  }
+ ],
+ "links": [],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "Foldable Flight: The Best Paper Airplanes",
+   "url": "https://www.foldableflight.com",
+   "points": 930,
+   "comments": 145,
+   "comments_url": "https://news.ycombinator.com/item?id=50424581"
+  },
+  {
+   "rank": 2,
+   "title": "USPS now offers official ZIP Code boundary polygons",
+   "url": "https://postalpro.usps.com/zcb",
+   "points": 573,
+   "comments": 283,
+   "comments_url": "https://news.ycombinator.com/item?id=50431058"
+  },
+  {
+   "rank": 3,
+   "title": "Google Gemini routes personal Drive files and emails to human annotators",
+   "url": "https://github.com/thisisme6598/gemini_files/",
+   "points": 512,
+   "comments": 118,
+   "comments_url": "https://news.ycombinator.com/item?id=50429426"
+  },
+  {
+   "rank": 4,
+   "title": "Payments Canada announces launch of Canada's Real-Time Rail (RTR) payment system",
+   "url": "https://www.payments.ca/canada-launches-real-time-rail-bringing-247-payment-infrastructure-national-economy",
+   "points": 503,
+   "comments": 277,
+   "comments_url": "https://news.ycombinator.com/item?id=50427362"
+  },
+  {
+   "rank": 5,
+   "title": "Claude Fable 5.2 and Mythos 5.2",
+   "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+   "points": 404,
+   "comments": 719,
+   "comments_url": "https://news.ycombinator.com/item?id=50429068"
+  },
+  {
+   "rank": 6,
+   "title": "E-means: Outperforming k-means in one-tenth the epochs",
+   "url": "https://e-means.github.io/",
+   "points": 339,
+   "comments": 29,
+   "comments_url": "https://news.ycombinator.com/item?id=50429734"
+  },
+  {
+   "rank": 7,
+   "title": "Claude Fable 5.2 scores 65 on Artificial Analysis, highest so far",
+   "url": "https://artificialanalysis.ai/models/claude-fable-5-2",
+   "points": 326,
+   "comments": 232,
+   "comments_url": "https://news.ycombinator.com/item?id=50431144"
+  },
+  {
+   "rank": 8,
+   "title": "Semi-transparent, colored cadmium telluride photovoltaic panels in agrivoltaics",
+   "url": "https://www.anthropocenemagazine.org/2026/10/magenta-solar-panels-may-be-agrivoltaics-cleverest-trick-yet/",
+   "points": 296,
+   "comments": 194,
+   "comments_url": "https://news.ycombinator.com/item?id=50426175"
+  },
+  {
+   "rank": 9,
+   "title": "Fable 5.2 one-shotted my nephew's dream game",
+   "url": "https://notesbylex.com/fable-5-2-one-shotted-my-nephews-dream-game",
+   "points": 292,
+   "comments": 208,
+   "comments_url": "https://news.ycombinator.com/item?id=50433659"
+  },
+  {
+   "rank": 10,
+   "title": "Show HN: Every satellite that passed over any place this week, and its photos",
+   "url": "https://www.watched.earth",
+   "points": 292,
+   "comments": 48,
+   "comments_url": "https://news.ycombinator.com/item?id=50428907"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "ROB RUN",
+    "appid": 4262460,
+    "release_date": "2026-11-04",
+    "steam_rating": "Mixed",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4262460/db8e0cf43c9475b96fb9446b4908de79fcb9f619/header.jpg?t=1793811654",
+    "store_url": "https://store.steampowered.com/app/4262460/",
+    "price": null,
+    "currency": "EUR",
+    "blurb": "Early access crime sandbox for thousands of players; a big launch with a Mixed rating across 16,395 Steam reviews.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/ROB%20RUN/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Lightyear Frontier",
+    "appid": 1677110,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1677110/f4aec944f634f189990fe69e6d353b5609787955/header_alt_assets_7.jpg?t=1793891345",
+    "store_url": "https://store.steampowered.com/app/1677110/",
+    "price": 23.99,
+    "currency": "EUR",
+    "blurb": "Relaxing open-world farming game where a tunable mech does the heavy lifting, with co-op for up to four players.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Lightyear%20Frontier/?category=13",
+    "review_ids": [],
+    "critics": {
+     "metascore": {
+      "score": 78,
+      "count": 4,
+      "url": "https://metacritic.com/game/lightyear-frontier/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 78,
+      "count": 20,
+      "url": "https://opencritic.com/game/16457/lightyear-frontier"
+     }
+    }
+   },
+   {
+    "title": "ZED ZONE",
+    "appid": 1211600,
+    "release_date": "2026-11-06",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1211600/aac7446006d1fb3898eccf697406d0c357cf20a3/header_alt_assets_2.jpg?t=1794210733",
+    "store_url": "https://store.steampowered.com/app/1211600/",
+    "price": 7.07,
+    "currency": "EUR",
+    "blurb": "Zombie survival game after a plane crash: gather, build shelters and fight hordes and mechs. Very Positive on Steam.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/ZED%20ZONE/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "VOID/BREAKER",
+    "appid": 2615540,
+    "release_date": "2026-11-04",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2615540/4f3789458cfd9c3375c2926620b19640135f7c4a/header_alt_assets_8.jpg?t=1794245445",
+    "store_url": "https://store.steampowered.com/app/2615540/",
+    "price": 16.19,
+    "currency": "EUR",
+    "blurb": "Bullet hell roguelite FPS with deep gun modding and environmental destruction, rated Very Positive by Steam players.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/VOID%2FBREAKER/?category=13",
+    "review_ids": [
+     "r-game-informe-void-breaker"
+    ]
+   },
+   {
+    "title": "Potato Please",
+    "appid": 5266240,
+    "release_date": "2026-11-03",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5266240/e289442aa6b3756109bc65b427556ea538efb849/header.jpg?t=1794167289",
+    "store_url": "https://store.steampowered.com/app/5266240/",
+    "price": 8.72,
+    "currency": "EUR",
+    "blurb": "First-person potato peeling with real physics and tool upgrades, an odd premise that Steam players rate Very Positive.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Potato%20Please/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Godzilla: Destroy All Monsters Melee Remastered",
+    "appid": 4251460,
+    "release_date": "2026-11-03",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4251460/28023d80b51185fe3dbadadf608523942f47238c/header.jpg?t=1793714569",
+    "store_url": "https://store.steampowered.com/app/4251460/",
+    "price": 29.99,
+    "currency": "EUR",
+    "blurb": "Remastered Godzilla arena brawler with new online multiplayer; Steam players rate it far more warmly than critics do.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Godzilla%3A%20Destroy%20All%20Monsters%20Melee%20Remastered/?category=13",
+    "review_ids": [],
+    "critics": {
+     "metascore": {
+      "score": 70,
+      "count": 8,
+      "url": "https://metacritic.com/game/godzilla-destroy-all-monsters-melee-remastered/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 75,
+      "count": 39,
+      "url": "https://opencritic.com/game/20818/godzilla-destroy-all-monsters-melee-remastered"
+     }
+    }
+   },
+   {
+    "title": "Horses of Hoofprint Bay",
+    "appid": 3727090,
+    "release_date": "2026-11-04",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3727090/05ecc629bbeefe5b64ea3acc33da82009bccf968/header.jpg?t=1793830906",
+    "store_url": "https://store.steampowered.com/app/3727090/",
+    "price": 22.94,
+    "currency": "EUR",
+    "blurb": "Hand-drawn 2D horse stable sim with training, breeding and competitions, rated Overwhelmingly Positive on Steam.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Horses%20of%20Hoofprint%20Bay/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Casualties: Unknown",
+    "appid": 4576490,
+    "release_date": "2026-11-09",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4576490/907888dce73f50c48410b5ab92971a0d95776b29/header.jpg?t=1794232782",
+    "store_url": "https://store.steampowered.com/app/4576490/",
+    "price": 18.69,
+    "currency": "EUR",
+    "blurb": "Unforgiving cave-exploration survival sim across 11 layers of an alien planet, rated Overwhelmingly Positive on Steam.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Casualties%3A%20Unknown/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Playrooms",
+    "appid": 5037510,
+    "release_date": "2026-11-04",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5037510/aa50da281292d0776241c58beef540614f4f6191/header.jpg?t=1794235259",
+    "store_url": "https://store.steampowered.com/app/5037510/",
+    "price": 5.59,
+    "currency": "EUR",
+    "blurb": "Eerie game about tidying thousands of balls in empty playrooms, rated Overwhelmingly Positive on Steam.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Playrooms/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-i-dream-of-i-tanuki-pon-s-summer",
+    "game": "TANUKI: Pon's Summer",
+    "outlet": "I Dream of Indie Games",
+    "score": "",
+    "verdict": "I Dream of Indie Games calls the cozy BMX adventure a special little gem and one of its favorite games of the year.",
+    "url": "https://www.idreamofindie.com/post/tanuki-pon-s-summer-review-is-this-cozy-bmx-adventure-worth-playing",
+    "published_at": "2026-11-09T15:48:25+00:00",
+    "critics": {
+     "opencritic": {
+      "score": 80,
+      "count": 8,
+      "url": "https://opencritic.com/game/21702/tanuki-pons-summer"
+     }
+    }
+   },
+   {
+    "id": "r-missil-tape-to-tape",
+    "game": "Tape to Tape",
+    "outlet": "MISSIL",
+    "score": "9/10",
+    "verdict": "MISSIL's reviewer eats pucks, skates more, lands a few hits and loves all of it.",
+    "url": "https://missil.se/spelrecensioner/tape-to-tape/",
+    "published_at": "2026-11-06T00:52:04+00:00"
+   },
+   {
+    "id": "r-pc-gamer-phantom-blade-zero",
+    "game": "Phantom Blade Zero",
+    "outlet": "PC Gamer",
+    "score": "90%",
+    "verdict": "PC Gamer finds a martial arts action epic with a dash of Souls and Sekiro that favors feeling good over grinding.",
+    "url": "https://www.pcgamer.com/games/action/phantom-blade-zero-review/",
+    "published_at": "2026-11-05T17:10:23+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 52,
+      "url": "https://metacritic.com/game/phantom-blade-zero/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 89,
+      "count": 76,
+      "url": "https://opencritic.com/game/19914/phantom-blade-zero"
+     }
+    }
+   },
+   {
+    "id": "r-game-informe-void-breaker",
+    "game": "Void/Breaker",
+    "outlet": "Game Informer",
+    "score": "8.5/10",
+    "verdict": "Game Informer says chaos is the point, praising destruction that works better than in most games that tout it.",
+    "url": "https://gameinformer.com/review/voidbreaker/chaos-is-the-point",
+    "published_at": "2026-11-03T19:04:24+00:00"
+   },
+   {
+    "id": "r-missil-croc-2-kingdom-of-the-gobbos",
+    "game": "Croc 2: Kingdom of the Gobbos",
+    "outlet": "MISSIL",
+    "score": "5/10",
+    "verdict": "MISSIL sees a polished-up return for Argonaut's mediocre crocodile and scores it below the critic average.",
+    "url": "https://missil.se/spelrecensioner/croc-2-kingdom-of-the-gobbos/",
+    "published_at": "2026-11-03T15:02:41+00:00",
+    "critics": {
+     "opencritic": {
+      "score": 67,
+      "count": 16,
+      "url": "https://opencritic.com/game/21632/croc-2-kingdom-of-the-gobbos"
+     }
+    }
+   },
+   {
+    "id": "r-pc-gamer-enshrouded-1-0",
+    "game": "Enshrouded 1.0",
+    "outlet": "PC Gamer",
+    "score": "90%",
+    "verdict": "PC Gamer calls the 1.0 release a survival crafting masterpiece as the fog lifts over Embervale.",
+    "url": "https://www.pcgamer.com/games/survival-crafting/enshrouded-1-0-review/",
+    "published_at": "2026-11-02T21:47:58+00:00",
+    "critics": {
+     "metascore": {
+      "score": 88,
+      "count": 15,
+      "url": "https://metacritic.com/game/enshrouded/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 83,
+      "count": 43,
+      "url": "https://opencritic.com/game/16119/enshrouded"
+     }
+    }
+   }
+  ],
+  "console_spotlight": [
+   {
+    "game": "Grand Theft Auto VI",
+    "platforms": [
+     "ps5",
+     "xbox"
+    ],
+    "headline": "GTA 6 preloads go live as Take-Two eyes $3.5 billion launch",
+    "summary": "Preloading has started on PlayStation and Xbox ahead of launch, with no PC version at release. Take-Two says pre-orders remain \"unprecedented\" and expects as much as $3.5 billion during the launch period.",
+    "sources": [
+     {
+      "name": "PCMag",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPaFZTRUlXMmgyWDYxVjM5dm5MQVBuME40T0I3MUpwY2FINTQ5Q2FhdkRFMEhtclRhbHV0MWVNOUxCTXpzUG1OekNBOEpGMlI1ZG4tQkhnZGtLMGZhZHNsekJPSDdleTJvM1Zia2lkZ0lXSi1LQTBRZ3p5VnBBT1ZVbDdpcTJ6RENET3JDa0FaR2MxWnhrVlZIeEtlcw?oc=5"
+     },
+     {
+      "name": "TechRadar",
+      "url": "https://www.techradar.com/computing/wi-fi-broadband/gta-6-preloads-are-live-theres-still-time-to-upgrade-your-nbn-before-launch-day"
+     },
+     {
+      "name": "PC Gamer",
+      "url": "https://www.pcgamer.com/games/grand-theft-auto/take-two-expects-to-make-as-much-as-usd3-5-billion-during-the-gta-6-launch-period/"
+     }
+    ]
+   }
+  ],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Emberville",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-07",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2295170/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "Warhammer 40,000: Dark Heresy",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3710600/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   }
+  ],
+  "watch": [],
+  "news": [
+   {
+    "headline": "Mass Effect composer hopes BioWare can be revived after EA closure",
+    "summary": "Jack Wall, who scored the original Mass Effect, told TechRadar it is \"bananas\" to think of BioWare as gone and hopes someone can take it from here.",
+    "url": "https://www.techradar.com/gaming/frankly-its-sort-of-bananas-to-think-of-bioware-as-just-gone-original-mass-effect-composer-hopes-someone-else-can-come-in-and-take-it-from-here-following-studio-closure",
+    "source": "TechRadar"
+   },
+   {
+    "headline": "Skydance Games cuts staff a month after Warner Bros. Discovery deal",
+    "summary": "Paramount's merged game division, now Skydance Games, says it has laid off staff and will \"scale down some of our projects,\" PC Gamer reports.",
+    "url": "https://www.pcgamer.com/gaming-industry/a-month-after-paramount-acquired-warner-bros-discovery-its-merged-game-division-is-laying-people-off/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Sega newsletter breach exposes 2.2 million email addresses",
+    "summary": "A breach at third-party newsletter provider Arara leaked subscriber emails, Sega says, though Rock Paper Shotgun reports Sega accounts were unaffected.",
+    "url": "https://www.bleepingcomputer.com/news/security/sega-newsletter-data-breach-exposes-22-million-email-addresses/",
+    "source": "BleepingComputer"
+   },
+   {
+    "headline": "Tripwire Interactive lays off 36 people",
+    "summary": "The Killing Floor studio announced the cuts a week after expanding its publishing division, calling them necessary for the organization.",
+    "url": "https://www.pcgamer.com/gaming-industry/a-week-after-expanding-its-publishing-division-killing-floor-studio-tripwire-interactive-lays-off-36-people/",
+    "source": "PC Gamer"
+   },
+   {
+    "headline": "Warhammer 40K: Dark Heresy launches at the end of January",
+    "summary": "The cRPG follow-up to Rogue Trader now has a late January 2027 release window, according to PC Gamer and Rock Paper Shotgun.",
+    "url": "https://www.pcgamer.com/games/rpg/warhammer-40k-rogue-trader-follow-up-dark-heresy-will-launch-at-the-end-of-january/",
+    "source": "PC Gamer"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-10T06:05:41.748153+00:00",
+  "featured": [
+   {
+    "game": "Gravity Circuit",
+    "shop": "IndieGala Store",
+    "price": 4.24,
+    "regular": 16.99,
+    "currency": "EUR",
+    "cut": 75,
+    "lowest_ever": true,
+    "expires": "2026-11-24T00:59:00+01:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 89,
+    "url": "https://isthereanydeal.com/game/gravity-circuit/",
+    "pick": "hidden",
+    "tags": [
+     "Action",
+     "Platformer",
+     "Indie",
+     "Pixel Graphics",
+     "2D"
+    ],
+    "headline": "Gravity Circuit hits its lowest price ever at €4.24: Strong Buy",
+    "body": "Gravity Circuit, a lesser-known 2D pixel-art action platformer, is down 75 percent to €4.24 at IndieGala Store, from a regular €16.99. That is the lowest price on record. It holds an Overwhelmingly Positive Steam rating and a Metascore of 89, one of the highest scores in today's list.\n\nThe deal runs until November 24 at 00:59 CET, so there is no rush. Strong reviews, a record-low price and a cut of three quarters earn it a Strong Buy. It suits players who like indie action platformers and pixel graphics, and anyone looking for a well-reviewed game for under €5.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "FINAL FANTASY VII REMAKE INTERGRADE",
+    "shop": "Epic Game Store",
+    "price": 7.19,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 82,
+    "lowest_ever": true,
+    "expires": "2026-11-16T17:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 86,
+    "url": "https://isthereanydeal.com/game/final-fantasy-vii-remake-intergrade/",
+    "pick": "popular",
+    "tags": [
+     "RPG",
+     "Action RPG",
+     "JRPG",
+     "Singleplayer",
+     "Action-Adventure"
+    ],
+    "headline": "Final Fantasy VII Remake Intergrade drops 82 percent: Strong Buy",
+    "body": "Final Fantasy VII Remake Intergrade, a singleplayer action RPG and JRPG, costs €7.19 at the Epic Game Store, down 82 percent from €39.99. That is its lowest price ever. It carries a Very Positive Steam rating and a Metascore of 86.\n\nThe sale ends November 16 at 17:00 CET. A big-budget, well-reviewed RPG at under a fifth of its regular price, and at a record low, rates a Strong Buy. It fits fans of JRPGs and action RPGs who want a long singleplayer game. Note that the deal is on the Epic Game Store, not Steam.",
+    "verdict": "strong_buy"
+   }
+  ],
+  "more": [
+   {
+    "game": "Pathologic 2",
+    "shop": "Fanatical",
+    "price": 3.39,
+    "regular": 33.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": "2026-11-17T00:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 70,
+    "url": "https://isthereanydeal.com/game/pathologic-2/",
+    "pick": "genre",
+    "genre": "Horror",
+    "tags": [
+     "Story Rich",
+     "Atmospheric",
+     "Choices Matter",
+     "Difficult",
+     "RPG"
+    ],
+    "advice": "Horror pick at a record-low €3.39, 90 percent off, Very Positive; ends November 17 at 00:59 CET.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "DAVE THE DIVER",
+    "shop": "Fanatical",
+    "price": 7.39,
+    "regular": 19.99,
+    "currency": "EUR",
+    "cut": 63,
+    "lowest_ever": true,
+    "expires": "2026-11-10T17:00:00+01:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 90,
+    "url": "https://isthereanydeal.com/game/dave-the-diver/",
+    "pick": "popular",
+    "tags": [
+     "Pixel Graphics",
+     "Management",
+     "Casual",
+     "Adventure",
+     "Relaxing"
+    ],
+    "advice": "Record low €7.39, Overwhelmingly Positive, Metascore 90; ends today, November 10, at 17:00 CET.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Metro Exodus",
+    "shop": "GOG",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 82,
+    "url": "https://isthereanydeal.com/game/metro-exodus/",
+    "pick": "popular",
+    "tags": [
+     "Post-apocalyptic",
+     "FPS",
+     "Singleplayer",
+     "Story Rich",
+     "Open World"
+    ],
+    "advice": "Post-apocalyptic FPS at €2.99, 90 percent off and a record low, Metascore 82.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Brigador: Up-Armored Edition",
+    "shop": "GOG",
+    "price": 5.19,
+    "regular": 19.99,
+    "currency": "EUR",
+    "cut": 74,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/brigador-up-armored-edition/",
+    "pick": "hidden",
+    "tags": [
+     "Action",
+     "Twin Stick Shooter",
+     "Mechs",
+     "Top-Down Shooter",
+     "Difficult"
+    ],
+    "advice": "Lesser-known mech shooter, Very Positive, at a record-low €5.19, 74 percent off.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Starship Troopers: Ultimate Bug War!",
+    "shop": "Steam",
+    "price": 12.49,
+    "regular": 24.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": true,
+    "expires": "2026-11-18T19:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 73,
+    "url": "https://store.steampowered.com/app/2321780/",
+    "pick": "genre",
+    "genre": "FMV",
+    "tags": [
+     "Boomer Shooter",
+     "FMV",
+     "Singleplayer",
+     "Sci-fi",
+     "War"
+    ],
+    "advice": "FMV boomer shooter at its lowest price, but a 50 percent cut leaves it at €12.49.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Noita",
+    "shop": "GOG",
+    "price": 7.59,
+    "regular": 18.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 76,
+    "url": "https://isthereanydeal.com/game/noita/",
+    "pick": "popular",
+    "tags": [
+     "Physics",
+     "Roguelike",
+     "Difficult",
+     "Pixel Graphics",
+     "Dungeon Crawler"
+    ],
+    "advice": "Overwhelmingly Positive roguelike at a record-low €7.59; a 60 percent cut is solid, not deep.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Graveyard Keeper",
+    "shop": "Fanatical",
+    "price": 1.94,
+    "regular": 19.5,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": "2026-11-17T00:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 69,
+    "url": "https://isthereanydeal.com/game/graveyard-keeper/",
+    "pick": "popular",
+    "tags": [
+     "Pixel Graphics",
+     "Crafting",
+     "RPG",
+     "Simulation",
+     "Management"
+    ],
+    "advice": "Record-low €1.94, Very Positive, though a Metascore of 69 tempers it.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Jusant",
+    "shop": "GOG",
+    "price": 9.99,
+    "regular": 24.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 83,
+    "url": "https://isthereanydeal.com/game/jusant/",
+    "pick": "hidden",
+    "tags": [
+     "Atmospheric",
+     "Exploration",
+     "Adventure",
+     "Cinematic",
+     "Nature"
+    ],
+    "advice": "Lesser-known atmospheric adventure, Metascore 83, at a record-low €9.99 with a 60 percent cut.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Citizen Sleeper",
+    "shop": "GOG",
+    "price": 5.05,
+    "regular": 16.79,
+    "currency": "EUR",
+    "cut": 70,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 82,
+    "url": "https://isthereanydeal.com/game/citizen-sleeper/",
+    "pick": "genre",
+    "genre": "Point & Click",
+    "tags": [
+     "RPG",
+     "Story Rich",
+     "Dice",
+     "Cyberpunk",
+     "Sci-fi"
+    ],
+    "advice": "Sci-fi story RPG at a record-low €5.05, 70 percent off, Metascore 82.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Sea of Stars",
+    "shop": "GOG",
+    "price": 16.99,
+    "regular": 33.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 87,
+    "url": "https://isthereanydeal.com/game/sea-of-stars/",
+    "pick": "popular",
+    "tags": [
+     "Pixel Graphics",
+     "JRPG",
+     "Turn-Based Combat",
+     "Local Co-Op",
+     "Party-Based RPG"
+    ],
+    "advice": "Metascore 87 JRPG at its lowest price, but €16.99 at 50 percent off is not deep.",
+    "verdict": "buy"
+   },
+   {
+    "game": "System Shock",
+    "shop": "GOG",
+    "price": 11.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 70,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 78,
+    "url": "https://isthereanydeal.com/game/system-shock/",
+    "pick": "popular",
+    "tags": [
+     "Action",
+     "Immersive Sim",
+     "Cyberpunk",
+     "Sci-fi",
+     "Adventure"
+    ],
+    "advice": "Cyberpunk immersive sim at a record-low €11.99, 70 percent off, Very Positive.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Kathy Rain",
+    "shop": "GOG",
+    "price": 0.99,
+    "regular": 9.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 77,
+    "url": "https://isthereanydeal.com/game/kathy-rain/",
+    "pick": "hidden",
+    "tags": [
+     "Point & Click",
+     "Adventure",
+     "Pixel Graphics",
+     "Female Protagonist",
+     "Mystery"
+    ],
+    "advice": "Lesser-known point-and-click mystery at €0.99, 90 percent off and a record low.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Streets of Rogue",
+    "shop": "Fanatical",
+    "price": 1.94,
+    "regular": 19.5,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": "2026-11-17T00:59:00+01:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/streets-of-rogue/",
+    "pick": "genre",
+    "genre": "Roguelike",
+    "tags": [
+     "Roguelite",
+     "Action Roguelike",
+     "Pixel Graphics",
+     "Multiplayer",
+     "RPG"
+    ],
+    "advice": "For roguelike fans: Overwhelmingly Positive, record-low €1.94; ends November 17 at 00:59 CET.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Orwell: Keeping an Eye On You",
+    "shop": "GOG",
+    "price": 1.79,
+    "regular": 9.09,
+    "currency": "EUR",
+    "cut": 80,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 77,
+    "url": "https://isthereanydeal.com/game/orwell-keeping-an-eye-on-you/",
+    "pick": "popular",
+    "tags": [
+     "Espionage",
+     "Investigation",
+     "Simulation",
+     "Choices Matter",
+     "Political Sim"
+    ],
+    "advice": "Very Positive investigation sim at a record-low €1.79, 80 percent off.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "OCTOPATH TRAVELER",
+    "shop": "Epic Game Store",
+    "price": 16.19,
+    "regular": 53.99,
+    "currency": "EUR",
+    "cut": 70,
+    "lowest_ever": true,
+    "expires": "2026-11-16T17:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 80,
+    "url": "https://isthereanydeal.com/game/octopath-traveler/",
+    "pick": "popular",
+    "tags": [
+     "RPG",
+     "JRPG",
+     "Pixel Graphics",
+     "Turn-Based",
+     "Story Rich"
+    ],
+    "advice": "JRPG at a record-low €16.19, 70 percent off, Metascore 80; ends November 16 at 17:00 CET.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Immortal Redneck",
+    "shop": "MacGameStore",
+    "price": 1.76,
+    "regular": 17.77,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 70,
+    "url": "https://isthereanydeal.com/game/immortal-redneck/",
+    "pick": "hidden",
+    "tags": [
+     "Boomer Shooter",
+     "FPS",
+     "Action Roguelike",
+     "Fast-Paced",
+     "Procedural Generation"
+    ],
+    "advice": "Lesser-known roguelike shooter at a record-low €1.76; Metascore 70 keeps it at Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Timber Rush",
+    "shop": "Steam",
+    "price": 2.49,
+    "regular": 4.99,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": true,
+    "expires": "2026-11-22T19:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://store.steampowered.com/app/4298880/",
+    "pick": "genre",
+    "genre": "Incremental",
+    "tags": [
+     "Casual",
+     "Idler",
+     "Indie",
+     "Relaxing",
+     "Strategy"
+    ],
+    "advice": "Idler for incremental fans at a record-low €2.49; small absolute saving at 50 percent off.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Owlboy",
+    "shop": "GOG",
+    "price": 1.95,
+    "regular": 19.5,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 88,
+    "url": "https://isthereanydeal.com/game/owlboy/",
+    "pick": "popular",
+    "tags": [
+     "Pixel Graphics",
+     "Adventure",
+     "Indie",
+     "Platformer",
+     "Metroidvania"
+    ],
+    "advice": "Metascore 88 metroidvania platformer at a record-low €1.95, 90 percent off.",
+    "verdict": "strong_buy"
+   }
+  ],
+  "source": "itad",
+  "shelves": [
+   {
+    "pool": "popular",
+    "name": "Popular",
+    "deals": [
+     {
+      "game": "ULTRAKILL",
+      "shop": "AllYouPlay",
+      "price": 9.1,
+      "regular": 23.99,
+      "currency": "EUR",
+      "cut": 62,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/ultrakill/",
+      "tags": [
+       "Fast-Paced",
+       "Gore",
+       "FPS",
+       "Boomer Shooter",
+       "Character Action Game"
+      ]
+     },
+     {
+      "game": "The Alters",
+      "shop": "Fanatical",
+      "price": 12.24,
+      "regular": 34.99,
+      "currency": "EUR",
+      "cut": 65,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 85,
+      "url": "https://isthereanydeal.com/game/the-alters/",
+      "tags": [
+       "Survival",
+       "Base Building",
+       "Management",
+       "Sci-fi",
+       "Exploration"
+      ]
+     },
+     {
+      "game": "Eastward",
+      "shop": "Steam",
+      "price": 12.49,
+      "regular": 24.99,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": "2026-11-16T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 82,
+      "url": "https://store.steampowered.com/app/977880/",
+      "tags": [
+       "Pixel Graphics",
+       "Story Rich",
+       "Adventure",
+       "Singleplayer",
+       "Action RPG"
+      ]
+     },
+     {
+      "game": "Armello",
+      "shop": "Steam",
+      "price": 4.99,
+      "regular": 24.99,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": true,
+      "expires": "2026-11-15T14:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 75,
+      "url": "https://store.steampowered.com/app/290340/",
+      "tags": [
+       "Board Game",
+       "PvP",
+       "Turn-Based Strategy",
+       "Card Game",
+       "Turn-Based"
+      ]
+     },
+     {
+      "game": "ENDER LILIES: Quietus of the Knights",
+      "shop": "Steam",
+      "price": 9.99,
+      "regular": 24.99,
+      "currency": "EUR",
+      "cut": 60,
+      "lowest_ever": true,
+      "expires": "2026-11-22T16:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 86,
+      "url": "https://store.steampowered.com/app/1369630/",
+      "tags": [
+       "Metroidvania",
+       "Female Protagonist",
+       "Dark Fantasy",
+       "Souls-like",
+       "Great Soundtrack"
+      ]
+     },
+     {
+      "game": "Cloudpunk",
+      "shop": "GOG",
+      "price": 6.99,
+      "regular": 19.99,
+      "currency": "EUR",
+      "cut": 65,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 73,
+      "url": "https://isthereanydeal.com/game/cloudpunk/",
+      "tags": [
+       "Cyberpunk",
+       "Open World",
+       "Atmospheric",
+       "Sci-fi",
+       "Futuristic"
+      ]
+     },
+     {
+      "game": "Hardspace: Shipbreaker",
+      "shop": "GOG",
+      "price": 10.49,
+      "regular": 34.99,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 83,
+      "url": "https://isthereanydeal.com/game/hardspace-shipbreaker/",
+      "tags": [
+       "Space",
+       "Sci-fi",
+       "Simulation",
+       "Physics",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "The Legend of Heroes: Trails in the Sky",
+      "shop": "Humble Store",
+      "price": 7.99,
+      "regular": 15.99,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": "2026-11-19T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 85,
+      "url": "https://isthereanydeal.com/game/the-legend-of-heroes-trails-in-the-sky/",
+      "tags": [
+       "JRPG",
+       "Story Rich",
+       "RPG",
+       "Anime",
+       "Great Soundtrack"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "hidden",
+    "name": "Hidden gems",
+    "deals": [
+     {
+      "game": "Dungeons of Hinterberg",
+      "shop": "Fanatical",
+      "price": 4.25,
+      "regular": 22.99,
+      "currency": "EUR",
+      "cut": 82,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 80,
+      "url": "https://isthereanydeal.com/game/dungeons-of-hinterberg/",
+      "tags": [
+       "Relaxing",
+       "Puzzle",
+       "Exploration",
+       "Adventure",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "Legacy of Kain™ Soul Reaver 1&2 Remastered",
+      "shop": "GOG",
+      "price": 7.25,
+      "regular": 28.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 76,
+      "url": "https://isthereanydeal.com/game/legacy-of-kain-soul-reaver-1-and-2-remastered/",
+      "tags": [
+       "Action",
+       "Adventure",
+       "Dark Fantasy",
+       "Third Person",
+       "Action-Adventure"
+      ]
+     },
+     {
+      "game": "Lacuna - A Sci-Fi Noir Adventure",
+      "shop": "GOG",
+      "price": 1.59,
+      "regular": 15.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 86,
+      "url": "https://isthereanydeal.com/game/lacuna-a-sci-fi-noir-adventure/",
+      "tags": [
+       "Pixel Graphics",
+       "Detective",
+       "Noir",
+       "Interactive Fiction",
+       "Multiple Endings"
+      ]
+     },
+     {
+      "game": "Dread Delusion",
+      "shop": "Fanatical",
+      "price": 6.88,
+      "regular": 16.79,
+      "currency": "EUR",
+      "cut": 59,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 73,
+      "url": "https://isthereanydeal.com/game/dread-delusion/",
+      "tags": [
+       "RPG",
+       "Open World",
+       "Dark Fantasy",
+       "Exploration",
+       "Adventure"
+      ]
+     },
+     {
+      "game": "Suikoden I&II HD Remaster Gate Rune and Dunan Unification Wars",
+      "shop": "Fanatical",
+      "price": 18.99,
+      "regular": 49.99,
+      "currency": "EUR",
+      "cut": 62,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/suikoden-i-and-ii-hd-remaster-gate-rune-and-dunan-unification-wars/",
+      "tags": [
+       "RPG",
+       "JRPG",
+       "Pixel Graphics",
+       "2D",
+       "Story Rich"
+      ]
+     },
+     {
+      "game": "Venba",
+      "shop": "GOG",
+      "price": 3.75,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 79,
+      "url": "https://isthereanydeal.com/game/venba/",
+      "tags": [
+       "Cooking",
+       "Casual",
+       "Narrative",
+       "Puzzle",
+       "Female Protagonist"
+      ]
+     },
+     {
+      "game": "Train Valley 2",
+      "shop": "Fanatical",
+      "price": 0.99,
+      "regular": 12.49,
+      "currency": "EUR",
+      "cut": 92,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/train-valley-2/",
+      "tags": [
+       "Trains",
+       "Puzzle",
+       "Strategy",
+       "Simulation",
+       "Relaxing"
+      ]
+     },
+     {
+      "game": "Monster Prom 2: Monster Camp",
+      "shop": "Humble Store",
+      "price": 2.99,
+      "regular": 11.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": true,
+      "expires": "2026-11-12T19:00:00+01:00",
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 80,
+      "url": "https://isthereanydeal.com/game/monster-prom-2-monster-camp/",
+      "tags": [
+       "Dating Sim",
+       "LGBTQ+",
+       "Multiplayer",
+       "Comedy",
+       "Indie"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Horror",
+    "name": "Horror",
+    "deals": [
+     {
+      "game": "Party Hard",
+      "shop": "Fanatical",
+      "price": 0.97,
+      "regular": 9.75,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 64,
+      "url": "https://isthereanydeal.com/game/party-hard/",
+      "tags": [
+       "Pixel Graphics",
+       "Stealth",
+       "Strategy",
+       "Violent",
+       "Indie"
+      ]
+     },
+     {
+      "game": "Mutant Year Zero: Road to Eden",
+      "shop": "WinGameStore",
+      "price": 7.03,
+      "regular": 31.16,
+      "currency": "EUR",
+      "cut": 77,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 78,
+      "url": "https://isthereanydeal.com/game/mutant-year-zero-road-to-eden/",
+      "tags": [
+       "Strategy",
+       "RPG",
+       "Turn-Based Combat",
+       "Post-apocalyptic",
+       "Turn-Based Tactics"
+      ]
+     },
+     {
+      "game": "INDIKA",
+      "shop": "Fanatical",
+      "price": 5.87,
+      "regular": 24.99,
+      "currency": "EUR",
+      "cut": 77,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 80,
+      "url": "https://isthereanydeal.com/game/indika/",
+      "tags": [
+       "Surreal",
+       "Puzzle",
+       "Story Rich",
+       "Horror",
+       "Third Person"
+      ]
+     },
+     {
+      "game": "Lovely Planet",
+      "shop": "Fanatical",
+      "price": 0.58,
+      "regular": 5.89,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 61,
+      "url": "https://isthereanydeal.com/game/lovely-planet/",
+      "tags": [
+       "Indie",
+       "Action",
+       "FPS",
+       "Cute",
+       "Difficult"
+      ]
+     },
+     {
+      "game": "The Midnight Walk",
+      "shop": "GOG",
+      "price": 13.49,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 55,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 79,
+      "url": "https://isthereanydeal.com/game/the-midnight-walk/",
+      "tags": [
+       "Adventure",
+       "Horror",
+       "Atmospheric",
+       "Dark Fantasy",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "Fearless Fantasy",
+      "shop": "Fanatical",
+      "price": 0.68,
+      "regular": 6.89,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/fearless-fantasy/",
+      "tags": [
+       "RPG",
+       "Indie",
+       "Casual",
+       "Adventure",
+       "Action"
+      ]
+     },
+     {
+      "game": "Beacon Pines",
+      "shop": "GOG",
+      "price": 5.05,
+      "regular": 16.79,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 83,
+      "url": "https://isthereanydeal.com/game/beacon-pines/",
+      "tags": [
+       "Visual Novel",
+       "Story Rich",
+       "Emotional",
+       "Cozy",
+       "Colorful"
+      ]
+     },
+     {
+      "game": "Dropsy",
+      "shop": "GOG",
+      "price": 0.99,
+      "regular": 9.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 80,
+      "url": "https://isthereanydeal.com/game/dropsy/",
+      "tags": [
+       "Point & Click",
+       "Adventure",
+       "2D",
+       "Great Soundtrack",
+       "Pixel Graphics"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:FMV",
+    "name": "FMV",
+    "deals": [
+     {
+      "game": "Road Rash™: 30th Anniversary Edition",
+      "shop": "Steam",
+      "price": 4.99,
+      "regular": 9.99,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": "2026-11-19T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/2448570/",
+      "tags": [
+       "Action",
+       "1990's",
+       "Arcade",
+       "Racing",
+       "Combat"
+      ]
+     },
+     {
+      "game": "Not For Broadcast",
+      "shop": "Fanatical",
+      "price": 3.67,
+      "regular": 24.5,
+      "currency": "EUR",
+      "cut": 85,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 82,
+      "url": "https://isthereanydeal.com/game/not-for-broadcast/",
+      "tags": [
+       "Adventure",
+       "1980s",
+       "Choices Matter",
+       "Dystopian ",
+       "Simulation"
+      ]
+     },
+     {
+      "game": "Five Dates",
+      "shop": "Steam",
+      "price": 4.43,
+      "regular": 14.79,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": "2026-11-17T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 64,
+      "url": "https://store.steampowered.com/app/1353270/",
+      "tags": [
+       "Dating Sim",
+       "FMV",
+       "Choose Your Own Adventure",
+       "Choices Matter",
+       "Adventure"
+      ]
+     },
+     {
+      "game": "Hand of Doom",
+      "shop": "Fanatical",
+      "price": 1.99,
+      "regular": 9.75,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/hand-of-doom/",
+      "tags": [
+       "RPG",
+       "Adventure",
+       "Action-Adventure",
+       "Exploration",
+       "3D"
+      ]
+     },
+     {
+      "game": "Terra Nova: Strike Force Centauri",
+      "shop": "GOG",
+      "price": 0.79,
+      "regular": 5.45,
+      "currency": "EUR",
+      "cut": 86,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/terra-nova-strike-force-centauri/",
+      "tags": [
+       "Simulation",
+       "Action",
+       "Mechs",
+       "Sci-fi",
+       "FMV"
+      ]
+     },
+     {
+      "game": "Attentat 1942",
+      "shop": "GOG",
+      "price": 0.69,
+      "regular": 8.99,
+      "currency": "EUR",
+      "cut": 92,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 76,
+      "url": "https://isthereanydeal.com/game/attentat-1942/",
+      "tags": [
+       "Historical",
+       "Cinematic",
+       "World War II",
+       "Story Rich",
+       "FMV"
+      ]
+     },
+     {
+      "game": "Squad 51 vs. the Flying Saucers",
+      "shop": "Steam",
+      "price": 4.19,
+      "regular": 16.79,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": true,
+      "expires": "2026-11-16T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/1378800/",
+      "tags": [
+       "Shoot 'Em Up",
+       "FMV",
+       "Side Scroller",
+       "Arcade",
+       "Space"
+      ]
+     },
+     {
+      "game": "SIMULACRA 2",
+      "shop": "GOG",
+      "price": 1.99,
+      "regular": 7.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 69,
+      "url": "https://isthereanydeal.com/game/simulacra-2/",
+      "tags": [
+       "Horror",
+       "Detective",
+       "Immersive Sim",
+       "Hacking",
+       "Visual Novel"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Point & Click",
+    "name": "Point & Click",
+    "deals": [
+     {
+      "game": "Machinika: Museum",
+      "shop": "IndieGala Store",
+      "price": 0.79,
+      "regular": 7.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-24T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/machinika-museum/",
+      "tags": [
+       "Puzzle",
+       "Mystery",
+       "Point & Click",
+       "Sci-fi",
+       "Atmospheric"
+      ]
+     },
+     {
+      "game": "The Bookwalker: Thief of Tales",
+      "shop": "Fanatical",
+      "price": 2.21,
+      "regular": 14.79,
+      "currency": "EUR",
+      "cut": 85,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 80,
+      "url": "https://isthereanydeal.com/game/the-bookwalker-thief-of-tales/",
+      "tags": [
+       "Adventure",
+       "Singleplayer",
+       "Atmospheric",
+       "Isometric",
+       "Story Rich"
+      ]
+     },
+     {
+      "game": "Rusty Lake: Roots",
+      "shop": "GOG",
+      "price": 0.99,
+      "regular": 2.99,
+      "currency": "EUR",
+      "cut": 67,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 75,
+      "url": "https://isthereanydeal.com/game/rusty-lake-roots/",
+      "tags": [
+       "Puzzle",
+       "Point & Click",
+       "Indie",
+       "Psychological Horror",
+       "Adventure"
+      ]
+     },
+     {
+      "game": "Hypnospace Outlaw",
+      "shop": "GOG",
+      "price": 4.19,
+      "regular": 16.79,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 83,
+      "url": "https://isthereanydeal.com/game/hypnospace-outlaw/",
+      "tags": [
+       "1990's",
+       "Simulation",
+       "Point & Click",
+       "Surreal",
+       "Retro"
+      ]
+     },
+     {
+      "game": "In Other Waters",
+      "shop": "GOG",
+      "price": 3.09,
+      "regular": 12.49,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 74,
+      "url": "https://isthereanydeal.com/game/in-other-waters/",
+      "tags": [
+       "Indie",
+       "Adventure",
+       "Exploration",
+       "Atmospheric",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "Unavowed",
+      "shop": "GOG",
+      "price": 4.79,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 68,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 87,
+      "url": "https://isthereanydeal.com/game/unavowed/",
+      "tags": [
+       "Adventure",
+       "Point & Click",
+       "Indie",
+       "Story Rich",
+       "Pixel Graphics"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Roguelike",
+    "name": "Roguelike",
+    "deals": [
+     {
+      "game": "Hand of Fate",
+      "shop": "MacGameStore",
+      "price": 2.66,
+      "regular": 22.26,
+      "currency": "EUR",
+      "cut": 88,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/hand-of-fate/",
+      "tags": [
+       "Roguelike Deckbuilder",
+       "Roguelike",
+       "Deckbuilding",
+       "Card Game",
+       "Action Roguelike"
+      ]
+     },
+     {
+      "game": "ScourgeBringer",
+      "shop": "IndieGala Store",
+      "price": 1.69,
+      "regular": 16.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-24T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 76,
+      "url": "https://isthereanydeal.com/game/scourgebringer/",
+      "tags": [
+       "Indie",
+       "Action",
+       "Adventure",
+       "Roguelite",
+       "Pixel Graphics"
+      ]
+     },
+     {
+      "game": "Iris and the Giant",
+      "shop": "IndieGala Store",
+      "price": 1.49,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-20T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/iris-and-the-giant/",
+      "tags": [
+       "Roguelike Deckbuilder",
+       "Card Game",
+       "Roguelike",
+       "Card Battler",
+       "Deckbuilding"
+      ]
+     },
+     {
+      "game": "Curious Expedition",
+      "shop": "GOG",
+      "price": 1.49,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 74,
+      "url": "https://isthereanydeal.com/game/curious-expedition/",
+      "tags": [
+       "Exploration",
+       "Roguelike",
+       "Pixel Graphics",
+       "Turn-Based Strategy",
+       "Lovecraftian"
+      ]
+     },
+     {
+      "game": "Blue Prince",
+      "shop": "Fanatical",
+      "price": 14.69,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 51,
+      "lowest_ever": false,
+      "expires": "2026-11-16T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 92,
+      "url": "https://isthereanydeal.com/game/blue-prince/",
+      "tags": [
+       "Puzzle",
+       "Mystery",
+       "Exploration",
+       "Investigation",
+       "Roguelite"
+      ]
+     },
+     {
+      "game": "Kingdom: New Lands",
+      "shop": "Fanatical",
+      "price": 1.34,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 91,
+      "lowest_ever": false,
+      "expires": "2026-11-16T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/kingdom-new-lands/",
+      "tags": [
+       "Tower Defense",
+       "Base Building",
+       "Survival",
+       "Minimalist",
+       "Exploration"
+      ]
+     },
+     {
+      "game": "HASTE",
+      "shop": "Fanatical",
+      "price": 9.11,
+      "regular": 18.99,
+      "currency": "EUR",
+      "cut": 52,
+      "lowest_ever": false,
+      "expires": "2026-11-15T00:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 81,
+      "url": "https://isthereanydeal.com/game/haste/",
+      "tags": [
+       "Fast-Paced",
+       "Parkour",
+       "Roguelite",
+       "3D Platformer",
+       "Female Protagonist"
+      ]
+     },
+     {
+      "game": "Niche - a genetics survival game",
+      "shop": "Epic Game Store",
+      "price": 3.74,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": false,
+      "expires": "2026-11-16T16:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/niche-a-genetics-survival-game/",
+      "tags": [
+       "Turn-Based Strategy",
+       "Adventure",
+       "Puzzle",
+       "Singleplayer",
+       "Nature"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Incremental",
+    "name": "Incremental",
+    "deals": [
+     {
+      "game": "Swords & Souls: Neverseen",
+      "shop": "Humble Store",
+      "price": 5.17,
+      "regular": 14.79,
+      "currency": "EUR",
+      "cut": 65,
+      "lowest_ever": true,
+      "expires": "2026-11-16T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 70,
+      "url": "https://isthereanydeal.com/game/swords-and-souls-neverseen/",
+      "tags": [
+       "Indie",
+       "RPG",
+       "Turn-Based Combat",
+       "Character Customization",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "Leaf it Alone",
+      "shop": "Steam",
+      "price": 2.74,
+      "regular": 5.49,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": "2026-11-13T19:00:00+01:00",
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/3981100/",
+      "tags": [
+       "Relaxing",
+       "Cleaning",
+       "Simulation",
+       "incremental",
+       "Casual"
+      ]
+     },
+     {
+      "game": "Kyle is Famous: Complete Edition",
+      "shop": "GOG",
+      "price": 4.89,
+      "regular": 9.75,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/kyle-is-famous-complete-edition/",
+      "tags": [
+       "Adventure",
+       "Choose Your Own Adventure",
+       "Interactive Fiction",
+       "Funny",
+       "Multiple Endings"
+      ]
+     },
+     {
+      "game": "Gigapocalypse",
+      "shop": "Fanatical",
+      "price": 0.79,
+      "regular": 9.99,
+      "currency": "EUR",
+      "cut": 92,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/gigapocalypse/",
+      "tags": [
+       "Action",
+       "Casual",
+       "Arcade",
+       "2D",
+       "2D Fighter"
+      ]
+     },
+     {
+      "game": "Factory Town Idle",
+      "shop": "Steam",
+      "price": 1.24,
+      "regular": 4.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": true,
+      "expires": "2026-11-16T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/2207490/",
+      "tags": [
+       "Idler",
+       "incremental",
+       "Resource Management",
+       "City Builder",
+       "Automation"
+      ]
+     },
+     {
+      "game": "SUPER 56",
+      "shop": "Steam",
+      "price": 2.41,
+      "regular": 6.89,
+      "currency": "EUR",
+      "cut": 65,
+      "lowest_ever": true,
+      "expires": "2026-11-16T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/1659150/",
+      "tags": [
+       "Funny",
+       "Hidden Object",
+       "Memes",
+       "Action",
+       "Casual"
+      ]
+     },
+     {
+      "game": "Hero of the Kingdom: The Lost Tales 3",
+      "shop": "Fanatical",
+      "price": 1.1,
+      "regular": 6.89,
+      "currency": "EUR",
+      "cut": 84,
+      "lowest_ever": true,
+      "expires": "2026-11-17T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/hero-of-the-kingdom-the-lost-tales-3/",
+      "tags": [
+       "Casual",
+       "Adventure",
+       "RPG",
+       "Point & Click",
+       "Isometric"
+      ]
+     },
+     {
+      "game": "Assembly Planter",
+      "shop": "Steam",
+      "price": 1.59,
+      "regular": 3.99,
+      "currency": "EUR",
+      "cut": 60,
+      "lowest_ever": true,
+      "expires": "2026-11-16T15:30:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/1302860/",
+      "tags": [
+       "Automation",
+       "Base Building",
+       "Crafting",
+       "Resource Management",
+       "Farming Sim"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 313,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 12,
+   "ms": 92,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 23,
+   "ms": 591,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 645,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "The Hacker News",
+   "ok": true,
+   "count": 50,
+   "ms": 261,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "BleepingComputer",
+   "ok": true,
+   "count": 15,
+   "ms": 101,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 14,
+   "ms": 1726,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL Reviews",
+   "ok": true,
+   "count": 20,
+   "ms": 655,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 632,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer Reviews",
+   "ok": true,
+   "count": 18,
+   "ms": 2124,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 59,
+   "ms": 216,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 89,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 247,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Eurogamer",
+   "ok": true,
+   "count": 58,
+   "ms": 155,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Game Informer",
+   "ok": true,
+   "count": 49,
+   "ms": 237,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCGamesN",
+   "ok": true,
+   "count": 0,
+   "ms": 135,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 23,
+   "ms": 320,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 111,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": false,
+   "count": 0,
+   "ms": 317,
+   "error": "HTTP 404 for https://www.youtube.com/feeds/videos.xml",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 771,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 436,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam specials",
+   "ok": true,
+   "count": 100,
+   "ms": 446,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal",
+   "ok": true,
+   "count": 100,
+   "ms": 9821,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal hidden gems",
+   "ok": true,
+   "count": 40,
+   "ms": 4148,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Horror",
+   "ok": true,
+   "count": 30,
+   "ms": 2697,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal FMV",
+   "ok": true,
+   "count": 18,
+   "ms": 5263,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Point & Click",
+   "ok": true,
+   "count": 30,
+   "ms": 1921,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Roguelike",
+   "ok": true,
+   "count": 30,
+   "ms": 1955,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "IsThereAnyDeal Incremental",
+   "ok": true,
+   "count": 16,
+   "ms": 4568,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Critic scores (IsThereAnyDeal)",
+   "ok": true,
+   "count": 11,
+   "ms": 4597,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Review scores (outlet pages)",
+   "ok": true,
+   "count": 2,
+   "ms": 522,
+   "error": "",
+   "skipped": false
+  }
+ ],
+ "editor": {
+  "events": 57,
+  "returned": {
+   "featured": 2,
+   "medium": 5,
+   "briefs": 20
+  },
+  "kept": {
+   "featured": 2,
+   "medium": 5,
+   "briefs": 20
+  },
+  "briefs_added": 0
+ },
+ "discovery": {
+  "depth": "normal",
+  "filtering": true,
+  "searches": 6,
+  "fetches": 1,
+  "usd": 0.326123,
+  "queries": [
+   "AI model release November 2026",
+   "AI policy regulation news November 2026",
+   "PC game review November 2026",
+   "GPU CPU announcement November 2026",
+   "open source release November 10 2026",
+   "game studio news November 10 2026"
+  ],
+  "kept": [
+   "https://www.technologyreview.com/2026/11/09/1148182/nancy-pelosis-replacement-is-ready-to-regulate-ai/"
+  ],
+  "dropped": []
+ },
+ "quiz": {
+  "kicker": "Quiz",
+  "headline": "The Tuesday quiz",
+  "dek": "Seven questions on AI, tech and gaming news from 8–10 November. How much do you remember?",
+  "period": {
+   "start": "2026-11-08",
+   "end": "2026-11-10"
+  },
+  "model": "claude-opus-5-5",
+  "checked": {
+   "model": "claude-opus-5-5",
+   "dropped": [
+    {
+     "question": "Roughly how much SSD health per month do users say AMD's External Events Utility costs?",
+     "answer": "1%",
+     "problem": "The story says the 1 percent SSD health claim is unconfirmed, so it is off limits."
+    }
+   ]
+  },
+  "questions": [
+   {
+    "question": "How much revenue does Take-Two expect GTA 6 could bring in during its launch period?",
+    "options": [
+     "$800 million",
+     "$1.2 billion",
+     "$7 billion",
+     "$3.5 billion"
+    ],
+    "answer": 3,
+    "explanation": "Take-Two expects as much as $3.5 billion during the launch period and calls pre-orders \"unprecedented.\" Preloads are live on PlayStation and Xbox, with no PC version at release.",
+    "section": "gaming",
+    "story": {
+     "headline": "GTA 6 preloads go live as Take-Two eyes $3.5 billion launch",
+     "edition_id": "2026-11-10",
+     "sources": [
+      {
+       "name": "PCMag",
+       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPaFZTRUlXMmgyWDYxVjM5dm5MQVBuME40T0I3MUpwY2FINTQ5Q2FhdkRFMEhtclRhbHV0MWVNOUxCTXpzUG1OekNBOEpGMlI1ZG4tQkhnZGtLMGZhZHNsekJPSDdleTJvM1Zia2lkZ0lXSi1LQTBRZ3p5VnBBT1ZVbDdpcTJ6RENET3JDa0FaR2MxWnhrVlZIeEtlcw?oc=5"
+      },
+      {
+       "name": "TechRadar",
+       "url": "https://www.techradar.com/computing/wi-fi-broadband/gta-6-preloads-are-live-theres-still-time-to-upgrade-your-nbn-before-launch-day"
+      },
+      {
+       "name": "PC Gamer",
+       "url": "https://www.pcgamer.com/games/grand-theft-auto/take-two-expects-to-make-as-much-as-usd3-5-billion-during-the-gta-6-launch-period/"
+      }
+     ],
+     "section": "gaming",
+     "tier": "gaming_news"
+    }
+   },
+   {
+    "question": "An original BioWare composer shared planned music for which cancelled game as a goodbye?",
+    "options": [
+     "Anthem 2",
+     "Mass Effect 5",
+     "Jade Empire 2",
+     "Dragon Age 5"
+    ],
+    "answer": 1,
+    "explanation": "One of the original Mass Effect composers released a trailer of the planned Mass Effect 5 score after EA shut down BioWare and cancelled the game.",
+    "section": "gaming",
+    "story": {
+     "headline": "Original composer shares Mass Effect 5 score that will never be used",
+     "edition_id": "2026-11-09",
+     "sources": [
+      {
+       "name": "Rock Paper Shotgun",
+       "url": "https://www.rockpapershotgun.com/this-trailer-is-my-way-of-saying-goodbye-have-a-listen-to-the-mass-effect-5-score-that-could-have-been-courtesy-of-one-of-the-original-games-composers"
+      }
+     ],
+     "section": "gaming",
+     "tier": "gaming_news"
+    }
+   },
+   {
+    "question": "How many new high-severity Firefox flaws did OpenAI's GPT-6 Cyber find?",
+    "options": [
+     "2,308",
+     "81",
+     "948",
+     "12"
+    ],
+    "answer": 1,
+    "explanation": "GPT-6 Cyber found 81 new high-severity Firefox flaws, and Mozilla has shipped many fixes. It also built 948 Linux kernel root exploits from 2,308 potential flaws.",
+    "section": "ai",
+    "story": {
+     "headline": "OpenAI's GPT-6 Cyber finds 81 Firefox flaws, exploits 948 Linux bugs",
+     "edition_id": "2026-11-08",
+     "sources": [
+      {
+       "name": "BleepingComputer",
+       "url": "https://www.bleepingcomputer.com/news/security/openais-new-gpt-6-cyber-ai-finds-81-firefox-flaws-948-linux-bugs/",
+       "title": "OpenAI's new GPT-6 Cyber AI finds 81 Firefox flaws, 948 Linux bugs"
+      }
+     ],
+     "section": "ai",
+     "tier": "featured",
+     "slug": "openai-s-gpt-6-cyber-finds-81-firefox-flaws-exploits-948-lin"
+    }
+   },
+   {
+    "question": "What did Claude Fable 5.2 score on the Artificial Analysis Intelligence Index?",
+    "options": [
+     "65",
+     "52",
+     "78",
+     "40"
+    ],
+    "answer": 0,
+    "explanation": "Fable 5.2 scored 65, against a tier median of 40. Testers also found it slow and very verbose, averaging 46.4 minutes per index task at Max effort.",
+    "section": "ai",
+    "story": {
+     "headline": "Anthropic ships Claude Fable 5.2, tops Artificial Analysis at 65",
+     "edition_id": "2026-11-10",
+     "sources": [
+      {
+       "name": "Hacker News",
+       "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+       "title": "Claude Fable 5.2 and Mythos 5.2"
+      },
+      {
+       "name": "Hacker News",
+       "url": "https://artificialanalysis.ai/models/claude-fable-5-2",
+       "title": "Claude Fable 5.2 scores 65 on Artificial Analysis, highest so far"
+      }
+     ],
+     "section": "ai",
+     "tier": "featured",
+     "slug": "anthropic-ships-claude-fable-5-2-tops-artificial-analysis-at"
+    }
+   },
+   {
+    "question": "Which Claude Code file exposed passwords and API keys in 1,122 public GitHub repos?",
+    "options": [
+     "settings.local.json",
+     "CLAUDE.md",
+     "credentials.json",
+     "mcp.json"
+    ],
+    "answer": 0,
+    "explanation": "Apiiro found 1,379 secrets in public .claude/settings.local.json files, including 379 database passwords and 23 AWS keys. Deleting the file is not enough, since git history and forks keep it.",
+    "section": "ai",
+    "story": {
+     "headline": "Claude Code's 'don't ask again' file leaks secrets to 1,122 repos",
+     "edition_id": "2026-11-08",
+     "sources": [
+      {
+       "name": "The Hacker News",
+       "url": "https://thehackernews.com/2026/11/claude-codes-dont-ask-again-file.html",
+       "title": "Claude Code's “Don't Ask Again” File Exposes Passwords and Keys in 1,122 Public Copies on GitHub"
+      },
+      {
+       "name": "Hacker News",
+       "url": "https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again",
+       "title": "Claude Code's \"Don't Ask Again\" exposes passwords in 1,122 public GitHub files"
+      }
+     ],
+     "section": "ai",
+     "tier": "featured",
+     "slug": "claude-code-s-don-t-ask-again-file-leaks-secrets-to-1-122-re"
+    }
+   },
+   {
+    "question": "Goldman Sachs now limits AI coding agents to roughly how many of its engineers?",
+    "options": [
+     "47,000",
+     "2,000",
+     "12,000",
+     "25,000"
+    ],
+    "answer": 2,
+    "explanation": "The October guidance limits Claude Code and GitHub to about 12,000 engineers out of roughly 47,000 staff. Traders had used the tools to track client flows and model positions.",
+    "section": "ai",
+    "story": {
+     "headline": "Goldman Sachs pulls Claude Code from its bankers and traders",
+     "edition_id": "2026-11-09",
+     "sources": [
+      {
+       "name": "Hacker News",
+       "url": "https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers",
+       "title": "Goldman Sachs is pulling Claude Code from its bankers and traders"
+      }
+     ],
+     "section": "ai",
+     "tier": "medium",
+     "slug": "goldman-sachs-pulls-claude-code-from-its-bankers-and-traders"
+    }
+   },
+   {
+    "question": "By how much did 64GB RAM configurations fall year over year in CPU-Z's user data?",
+    "options": [
+     "40%",
+     "65%",
+     "18%",
+     "2.5%"
+    ],
+    "answer": 2,
+    "explanation": "64GB systems fell 18 percent as rising memory prices pushed buyers toward smaller kits. DDR4 grew to a 54.5 percent share while DDR5 slipped to 32.9 percent.",
+    "section": "tech",
+    "story": {
+     "headline": "CPU-Z data shows 64GB RAM systems down 18 percent as prices climb",
+     "edition_id": "2026-11-09",
+     "sources": [
+      {
+       "name": "Tom's Hardware",
+       "url": "https://www.tomshardware.com/pc-components/ram/pcs-with-64gb-of-ram-plummet-18-percent-as-memory-prices-soar-cpu-z-install-base-data-shows-ddr4-making-a-surprise-comeback",
+       "title": "PC's with 64GB of RAM plummet 18% as memory prices soar"
+      }
+     ],
+     "section": "tech",
+     "tier": "medium",
+     "slug": "cpu-z-data-shows-64gb-ram-systems-down-18-percent-as-prices"
+    }
+   }
+  ]
+ }
+}
