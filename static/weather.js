@@ -1,15 +1,19 @@
 // The front page's weather box, live from Open-Meteo (free for non-commercial sites, no key; data CC BY 4.0,
 // credited in the box). It shows the paper's home town until the reader asks for their own position: the
 // browser asks for permission, and the position is rounded to two decimals (about 1 km) before it leaves
-// the page. The choice and the last forecast (30 minutes) are kept in this browser.
+// the page. The box then names the place the browser found (BigDataCloud's free reverse geocoding for
+// browsers, no key) and shows its coordinates, accuracy and a map link, so a wrong fix (a VPN, an IP-based
+// guess) is easy to spot. The choice, the last forecast (30 minutes) and the place names are kept in this
+// browser.
 (() => {
   "use strict";
   const box = document.querySelector("[data-weather]");
   if (!box) return;
 
   const API = "https://api.open-meteo.com/v1/forecast";
+  const GEOCODE = "https://api.bigdatacloud.net/data/reverse-geocode-client";
   const FRESH_MS = 30 * 60 * 1000;
-  const WHERE = "times:weather:where", CACHE = "times:weather:forecast";
+  const WHERE = "times:weather:where", CACHE = "times:weather:forecast", NAMES = "times:weather:names";
   const DAILY = ["weather_code", "temperature_2m_max", "temperature_2m_min", "precipitation_sum",
     "precipitation_probability_max", "wind_speed_10m_max", "sunrise", "sunset"];
   const HOURLY = ["temperature_2m", "weather_code"];
@@ -59,12 +63,51 @@
     status.hidden = !text;
   }
 
+  // "±300 m", "±2 km": how sure the browser is (a fix from Wi-Fi is tight; one from the IP address is not)
+  const accuracy = (m) => (m < 1000 ? `±${Math.max(100, Math.round(m / 100) * 100)} m` : `±${Math.round(m / 1000)} km`);
+
   function label(where) {
-    const name = where.here ? "Your location" : where.place;
+    const name = where.here ? (where.name || "Your location") : where.place;
     $(".block-sub").textContent = name;
-    box.setAttribute("aria-label", where.here ? "Weather at your location" : `Weather in ${where.place}`);
+    box.setAttribute("aria-label", where.here ? `Weather at your location${where.name ? `, ${where.name}` : ""}`
+      : `Weather in ${where.place}`);
     toggle.textContent = where.here ? `Show ${home.place}` : "Use my location";
     box.querySelectorAll("[data-weather-where]").forEach((node) => { node.hidden = !canLocate; });
+
+    // Where the browser placed the reader: the full place name, the rounded coordinates and a map
+    const found = field("found");
+    found.replaceChildren();
+    if (where.here) {
+      const lat = round(where.lat), lon = round(where.lon);
+      const coords = `${Math.abs(lat).toFixed(2)}° ${lat < 0 ? "S" : "N"}, ${Math.abs(lon).toFixed(2)}° ${lon < 0 ? "W" : "E"}`;
+      const map = el("a", "meta-link", "Map");
+      map.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=11/${lat}/${lon}`;
+      found.append(el("span", "", `Found: ${where.full || where.name || "a place without a name"}`), sep(),
+        el("span", "", where.accuracy ? `${coords} (${accuracy(where.accuracy)})` : coords), sep(), map);
+    }
+    found.hidden = !where.here;
+  }
+
+  // The browser gives coordinates only; BigDataCloud turns them into a town and a country
+  async function placeName(where) {
+    const lat = round(where.lat), lon = round(where.lon), key = `${lat},${lon}`;
+    const names = read(NAMES) || {};
+    if (names[key]) return names[key];
+    const params = new URLSearchParams({ latitude: String(lat), longitude: String(lon), localityLanguage: "en" });
+    const res = await fetch(`${GEOCODE}?${params}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const town = data.city || data.locality || "";
+    if (!town && !data.countryName) throw new Error("no name");
+    let country = data.countryName || "";
+    try { country = new Intl.DisplayNames(["en"], { type: "region" }).of(data.countryCode) || country; } catch { /* keep */ }
+    const region = (data.principalSubdivision || "").replace(/\s*\[[^\]]*\]$/, "");   // "Stockholms lan [SE-01]"
+    const full = [town, region, country].filter((x, i, all) => x && all.indexOf(x) === i).join(", ");
+    const named = { name: town || country, full };
+    const keep = Object.fromEntries(Object.entries(names).slice(-9));   // the last few places are plenty
+    keep[key] = named;
+    write(NAMES, keep);
+    return named;
   }
 
   // Open-Meteo's columns → today, the hours still ahead today, and the next days
@@ -155,7 +198,8 @@
 
   function locate() {
     return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(
-      (pos) => resolve({ place: "", lat: pos.coords.latitude, lon: pos.coords.longitude, here: true }), reject,
+      (pos) => resolve({ place: "", lat: pos.coords.latitude, lon: pos.coords.longitude, accuracy: pos.coords.accuracy,
+        here: true }), reject,
       { enableHighAccuracy: false, maximumAge: FRESH_MS, timeout: 15000 }));
   }
 
@@ -165,6 +209,10 @@
       const where = await locate();
       write(WHERE, "here");
       await show(where);
+      try {
+        Object.assign(where, await placeName(where));
+        if (shown === where) label(where);
+      } catch { /* the coordinates still show */ }
     } catch (err) {
       write(WHERE, null);
       const why = err && err.code === 1 ? "Location permission was not given" : "Couldn't find your location";

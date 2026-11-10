@@ -78,6 +78,7 @@ def test_weather_box_is_live_on_todays_front_page_only(site, cfg):
     assert "static/weather.js" in html and ">Weather data by Open-Meteo.com</a>" in html   # CC BY 4.0 credit
     head = html[html.index("data-weather "):html.index("data-weather-status")]
     assert f'<p class="block-sub">{w["place"]}</p>' in head and "data-weather-where hidden>Use my location<" in head
+    assert 'data-w="found" hidden' in head        # where the browser placed the reader (static/weather.js)
     archived = (site / "archive" / "2026-11-03" / "index.html").read_text(encoding="utf-8")
     assert "data-weather" not in archived and "static/weather.js" not in archived
 

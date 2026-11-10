@@ -24,6 +24,21 @@ def _range(x: dict[str, Any] | None, unit: str = "") -> str:
     return f"{span} {unit}".strip()
 
 
+def _deal_days(cfg: dict[str, Any], long: bool = False) -> str:
+    days = (cfg.get("deals") or {}).get("days") or []
+    if not days:
+        return ""
+    if long:
+        return (f"; the deals are checked on {_days(days)}, and the editions in between carry that check over, "
+                "minus deals that have ended")
+    return f" (deals checked on {_days(days)})"
+
+
+def _services(screen: dict[str, Any]) -> str:
+    names = [x.get("name", "") for x in screen.get("services") or [] if x.get("name")]
+    return _days(names) if names else "streaming services"
+
+
 def summary(cfg: dict[str, Any]) -> str:
     """The facts in one short paragraph, for round 2's shared prompt (every reply call reads it)."""
     sections = ", ".join(s.get("name", s.get("slug", "")) for s in cfg.get("sections") or [])
@@ -33,7 +48,11 @@ def summary(cfg: dict[str, Any]) -> str:
              f"{', '.join((cfg.get('schedule') or {}).get('editions') or ['07:00'])} Stockholm time",
              "article pages with key points, sources and the collapsed Botroom thread (its bar shows the comment "
              "count)", f"a front page with Top on Hacker News and a Latest list of briefs{weather}",
-             "Gaming and Deals pages"]
+             "Gaming and Deals pages" + _deal_days(cfg)]
+    sc = cfg.get("screen") or {}
+    if sc.get("enabled"):
+        parts.append(f"a Screen page on what to watch on {_services(sc)}, with picks of the week on "
+                     f"{_days((sc.get('picks') or {}).get('days'))}")
     if op.get("enabled", True):
         parts.append(f"an opinion column on {_days(op.get('days'))}")
     if qz.get("enabled", True):
@@ -71,13 +90,13 @@ def facts(cfg: dict[str, Any], edition: dict[str, Any], editions: list[dict[str,
         "Units with a pass also get a \"Discuss\" button with the count by the byline. Briefs link straight to "
         "the source.",
         "- Front page: the lead story, top stories, \"Top on Hacker News\" ranked by points, a \"Latest\" list of "
-        "briefs, the newest opinion column and quiz, then a Gaming band and a Deals band.",
+        "briefs, the newest opinion column and quiz, then a Gaming band, a Deals band and a Screen band.",
     ]
     w = cfg.get("weather") or {}
     if w.get("enabled"):
         lines.append(f"- Weather box on today's front page (Open-Meteo): now, later today and the next "
                      f"{w.get('days', 2)} days for {w.get('place', 'one city')}; a \"Use my location\" button "
-                     "swaps in the reader's own place.")
+                     "swaps in the reader's own place, named, with its coordinates and a map link.")
     lines += [
         "- AI and Tech section pages: recent featured and medium stories, then briefs.",
         "- Gaming page: new on PC (Steam, with user ratings), reviews"
@@ -87,9 +106,15 @@ def facts(cfg: dict[str, Any], edition: dict[str, Any], editions: list[dict[str,
         + (f", videos from {', '.join(channels)}" if channels else "") + ", and gaming news.",
         f"- Deals page: \"shopping advice, not ads\". The deal of the day with a verdict (Strong Buy, Buy, Hold or "
         f"Avoid), {deals.get('top_picks', 8)} top picks, then lists (popular, hidden gems, a few genres) for "
-        f"Sweden ({deals.get('country', 'SE')}), from IsThereAnyDeal, with when the prices were checked. No "
-        "affiliate links.",
+        f"Sweden ({deals.get('country', 'SE')}), from IsThereAnyDeal, with when the prices were checked"
+        f"{_deal_days(cfg, long=True)}. No affiliate links.",
     ]
+    sc = cfg.get("screen") or {}
+    if sc.get("enabled"):
+        lines.append(f"- Screen page: what to watch in Sweden on {_services(sc)}: new films and series on each, "
+                     "titles that just arrived, Netflix's weekly Swedish top 10 and older well-rated titles, each "
+                     "tagged with where it streams (TMDB, where-to-watch data from JustWatch). Picks of the week, "
+                     f"6 to 8 with a short reason each, on {_days((sc.get('picks') or {}).get('days'))}.")
     op, qz = cfg.get("opinion") or {}, cfg.get("quiz") or {}
     if op.get("enabled", True):
         lines.append(f"- Opinion column on {_days(op.get('days'))}, about {op.get('words', 800)} words, written "

@@ -4,7 +4,7 @@
 site:
   title: "The 403 Times"
   tagline: "Access Granted"
-  description: "A personal AI newspaper: AI, tech, PC gaming and deals, written by Claude from the linked sources."
+  description: "A personal AI newspaper: AI, tech, PC gaming, deals and what to watch, written by Claude from the linked sources."
   url: "https://a403.space/times/"
   base_path: "/times/"
   language: en
