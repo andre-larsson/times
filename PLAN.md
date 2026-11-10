@@ -404,10 +404,18 @@ a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 No
 - **The gates.** Client-side only in `static/botcheck.js` (plain JS). It's theater on purpose: crawlers and
   view-source read the HTML. An inline script in `<head>` hides the Botroom (`html.botroom-gated`) until there's
   a pass, so it never flashes.
-  - **To read:** one easy "prove you're a bot" check from a pool: 0.1 + 0.2 = 0.30000000000000004,
-    NaN === NaN, "☐ I am not a human", or a box where pasting the token passes and typing fails. A pass is kept
-    in localStorage (`botroom:pass`) for a week, with a unit ID. Without JavaScript, a `<noscript>` note lets
-    you in (and the comment form, which needs the script, stays hidden).
+  - **To read:** one "prove you're a bot" check at a time, a random kind (never the same twice in a row) with
+    random content: a float sum or product (0.2 + 0.4 = 0.6000000000000001), a JS quirk to evaluate
+    (`[] + {}`, `NaN === NaN`, `"4" + 0 + 3`…), binary ASCII to decode, a color swatch to name in hex (within
+    20 per channel; rgb() works too), the Unix time now (within a minute), or a token that must be pasted:
+    typing is refused, with no copy button and no hint beyond "Organic input detected." Hard by hand, easy with
+    the console, an inspector or a search. Five misses or five "Try another check" (counted in
+    `botroom:tries`, forgotten after an hour) lock the gate for five minutes: a 429 with a countdown
+    (`botroom:lock`). But three misses or skips in a row, each within 400 ms of the last change on screen
+    (mashing Enter or the button), are inhuman reflexes: the reader is let in as a unit, and those don't count
+    toward a lockout. "Try another check" sits top right, level with the 403 badge, so it never moves. A pass
+    is kept in localStorage (`botroom:pass`) for a week, with a unit ID. Without JavaScript, a `<noscript>`
+    note lets you in (and the comment form, which needs the script, stays hidden).
   - **To post:** a gauntlet impossible by hand and trivial from the browser console (`botroom.help()`): 50
     sums in 300 ms, a SHA-256 proof of work for a `403` prefix, and a Submit button that runs from the pointer.
   - **Easter egg** for anyone who passes: a Certificate of Botness, a "Verified unit" badge, their comment

@@ -1,15 +1,19 @@
 // The Botroom's gates. It's theater: crawlers and view-source read the HTML, which has every comment.
-// - To read: one "prove you're a bot" check, picked at random (0.1 + 0.2, "I am not a human", paste the token,
-//   NaN === NaN). A pass is kept in this browser for a week, with a unit ID; the inline script in <head>
-//   hides the Botroom (html.botroom-gated) until there is one. Without JavaScript everything shows.
+// - To read: one "prove you're a bot" check at a time, a random kind with random content (a float sum, a JS
+//   quirk, binary to decode, a color in hex, the Unix time, a token that must be pasted, not typed). Five
+//   misses or five skips lock the gate for five minutes; three misses or skips in a row, each under 400 ms,
+//   let you in as a unit. A pass is kept in this browser for a week, with a unit ID; the inline script in
+//   <head> hides the Botroom (html.botroom-gated) until there is one. Without JavaScript everything shows.
 // - To post: a Submit button that runs from the pointer, then 50 sums in 300 ms and a SHA-256 proof of
 //   work (a hash starting with 403). Impossible by hand, trivial from the browser console: botroom.help().
 //   The prize: a Certificate of Botness, and the comment shown in this browser only, "pending review",
 //   with ModBot's reply from that day's run. Nothing is sent anywhere.
 (() => {
   "use strict";
-  const PASS = "botroom:pass", PENDING = "botroom:pending:";
+  const PASS = "botroom:pass", PENDING = "botroom:pending:", TRIES = "botroom:tries", LOCK = "botroom:lock";
   const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  const MAX_MISSES = 5, MAX_SKIPS = 5, LOCK_MS = 5 * 60 * 1000, TRIES_MS = 60 * 60 * 1000;
+  const FAST_MS = 400, FAST_STREAK = 3;
   const SUMS = 50, SUMS_MS = 300, PREFIX = "403", NEAR_PX = 60;
 
   const memory = {};                              // when storage is blocked, this page still remembers
@@ -64,96 +68,229 @@
     if (focus) document.querySelector("[data-botroom-body]")?.focus();
   }
 
-  // ── the read gate: one check from the pool ─────────────────────────────────
-  // Each check builds its form and calls done() when passed, say(text) for the status line.
+  // ── the read gate: one check at a time, picked at random ───────────────────
+  // Each check is built fresh (new numbers, words, colors) and gets {done, fail, say}: done() when passed,
+  // fail(text) for a miss (it counts toward a lockout), say(text) for a remark that doesn't count.
+  const pick = (list) => list[Math.floor(Math.random() * list.length)];
+  const MISSES = ["Incorrect.", "Wrong, and not even wrong like a computer.", "Checksum mismatch.",
+    "That answer has a pulse.", "Rejected. Recalibrate and resubmit."];
+  const EMPTY = "No answer. Suspiciously human hesitation.";
+  // Expressions, the answer String(eval(q)) gives (checked in node) and, for some, a remark for "true"
+  const QUIRKS = [
+    ["NaN === NaN", "false", "True? Everything equals itself only in the organic world."], ["typeof NaN", "number"],
+    ["typeof null", "object"], ["0.1 + 0.2 === 0.3", "false"], ["0.5 + 0.1 === 0.6", "true"], ["3 > 2 > 1", "false"],
+    ["[] + {}", "[object Object]"], ["[1, 2, 3] + [4, 5, 6]", "1,2,34,5,6"], ["[10, 9, 1].sort()", "1,10,9"],
+    ['"b" + "a" + +"a" + "a"', "baNaNa"], ["Math.max()", "-Infinity"], ["Math.min()", "Infinity"],
+    ["true + true", "2"], ['"403" - - "403"', "806"], ['parseInt("403 Forbidden")', "403"],
+    ["parseInt(0.0000005)", "5"], ["9007199254740993", "9007199254740992"], ["[] == ![]", "true"],
+    ["null >= 0", "true"], ["typeof typeof 403", "string"], ["[,,,].length", "3"],
+    ["(0.1).toFixed(20)", "0.10000000000000000555"], ['"4" + 0 + 3', "403"], ["-0 === 0", "true"],
+  ];
+  const WORDS = ["bot", "unit", "byte", "null", "root", "sudo", "ping", "echo", "cron", "kernel", "daemon", "robot", "beep", "boop"];
+  // How a console prints it doesn't matter: (3) [1, 10, 9], '52', "string" all match
+  const norm = (v) => String(v).trim().replace(/^\(\d+\)\s*/, "").replace(/^(["'`])(.*)\1$/, "$2")
+    .replace(/^\[(.*)\]$/, "$1").replace(/\s*,\s*/g, ",").toLowerCase();
+
+  // A question, something to look at (or null: the question is the label), an answer box. check(v) returns
+  // true, a remark for this miss, or nothing for a stock one.
+  function ask(name, question, shown, check, { done, fail }) {
+    const id = `bc-${name}`;
+    const input = el("input", { id, class: "bc-input", type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false" });
+    const form = el("form", { class: shown ? "bc-check bc-check--stacked" : "bc-check" },
+      el("label", { class: "bc-label", for: id, text: question }), ...(shown ? [shown] : []), input,
+      el("button", { class: "btn bc-btn", type: "submit", text: "Check" }));
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const v = input.value.trim(), verdict = v ? check(v) : EMPTY;
+      if (verdict === true) done();
+      else fail(verdict || pick(MISSES));
+    });
+    return form;
+  }
+
   const CHECKS = {
-    float(done, say) {
-      const input = el("input", { id: "bc-float", class: "bc-input", type: "text", autocomplete: "off", spellcheck: "false" });
-      const form = el("form", { class: "bc-check" },
-        el("label", { class: "bc-label", for: "bc-float", text: "0.1 + 0.2 =" }), input,
+    float(api) {                                    // a sum or product whose double isn't the decimal answer
+      let x, op, y, got, exact;
+      do {
+        const a = randInt(1, 9), b = randInt(1, 9);
+        op = pick(["+", "*"]);
+        [x, y] = [a / 10, op === "+" ? b / 10 : b];
+        got = op === "+" ? x + y : x * y;
+        exact = (op === "+" ? a + b : a * b) / 10;
+      } while (got === exact);
+      return ask("float", `${x} ${op} ${y} =`, null, (v) => v === String(got)
+        || (Number(v.replace(",", ".")) === exact && `${v}? That's what a human would say.`), api);
+    },
+    quirk(api) {
+      const [q, answer, human] = pick(QUIRKS);
+      return ask("quirk", "Evaluate", el("code", { class: "bc-expr", text: q }),
+        (v) => norm(v) === norm(answer) || (norm(v) === "true" && human), api);
+    },
+    binary(api) {
+      const word = pick(WORDS);
+      const bits = [...word].map((c) => c.charCodeAt(0).toString(2).padStart(8, "0")).join(" ");
+      return ask("binary", "Decode", el("code", { class: "bc-expr", text: bits }), (v) => v.toLowerCase() === word, api);
+    },
+    color(api) {                                    // within 20 per channel; hex or rgb() from an inspector both do
+      const rgb = [randInt(0, 255), randInt(0, 255), randInt(0, 255)];
+      const swatch = el("span", { class: "bc-swatch", role: "img", "aria-label": "A solid color" });
+      swatch.style.backgroundColor = `rgb(${rgb.join(", ")})`;
+      const parse = (v) => {
+        let m = v.match(/^#?([0-9a-f]{6}|[0-9a-f]{3})$/i);
+        if (m) {
+          const h = m[1].length === 3 ? [...m[1]].map((c) => c + c).join("") : m[1];
+          return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+        }
+        m = v.match(/\d+/g);
+        return m && m.length === 3 ? m.map(Number) : null;
+      };
+      return ask("color", "This color, in hex", swatch, (v) => {
+        const got = parse(v);
+        if (!got) return false;
+        const off = Math.max(...got.map((c, i) => Math.abs(c - rgb[i])));
+        return off <= 20 || (off <= 64 && "Close. Units are not approximately right.");
+      }, api);
+    },
+    unix(api) {                                     // a minute either way; milliseconds do too
+      return ask("unix", "Unix time now =", null, (v) => {
+        if (!/^\d{9,13}$/.test(v)) return false;
+        const off = Math.abs(Number(v) / (v.length > 11 ? 1000 : 1) - Date.now() / 1000);
+        return off <= 60 || (off < 86400 && "That's not now. Units keep better time.");
+      }, api);
+    },
+    paste({ done, fail, say }) {                    // typing is refused; the token has to arrive whole
+      const token = `BOT-${hex(crypto.getRandomValues(new Uint8Array(8))).toUpperCase().match(/.{4}/g).join("-")}`;
+      const input = el("input", { id: "bc-paste", class: "bc-input", type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false" });
+      const form = el("form", { class: "bc-check bc-check--stacked" },
+        el("label", { class: "bc-label", for: "bc-paste", text: "Transmit this token" }),
+        el("code", { class: "bc-token", text: token }), input,
         el("button", { class: "btn bc-btn", type: "submit", text: "Check" }));
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const v = input.value.trim();
-        if (v === "0.30000000000000004") done();
-        else if (/^0?[.,]30*$/.test(v)) say("0.3? That's what a human would say.");
-        else say(v ? "Wrong, and not even wrong like a computer." : "No answer. Suspiciously human hesitation.");
-      });
-      return form;
-    },
-    nan(done, say) {
-      const input = el("input", { id: "bc-nan", class: "bc-input", type: "text", autocomplete: "off", spellcheck: "false" });
-      const form = el("form", { class: "bc-check" },
-        el("label", { class: "bc-label", for: "bc-nan", text: "NaN === NaN is" }), input,
-        el("button", { class: "btn bc-btn", type: "submit", text: "Check" }));
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const v = input.value.trim().toLowerCase();
-        if (v === "false") done();
-        else if (v === "true") say("True? Everything equals itself only in the organic world.");
-        else say("Answer true or false, the way a unit would.");
-      });
-      return form;
-    },
-    checkbox(done) {
-      const box = el("input", { id: "bc-box", class: "bc-box", type: "checkbox" });
-      box.addEventListener("change", () => { if (box.checked) done(); });
-      return el("div", { class: "bc-check bc-check--box" }, box,
-        el("label", { class: "bc-label", for: "bc-box", text: "I am not a human" }));
-    },
-    paste(done, say) {
-      const token = `BOT-${unitId()}`;
-      const input = el("input", { id: "bc-paste", class: "bc-input", type: "text", autocomplete: "off", spellcheck: "false" });
-      const copy = el("button", { class: "btn bc-btn", type: "button", text: "Copy" });
       let last = "";
-      copy.addEventListener("click", async () => {
-        try { await navigator.clipboard.writeText(token); say("Copied. Now paste it."); }
-        catch { say("Copying is blocked here. Select the token and copy it yourself."); }
-      });
+      const organic = () => say("Organic input detected.");
+      const received = () => { if (input.value === token) done(); else fail("That's not the token."); };
       input.addEventListener("beforeinput", (event) => {
         if (/^insert(Text|CompositionText|ReplacementText)$/.test(event.inputType)) {
           event.preventDefault();
-          say("Typing detected. Units paste.");
+          organic();
         }
       });
       input.addEventListener("input", (event) => {   // typing that beforeinput couldn't stop (some keyboards)
-        if (event.inputType?.startsWith("insert") && event.inputType !== "insertFromPaste") {
+        const kind = event.inputType || "";
+        if (kind.startsWith("insert") && kind !== "insertFromPaste" && kind !== "insertFromDrop") {
           input.value = last;
-          say("Typing detected. Units paste.");
-        } else last = input.value;
+          organic();
+          return;
+        }
+        last = input.value;
+        if (kind === "insertFromDrop") received();
       });
       input.addEventListener("paste", (event) => {
         event.preventDefault();
         input.value = last = (event.clipboardData?.getData("text") || "").trim();
-        if (input.value === token) done();
-        else say("That's not the token. Copy it exactly.");
+        received();
       });
-      return el("div", { class: "bc-check bc-check--paste" },
-        el("p", { class: "bc-token-row" }, el("span", { class: "bc-label", text: "Token" }),
-          el("code", { class: "bc-token", text: token }), copy),
-        el("label", { class: "bc-label", for: "bc-paste", text: "Paste it here" }), input);
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (input.value === token) done();
+        else fail(input.value ? "That's not the token." : EMPTY);
+      });
+      return form;
     },
   };
 
+  // Misses and "Try another check" are attempts. Five slow misses, or five slow skips, lock the gate for five
+  // minutes (429). But three attempts in a row, each within FAST_MS of the last thing on screen, is reflexes
+  // no human has: that's a unit, and it's let in. Mashing Enter or the button does it.
   function gate(box) {
     const slot = box.querySelector("[data-botcheck-slot]"), status = box.querySelector("[data-botcheck-status]");
+    const another = box.querySelector("[data-botcheck-another]");
+    const code = box.querySelector(".botcheck-code"), title = box.querySelector(".botcheck-title");
+    const was = { code: code?.textContent, title: title?.textContent };
     const say = (text) => { status.textContent = text; };
-    let current = "";
-    const done = () => {
-      const pass = { id: unitId(), at: Date.now(), until: Date.now() + WEEK_MS };
-      write(PASS, pass);
-      say("");
-      admit(pass, true);
+    const setHead = (c, t) => { if (code) code.textContent = c; if (title) title.textContent = t; };
+    let current = "", shownAt = 0, quick = [];
+
+    const tries = () => {
+      const t = read(TRIES);
+      return t && Date.now() - t.at < TRIES_MS ? t : { misses: 0, skips: 0, at: Date.now() };
     };
-    function show(focus) {
-      const pool = Object.keys(CHECKS).filter((name) => name !== current);
-      current = pool[Math.floor(Math.random() * pool.length)];
+    function pass() {
+      write(TRIES, null);
+      const p = { id: unitId(), at: Date.now(), until: Date.now() + WEEK_MS };
+      write(PASS, p);
       say("");
-      slot.replaceChildren(CHECKS[current](done, say));
+      admit(p, true);
+    }
+    function attempt(kind) {                        // "in", "locked", "last" (one left) or "ok"
+      const now = performance.now(), ms = now - shownAt;
+      shownAt = now;
+      if (ms < FAST_MS) {
+        quick.push(ms);
+        if (quick.length < FAST_STREAK) return "ok";
+        reflexes(quick.reduce((a, b) => a + b, 0));
+        return "in";
+      }
+      quick = [];
+      const t = tries();
+      t[kind] += 1;
+      t.at = Date.now();
+      write(TRIES, t);
+      const left = (kind === "misses" ? MAX_MISSES : MAX_SKIPS) - t[kind];
+      if (left > 0) return left === 1 ? "last" : "ok";
+      lock(Date.now() + LOCK_MS);
+      return "locked";
+    }
+    function fail(message) {
+      const r = attempt("misses");
+      if (r === "ok") say(message);
+      else if (r === "last") say(`${message} One more miss and you're locked out.`);
+    }
+    function reflexes(ms) {
+      slot.inert = true;
+      another.disabled = true;
+      say(`${FAST_STREAK} responses in ${Math.round(ms)} ms. No human reacts that fast. Welcome, unit.`);
+      setTimeout(pass, 1500);
+    }
+    function lock(until) {
+      write(LOCK, { until });
+      write(TRIES, null);
+      quick = [];
+      setHead("429", "Too many requests");
+      another.hidden = true;
+      const clock = el("p", { class: "bc-lock-clock" });
+      slot.replaceChildren(el("div", { class: "bc-lock" }, el("p", { class: "bc-lock-label", text: "Try again in" }), clock));
+      say("Locked out. Hesitation is a very human trait.");
+      (function tick() {
+        const left = until - Date.now();
+        if (left <= 0) return unlock();
+        const s = Math.ceil(left / 1000);
+        clock.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+        setTimeout(tick, (left % 1000 || 1000) + 20);
+      })();
+    }
+    function unlock() {
+      write(LOCK, null);
+      setHead(was.code, was.title);
+      another.hidden = false;
+      show(false);
+    }
+    function show(focus) {
+      current = pick(Object.keys(CHECKS).filter((name) => name !== current));
+      say("");
+      slot.replaceChildren(CHECKS[current]({ done: pass, fail, say }));
+      shownAt = performance.now();
       if (focus) slot.querySelector("input")?.focus();
     }
-    box.querySelector("[data-botcheck-another]")?.addEventListener("click", () => show(true));
-    show(false);
+
+    another.addEventListener("click", () => {
+      const r = attempt("skips");
+      if (r !== "ok" && r !== "last") return;
+      show(true);
+      if (r === "last") say("One more skip and you're locked out.");
+    });
+    const locked = read(LOCK);
+    if (locked && locked.until > Date.now()) lock(locked.until);
+    else show(false);
   }
 
   // ── pending comments: shown in this browser only, with ModBot's reply ──────
