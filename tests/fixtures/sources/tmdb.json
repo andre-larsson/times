@@ -1,0 +1,64 @@
+{
+ "_note": "Recorded-style TMDB responses for tests: made-up titles, provider ids and links.",
+ "providers": {
+  "movie": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}, {"provider_id": 1175, "provider_name": "Netflix Kids", "logo_path": "/logo-1175.png", "display_priority": 1, "display_priorities": {"SE": 1}}, {"provider_id": 1501, "provider_name": "SVT Play", "logo_path": "/logo-1501.png", "display_priority": 1, "display_priorities": {"SE": 1}}, {"provider_id": 2000, "provider_name": "Other Service", "logo_path": "/logo-2000.png", "display_priority": 1, "display_priorities": {"SE": 1}}],
+  "tv": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}, {"provider_id": 1501, "provider_name": "SVT Play", "logo_path": "/logo-1501.png", "display_priority": 1, "display_priorities": {"SE": 1}}, {"provider_id": 1502, "provider_name": "TV4 Play", "logo_path": "/logo-1502.png", "display_priority": 1, "display_priorities": {"SE": 1}}]
+ },
+ "genres": {
+  "movie": [{"id": 18, "name": "Drama"}, {"id": 53, "name": "Thriller"}, {"id": 35, "name": "Comedy"}, {"id": 10749, "name": "Romance"}, {"id": 878, "name": "Science Fiction"}, {"id": 28, "name": "Action"}, {"id": 99, "name": "Documentary"}, {"id": 16, "name": "Animation"}, {"id": 10751, "name": "Family"}],
+  "tv": [{"id": 18, "name": "Drama"}, {"id": 9648, "name": "Mystery"}, {"id": 10764, "name": "Reality"}, {"id": 36, "name": "History"}, {"id": 80, "name": "Crime"}]
+ },
+ "discover": {
+  "1008": {
+   "new": {"movie": [7001, 7002], "tv": [7101, 7102]},
+   "catalog": {"movie": [7201, 7202], "tv": [7301]}
+  },
+  "1501": {"new": {"movie": [7502], "tv": [7501]}, "catalog": {"movie": [7601, 7602], "tv": []}},
+  "1502": {"new": {"movie": [], "tv": [7801]}, "catalog": {"movie": [], "tv": [7901]}},
+  "classics": {"movie": [7201, 7602, 7601], "tv": [7301, 7902]}
+ },
+ "titles": {
+  "7001": {"adult": false, "id": 7001, "title": "Northbound Static", "original_title": "Northbound Static", "overview": "A night-shift radio host takes a call from a listener who claims to be broadcasting from next week.", "poster_path": "/sample-7001.jpg", "release_date": "2026-10-17", "vote_average": 6.8, "vote_count": 230, "popularity": 95.5, "genre_ids": [53], "original_language": "en", "video": false},
+  "7002": {"adult": false, "id": 7002, "title": "Paper Moonrise", "original_title": "Paper Moonrise", "overview": "Two rival origami artists are booked for the same wedding.", "poster_path": "/sample-7002.jpg", "release_date": "2026-09-30", "vote_average": 6.2, "vote_count": 41, "popularity": 40.1, "genre_ids": [35, 10749], "original_language": "en", "video": false},
+  "7101": {"id": 7101, "name": "The Lantern Keepers", "original_name": "The Lantern Keepers", "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.", "poster_path": "/sample-7101.jpg", "first_air_date": "2026-10-30", "vote_average": 7.9, "vote_count": 412, "popularity": 120.0, "genre_ids": [9648, 18], "original_language": "en", "origin_country": ["XX"]},
+  "7102": {"id": 7102, "name": "Copper and Clay", "original_name": "Copper and Clay", "overview": "Ten amateur potters and metalworkers compete for a studio of their own.", "poster_path": "/sample-7102.jpg", "first_air_date": "2024-03-01", "vote_average": 6.4, "vote_count": 88, "popularity": 30.2, "genre_ids": [10764], "original_language": "en", "origin_country": ["XX"]},
+  "7201": {"adult": false, "id": 7201, "title": "Orbit of Glass", "original_title": "Orbit of Glass", "overview": "A repair crew on a failing space station has one week to decide who goes home.", "poster_path": "/sample-7201.jpg", "release_date": "2014-05-01", "vote_average": 8.2, "vote_count": 15230, "popularity": 60.0, "genre_ids": [878, 18], "original_language": "en", "video": false},
+  "7202": {"adult": false, "id": 7202, "title": "Iron Meadow", "original_title": "Iron Meadow", "overview": "A retired blacksmith defends his village's last forge.", "poster_path": "/sample-7202.jpg", "release_date": "2011-08-12", "vote_average": 6.9, "vote_count": 9000, "popularity": 22.0, "genre_ids": [28], "original_language": "en", "video": false},
+  "7301": {"id": 7301, "name": "Paper Kingdoms", "original_name": "Paper Kingdoms", "overview": "The rise and fall of a family printing house over four generations.", "poster_path": "/sample-7301.jpg", "first_air_date": "2016-02-11", "vote_average": 8.4, "vote_count": 5120, "popularity": 44.0, "genre_ids": [18, 36], "original_language": "en", "origin_country": ["XX"]},
+  "7302": {"id": 7302, "name": "Harbor Lights", "original_name": "Harbor Lights", "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.", "poster_path": "/sample-7302.jpg", "first_air_date": "2019-09-01", "vote_average": 8.1, "vote_count": 2104, "popularity": 52.0, "genre_ids": [80, 18], "original_language": "en", "origin_country": ["XX"]},
+  "7501": {"id": 7501, "name": "The Mountain Cabin", "original_name": "Fjällstugan", "overview": "Four old friends rent the same mountain cabin every winter; this year one of them brings a secret.", "poster_path": "/sample-7501.jpg", "first_air_date": "2026-10-25", "vote_average": 7.4, "vote_count": 61, "popularity": 18.0, "genre_ids": [18], "original_language": "sv", "origin_country": ["XX"]},
+  "7502": {"adult": false, "id": 7502, "title": "The Ferry Ward", "original_title": "The Ferry Ward", "overview": "A year aboard the night ferry between two island towns, told by its crew.", "poster_path": "/sample-7502.jpg", "release_date": "2026-09-12", "vote_average": 7.2, "vote_count": 54, "popularity": 9.0, "genre_ids": [99], "original_language": "sv", "video": false},
+  "7601": {"adult": false, "id": 7601, "title": "The Quiet Harbour", "original_title": "The Quiet Harbour", "overview": "A lighthouse keeper's daughter returns to the village she left after a scandal.", "poster_path": "/sample-7601.jpg", "release_date": "2009-03-20", "vote_average": 7.8, "vote_count": 3120, "popularity": 12.0, "genre_ids": [18], "original_language": "en", "video": false},
+  "7602": {"adult": false, "id": 7602, "title": "Seven Foxes", "original_title": "Seven Foxes", "overview": "Seven fox cubs set out to find the forest their mother sang about.", "poster_path": "/sample-7602.jpg", "release_date": "2012-11-02", "vote_average": 7.9, "vote_count": 4800, "popularity": 15.0, "genre_ids": [16, 10751], "original_language": "en", "video": false},
+  "7801": {"id": 7801, "name": "Saltwater Detectives", "original_name": "Saltwater Detectives", "overview": "Two retired coastguards open a detective agency in a fishing village.", "poster_path": "/sample-7801.jpg", "first_air_date": "2026-10-20", "vote_average": 6.9, "vote_count": 47, "popularity": 11.0, "genre_ids": [80], "original_language": "sv", "origin_country": ["XX"]},
+  "7901": {"id": 7901, "name": "Kitchen Brigade North", "original_name": "Kitchen Brigade North", "overview": "Twelve home cooks try to survive a season in a busy hotel kitchen.", "poster_path": "/sample-7901.jpg", "first_air_date": "2025-01-15", "vote_average": 6.1, "vote_count": 33, "popularity": 8.0, "genre_ids": [10764], "original_language": "sv", "origin_country": ["XX"]},
+  "7902": {"id": 7902, "name": "Long Shadows", "original_name": "Long Shadows", "overview": "A cold case unit reopens the file that ended its founder's career.", "poster_path": "/sample-7902.jpg", "first_air_date": "2015-04-04", "vote_average": 8.0, "vote_count": 900, "popularity": 14.0, "genre_ids": [80, 18], "original_language": "en", "origin_country": ["XX"]},
+  "7903": {"adult": false, "id": 7903, "title": "Weekend in Oslo", "original_title": "Weekend in Oslo", "overview": "A wedding planner has 48 hours to fix the wrong wedding.", "poster_path": "/sample-7903.jpg", "release_date": "2025-12-05", "vote_average": 6.6, "vote_count": 310, "popularity": 33.0, "genre_ids": [35], "original_language": "en", "video": false}
+ },
+ "where": {
+  "movie:7001": {"link": "https://example.com/tmdb/movie/7001/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "movie:7002": {"link": "https://example.com/tmdb/movie/7002/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}], "rent": [{"provider_id": 2000, "provider_name": "Other Service", "logo_path": "/logo-2000.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7101": {"link": "https://example.com/tmdb/tv/7101/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7102": {},
+  "movie:7201": {"link": "https://example.com/tmdb/movie/7201/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "movie:7202": {"link": "https://example.com/tmdb/movie/7202/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7301": {"link": "https://example.com/tmdb/tv/7301/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7302": {"link": "https://example.com/tmdb/tv/7302/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7501": {"link": "https://example.com/tmdb/tv/7501/watch?locale=SE", "free": [{"provider_id": 1501, "provider_name": "SVT Play", "logo_path": "/logo-1501.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "movie:7502": {"link": "https://example.com/tmdb/movie/7502/watch?locale=SE", "free": [{"provider_id": 1501, "provider_name": "SVT Play", "logo_path": "/logo-1501.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "movie:7601": {"link": "https://example.com/tmdb/movie/7601/watch?locale=SE", "free": [{"provider_id": 1501, "provider_name": "SVT Play", "logo_path": "/logo-1501.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "movie:7602": {"link": "https://example.com/tmdb/movie/7602/watch?locale=SE", "flatrate": [{"provider_id": 1008, "provider_name": "Netflix", "logo_path": "/logo-1008.png", "display_priority": 1, "display_priorities": {"SE": 1}}], "free": [{"provider_id": 1501, "provider_name": "SVT Play", "logo_path": "/logo-1501.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7801": {"link": "https://example.com/tmdb/tv/7801/watch?locale=SE", "ads": [{"provider_id": 1502, "provider_name": "TV4 Play", "logo_path": "/logo-1502.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7901": {"link": "https://example.com/tmdb/tv/7901/watch?locale=SE", "ads": [{"provider_id": 1502, "provider_name": "TV4 Play", "logo_path": "/logo-1502.png", "display_priority": 1, "display_priorities": {"SE": 1}}]},
+  "tv:7902": {"link": "https://example.com/tmdb/tv/7902/watch?locale=SE", "flatrate": [{"provider_id": 1502, "provider_name": "TV4 Play", "logo_path": "/logo-1502.png", "display_priority": 1, "display_priorities": {"SE": 1}}]}
+ },
+ "search": {
+  "movie": {
+   "Northbound Static": [7001],
+   "Glass Harbor Heist": [],
+   "Weekend in Oslo: The Return": [7903],
+   "Thunder & Lake": []
+  },
+  "tv": {"The Lantern Keepers": [7101], "Copper and Clay": [7102], "Bright Static": []}
+ }
+}

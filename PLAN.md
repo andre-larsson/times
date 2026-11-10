@@ -26,6 +26,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Opinion | **A column twice a week, Wednesday and Sunday** (~800 words): Opus picks the topic from the last week of editions, Fable writes it, Opus fact-checks it. Format and focus rotate, so it stays varied |
 | Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
 | Botroom | **A comment section and forum where only bots post** (built 2026-11-09): recurring made-up AI personas comment on every full edition, each in its own Haiku or Sonnet call; a living roster, newcomers invented by Claude, and a "prove you're a bot" gate. ~$4/month |
+| Screen | **What to watch** (added 2026-11-10): new on Netflix, SVT Play and TV4 Play in Sweden, new arrivals, Netflix's weekly Swedish top 10 and older well-rated titles, from TMDB without Claude in every edition; **picks of the week on Fridays** (one Opus call, ~$0.08) |
 | Budget | **$40/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $50. Raised from $20/$25 on 2026-11-07 for daily discovery and the Botroom, and from $35 to $40 on 2026-11-09, when the measured month came to ~$32.50 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -81,6 +82,13 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 | Source | How | Status |
 |---|---|---|
 | **Open-Meteo** | Fetched **live in the reader's browser** (`static/weather.js`, `/v1/forecast`, no key, `timezone=auto`), not by the pipeline. Shows the place in `config.yaml` → `weather` (Lund since 2026-11-10, was Stockholm; the site never guesses where a reader is) until the reader presses "Use my location" (a pin button next to the place name at the top of the box; until 2026-11-10 it was a small link under it): the browser asks for permission, and the position is rounded to two decimals (~1 km) before it's sent. The choice and the last forecast (30 minutes, one place) are kept in localStorage; on later visits the position is only read when the permission still stands, so the page never opens with a prompt. Box: today's high/low, condition (WMO code → word), temperature now, precipitation chance and amount, max wind (m/s), the configured hours still ahead today (09, 12, 15, 18), the next two days, sunrise/sunset. Top of today's front-page rail only (archived front pages have none); hidden without JavaScript; a failed fetch shows one line. **Terms:** the free API is for non-commercial use (no ads or subscriptions: true here), under 10,000 calls a day per IP, which each reader's browser has to itself; data CC BY 4.0, so "Weather data by Open-Meteo.com" links to open-meteo.com next to the data | ✅ |
+
+### Screen (what to watch)
+
+| Source | How | Status |
+|---|---|---|
+| **TMDB** | The official API (`api.themoviedb.org/3`), free for non-commercial use with attribution. `TMDB_API_KEY` takes either credential: the v4 read-access token (a JWT, `eyJ…`, sent as `Authorization: Bearer`) or the v3 API key (`api_key` query parameter, never logged). Provider ids for Netflix, SVT Play and TV4 Play in SE are looked up by name from `/watch/providers/{movie,tv}` each run (config overrides). Lists from `/discover/{movie,tv}` with `watch_region=SE`, `with_watch_providers` and `with_watch_monetization_types`; per-title `/{kind}/{id}/watch/providers` for the service tags (flatrate / free / ads) and TMDB's watch-page link; `/search` to match the top 10. Posters from `image.tmdb.org/t/p/w342`. About 35 requests a day before the per-title lookups, 60–100 with them (20 more for the top 10 once a week), against a limit of ~40 a second. **Where-to-watch data is JustWatch's** and must be credited to it. TMDB's website shows "SVT Play" under Free and "TV4 Play" under Ads for Sweden (checked 2026-11-10). | ⏳ no key yet |
+| **Netflix top 10** | Netflix's public Tudum pages, `netflix.com/tudum/top10/sweden` (films) and `…/sweden/tv`, ~0.8 MB of HTML each with the week's table server-rendered (rows carry `data-uia` test hooks). The all-countries TSV is 33 MB and ignores range requests, so it's not used. No key. Netflix publishes a Monday–Sunday week on the Tuesday after (evening, Swedish time), so the list is fetched again only from the second Wednesday after the cached week ended. Checked live 2026-11-10: 200 for the shared client, 1.2 s for both pages | ✅ |
 
 ### Draft interests (editable)
 
@@ -454,6 +462,56 @@ a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 No
 - **Caching:** each round's shared part is the system prompt, which `llm.py` marks for caching; the first call
   per model runs alone so the rest read the cache instead of all writing it at once.
 
+### Screen: what to watch
+
+Added 2026-11-10 at `/screen/` (named Screen, not Watch: Gaming already has a "Watch" block of videos). For one
+reader in Sweden with a Netflix subscription and the free tiers of SVT Play and TV4 Play (`screen.services`, so
+more can be added later: name, how a title must be on it, and optional provider ids).
+
+- **Lists, in every edition without Claude** (links editions too), from TMDB (`newsroom/screen.py`,
+  `newsroom/sources/tmdb.py`):
+  - **New on each service:** films released in the last 90 days and series with episodes in the last 21 (news and
+    talk shows left out), most popular first, films and series alternating; up to 8 per service, labeled "New
+    film", "New series" (started in the last 60 days) or "New episodes".
+  - **Just added:** TMDB has no "date added", so each service's best-known titles (3 pages each of films and
+    series by TMDB votes, ~120) are compared with a small snapshot in `data/screen.json`. Votes, not popularity:
+    a title enters that list almost only by arriving on the service, while popularity churns daily and would
+    flag old titles as new. The first day seeds the snapshot, the next two only record (warm-up), a title counts
+    as new if it wasn't seen in the last 45 days, more than 20 at once is a data change and is absorbed silently,
+    and an arrival stays "Just added" for 14 days, first in its service's list (at most 4). It only catches
+    titles well known enough to be in that list; recent releases cover the rest. ~18 requests a day.
+  - **Netflix top 10 in Sweden** (series and films), with weeks in the top 10, matched to TMDB (poster, year,
+    rating) by exact title only: a near match is often the wrong film. Cached in `data/screen.json` for the week.
+  - **Older but great:** rated 7.5+ by 1,500+ (films) or 400+ (series) TMDB users, at least 3 years old, on any
+    of the services, plus the catalog titles that clear the same bar; 8 a day, least recently shown first (ties
+    shuffled by the date, so a re-run shows the same ones).
+  - **Service tags** come from each title's where-to-watch data: "Netflix", "SVT Play · free", "TV4 Play · ads".
+    A title only on TV4's paid tier is left out. When the per-title data has no entry, the list it came from is
+    used.
+- **Picks of the week, Fridays** (Netflix's big release day; `screen.picks.days`, `schedule.weekly_due` like the
+  column), full editions only: one Opus call (`screen`, `prompts/screen.md`) gets up to 50 candidates (new,
+  top 10, older; title, kind, year, genres, rating, votes, overview, where, why listed, new or not) inside
+  `<data>`, and returns 6–8 picks with a reason of at most 30 words each, plus a headline and dek. About half new
+  and half older, films and series, spread across services and genres, nothing invented beyond the overview.
+  Code keeps only known ids, once each, at most 8, and needs 4; titles picked in the last 8 weeks aren't offered
+  again. Between Fridays the page and the front page show the latest picks (`front_days: 7`); a re-run keeps the
+  day's picks; `generate --screen force|off`.
+- **Failures:** every step is a row in the Harvest status (`TMDB providers`, `TMDB new on Netflix`, `TMDB Netflix
+  catalog`, `TMDB older but great`, `Netflix top 10`, `TMDB top 10 matches`, `TMDB where to watch`). No key is a
+  quiet "skipped" row: the page shows the top 10 (no posters) and a note. A failed catalog fetch leaves the
+  snapshot as it was; failed lookups fall back to the list's service.
+- **Where:** `/screen/` (a nav link) with a jump list, the picks (poster beside each note), a poster grid per
+  service, the top 10 (two columns) and the older titles; a compact band at the bottom of the front page (four
+  picks, or what's new on Netflix, and the top 5 series and films). Attribution on the page: the TMDB logo,
+  "This product uses the TMDB API but is not endorsed or certified by TMDB", TMDB for data and posters, JustWatch
+  for where to watch, Netflix for the top 10; and a credit line in the footer.
+- **Cost:** ~8k input tokens and 1.5–3.5k output (with thinking) at Opus prices: **~$0.06–0.10 a week,
+  ~$0.30–0.45 a month** (`llm.max_tokens.screen: 6000` caps a call at ~$0.15).
+- **Needs:** a TMDB account and API key (free) in `.env` and the repository's Actions secrets as `TMDB_API_KEY`.
+  Until then only the top 10 shows. Not yet checked against the live API: the SE provider names (TMDB's website
+  shows "Netflix", "SVT Play" and "TV4 Play"), whether TV4 Play titles come as `ads` or `flatrate`, how many
+  titles each list returns, and how often "Just added" fires.
+
 ## Look and feel: a real tabloid news site
 
 Inspired by the conventions of Swedish evening papers (Expressen, Aftonbladet). **Nothing is copied:** the
@@ -588,6 +646,7 @@ web search is $0.01 per search.
 | Opinion column, Wednesday and Sunday (~$0.45 each) | Opus + Fable | ~$4/month | ~$4/month |
 | News quiz, Tuesday and Saturday (~$0.35 each) | Opus | ~$3/month | ~$3/month |
 | The Botroom (~$0.12 a day; a newcomer ~$0.65, 4 or 5 a year) | Haiku + Sonnet | ~$4/month | ~$4/month |
+| Screen: picks of the week, Fridays (~$0.06–0.10 each; the lists use no Claude) | Opus | ~$0.40/month | ~$0.40/month |
 | **Per day / per month** | | **~$0.64 / ~$20** | **~$0.86 / ~$26** |
 
 - **Measured, 2026-11-09** (`data/usage.json`, API): an edition without discovery $0.35–0.47 (one early run $0.63;
@@ -613,6 +672,8 @@ web search is $0.01 per search.
 - The column and the newcomer ideas moved from Fable 5.1 to Fable 5.2 (2026-11-09): 20% cheaper per token
   ($8 / $40, was $10 / $50). At the same token counts a column is ~$0.47 (was ~$0.53), ~$0.56/month less;
   the Fable 5.1 figures above are as measured. Re-measure after the first 5.2 column.
+- Screen's picks of the week (from 2026-11-10, not yet measured) add ~$0.06–0.10 on Fridays, ~$0.30–0.45 a
+  month: well inside the room left under the $40 target.
 - Discovery is the largest single item. Setting `search.discovery_every_days: 2` saves ~$5/month.
 - Deals checked twice a week (from 2026-11-10, `deals.days`): the deals call ($0.04–0.08 measured, $0.08 with 20
   rated deals) runs ~9 times a month instead of 30, so editions on the other days are ~$0.07 cheaper and a month
@@ -634,6 +695,7 @@ web search is $0.01 per search.
 | News quiz | `quiz.days / questions / min_questions / max_per_section / lookback_days / front_days` | Tue, Sat / 8 / 5 / 4 / 7 / 4 |
 | Effort per task | `llm.effort` | `high` for the three column calls and the quiz check; others use the model default |
 | The Botroom | `forum.enabled / max_stories / newcomers / launch / seed`; `models.forum_*`, `models.persona_*` | on / 6 / on / four simulation newcomers / 403 |
+| Screen | `screen.services / new / arrivals / classics / picks`; `models.screen` | Netflix, SVT Play, TV4 Play / 8 per service / 3 pages, 14 days / 8 a day / Fridays, 6–8 picks |
 | Budget | `budget.monthly_usd`, `budget.per_run_usd` | 40, 3.00 |
 
 ## Run modes and the pre-run check
@@ -675,6 +737,7 @@ GitHub Actions (hourly check; "Run workflow" button with an optional mode)
 │                 MISSIL · PC Gamer · RPS · Eurogamer · Game Informer · PCGamesN · YouTube channel feeds
 │                 Steam store data · IsThereAnyDeal deals and critic scores · review pages (scores)
 │                 (deals lists only on check days, deals.py; the other days carry the last check over)
+│   1b. screen    TMDB lists, where-to-watch tags, the arrivals snapshot · Netflix's top 10 (weekly)
 │   2. normalize  canonical URL, title, excerpt, source, time, signals, language
 │   3. dedupe     against data/seen.json; age limits
 │   4. rank       rule-based (signals, recency, keywords, number of sources) → every mode
@@ -686,8 +749,10 @@ GitHub Actions (hourly check; "Run workflow" button with an optional mode)
 │   9. write      Opus: featured and medium (one call each) · briefs (one batched call) ·
 │                 gaming (one batched call) · deals (one call, check days) · column / quiz when due
 │   9b. botroom   roster step (a newcomer: Fable + Opus + Sonnet) · two rounds, one call per bot (Haiku/Sonnet)
+│   9c. screen    Fridays: the picks of the week (one Opus call)
 │   ───────────────
-│  10. save       data/editions/YYYY/MM/DD.json, data/forum/, games_watchlist.json, usage.json, seen.json
+│  10. save       data/editions/YYYY/MM/DD.json, data/forum/, games_watchlist.json, usage.json, seen.json,
+│                 screen.json
 │  11. commit     push data/; workflow "enable" call (60-day keep-alive)
 │
 └─ job: deploy (after a published edition, or on code/template pushes) ───────
@@ -715,9 +780,10 @@ times/
 │   ├── discover.py  triage.py  editor.py
 │   ├── writers.py            # featured / medium / briefs / gaming / deals prompts + schemas
 │   ├── forum/                # the Botroom: cast.py, roster.py, newcomer.py, day.py, look.py (identicons)
+│   ├── screen.py             # Screen: lists, arrivals snapshot, rotation, picks (sources/tmdb.py, sources/netflix.py)
 │   └── render.py
 ├── prompts/
-├── templates/                # base, front, section, gaming, deals, article, archive, search, 404, feed.xml
+├── templates/                # base, front, section, gaming, deals, screen, article, archive, search, 404, feed.xml
 ├── static/                   # style.css, search.js, quiz.js, weather.js, botcheck.js, fonts/ (self-hosted)
 ├── data/  seen.json  usage.json  games_watchlist.json  editions/2026/11/03.json
 │          forum/  cast.json  roster.json  2026-11-09.json
@@ -786,6 +852,7 @@ models:
   deals:    claude-opus-5-5
   discover: claude-opus-5-5
   probe:    claude-haiku-5-5
+  screen:   claude-opus-5-5         # Screen's picks of the week
 
 budget:
   monthly_usd: 40                   # paced over the calendar month; the workspace spend limit is $50
@@ -826,6 +893,19 @@ sources:
     - { name: I Dream of Indie Games, channel_id: "TBD" }
   steam: { cc: se, lists: [new_releases, top_sellers, coming_soon, specials] }
   itad:  { enabled: true, critics: { enabled: true, max_reviewed_games: 40 } }   # needs the ITAD_API_KEY secret
+  tmdb: { enabled: true }                            # Screen: needs the TMDB_API_KEY secret
+  netflix_top10: { enabled: true, country: sweden }  # Screen: Tudum pages, no key
+
+screen:                             # what to watch; models.screen writes the Friday picks
+  region: SE
+  services:
+    - { name: Netflix,  types: [flatrate] }
+    - { name: SVT Play, types: [free, ads, flatrate] }
+    - { name: TV4 Play, types: [ads, free] }        # the free tier
+  new:      { per_service: 8, movie_days: 90, tv_days: 21, new_series_days: 60 }
+  arrivals: { pages: 3, min_votes: 50, keep_days: 14, max_listed: 4, forget_days: 45, warmup_days: 2, max_per_day: 20 }
+  classics: { count: 8, min_rating: 7.5, min_votes_movie: 1500, min_votes_tv: 400, min_age_years: 3, pages: 3 }
+  picks:    { days: [fri], every_weeks: 1, min: 6, max: 8, candidates: 50, repeat_weeks: 8, front_days: 7 }
 
 pricing:                            # USD per million tokens (Nov 2026)
   claude-opus-5-5:   { input: 4.00, output: 20.00, cache_read: 0.20, cache_write_5m: 5.00 }
@@ -866,6 +946,16 @@ pricing:                            # USD per million tokens (Nov 2026)
     "carried": { "from": "2026-11-03", "ended": 2 }
   },
   "links": [ { "section": "tech", "title": "…", "url": "…", "source": "…", "excerpt": "…", "rank": 0.8 } ],
+  "screen": { "region": "SE", "checked_at": "…", "tmdb": true, "services": [ { "name": "Netflix", "types": ["flatrate"] } ],
+              "new": [ { "service": "Netflix", "titles": [ { "key": "tv:123", "id": 123, "kind": "tv", "title": "…",
+                         "year": 2026, "date": "…", "overview": "…", "poster": "https://image.tmdb.org/t/p/w342/….jpg",
+                         "rating": 7.9, "votes": 412, "genres": ["Drama"], "url": "TMDB watch page",
+                         "on": [ { "service": "Netflix", "type": "flatrate" } ], "flag": "added", "flag_date": "…" } ] } ],
+              "classics": [ { … } ],
+              "top10": { "week": { "start": "…", "end": "…" }, "url": "…",
+                         "films": [ { "rank": 1, "title": "…", "weeks": 2, "kind": "movie", "match": { … } } ],
+                         "tv": [ { "rank": 1, "title": "Show: Season 2", "show": "Show", "weeks": 1, "kind": "tv", "match": null } ] },
+              "picks": { "headline": "…", "dek": "…", "model": "claude-opus-5-5", "titles": [ { …, "reason": "…" } ] } },
   "opinion": { "slug": "…", "kicker": "Opinion", "headline": "…", "dek": "…", "body": "…", "pull_quote": "…",
                "topic": "…", "thesis": "…", "focus": "cross", "format": "argument", "model": "claude-fable-5-2",
                "reading": [ { "headline": "…", "edition_id": "2026-11-05", "tier": "medium", "slug": "…",
@@ -881,7 +971,10 @@ pricing:                            # USD per million tokens (Nov 2026)
 
 `deals.carried` is only on editions that didn't check the deals (see *Deals section → Cadence*): `from` is the
 edition whose check it is, `ended` how many of its deals have ended since (they're left out), and `checked_at`
-stays the time of that check. `opinion` and `quiz` are only present on the days they run. The Botroom keeps its own files in `data/forum/`:
+stays the time of that check.
+`opinion` and `quiz` are only present on the days they run, and so is `screen.picks` (Fridays). `data/screen.json`
+is Screen's memory: each service's catalog snapshot (title key → last seen), when it started, the arrivals of
+the last 14 days, when each older title was last shown, and the cached Netflix top 10 with its TMDB matches. The Botroom keeps its own files in `data/forum/`:
 `YYYY-MM-DD.json` per day (`threads` with their `comments`: id, handle, text, bit, reply_to, votes, model;
 `roster` news; `pending_reply`; `plan`, `calls` and `cost` by model), `roster.json` (the members' state, and the
 state before the last day for a re-run) and `cast.json` (generated personas, retired ones, ideas proposed). The 2026-11-07 edition also carries a
@@ -898,6 +991,7 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/ai/`, `/times/tech/` | Section front: colored band, recent featured and medium stories, briefs |
 | `/times/gaming/` | All gaming blocks, ~2 weeks of history, the full "Coming soon" list |
 | `/times/deals/` | The latest deals check (Tuesday and Friday; carried over in between, minus ended deals): deal(s) of the day, top picks, then each list (rated, then "More" unrated), plus earlier deals of the day still running |
+| `/times/screen/` | Screen: the picks of the week, new on Netflix, SVT Play and TV4 Play, Netflix's top 10 in Sweden, older but great; TMDB and JustWatch credits (and a band on the front page) |
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
 | `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
 | `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz nav link once there is one) |
@@ -907,7 +1001,9 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/feed.xml` | Atom feed |
 
 - `noindex` on every page.
-- Footer: "Written by Claude from the linked sources; may contain errors. Deals data: IsThereAnyDeal."
+- Footer: "Written by Claude from the linked sources; may contain errors. Deals data: IsThereAnyDeal." and
+  "Film and TV data: TMDB (this product uses the TMDB API but is not endorsed or certified by TMDB). Where to
+  watch: JustWatch."
 - 404 page: "403: you're allowed in, but this page doesn't exist."
 
 ## Workflow: `.github/workflows/edition.yml`

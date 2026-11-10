@@ -20,6 +20,7 @@ sections:
   - { slug: tech,   name: Tech,   blurb: "Developer news, open source, security and hardware." }
   - { slug: gaming, name: Gaming, blurb: "PC first. Consoles when it's big." }
   - { slug: deals,  name: Deals,  blurb: "Shopping advice, not ads." }
+  - { slug: screen, name: Screen, blurb: "What to watch: new on Netflix, SVT Play and TV4 Play, and the week's picks." }
 
 edition:
   featured: { min: 1, max: 3,   words: 350, max_sources: 3, min_newsworthiness: 4.5 }
@@ -87,6 +88,7 @@ models:
   persona_ideas: claude-fable-5-2     # a Botroom newcomer: Fable invents ten ideas,
   persona_draft: claude-opus-5-5      #   Opus writes three up as candidates,
   persona_check: claude-sonnet-5-5    #   Sonnet judges them against every member
+  screen:   claude-opus-5-5           # Screen: the picks of the week (Fridays)
 
 budget:
   monthly_usd: 40                     # paced over the calendar month; the Console workspace spend limit is $50.
@@ -108,7 +110,7 @@ llm:
   max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 6000,
                 opinion_pick: 8000, opinion: 16000, opinion_check: 8000, quiz: 12000, quiz_check: 8000,
                 discover: 12000, forum_haiku: 8000, forum_sonnet: 8000, persona_ideas: 16000,
-                persona_draft: 12000, persona_check: 8000 }
+                persona_draft: 12000, persona_check: 8000, screen: 6000 }
                                       # a hard cap on thinking + text (Claude 5 models always think); you pay for what's used
   effort: { opinion_pick: high, opinion: high, opinion_check: high, quiz_check: high, forum_haiku: high }
                                       # per task; unset = the model's default (Opus 5.5: medium, Fable 5.2: high)
@@ -156,6 +158,34 @@ links:                                # the no-AI links edition
   max_per_source: 4                   # per section, so one busy feed can't fill it
   hn_top: 10
   languages: [en]                     # headlines in other languages only feed reviews (and AI modes)
+
+screen:                               # Screen: what to watch on my services (newsroom/screen.py). The lists refresh in
+  enabled: true                       #   every edition without Claude, links editions too: TMDB (needs TMDB_API_KEY;
+                                      #   where-to-watch data by JustWatch) and Netflix's weekly top 10 (no key)
+  region: SE                          # TMDB's watch region
+  language: en-US                     # titles and overviews
+  services:                           # the services I have. TMDB provider ids are looked up by name (or match: [other
+                                      #   names]); ids: [8] skips the lookup. types: how a title must be on it to count
+    - { name: Netflix,  types: [flatrate] }               # my subscription
+    - { name: SVT Play, types: [free, ads, flatrate] }    # all free (JustWatch lists it under "free")
+    - { name: TV4 Play, types: [ads, free] }              # the free tier, with ads; flatrate = TV4's paid tiers
+  new:      { per_service: 8, movie_days: 90, tv_days: 21, new_series_days: 60, min_votes: 0 }
+                                      # films released in the last 90 days, series with episodes in the last 21
+                                      #   ("New series" when it started in the last 60), most popular first
+  arrivals: { pages: 3, min_votes: 50, keep_days: 14, max_listed: 4, forget_days: 45, warmup_days: 2, max_per_day: 20 }
+                                      # "Just added": titles new to each service's best-known films and series (3 pages
+                                      #   each by TMDB votes, 120 titles) against the snapshot in data/screen.json
+  classics: { count: 8, min_rating: 7.5, min_votes_movie: 1500, min_votes_tv: 400, min_age_years: 3, pages: 3 }
+                                      # "Older but great": rated 7.5+ by many, 3+ years old; least recently shown first
+  picks:                              # the picks of the week: one Claude call (models.screen), full editions only
+    enabled: true
+    days: [fri]                       # Netflix's big release day
+    every_weeks: 1
+    min: 6
+    max: 8
+    candidates: 50                    # titles Claude chooses from: new, Netflix top 10, older
+    repeat_weeks: 8                   # a title isn't picked again within 8 weeks
+    front_days: 7                     # how long the latest picks stay on the front page
 
 interests: |
   AI: model releases, research that matters, AI developer tools and agents, policy with real impact.
@@ -210,6 +240,8 @@ sources:
   youtube:
     - { name: gameranx,               channel_id: "UCNvzD7Z-g64bPXxGzaQaa4g" }
     - { name: I Dream of Indie Games, channel_id: "UC_HX1n5iojK-xjy9WxfxXhg" }
+  tmdb: { enabled: true }             # Screen: needs the TMDB_API_KEY secret (a v4 read-access token or a v3 API key)
+  netflix_top10: { enabled: true, country: sweden }   # Screen: Netflix's weekly top 10 (Tudum pages, no key)
   steam: { cc: se, lists: [new_releases, coming_soon, specials] }   # popular new · most wishlisted · popular on sale
   itad:                               # needs the ITAD_API_KEY secret; without it deals come from Steam specials
     enabled: true

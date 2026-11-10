@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+
+{% block title %}Screen · {{ site.title }}{% endblock %}
+{% block description %}What to watch in Sweden: new on Netflix, SVT Play and TV4 Play, Netflix's top 10, and the week's picks.{% endblock %}
+
+{% block main %}
+{% set new_lists = (screen.new or []) | selectattr('titles') | list %}
+<section class="band band--page sec-screen" aria-labelledby="screen-title">
+  <div class="wrap">
+    <div class="band-head">
+      <h1 class="band-title" id="screen-title">Screen</h1>
+      <p class="band-sub">{{ section.blurb }}{% if screen.checked_at and screen.tmdb %} Where to watch checked {{ screen.checked_at | date_short }}; it changes.{% endif %}</p>
+    </div>
+
+    {% if picks or new_lists or screen.top10 or screen.classics %}
+    <nav class="shelf-nav" aria-label="Screen lists">
+      {% if picks %}<a class="chip chip--pick" href="#picks">Picks of the week</a>{% endif %}
+      {% for n in new_lists %}<a class="chip chip--pick" href="#new-{{ n.service | slug }}">New on {{ n.service }}</a>{% endfor %}
+      {% if screen.top10 %}<a class="chip chip--pick" href="#top10">Netflix top 10</a>{% endif %}
+      {% if screen.classics %}<a class="chip chip--pick" href="#older">Older but great</a>{% endif %}
+    </nav>
+    {% endif %}
+
+    {% if screen and not screen.tmdb %}
+    <p class="notice notice--quiet">Waiting for a TMDB key: the lists of what's new on Netflix, SVT Play and TV4 Play, the posters and the older picks start once <code>TMDB_API_KEY</code> is set.{% if screen.top10 %} Netflix's top 10 below is current.{% endif %}</p>
+    {% endif %}
+
+    {% if picks %}
+    <section class="screen-shelf screen-picks" id="picks" aria-labelledby="picks-title">
+      <p class="kicker">Picks of the week · {{ picks.edition_generated_at | date_short }}</p>
+      <h2 class="hl hl-lg" id="picks-title">{{ picks.headline }}</h2>
+      {% if picks.dek %}<p class="dek dek--sm">{{ picks.dek }}</p>{% endif %}
+      <p class="meta">Picked by Claude (AI) from this week's lists</p>
+      <div class="screen-grid screen-grid--picks">
+        {% for t in picks.titles %}{{ m.screen_card(t, t.reason) }}{% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% for n in new_lists %}
+    <section class="screen-shelf" id="new-{{ n.service | slug }}" aria-labelledby="new-{{ n.service | slug }}-title">
+      <h2 class="shelf-title" id="new-{{ n.service | slug }}-title">New on {{ n.service }}</h2>
+      <div class="screen-grid">
+        {% for t in n.titles %}{{ m.screen_card(t) }}{% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+
+    {% if screen.top10 %}
+    <section class="screen-shelf" id="top10" aria-labelledby="top10-title">
+      <h2 class="shelf-title" id="top10-title">Netflix top 10 in Sweden</h2>
+      <p class="meta screen-shelf-sub">{{ m.top10_week(screen.top10) }}{% if screen.top10.week %}<span class="meta-sep" aria-hidden="true">·</span>{% endif %}<a class="meta-link" href="{{ screen.top10.url }}">Netflix Tudum →</a></p>
+      <div class="top10-cols">
+        <section aria-labelledby="top10-tv">
+          <h3 class="sub-head" id="top10-tv">Series</h3>
+          {{ m.top10_list(screen.top10.tv) }}
+        </section>
+        <section aria-labelledby="top10-films">
+          <h3 class="sub-head" id="top10-films">Films</h3>
+          {{ m.top10_list(screen.top10.films) }}
+        </section>
+      </div>
+    </section>
+    {% endif %}
+
+    {% if screen.classics %}
+    <section class="screen-shelf" id="older" aria-labelledby="older-title">
+      <h2 class="shelf-title" id="older-title">Older but great</h2>
+      <p class="meta screen-shelf-sub">Rated highly by many TMDB users, and on one of the services now. A new set every day.</p>
+      <div class="screen-grid">
+        {% for t in screen.classics %}{{ m.screen_card(t) }}{% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if not screen %}
+    <p class="empty">Nothing to watch listed yet. The next edition arrives at {{ edition_time }}.</p>
+    {% endif %}
+
+    <div class="screen-credits">
+      <a class="screen-credits-logo" href="https://www.themoviedb.org/"><img src="{{ url('static/tmdb.svg') }}" alt="TMDB" width="108" height="14"></a>
+      <p>This product uses the TMDB API but is not endorsed or certified by TMDB. Film and series data and posters: <a class="meta-link" href="https://www.themoviedb.org/">TMDB</a>. Where to watch: <a class="meta-link" href="https://www.justwatch.com/se">JustWatch</a>. Top 10: <a class="meta-link" href="https://www.netflix.com/tudum/top10">Netflix</a>.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

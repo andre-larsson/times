@@ -72,6 +72,7 @@
   --tech: #0891b2;   --tech-ink: #0e7490;   --tech-soft: #e2f5f9;   --tech-deep: #083344;
   --gaming: #16a34a; --gaming-ink: #15803d; --gaming-soft: #e5f5ea; --gaming-deep: #062e17;
   --deals: #db2777;  --deals-ink: #be185d;  --deals-soft: #fce8f1;  --deals-deep: #4c0a26;
+  --screen: #2563eb; --screen-ink: #1d4ed8; --screen-soft: #e8effd; --screen-deep: #0b1f4d;
 
   /* Botroom identicons: the section fills plus three more bot colors */
   --rust: #c2410c;
@@ -116,6 +117,7 @@
     --tech-ink: #67e8f9;   --tech-soft: #0a2a33;
     --gaming-ink: #86efac; --gaming-soft: #0c2616;
     --deals-ink: #f9a8d4;  --deals-soft: #381024;
+    --screen-ink: #93c5fd; --screen-soft: #0f1d3a;
     --positive: #4ade80;
     --mixed: #fbbf24;
     --negative: #f87171;
@@ -659,6 +661,97 @@ a.critic:hover { text-decoration: underline; }
 .link-item { display: grid; gap: var(--s-1); padding-block: var(--s-3); border-top: 1px solid var(--rule); }
 .link-item:first-child { border-top: 0; padding-top: 0; }
 .link-excerpt { font: 400 0.9375rem/1.45 var(--font-body); color: var(--ink-2); }
+
+/* ── Screen: what to watch ───────────────────────────────────────────────── */
+.sec-screen { --sec: var(--screen); --sec-ink: var(--screen-ink); --sec-soft: var(--screen-soft); --sec-deep: var(--screen-deep); }
+.band--screen { background: var(--sec-soft); }
+.screen-shelf { margin-top: var(--s-7); scroll-margin-top: var(--s-4); }
+.screen-shelf:first-of-type { margin-top: var(--s-5); }
+.screen-shelf-sub { margin: calc(-1 * var(--s-2)) 0 var(--s-4); }
+.screen-picks { display: grid; gap: var(--s-2); }
+.screen-picks .screen-grid { margin-top: var(--s-4); }
+
+.screen-grid { display: grid; gap: var(--s-5) var(--s-4); grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+/* the picks read like a critic's list: poster left, the note beside it */
+.screen-grid--picks { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--s-5) var(--s-6); }
+.screen-grid--picks .screen-card { display: grid; grid-template-columns: 34% minmax(0, 1fr); column-gap: var(--s-4); align-items: start; }
+.screen-grid--picks .screen-reason { font-size: 1rem; margin-top: var(--s-1); }
+.screen-card { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
+.screen-body { display: grid; gap: var(--s-1); align-content: start; justify-items: start; }
+.screen-title { font: 800 1.25rem/1.05 var(--font-head); }
+.screen-title a:hover { text-decoration: underline; }
+.screen-reason { font: 400 0.9375rem/1.45 var(--font-body); color: var(--ink-2); }
+.screen-overview {
+  font: 400 0.875rem/1.4 var(--font-body); color: var(--ink-3);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden;
+}
+.screen-tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1) var(--s-2); margin-top: 2px; }
+.screen-tags .critic { font: 600 0.8125rem/1.4 var(--font-ui); color: var(--ink-2); }
+.chip-note { font-weight: 600; letter-spacing: 0.02em; }
+
+.poster { position: relative; overflow: hidden; aspect-ratio: 2 / 3; background: var(--paper-2); }
+.poster img { width: 100%; height: 100%; object-fit: cover; }
+.poster-fallback {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--sec-soft), var(--paper-2));
+  font: 800 3rem/1 var(--font-head); color: var(--sec-ink);
+}
+.screen-poster { display: block; }
+
+/* Service tags: the service's name in words (never a logo or a color alone) */
+.svc {
+  font: 800 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 4px 6px 3px; background: var(--sec); color: #fff;
+}
+.svc-type { font-weight: 600; }
+
+/* Netflix's top 10 */
+.top10-cols { display: grid; gap: var(--s-6); }
+@media (min-width: 720px) { .top10-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.top10-item {
+  display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: var(--s-3); align-items: center;
+  padding-block: var(--s-2); border-top: 1px solid var(--rule);
+}
+.top10-item:first-child { border-top: 0; padding-top: 0; }
+.top10--thumbs .top10-item { grid-template-columns: 2.25rem var(--s-7) minmax(0, 1fr); }
+.top10 .poster-fallback { font-size: 1.5rem; }
+.top10-rank { font: 800 2rem/0.9 var(--font-head); color: var(--sec-ink); font-variant-numeric: tabular-nums; text-align: right; }
+.top10-body { display: grid; gap: 2px; min-width: 0; }
+.top10-title { font: 700 1rem/1.3 var(--font-ui); }
+a.top10-title:hover { text-decoration: underline; }
+.top10-pair { display: grid; gap: var(--s-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.top10--compact .top10-item { grid-template-columns: 1.5rem minmax(0, 1fr); gap: var(--s-2); }
+.top10--compact .top10-rank { font-size: 1.375rem; }
+.top10--compact .top10-title { font-size: 0.9375rem; }
+.top10--compact .meta { display: none; }
+.band--screen .poster-fallback { background: linear-gradient(135deg, var(--paper), var(--paper-2)); }
+.top10-kind { font: 600 0.8125rem/1.3 var(--font-ui); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--s-2); }
+
+/* Front page band */
+.screen-front { display: grid; gap: var(--s-6); }
+@media (min-width: 1024px) { .screen-front { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } .screen-front--one { grid-template-columns: none; } }
+.screen-front-headline { margin-bottom: var(--s-4); }
+.screen-front-top > .meta { margin-top: var(--s-3); }
+.screen-grid--front { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 720px) { .screen-grid--front { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.screen-all { margin-top: var(--s-5); }
+
+.screen-credits {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4);
+  margin-top: var(--s-7); padding-top: var(--s-4); border-top: 1px solid var(--rule);
+  font: 500 0.8125rem/1.5 var(--font-ui); color: var(--ink-3);
+}
+.screen-credits p { flex: 1 1 20rem; }
+.screen-credits img { display: block; height: 14px; width: auto; }
+
+@media (max-width: 479px) {
+  /* phones: rows (poster left, text right) instead of a long stack of tall posters */
+  .screen-grid, .screen-grid--picks { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  .screen-card { display: grid; grid-template-columns: 30% minmax(0, 1fr); column-gap: var(--s-3); align-items: start; }
+  .screen-grid--front { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .screen-grid--front .screen-card { display: flex; }
+  .screen-grid--front .screen-reason { display: none; }
+}
 
 /* ── Section fronts ──────────────────────────────────────────────────────── */
 .section-hero {

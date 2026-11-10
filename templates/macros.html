@@ -242,3 +242,78 @@
     <span class="quiz-done" data-quiz-done hidden><span class="meta-sep" aria-hidden="true">·</span><span class="quiz-done-label"><span aria-hidden="true">✓</span> Completed</span> <span data-quiz-done-score></span></span></p>
 </article>
 {%- endmacro %}
+
+{# ── Screen (what to watch) ─────────────────────────────────────────────── #}
+
+{# Where a title is on: "Netflix", "SVT Play · free", "TV4 Play · ads" (where-to-watch data: JustWatch, via TMDB) #}
+{% macro services(on) -%}
+{%- for o in on or [] %}<span class="svc">{{ o.service }}{% if o.type == 'free' %}<span class="svc-type"> · free</span>{% elif o.type == 'ads' %}<span class="svc-type" title="Free with ads"> · ads</span>{% endif %}</span>{% endfor -%}
+{%- endmacro %}
+
+{# The TMDB users' average, colored like the critic scores (and always with the number) #}
+{% macro tmdb_rating(t) -%}
+{%- if t.rating and t.votes %}
+{%- set band = "positive" if t.rating >= 7 else "mixed" if t.rating >= 5.5 else "negative" %}
+<span class="critic critic--{{ band }}" title="TMDB users' average from {{ t.votes | num }} votes"><b class="critic-score">{{ t.rating }}</b> TMDB</span>
+{%- endif %}
+{%- endmacro %}
+
+{% macro poster(t) -%}
+<div class="poster">
+  {%- if t.poster %}<img src="{{ t.poster }}" alt="" loading="lazy" decoding="async">
+  {%- else %}<span class="poster-fallback" aria-hidden="true">{{ (t.title or '?') | first | upper }}</span>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro title_flag(t) -%}
+{%- set words = {'added': 'Just added', 'new_series': 'New series', 'new_episodes': 'New episodes', 'new_film': 'New film'} %}
+{%- if t.flag in words %}<span class="chip chip--pick">{{ words[t.flag] }}{% if t.flag == 'added' and t.flag_date %} <span class="chip-note">{{ t.flag_date | date_short }}</span>{% endif %}</span>{% endif %}
+{%- endmacro %}
+
+{% macro title_meta(t) -%}
+<p class="meta">
+  <span>{{ 'Film' if t.kind == 'movie' else 'Series' }}{% if t.year %} {{ t.year }}{% endif %}</span>
+  {%- if t.genres %}<span class="meta-sep" aria-hidden="true">·</span><span>{{ t.genres[:2] | join(', ') }}</span>{% endif %}
+</p>
+<p class="screen-tags">{{ tmdb_rating(t) }}{{ services(t.on) }}</p>
+{%- endmacro %}
+
+{% macro screen_card(t, reason='', overview=true) -%}
+<article class="screen-card">
+  <a class="screen-poster" href="{{ t.url }}" tabindex="-1" aria-hidden="true">{{ poster(t) }}</a>
+  <div class="screen-body">
+    {{ title_flag(t) }}
+    <h4 class="screen-title"><a href="{{ t.url }}">{{ t.title }}</a></h4>
+    {{ title_meta(t) }}
+    {%- if reason %}<p class="screen-reason">{{ reason }}</p>
+    {%- elif overview and t.overview %}<p class="screen-overview">{{ t.overview }}</p>{% endif %}
+  </div>
+</article>
+{%- endmacro %}
+
+{# Netflix's weekly top 10: rank, title (and, matched on TMDB, a small poster, year and rating) #}
+{% macro top10_list(rows, limit=10, compact=false) -%}
+{%- set thumbs = not compact and (rows | selectattr('match') | list | length) > 0 %}
+<ol class="top10{% if thumbs %} top10--thumbs{% endif %}{% if compact %} top10--compact{% endif %}">
+  {%- for r in rows[:limit] %}
+  <li class="top10-item">
+    <span class="top10-rank" aria-hidden="true">{{ r.rank }}</span>
+    {%- if thumbs %}{% if r.match %}<a href="{{ r.match.url }}" tabindex="-1" aria-hidden="true">{{ poster(r.match) }}</a>{% else %}<span aria-hidden="true">{{ poster({'title': r.show or r.title}) }}</span>{% endif %}{% endif %}
+    <div class="top10-body">
+      {%- set name = (r.show or r.title) if compact else r.title %}{# compact lists: the series without its season #}
+      {%- if r.match %}<a class="top10-title" href="{{ r.match.url }}"><span class="visually-hidden">{{ r.rank }}. </span>{{ name }}</a>
+      {%- else %}<span class="top10-title"><span class="visually-hidden">{{ r.rank }}. </span>{{ name }}</span>{% endif %}
+      <p class="meta">
+        <span>{% if r.weeks == 1 %}New this week{% else %}{{ r.weeks }} weeks in the top 10{% endif %}</span>
+        {%- if r.match and r.match.year %}<span class="meta-sep" aria-hidden="true">·</span><span>{{ r.match.year }}</span>{% endif %}
+        {%- if r.match and r.match.rating and r.match.votes %}<span class="meta-sep" aria-hidden="true">·</span><span><b>{{ r.match.rating }}</b>/10 TMDB</span>{% endif %}
+      </p>
+    </div>
+  </li>
+  {%- endfor %}
+</ol>
+{%- endmacro %}
+
+{% macro top10_week(top) -%}
+{%- if top.week %}Week of {{ top.week.start | date_short }}–{{ top.week.end | date_short }}{% endif %}
+{%- endmacro %}

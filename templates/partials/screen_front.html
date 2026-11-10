@@ -1,0 +1,42 @@
+{% import "macros.html" as m with context %}
+{# The front page's Screen band: the latest picks of the week (or, between them, what's new) and Netflix's top 10 #}
+{% set first_new = (screen.new or []) | selectattr('titles') | first %}
+{% if sections.screen and (screen_picks or first_new or screen.top10) %}
+<section class="band band--screen sec-screen" aria-label="Screen">
+  <div class="wrap">
+    <div class="band-head">
+      <h2 class="band-title"><a href="{{ url('screen/') }}">Screen</a></h2>
+      <p class="band-sub">{{ sections.screen.blurb }}</p>
+    </div>
+    <div class="screen-front{% if not (screen_picks or first_new) or not screen.top10 %} screen-front--one{% endif %}">
+      {% if screen_picks %}
+      <section class="screen-front-main" aria-labelledby="front-picks">
+        <h3 class="sub-head" id="front-picks">Picks of the week</h3>
+        <p class="hl hl-md screen-front-headline"><a class="hl-link" href="{{ url('screen/') }}#picks">{{ screen_picks.headline }}</a></p>
+        <div class="screen-grid screen-grid--front">
+          {% for t in screen_picks.titles[:4] %}{{ m.screen_card(t, t.reason) }}{% endfor %}
+        </div>
+      </section>
+      {% elif first_new %}
+      <section class="screen-front-main" aria-labelledby="front-new">
+        <h3 class="sub-head" id="front-new">New on {{ first_new.service }}</h3>
+        <div class="screen-grid screen-grid--front">
+          {% for t in first_new.titles[:4] %}{{ m.screen_card(t, overview=false) }}{% endfor %}
+        </div>
+      </section>
+      {% endif %}
+      {% if screen.top10 %}
+      <section class="screen-front-top" aria-labelledby="front-top10">
+        <h3 class="sub-head" id="front-top10">Netflix top 10 · Sweden</h3>
+        <div class="top10-pair">
+          <div><p class="top10-kind">Series</p>{{ m.top10_list(screen.top10.tv, 5, compact=true) }}</div>
+          <div><p class="top10-kind">Films</p>{{ m.top10_list(screen.top10.films, 5, compact=true) }}</div>
+        </div>
+        <p class="meta">{{ m.top10_week(screen.top10) }}</p>
+      </section>
+      {% endif %}
+    </div>
+    <a class="btn screen-all" href="{{ url('screen/') }}">All of Screen →</a>
+  </div>
+</section>
+{% endif %}

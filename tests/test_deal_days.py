@@ -23,6 +23,13 @@ UTC = dt.timezone.utc
 TUE = dt.date(2026, 11, 3)                           # NOW is Tuesday 3 Nov 2026, 07:55 in Stockholm
 
 
+def _cfg() -> dict:
+    """The real config without Screen, whose fetches these tests don't serve."""
+    cfg = load_config()
+    cfg["screen"]["enabled"] = False
+    return cfg
+
+
 def _day(n: int) -> dt.datetime:
     """NOW plus n days: 0 Tuesday, 1 Wednesday, 3 Friday, 4 Saturday, 7 the next Tuesday."""
     return NOW + dt.timedelta(days=n)
@@ -110,7 +117,7 @@ def _deals(data, edition_id):
 
 
 def test_links_editions_check_on_tuesday_and_carry_on_wednesday(tmp_path, fetches):
-    cfg, data, client = load_config(), tmp_path / "data", FakeClient({})
+    cfg, data, client = _cfg(), tmp_path / "data", FakeClient({})
     tue = gen.generate(cfg, data, "links", now=_day(0), env={}, client=client)
     assert tue.published and tue.deals.startswith("checked (no earlier deals)")
     assert "specials" in fetches[-1]["sources"]["steam"]["lists"]
@@ -135,7 +142,7 @@ def test_links_editions_check_on_tuesday_and_carry_on_wednesday(tmp_path, fetche
 
 
 def test_force_carry_and_the_safety_net(tmp_path, fetches):
-    cfg, data, client = load_config(), tmp_path / "data", FakeClient({})
+    cfg, data, client = _cfg(), tmp_path / "data", FakeClient({})
     gen.generate(cfg, data, "links", now=_day(0), env={}, client=client)
     forced = gen.generate(cfg, data, "links", now=_day(1), env={}, client=client, deals_mode="force")
     assert forced.deals.startswith("checked (forced") and "carried" not in _deals(data, "2026-11-04")
@@ -150,7 +157,7 @@ def test_force_carry_and_the_safety_net(tmp_path, fetches):
 
 
 def test_a_check_that_finds_nothing_keeps_the_last_one(tmp_path, monkeypatch, fetches):
-    cfg, data, client = load_config(), tmp_path / "data", FakeClient({})
+    cfg, data, client = _cfg(), tmp_path / "data", FakeClient({})
     gen.generate(cfg, data, "links", now=_day(0), env={}, client=client)
     real = gen.fetch_all
 
@@ -169,7 +176,7 @@ def test_a_check_that_finds_nothing_keeps_the_last_one(tmp_path, monkeypatch, fe
 
 
 def test_ended_deals_and_an_unrated_check_bring_a_new_one(tmp_path, fetches):
-    cfg, data, client = load_config(), tmp_path / "data", FakeClient({})
+    cfg, data, client = _cfg(), tmp_path / "data", FakeClient({})
     gen.generate(cfg, data, "links", now=_day(0), env={}, client=client)
     path = store.edition_path(data, "2026-11-03")
     ed = json.loads(path.read_text())
@@ -186,7 +193,7 @@ def test_ended_deals_and_an_unrated_check_bring_a_new_one(tmp_path, fetches):
 
 
 def test_ai_editions_carry_the_ratings_and_the_botroom_skips_the_deal(tmp_path, fetches):
-    cfg, data, client = load_config(), tmp_path / "data", FakeClient({})
+    cfg, data, client = _cfg(), tmp_path / "data", FakeClient({})
     tue = gen.generate(cfg, data, "full", now=_day(0), env=KEY, client=client, llm_factory=factory())
     assert tue.mode == "full" and tue.llm["by_task"]["deals"]["calls"] == 1
     deal = _deals(data, "2026-11-03")["featured"][0]["headline"]
@@ -207,7 +214,7 @@ def test_ai_editions_carry_the_ratings_and_the_botroom_skips_the_deal(tmp_path, 
 
 
 def test_carried_labels_say_when_prices_were_checked(tmp_path):
-    cfg, data = load_config(), tmp_path / "data"
+    cfg, data = _cfg(), tmp_path / "data"
     shutil.copytree(ROOT / "tests" / "fixtures", data)
     tue = store.load_edition(data, "2026-11-03")                                     # checked 06:30 Tuesday
     wed = {**tue, "edition_id": "2026-11-04", "generated_at": "2026-11-04T05:31:00Z",

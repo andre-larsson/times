@@ -217,3 +217,14 @@ def check_quiz(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> dict[
     """The copy desk: material is {questions: [...], stories: {story_id: its full text}}."""
     return llm.call("quiz_check", system_prompt("quiz_check"),
                     data_block(material, "The questions and the stories they were written from:"), QUIZ_CHECK_SCHEMA)
+
+
+# ── Screen: the picks of the week (Opus) ─────────────────────────────────────
+
+SCREEN_SCHEMA = obj({"headline": STR, "dek": STR, "picks": arr(obj({"id": STR, "reason": STR}))})
+
+
+def pick_screen(llm: LLM, cfg: dict[str, Any], material: dict[str, Any], lo: int, hi: int) -> dict[str, Any]:
+    """material: titles on the reader's services (new and older), with their service tags and lists."""
+    system = system_prompt("screen", picks_min=lo, picks_max=hi)
+    return llm.call("screen", system, data_block(material, "This week's titles:"), SCREEN_SCHEMA)

@@ -348,5 +348,98 @@
         "story": {"headline": "Indie showcase returns in December with 40 games", "edition_id": "2026-11-03", "section": "gaming", "tier": "gaming_news", "sources": [{"name": "Pixel Courier", "url": "https://example.com/pixel-courier/showcase"}]} }
     ]
   },
+  "screen": {
+    "region": "SE",
+    "checked_at": "2026-11-03T05:30:00Z",
+    "tmdb": true,
+    "services": [
+      {
+        "name": "Netflix",
+        "types": ["flatrate"]
+      },
+      {
+        "name": "SVT Play",
+        "types": ["free", "ads", "flatrate"]
+      },
+      {
+        "name": "TV4 Play",
+        "types": ["ads", "free"]
+      }
+    ],
+    "new": [
+      {
+        "service": "Netflix",
+        "titles": [
+          {"key": "tv:9003", "id": 9003, "kind": "tv", "title": "Harbor Lights", "year": 2019, "date": "2019-06-01", "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.", "rating": 8.1, "votes": 2104, "genres": ["Crime", "Drama"], "url": "https://example.com/tmdb/tv/9003", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "added", "flag_date": "2026-11-01"},
+          {"key": "tv:9001", "id": 9001, "kind": "tv", "title": "The Lantern Keepers", "year": 2026, "date": "2026-10-30", "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.", "rating": 7.9, "votes": 412, "genres": ["Mystery", "Drama"], "url": "https://example.com/tmdb/tv/9001", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_series"},
+          {"key": "movie:9002", "id": 9002, "kind": "movie", "title": "Northbound Static", "year": 2026, "date": "2026-10-17", "overview": "A night-shift radio host takes a call from a listener who claims to be broadcasting from next week.", "rating": 6.8, "votes": 230, "genres": ["Thriller"], "url": "https://example.com/tmdb/movie/9002", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_film"},
+          {"key": "tv:9004", "id": 9004, "kind": "tv", "title": "Copper and Clay", "year": 2024, "date": "2024-06-01", "overview": "Ten amateur potters and metalworkers compete for a studio of their own.", "rating": 6.4, "votes": 88, "genres": ["Reality"], "url": "https://example.com/tmdb/tv/9004", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_episodes"}
+        ]
+      },
+      {
+        "service": "SVT Play",
+        "titles": [
+          {"key": "tv:9101", "id": 9101, "kind": "tv", "title": "The Mountain Cabin", "original_title": "Fjällstugan", "year": 2026, "date": "2026-10-25", "overview": "Four old friends rent the same mountain cabin every winter; this year one of them brings a secret.", "rating": 7.4, "votes": 61, "genres": ["Drama"], "url": "https://example.com/tmdb/tv/9101", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_series"},
+          {"key": "movie:9102", "id": 9102, "kind": "movie", "title": "The Ferry Ward", "year": 2025, "date": "2025-06-01", "overview": "A year aboard the night ferry between two island towns, told by its crew.", "rating": 7.2, "votes": 54, "genres": ["Documentary"], "url": "https://example.com/tmdb/movie/9102", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_film"},
+          {"key": "tv:9103", "id": 9103, "kind": "tv", "title": "Snow Line", "year": 2023, "date": "2023-06-01", "overview": "A ski-lift operator runs the slope, the cafe and the local council, badly.", "rating": 7.0, "votes": 140, "genres": ["Comedy"], "url": "https://example.com/tmdb/tv/9103", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_episodes"}
+        ]
+      },
+      {
+        "service": "TV4 Play",
+        "titles": [
+          {"key": "tv:9202", "id": 9202, "kind": "tv", "title": "Saltwater Detectives", "year": 2026, "date": "2026-10-20", "overview": "Two retired coastguards open a detective agency in a fishing village.", "rating": 6.9, "votes": 47, "genres": ["Crime"], "url": "https://example.com/tmdb/tv/9202", "on": [{"service": "TV4 Play", "type": "ads"}], "flag": "new_series"},
+          {"key": "tv:9201", "id": 9201, "kind": "tv", "title": "Kitchen Brigade North", "year": 2025, "date": "2025-06-01", "overview": "Twelve home cooks try to survive a season in a busy hotel kitchen.", "rating": 6.1, "votes": 33, "genres": ["Reality"], "url": "https://example.com/tmdb/tv/9201", "on": [{"service": "TV4 Play", "type": "ads"}], "flag": "new_episodes"}
+        ]
+      }
+    ],
+    "classics": [
+      {"key": "movie:9301", "id": 9301, "kind": "movie", "title": "Orbit of Glass", "year": 2014, "date": "2014-06-01", "overview": "A repair crew on a failing space station has one week to decide who goes home.", "rating": 8.2, "votes": 15230, "genres": ["Science Fiction", "Drama"], "url": "https://example.com/tmdb/movie/9301", "on": [{"service": "Netflix", "type": "flatrate"}]},
+      {"key": "tv:9303", "id": 9303, "kind": "tv", "title": "Paper Kingdoms", "year": 2016, "date": "2016-06-01", "overview": "The rise and fall of a family printing house over four generations.", "rating": 8.4, "votes": 5120, "genres": ["Drama", "History"], "url": "https://example.com/tmdb/tv/9303", "on": [{"service": "Netflix", "type": "flatrate"}]},
+      {"key": "movie:9302", "id": 9302, "kind": "movie", "title": "The Quiet Harbour", "year": 2009, "date": "2009-06-01", "overview": "A lighthouse keeper's daughter returns to the village she left after a scandal.", "rating": 7.8, "votes": 3120, "genres": ["Drama"], "url": "https://example.com/tmdb/movie/9302", "on": [{"service": "SVT Play", "type": "free"}]},
+      {"key": "movie:9304", "id": 9304, "kind": "movie", "title": "Seven Foxes", "year": 2012, "date": "2012-06-01", "overview": "Seven fox cubs set out to find the forest their mother sang about.", "rating": 7.9, "votes": 4800, "genres": ["Animation", "Family"], "url": "https://example.com/tmdb/movie/9304", "on": [{"service": "Netflix", "type": "flatrate"}, {"service": "SVT Play", "type": "free"}]}
+    ],
+    "top10": {
+      "week": {"start": "2026-10-26", "end": "2026-11-01"},
+      "url": "https://example.com/netflix/top10/sweden",
+      "films": [
+        {"rank": 1, "title": "Northbound Static", "weeks": 4, "kind": "movie", "match": {"key": "movie:9002", "id": 9002, "kind": "movie", "title": "Northbound Static", "year": 2026, "date": "2026-10-17", "overview": "A night-shift radio host takes a call from a listener who claims to be broadcasting from next week.", "rating": 6.8, "votes": 230, "genres": ["Thriller"], "url": "https://example.com/tmdb/movie/9002", "on": [{"service": "Netflix", "type": "flatrate"}]}},
+        {"rank": 2, "title": "Glass Harbor Heist", "weeks": 2, "kind": "movie", "match": null},
+        {"rank": 3, "title": "The Last Ferry", "weeks": 5, "kind": "movie", "match": null},
+        {"rank": 4, "title": "Weekend in Oslo", "weeks": 3, "kind": "movie", "match": null},
+        {"rank": 5, "title": "Midnight Recipe", "weeks": 1, "kind": "movie", "match": null},
+        {"rank": 6, "title": "Thunder Lake", "weeks": 4, "kind": "movie", "match": null},
+        {"rank": 7, "title": "Small Hours", "weeks": 2, "kind": "movie", "match": null},
+        {"rank": 8, "title": "The Cartographer", "weeks": 5, "kind": "movie", "match": null},
+        {"rank": 9, "title": "Paper Moonrise", "weeks": 3, "kind": "movie", "match": null},
+        {"rank": 10, "title": "Iron Meadow", "weeks": 1, "kind": "movie", "match": null}
+      ],
+      "tv": [
+        {"rank": 1, "title": "The Lantern Keepers: Season 1", "weeks": 3, "kind": "tv", "show": "The Lantern Keepers", "match": {"key": "tv:9001", "id": 9001, "kind": "tv", "title": "The Lantern Keepers", "year": 2026, "date": "2026-10-30", "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.", "rating": 7.9, "votes": 412, "genres": ["Mystery", "Drama"], "url": "https://example.com/tmdb/tv/9001", "on": [{"service": "Netflix", "type": "flatrate"}]}},
+        {"rank": 2, "title": "Harbor Lights: Season 3", "weeks": 5, "kind": "tv", "show": "Harbor Lights", "match": {"key": "tv:9003", "id": 9003, "kind": "tv", "title": "Harbor Lights", "year": 2019, "date": "2019-06-01", "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.", "rating": 8.1, "votes": 2104, "genres": ["Crime", "Drama"], "url": "https://example.com/tmdb/tv/9003", "on": [{"service": "Netflix", "type": "flatrate"}]}},
+        {"rank": 3, "title": "Copper and Clay: Season 2", "weeks": 1, "kind": "tv", "show": "Copper and Clay", "match": {"key": "tv:9004", "id": 9004, "kind": "tv", "title": "Copper and Clay", "year": 2024, "date": "2024-06-01", "overview": "Ten amateur potters and metalworkers compete for a studio of their own.", "rating": 6.4, "votes": 88, "genres": ["Reality"], "url": "https://example.com/tmdb/tv/9004", "on": [{"service": "Netflix", "type": "flatrate"}]}},
+        {"rank": 4, "title": "Bright Static: Limited Series", "weeks": 3, "kind": "tv", "show": "Bright Static", "match": null},
+        {"rank": 5, "title": "Fjord Patrol: Season 4", "weeks": 5, "kind": "tv", "show": "Fjord Patrol", "match": null},
+        {"rank": 6, "title": "Gilded Cage: Part 2", "weeks": 1, "kind": "tv", "show": "Gilded Cage", "match": null},
+        {"rank": 7, "title": "The Night Market: Season 1", "weeks": 3, "kind": "tv", "show": "The Night Market", "match": null},
+        {"rank": 8, "title": "Cold Open: Season 2", "weeks": 5, "kind": "tv", "show": "Cold Open", "match": null},
+        {"rank": 9, "title": "Hill Street Bakers: Season 5", "weeks": 1, "kind": "tv", "show": "Hill Street Bakers", "match": null},
+        {"rank": 10, "title": "Long Shadows: Limited Series", "weeks": 3, "kind": "tv", "show": "Long Shadows", "match": null}
+      ]
+    },
+    "picks": {
+      "headline": "A lighthouse mystery, a Baltic port and five more",
+      "dek": "Two new series, a free Swedish drama and four older favorites, across Netflix, SVT Play and TV4 Play.",
+      "model": "claude-opus-5-5",
+      "titles": [
+        {"key": "tv:9001", "id": 9001, "kind": "tv", "title": "The Lantern Keepers", "year": 2026, "date": "2026-10-30", "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.", "rating": 7.9, "votes": 412, "genres": ["Mystery", "Drama"], "url": "https://example.com/tmdb/tv/9001", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_series", "reason": "A new mystery series with a strong start: a stormy island, a lighthouse and a logbook that seems to know too much."},
+        {"key": "tv:9003", "id": 9003, "kind": "tv", "title": "Harbor Lights", "year": 2019, "date": "2019-06-01", "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.", "rating": 8.1, "votes": 2104, "genres": ["Crime", "Drama"], "url": "https://example.com/tmdb/tv/9003", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "added", "flag_date": "2026-11-01", "reason": "A slow-burn crime drama, just added to Netflix, with high ratings across its run."},
+        {"key": "tv:9101", "id": 9101, "kind": "tv", "title": "The Mountain Cabin", "original_title": "Fjällstugan", "year": 2026, "date": "2026-10-25", "overview": "Four old friends rent the same mountain cabin every winter; this year one of them brings a secret.", "rating": 7.4, "votes": 61, "genres": ["Drama"], "url": "https://example.com/tmdb/tv/9101", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_series", "reason": "Free on SVT Play: a new Swedish drama about old friends and one secret, in a snowed-in cabin."},
+        {"key": "movie:9301", "id": 9301, "kind": "movie", "title": "Orbit of Glass", "year": 2014, "date": "2014-06-01", "overview": "A repair crew on a failing space station has one week to decide who goes home.", "rating": 8.2, "votes": 15230, "genres": ["Science Fiction", "Drama"], "url": "https://example.com/tmdb/movie/9301", "on": [{"service": "Netflix", "type": "flatrate"}], "reason": "One of the best-rated films on the list: a tense, character-driven science fiction drama."},
+        {"key": "tv:9303", "id": 9303, "kind": "tv", "title": "Paper Kingdoms", "year": 2016, "date": "2016-06-01", "overview": "The rise and fall of a family printing house over four generations.", "rating": 8.4, "votes": 5120, "genres": ["Drama", "History"], "url": "https://example.com/tmdb/tv/9303", "on": [{"service": "Netflix", "type": "flatrate"}], "reason": "A family saga told across four generations, rated 8.4 by thousands of viewers."},
+        {"key": "tv:9202", "id": 9202, "kind": "tv", "title": "Saltwater Detectives", "year": 2026, "date": "2026-10-20", "overview": "Two retired coastguards open a detective agency in a fishing village.", "rating": 6.9, "votes": 47, "genres": ["Crime"], "url": "https://example.com/tmdb/tv/9202", "on": [{"service": "TV4 Play", "type": "ads"}], "flag": "new_series", "reason": "A lighter pick on TV4 Play's free tier: two retired coastguards turn detective."},
+        {"key": "movie:9302", "id": 9302, "kind": "movie", "title": "The Quiet Harbour", "year": 2009, "date": "2009-06-01", "overview": "A lighthouse keeper's daughter returns to the village she left after a scandal.", "rating": 7.8, "votes": 3120, "genres": ["Drama"], "url": "https://example.com/tmdb/movie/9302", "on": [{"service": "SVT Play", "type": "free"}], "reason": "A quiet, well-rated drama from 2009, free on SVT Play."}
+      ]
+    }
+  },
   "links": []
 }

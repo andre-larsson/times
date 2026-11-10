@@ -63,6 +63,7 @@ jobs:
           MODE: ${{ inputs.mode || 'auto' }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ITAD_API_KEY: ${{ secrets.ITAD_API_KEY }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 
       - name: Commit the edition
         if: steps.gen.outputs.published == 'true'

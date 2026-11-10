@@ -85,7 +85,8 @@ def _reason(resp: httpx.Response, params: dict[str, Any] | None) -> str:
         return ""
     if not isinstance(body, dict):
         return ""
-    msg = next((body[k] for k in ("reason_phrase", "error", "message", "detail") if isinstance(body.get(k), str)), "")
+    msg = next((body[k] for k in ("reason_phrase", "error", "message", "detail", "status_message")   # TMDB: status_message
+                if isinstance(body.get(k), str)), "")
     msg = " ".join(msg.split())[:100]
     if any(len(str(v)) >= 8 and str(v) in msg for v in (params or {}).values()):
         return ""

@@ -34,6 +34,7 @@ POSITIVE_RATINGS = {"overwhelmingly positive", "very positive", "positive", "mos
 NEGATIVE_RATINGS = {"mostly negative", "negative", "very negative", "overwhelmingly negative"}
 VERDICTS = {"strong_buy": ("▲▲", "Strong Buy"), "buy": ("▲", "Buy"), "hold": ("◆", "Hold"),
             "avoid": ("▼", "Avoid")}                    # deal ratings: symbol and word, never color alone
+SCREEN_PAGE_DAYS = 14                                   # Screen page: picks older than this aren't shown
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -130,6 +131,8 @@ class SiteBuilder:
         self.quizzes: list[dict[str, Any]] = []         # quizzes, newest first
         self.front_days = int((cfg.get("opinion") or {}).get("front_days", 7))
         self.quiz_days = int((cfg.get("quiz") or {}).get("front_days", 4))
+        self.screen_picks: list[dict[str, Any]] = []    # Screen's picks of the week, newest first
+        self.picks_days = int(((cfg.get("screen") or {}).get("picks") or {}).get("front_days", 7))
         weather = cfg.get("weather") or {}
         self.weather = weather if weather.get("enabled") else None   # live in the browser: today's front page only
 
@@ -180,6 +183,10 @@ class SiteBuilder:
     def quiz_for(self, edition: dict[str, Any]) -> dict[str, Any] | None:
         """The latest quiz as of this edition, if it's recent enough for its front page."""
         return _latest(self.quizzes, edition, self.quiz_days)
+
+    def picks_for(self, edition: dict[str, Any], days: int | None = None) -> dict[str, Any] | None:
+        """Screen's latest picks of the week as of this edition (they run on Fridays, shown until the next)."""
+        return _latest(self.screen_picks, edition, days or self.picks_days)
 
     def article_url(self, story: dict[str, Any]) -> str:
         if story.get("path"):
@@ -329,6 +336,8 @@ class SiteBuilder:
             "links_by_section": links_by_section,
             "column": self.column_for(edition),
             "quiz": self.quiz_for(edition),
+            "screen": edition.get("screen") or {},
+            "screen_picks": self.picks_for(edition),
         }
 
 
@@ -409,6 +418,11 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     b.quizzes = [ed["quiz"] for ed in reversed(editions) if ed.get("quiz")]
     if b.quizzes:
         b.add_nav("quiz", "Quiz", "quiz/")
+    for ed in editions:                                  # Screen's picks of the week: on the pages until the next
+        picks = (ed.get("screen") or {}).get("picks")
+        if picks:
+            picks.update(edition_id=ed["edition_id"], edition_generated_at=ed.get("generated_at"))
+    b.screen_picks = [ed["screen"]["picks"] for ed in reversed(editions) if (ed.get("screen") or {}).get("picks")]
 
     # The Botroom: a thread under each article it commented on, and /forum/
     forum_days = forum.load_days(data_dir)
@@ -478,6 +492,14 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
                 still_active.append(d)
     b.write("deals/", "deals.html", active="deals", section=b.sections["deals"], **common,
             deals=current_deals, still_active=still_active)
+
+    # Screen: what to watch (the newest lists, and the latest picks of the week)
+    if "screen" in b.sections:
+        screen_eds = [e for e in newest_first if e.get("screen")]
+        current_screen = screen_eds[0]["screen"] if screen_eds else {}
+        b.write("screen/", "screen.html", active="screen", section=b.sections["screen"], **common,
+                screen=current_screen,
+                picks=b.picks_for(screen_eds[0] if screen_eds else front, SCREEN_PAGE_DAYS))
 
     # Article pages
     for ed in editions:

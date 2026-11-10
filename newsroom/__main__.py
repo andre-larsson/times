@@ -48,6 +48,9 @@ def main(argv: list[str] | None = None) -> int:
     gen_p.add_argument("--deals", default="auto", choices=("auto", "force", "carry"),
                        help="the deals: auto = check them on deals.days (or when the last check is stale) and "
                             "carry the last check over on other days, force = check now, carry = keep the last check")
+    gen_p.add_argument("--screen", default="auto", choices=("auto", "force", "off"),
+                       help="Screen's picks of the week: auto = when due (config screen.picks), force = write them "
+                            "now (needs an AI edition), off = never. The lists refresh in every edition either way")
     gen_p.add_argument("--now", type=dt.datetime.fromisoformat, help="pretend it is this time (testing)")
     gen_p.add_argument("--dump", type=Path, help="also write everything fetched to this JSON file")
     gen_p.add_argument("--llm", choices=("api", "claude-code"),
@@ -101,7 +104,8 @@ def main(argv: list[str] | None = None) -> int:
 
         now = args.now.astimezone(dt.timezone.utc) if args.now else None
         result = generate(cfg, args.data_dir, args.mode, now=now, backend=args.llm, column=args.opinion,
-                          quiz_mode=args.quiz, forum_mode=args.forum, deals_mode=args.deals)
+                          quiz_mode=args.quiz, forum_mode=args.forum, deals_mode=args.deals,
+                          screen_mode=args.screen)
         print(report(result))
         if result.path:
             print(f"\nWrote {result.path}")
@@ -132,6 +136,11 @@ def main(argv: list[str] | None = None) -> int:
 
         with Client() as client:
             harvest = fetch_all(cfg, client, itad_key=(os.environ.get("ITAD_API_KEY") or "").strip() or None)
+            from . import screen
+
+            if screen.enabled(cfg):                  # with an empty memory, so the top 10 is fetched too
+                screen.fetch(cfg, client, harvest, (os.environ.get("TMDB_API_KEY") or "").strip() or None, {},
+                             harvest.fetched_at.date())
         print(report(Result(False, "check", "sources only", harvest=harvest)))
         if args.dump:
             dump_harvest(harvest, args.dump)

@@ -68,11 +68,18 @@ new deals are in; the editions in between carry the last check over, minus deals
 failed check day is made up by the next edition. `--deals force` checks now, `--deals carry` keeps the last
 check. See `deals.days` in config.yaml.
 
+Screen (`/screen/`) is what to watch on Netflix, SVT Play and TV4 Play in Sweden: what's new on each, titles
+that just arrived, Netflix's weekly Swedish top 10 and older well-rated titles, refreshed in every edition
+without Claude (TMDB, where-to-watch data by JustWatch; it needs `TMDB_API_KEY`, and without it only the top 10
+shows). On Fridays one Claude call picks 6–8 of them with a short reason each; `--screen force|off` on
+`generate`. See `screen:` in config.yaml and the Screen section of PLAN.md.
+
 `generate` without `--mode` (= `auto`) only builds an edition when a slot in `schedule.editions` has
 passed without one; that is what the hourly workflow runs. Local test runs should use
 `--data-dir _work/data` (git-ignored); `data/` is where the workflow commits real editions.
 
-Keys: `ANTHROPIC_API_KEY` (from phase 3) and `ITAD_API_KEY` (optional). Locally, put them in `.env` in
+Keys: `ANTHROPIC_API_KEY` (from phase 3), `ITAD_API_KEY` and `TMDB_API_KEY` (both optional; TMDB takes its
+v4 read-access token or its v3 API key). Locally, put them in `.env` in
 the project folder (git-ignored, `KEY=value` lines); `python -m newsroom` loads it and never overrides
 variables that are already set. Don't export the Anthropic key from your shell profile: Claude Code
 would pick it up and bill its own usage to it. In GitHub Actions they are repository secrets.
@@ -92,6 +99,7 @@ newsroom/            Python package: `python -m newsroom <command>`
   desk.py, llm.py    the Claude tasks and schemas; the API and claude-code backends, cost tally
   opinion.py         the opinion column: when it's due, format/focus rotation, pick → write → fact-check
   quiz.py            the news quiz: when it's due, write → check, answer placement
+  screen.py          Screen: what to watch (TMDB lists, the arrivals snapshot, Netflix's top 10, Friday picks)
   budget.py          data/usage.json and monthly pacing
   render.py          edition JSON → static HTML in _site/
   search.py          the search index (search/index.json) for the Search page

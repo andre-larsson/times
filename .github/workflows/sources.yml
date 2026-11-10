@@ -24,3 +24,4 @@ jobs:
           uv run --locked python -m newsroom sources | tee -a "$GITHUB_STEP_SUMMARY"
         env:
           ITAD_API_KEY: ${{ secrets.ITAD_API_KEY }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
