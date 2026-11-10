@@ -112,6 +112,11 @@ class TMDB:
             self.genres[kind] = {g["id"]: g["name"] for g in self.get(f"/genre/{kind}/list").get("genres") or []
                                  if g.get("id") is not None and g.get("name")}
 
+    def genre_ids(self, kind: str, names: list[str]) -> list[int]:
+        """TMDB genre ids for genre names (load_genres first); unknown names are ignored."""
+        wanted = {str(n).lower() for n in names}
+        return sorted(i for i, name in self.genres.get(kind, {}).items() if name.lower() in wanted)
+
     # ── lists ────────────────────────────────────────────────────────────────
 
     def discover(self, kind: str, pages: int = 1, **filters: Any) -> list[dict[str, Any]]:
@@ -132,12 +137,19 @@ class TMDB:
         tv_from = today - dt.timedelta(days=int(cfg.get("tv_days", 21)))
         series_days = int(cfg.get("new_series_days", 60))
         min_votes = int(cfg.get("min_votes", 0))
+        # New episodes of long-running and daily shows (soaps, wrestling, kids' cartoons) crowd out the new
+        # seasons worth knowing about: only series that started in the last `series_max_age_years`
+        years = int(cfg.get("series_max_age_years", 8))
+        tv_extra = {"first_air_date.gte": dt.date(today.year - years, today.month, min(today.day, 28)).isoformat()}
+        skip = self.genre_ids("tv", cfg.get("skip_tv_genres") or [])
+        if skip:
+            tv_extra["without_genres"] = ",".join(str(g) for g in skip)
         movies = self.discover("movie", **svc.filters(), sort_by="popularity.desc",
                                   **{"primary_release_date.gte": movie_from.isoformat(),
                                      "primary_release_date.lte": today.isoformat(), "vote_count.gte": min_votes})
         shows = self.discover("tv", **svc.filters(), sort_by="popularity.desc", with_type=TV_TYPES,
                                  **{"air_date.gte": tv_from.isoformat(), "air_date.lte": today.isoformat(),
-                                    "vote_count.gte": min_votes})
+                                    "vote_count.gte": min_votes, **tv_extra})
         for m in movies:
             m["flag"] = "new_film"
         for s in shows:

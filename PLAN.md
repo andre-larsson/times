@@ -87,7 +87,7 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 
 | Source | How | Status |
 |---|---|---|
-| **TMDB** | The official API (`api.themoviedb.org/3`), free for non-commercial use with attribution. `TMDB_API_KEY` takes either credential: the v4 read-access token (a JWT, `eyJ…`, sent as `Authorization: Bearer`) or the v3 API key (`api_key` query parameter, never logged). Provider ids for Netflix, SVT Play and TV4 Play in SE are looked up by name from `/watch/providers/{movie,tv}` each run (config overrides). Lists from `/discover/{movie,tv}` with `watch_region=SE`, `with_watch_providers` and `with_watch_monetization_types`; per-title `/{kind}/{id}/watch/providers` for the service tags (flatrate / free / ads) and TMDB's watch-page link; `/search` to match the top 10. Posters from `image.tmdb.org/t/p/w342`. About 35 requests a day before the per-title lookups, 60–100 with them (20 more for the top 10 once a week), against a limit of ~40 a second. **Where-to-watch data is JustWatch's** and must be credited to it. TMDB's website shows "SVT Play" under Free and "TV4 Play" under Ads for Sweden (checked 2026-11-10). | ⏳ no key yet |
+| **TMDB** | The official API (`api.themoviedb.org/3`), free for non-commercial use with attribution. `TMDB_API_KEY` takes either credential: the v4 read-access token (a JWT, `eyJ…`, sent as `Authorization: Bearer`) or the v3 API key (`api_key` query parameter, never logged). Provider ids for Netflix, SVT Play and TV4 Play in SE are looked up by name from `/watch/providers/{movie,tv}` each run (config overrides). Lists from `/discover/{movie,tv}` with `watch_region=SE`, `with_watch_providers` and `with_watch_monetization_types`; per-title `/{kind}/{id}/watch/providers` for the service tags (flatrate / free / ads) and TMDB's watch-page link; `/search` to match the top 10. Posters from `image.tmdb.org/t/p/w342`. About 35 requests a day before the per-title lookups, 60–100 with them (20 more for the top 10 once a week), against a limit of ~40 a second. **Where-to-watch data is JustWatch's** and must be credited to it. Checked live with the key, 2026-11-10: all three providers found by name; in SE, SVT Play titles come back as free and TV4 Play's free tier as ads; new lists 40 / 40 / 29 titles, catalogs 120 / 120 / 103, every top-10 row matched, ~120 ms per call. | ✅ |
 | **Netflix top 10** | Netflix's public Tudum pages, `netflix.com/tudum/top10/sweden` (films) and `…/sweden/tv`, ~0.8 MB of HTML each with the week's table server-rendered (rows carry `data-uia` test hooks). The all-countries TSV is 33 MB and ignores range requests, so it's not used. No key. Netflix publishes a Monday–Sunday week on the Tuesday after (evening, Swedish time), so the list is fetched again only from the second Wednesday after the cached week ended. Checked live 2026-11-10: 200 for the shared client, 1.2 s for both pages | ✅ |
 
 ### Draft interests (editable)
@@ -531,7 +531,10 @@ more can be added later: name, how a title must be on it, and optional provider 
   `newsroom/sources/tmdb.py`):
   - **New on each service:** films released in the last 90 days and series with episodes in the last 21 (news and
     talk shows left out), most popular first, films and series alternating; up to 8 per service, labeled "New
-    film", "New series" (started in the last 60 days) or "New episodes".
+    film", "New series" (started in the last 60 days) or "New episodes". Only series that started in the last
+    8 years, and no Kids or Soap genres (`new.series_max_age_years`, `new.skip_tv_genres`): on the first live run
+    "New episodes" was Law & Order: SVU (1999), WWE Raw, PAW Patrol and Home and Away; with the filter it was
+    Lupin, Black Doves, All Creatures Great & Small, Hudson & Rex and Fire Country.
   - **Just added:** TMDB has no "date added", so each service's best-known titles (3 pages each of films and
     series by TMDB votes, ~120) are compared with a small snapshot in `data/screen.json`. Votes, not popularity:
     a title enters that list almost only by arriving on the service, while popularity churns daily and would
@@ -963,7 +966,8 @@ screen:                             # what to watch; models.screen writes the Fr
     - { name: Netflix,  types: [flatrate] }
     - { name: SVT Play, types: [free, ads, flatrate] }
     - { name: TV4 Play, types: [ads, free] }        # the free tier
-  new:      { per_service: 8, movie_days: 90, tv_days: 21, new_series_days: 60 }
+  new:      { per_service: 8, movie_days: 90, tv_days: 21, new_series_days: 60, series_max_age_years: 8,
+              skip_tv_genres: [Kids, Soap] }
   arrivals: { pages: 3, min_votes: 50, keep_days: 14, max_listed: 4, forget_days: 45, warmup_days: 2, max_per_day: 20 }
   classics: { count: 8, min_rating: 7.5, min_votes_movie: 1500, min_votes_tv: 400, min_age_years: 3, pages: 3 }
   picks:    { days: [fri], every_weeks: 1, min: 6, max: 8, candidates: 50, repeat_weeks: 8, front_days: 7 }

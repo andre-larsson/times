@@ -174,9 +174,12 @@ screen:                               # Screen: what to watch on my services (ne
     - { name: Netflix,  types: [flatrate] }               # my subscription
     - { name: SVT Play, types: [free, ads, flatrate] }    # all free (JustWatch lists it under "free")
     - { name: TV4 Play, types: [ads, free] }              # the free tier, with ads; flatrate = TV4's paid tiers
-  new:      { per_service: 8, movie_days: 90, tv_days: 21, new_series_days: 60, min_votes: 0 }
+  new:      { per_service: 8, movie_days: 90, tv_days: 21, new_series_days: 60, min_votes: 0,
+              series_max_age_years: 8, skip_tv_genres: [Kids, Soap] }
                                       # films released in the last 90 days, series with episodes in the last 21
-                                      #   ("New series" when it started in the last 60), most popular first
+                                      #   ("New series" when it started in the last 60), most popular first. Only
+                                      #   series that started in the last 8 years, and no kids' shows or soaps:
+                                      #   daily and decades-long shows (SVU, WWE Raw, Home and Away) crowded it
   arrivals: { pages: 3, min_votes: 50, keep_days: 14, max_listed: 4, forget_days: 45, warmup_days: 2, max_per_day: 20 }
                                       # "Just added": titles new to each service's best-known films and series (3 pages
                                       #   each by TMDB votes, 120 titles) against the snapshot in data/screen.json

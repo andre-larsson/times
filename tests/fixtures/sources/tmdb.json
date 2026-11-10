@@ -6,7 +6,7 @@
  },
  "genres": {
   "movie": [{"id": 18, "name": "Drama"}, {"id": 53, "name": "Thriller"}, {"id": 35, "name": "Comedy"}, {"id": 10749, "name": "Romance"}, {"id": 878, "name": "Science Fiction"}, {"id": 28, "name": "Action"}, {"id": 99, "name": "Documentary"}, {"id": 16, "name": "Animation"}, {"id": 10751, "name": "Family"}],
-  "tv": [{"id": 18, "name": "Drama"}, {"id": 9648, "name": "Mystery"}, {"id": 10764, "name": "Reality"}, {"id": 36, "name": "History"}, {"id": 80, "name": "Crime"}]
+  "tv": [{"id": 18, "name": "Drama"}, {"id": 9648, "name": "Mystery"}, {"id": 10764, "name": "Reality"}, {"id": 36, "name": "History"}, {"id": 80, "name": "Crime"}, {"id": 10762, "name": "Kids"}, {"id": 10766, "name": "Soap"}]
  },
  "discover": {
   "1008": {

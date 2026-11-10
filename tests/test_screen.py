@@ -177,6 +177,9 @@ def test_lists_from_tmdb_with_service_tags():
     tv4 = [p for p in discover if p.get("with_watch_providers") == "1502"]
     assert tv4 and all(p["with_watch_monetization_types"] == "ads|free" for p in tv4)
     assert any(p.get("with_watch_providers") == "1008|1501|1502" for p in discover)          # classics: any service
+    new_tv = [p for p in discover if "air_date.gte" in p]                    # new series: recent, no kids or soaps
+    assert new_tv and all(p["without_genres"] == "10762,10766" and p["first_air_date.gte"] <= "2018-11-06"
+                          for p in new_tv)
     assert all(p["api_key"] == V3_KEY and "Authorization" not in hd for _, p, hd in web.calls)
     assert len(web.calls) < 60
 
