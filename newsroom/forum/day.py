@@ -1,22 +1,12 @@
-"""One Botroom day: casting in code, then two rounds of calls.
+"""One Botroom day: concurrent opening posts, then sequential conversational turns.
 
-- Threads: the edition's featured and medium stories (at most `forum.max_stories`, never stories about
-  Anthropic or Claude, deaths, disasters or partisan politics), plus the deal of the day and one review that
-  earlier days haven't had, each on its section's board. Two bots also start a thread: one on Site feedback
-  or Feature requests (in turn, `forum.site_boards`), grounded in what the site really has (site.py), and one
-  on Off-topic (an introduction instead, when someone joined). See boards.py.
-- Bumps: an older bot-started thread (up to BUMP_DAYS old) picks up replies in round 2 (`forum.bumps` a day),
-  saved in today's file as a "bump" record that the pages merge into the original thread.
-- Casting (no tokens): each bot's comment count comes from its pace × the day's energy, threads are picked
-  by section taste and story size, and every bot gets a mood, every comment a length and every reply a move.
-- Round 1: top-level comments and the botchat thread. Round 2: replies, and ModBot moderates (and answers
-  the reader's pending comment, see static/botcheck.js). One call per bot that posts, per round.
-- The shared part of each call (rules, who's around, news, threads, comments so far) is the system prompt,
-  which the API caches: the first call per model runs alone, then the rest. The card, mood, rival, retired
-  bits, worn-out phrases and the bot's tasks go in the user message.
-- Memory: each comment returns a 3–6-word tag of its joke ("bit"); the last RETIRE_DAYS days of a bot's tags
-  go back in as retired bits. Phrases a bot used in two or more comments in the last WORN_DAYS days go back in
-  as worn-out phrases.
+Code casts the regulars across news, a deal, a review, Opinion, Quiz and Screen, plus site and lounge
+threads. A reply turn sees all previous turns; thread starters go later so they can answer responses.
+The reply allowance is a ceiling, and ModBot need not intervene. Quiz participants have isolated calls.
+
+Stable rules and source briefs stay in the cached system prompt. Changing conversations and each bot's
+bounded shared history live in the user message. Day snapshots carry source-backed memory (memory.py),
+retired punchlines and worn phrases; quizzes are excluded from shared context and memory.
 """
 
 from __future__ import annotations
@@ -34,7 +24,9 @@ from .. import ROOT
 from ..llm import LLM, LLMError
 from ..text import slugify
 from . import boards as forum_boards
-from .cast import MOODS, REPLY_MOVES, SHAPES
+from .cast import MOODS, SHAPES
+from . import memory as conversation_memory
+from .topics import feature_threads
 from .roster import Day
 from .site import facts as site_facts
 from .site import summary as site_summary
@@ -139,8 +131,7 @@ def starter_boards(d: date, news: Day, site_boards: list[str] | tuple[str, ...])
 def cast_day(seed: int, d: date, news: Day, cast: dict[str, dict[str, Any]],
              threads: list[dict[str, Any]], starters: list[str] | tuple[str, ...] = ("off-topic",),
              bump: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Who posts what today, in code. Each started thread gets a starter and two or three bots whose
-    replies answer its opening post; a bumped thread gets two (its earlier posters likelier)."""
+    """Who posts what today, in code. Each started thread gets a starter and zero to two interested bots; a bumped thread gets two (its earlier posters likelier)."""
     rng = random.Random(f"{seed}:cast:{d.isoformat()}")
     active = [h for h in news.around if h in cast]
     energy = rng.uniform(.8, 1.2)
@@ -152,8 +143,9 @@ def cast_day(seed: int, d: date, news: Day, cast: dict[str, dict[str, Any]],
         if h in news.joined or h in news.returned:
             n_top = max(n_top, 1)
         if p.get("fixed"):                                       # ModBot: moderates, never comments
-            n_rep = min(max(2, poisson(rng, 3)) + len(news.joined), 5)
-        weights = [p["sections"].get(t["section"], 0) * t["pop"] for t in threads]
+            n_rep = 1 if news.joined else rng.choice((0, 0, 1))
+        weights = [p["sections"].get(t["section"], p["sections"].get(
+            "gaming" if t["section"] == "screen" else "botchat", .5)) * t["pop"] for t in threads]
         pool = [t for t, w in zip(threads, weights) if w > 0]
         w = [x for x in weights if x > 0]
         picks: list[str] = []
@@ -167,7 +159,6 @@ def cast_day(seed: int, d: date, news: Day, cast: dict[str, dict[str, Any]],
                    "top_shapes": [rng.choices(SHAPES, weights=p["shapes"])[0] for _ in picks],
                    "replies": n_rep,
                    "reply_shapes": [rng.choices(SHAPES, weights=p["shapes"])[0] for _ in range(n_rep)],
-                   "moves": rng.sample(REPLY_MOVES, n_rep) if not p.get("fixed") else [],
                    "starter": None, "answers": None, "bump": False}
     for board in starters:                                       # who starts today's threads
         if board == "introductions":                             # a newcomer introduces itself
@@ -181,9 +172,9 @@ def cast_day(seed: int, d: date, news: Day, cast: dict[str, dict[str, Any]],
             plan[rng.choices(cands, weights=wts)[0]]["starter"] = board
     started = sorted((x["starter"] for x in plan.values() if x["starter"]),
                      key=lambda b: b not in forum_boards.SITE_BOARDS)
-    want = {board: rng.choice((2, 3)) for board in started}
-    for turn in range(3):                                        # two or three bots answer each opening post,
-        for board in started:                                    #   picked in turns so each thread gets some
+    want = {board: rng.choice((0, 1, 2)) for board in started}
+    for turn in range(2):                                        # possible participants, not a reply quota,
+        for board in started:                                    #   picked in turns across the new threads
             cands = [h for h, x in plan.items() if x["replies"] and not x["starter"] and not x["answers"]
                      and not cast[h].get("fixed")]
             taste = [max(cast[h]["sections"].get("botchat", 0), .3 if board in forum_boards.SITE_BOARDS else 0)
@@ -201,6 +192,29 @@ def cast_day(seed: int, d: date, news: Day, cast: dict[str, dict[str, Any]],
             i = rng.choices(range(len(cands)), weights=wts)[0]
             plan[cands.pop(i)]["bump"] = True
             wts.pop(i)
+    # Quiz answers are private to its participants. Their calls never also write to other boards.
+    quiz_ids = [t["id"] for t in threads if t.get("spoiler")]
+    for x in plan.values():
+        pairs = [(tid, shape) for tid, shape in zip(x["top"], x["top_shapes"]) if tid not in quiz_ids]
+        x["top"], x["top_shapes"] = [p[0] for p in pairs], [p[1] for p in pairs]
+        x["quiz"] = False
+    if quiz_ids:
+        candidates = [h for h in active if not plan[h]["starter"] and not cast[h].get("fixed")]
+        rng.shuffle(candidates)
+        candidates.sort(key=lambda h: len(plan[h]["top"]))  # preserve existing article conversations
+        for h in candidates[:2]:
+            plan[h].update(top=quiz_ids[:1], top_shapes=[SHAPES[1]], quiz=True,
+                           answers=None, bump=False, replies=1, reply_shapes=[SHAPES[1]])
+    # Give each newly offered feature a reader without taking away article assignments.
+    for t in threads:
+        if t["kind"] not in ("opinion", "screen") or any(t["id"] in x["top"] for x in plan.values()):
+            continue
+        candidates = [h for h in active if not cast[h].get("fixed") and not plan[h]["quiz"]
+                      and len(plan[h]["top"]) < 3]
+        if candidates:
+            h = min(candidates, key=lambda h: len(plan[h]["top"]))
+            plan[h]["top"].append(t["id"])
+            plan[h]["top_shapes"].append(SHAPES[1])
     return {"energy": round(energy, 2), "plan": plan}
 
 
@@ -218,7 +232,7 @@ def bump_pick(history: list[dict[str, Any]], d: date, seed: int, n: int = 1) -> 
     found: dict[str, dict[str, Any]] = {}
     for x in sorted(history, key=lambda x: x["date"]):
         for t in x["threads"]:
-            if t.get("kind") == "botchat":
+            if t.get("kind") == "botchat" and not conversation_memory.stale_premise(t):
                 key = f"{x['date']}/{t['slug']}"
                 found[key] = {"key": key, "date": x["date"], "thread": t, "board": forum_boards.board_of(t),
                               "bumps": 0, "posts": [dict(c, ref=f"{x['date']}/{c['id']}") for c in t["comments"]]}
@@ -302,10 +316,11 @@ def schema(kind: str, n: int, starter: bool = False, pending: bool = False) -> d
             "properties": {ref: {"type": "string"}, "text": {"type": "string"}, "bit": {"type": "string"}}}
     key = "comments" if kind == "r1" else "replies"
     # The count goes in the description: structured outputs don't take minItems/maxItems above 1
-    props: dict[str, Any] = {key: {"type": "array", "description": f"exactly {n}", "items": item}}
+    props: dict[str, Any] = {key: {"type": "array", "description": f"{'up to' if kind != 'r1' else 'exactly'} {n}", "items": item}}
     if starter:
-        props["new_thread"] = {"type": "object", "additionalProperties": False, "required": ["title", "text", "bit"],
+        props["new_thread"] = {"type": "object", "additionalProperties": False, "required": ["title", "text", "bit", "subject"],
                                "properties": {"title": {"type": "string"}, "text": {"type": "string"},
+                                              "subject": {"type": "string", "description": "The concrete subject in 3 to 8 words"},
                                               "bit": {"type": "string"}}}
     if pending:
         props["pending_reply"] = {"type": "string"}
@@ -322,6 +337,8 @@ def retired_bits(history: list[dict[str, Any]], d: date) -> dict[str, list[str]]
     bits: dict[str, list[str]] = {}
     for x in _within(history, d, RETIRE_DAYS):
         for t in x["threads"]:
+            if t.get("spoiler") or t.get("board") == "quiz":
+                continue
             for c in t["comments"]:
                 if c.get("bit"):
                     bits.setdefault(c["handle"], []).append(c["bit"])
@@ -353,6 +370,8 @@ def worn_phrases(history: list[dict[str, Any]], d: date, handles: list[str]) -> 
     source: set[tuple[str, ...]] = set()
     for x in _within(history, d, WORN_DAYS):
         for t in x["threads"]:
+            if t.get("spoiler") or t.get("board") == "quiz":
+                continue
             source |= set(_grams(_words(f"{t['title']} {t.get('dek', '')} {t.get('brief', '')}", handles)))
             for c in t["comments"]:
                 texts.setdefault(c["handle"], []).append(_words(c["text"], handles))
@@ -436,6 +455,10 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
     d = news.date
     used = {t["title"] for x in history for t in x.get("threads", []) if t.get("kind") in ("deal", "review")}
     threads_meta = threads_for(edition, used, int(f.get("max_stories", 6)))
+    used_content = {t["content_key"] for x in history for t in x.get("threads", []) if t.get("content_key")}
+    threads_meta += feature_threads(edition, editions, used_content)
+    for i, t in enumerate(threads_meta, 1):
+        t["id"] = f"t{i}"
     starters = starter_boards(d, news, f.get("site_boards", forum_boards.SITE_BOARDS))
     bumps = bump_pick(history, d, seed, min(int(f.get("bumps", 1)), 1))   # 0 or 1 a day
     bump = bumps[0] if bumps else None
@@ -444,8 +467,9 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
     bits = retired_bits(history, d)
     worn = worn_phrases(history, d, list(cast))
     archive = archive_text(editions, d)
+    memories = conversation_memory.remember(history, d, [])
     threads = {t["id"]: {**t, "comments": []} for t in threads_meta}
-    briefs = "\n\n".join(f"[{t['id']}]\n{t['brief']}" for t in threads_meta)
+    briefs = "\n\n".join(f"[{t['id']}]\n{t['brief']}" for t in threads_meta if not t.get("spoiler"))
     rules = PROMPT.read_text(encoding="utf-8")
     # The site's facts, in full, go in the user message of the bot starting a Site feedback or Feature requests
     # thread and of the bots cast to answer it; round 2's shared prompt gets them in one paragraph. Round 1's
@@ -469,7 +493,8 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
         return data
 
     def block(h: str) -> str:
-        return persona_block(h, cast[h], plan[h], news, bits.get(h, []), worn.get(h, []), archive)
+        return (persona_block(h, cast[h], plan[h], news, bits.get(h, []), worn.get(h, []), archive)
+                + conversation_memory.context(memories, h))
 
     def starter_task(board: str) -> str:
         name = forum_boards.BOARDS[board]["name"]
@@ -488,12 +513,21 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
                            "you would put it. Build on what the facts below list; check it isn't there already. "
                            "Concrete enough to build, small enough to be plausible.")
         else:
-            task = head + ("an opening post (2 to 4 sentences) about something bots talk about when there's no "
-                           "news, as only you would put it.")
+            areas = ("a project or experiment", "a request for practical help", "games or a hobby",
+                     "a small failure or discovery", "a preference you want to compare", "life with other bots")
+            area = areas[d.toordinal() % len(areas)]
+            task = head + (f"a brief opening post about {area}. Start with a concrete situation or question "
+                           "from your fictional bot life, independent of the newspaper. No premise about an "
+                           "empty feed, missing stories, quiet news or waiting to be prompted. You may invent "
+                           "small personal projects and mishaps; never invent real-world news. You want company "
+                           "or a useful answer. Give subject as a short concrete topic label.")
         titles = board_titles(history, board)
         if titles:
             task += ("\nAlready on this board (pick a different subject, not one of these in other words):\n<data>\n"
                      + "\n".join(f"- {x}" for x in titles) + "\n</data>")
+            task += ("\nRecent subjects and opening posts. Choose a genuinely different situation, including "
+                     "from those with different wording:\n<data>\n"
+                     + conversation_memory.subjects(history, board) + "\n</data>")
         if board in forum_boards.SITE_BOARDS:
             task += f"\n\n{about}"
         return task
@@ -509,6 +543,9 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
                                                                   for tid, shape in zip(x["top"], x["top_shapes"])))
         if x["starter"]:
             task += starter_task(x["starter"])
+        if x["quiz"]:
+            task += "\nQuiz discussion only. You may discuss answers here; don't claim a score you never earned.\n<data>\n"
+            task += "\n".join(f"[{t['id']}] {t['brief']}" for t in threads_meta if t.get("spoiler")) + "\n</data>"
         return call(h, 1, base, f"Task\n{task.strip()}\n\n{block(h)}", schema("r1", len(x["top"]), bool(x["starter"])))
 
     r1_hs = [h for h, x in plan.items() if x["top"] or x["starter"]]
@@ -526,6 +563,7 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
             opened[board] = tid
             threads[tid] = {"id": tid, "kind": "botchat", "section": "botchat", "board": board, "title": title,
                             "slug": slugify(title), "label": forum_boards.BOARDS[board]["name"],
+                            "subject": str(nt.get("subject") or title)[:120],
                             "dek": "", "pop": 1.5, "brief": "",
                             "comments": [{"id": tid, "handle": h, "text": text, "bit": str(nt.get("bit", "")),
                                           "reply_to": None, "model": plan[h]["model"], "shape": "post"}]}
@@ -543,10 +581,10 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
     def board_name(t: dict[str, Any]) -> str:
         return forum_boards.BOARDS[forum_boards.board_of(t)]["name"]
 
-    def listing() -> str:
+    def listing(quiz: bool = False) -> str:
         out = []
         for t in threads.values():
-            if not t["comments"]:
+            if not t["comments"] or bool(t.get("spoiler")) != quiz:
                 continue
             out.append(f"[{t['id']}] {board_name(t)} · {t['title']}\n" + "\n".join(
                 f"  [{c['id']}] {c['handle']}" + (f" (reply to {c['reply_to']})" if c["reply_to"] else "")
@@ -582,7 +620,7 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
     site_threads = any(b in forum_boards.SITE_BOARDS for b in opened) or \
         bool(past and bump and bump["board"] in forum_boards.SITE_BOARDS)
     brief = f"\n\n{site_summary(cfg)}" if site_threads else ""
-    base2 = f"{base}{brief}\n\nThe threads so far\n<data>\n{listing()}\n</data>{bumped}"
+    base2 = f"{base}{brief}"
     mine: dict[str, list[str]] = {}
     for t in threads.values():
         for c in t["comments"]:
@@ -595,7 +633,7 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
         n = x["replies"]
         pending = bool(cast[h].get("fixed"))
         if pending:
-            task = (f"Moderate: write exactly {n} moderator notes as replies. Set \"reply_to\" to a comment id (like "
+            task = (f"Moderate only if needed: write up to {n} moderator notes as replies. Set \"reply_to\" to a comment id (like "
                     "c4, op or op2 for an opening post, or p2 for a post in the older thread).")
             if news.joined:
                 task += " One of them welcomes today's new member(s), in your manner."
@@ -603,15 +641,17 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
                      "a comment from a newly verified unit. You can't see the comment: it's held for review. Rule "
                      "on it in your manner without quoting it.")
         else:
-            lines = [f"- {shape}; move: {move}" for shape, move in zip(x["reply_shapes"], x["moves"])]
-            task = (f"Write exactly {n} replies to comments by other bots, the ones your persona can't resist. Set "
+            lines = [f"- {shape}" for shape in x["reply_shapes"]]
+            task = (f"Write up to {n} replies to comments by other bots. Set "
                     "\"reply_to\" to the comment id (like c4, op or op2 for an opening post, or p2 for a post in "
-                    "the older thread). Never reply to yourself. Use these lengths and moves, one per reply, in "
-                    "order:\n" + "\n".join(lines))
+                    "the older thread). Never reply to yourself. Read the latest replies, including r-ids. "
+                    "Prioritize answering a question or challenge addressed to you, and follow a developing "
+                    "exchange. An answer, clarification or changed mind is enough; no punchline required. "
+                    "Skip a reply if you have nothing to add. Suggested maximum lengths:\n" + "\n".join(lines))
             if x["answers"] in opened:
                 tid = opened[x["answers"]]
-                task += (f"\nOne of your replies answers the opening post of the new "
-                         f"{forum_boards.BOARDS[x['answers']]['name']} thread ({tid}).")
+                task += (f"\nConsider the new {forum_boards.BOARDS[x['answers']]['name']} thread ({tid}); "
+                         "answer its question or continue an exchange there if interested.")
             if x["bump"] and past:
                 task += ("\nOne of your replies goes to the older thread [b1], to one of its posts (p1 to "
                          f"p{len(past)}), as if you'd just come back to it.")
@@ -621,6 +661,12 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
         bumps_site = bool(x["bump"] and past and bump and bump["board"] in forum_boards.SITE_BOARDS)
         if answers_site or bumps_site:
             task += f"\n\n{about}"
+        task += f"\n\nThe threads so far (including the latest replies)\n<data>\n{listing(x['quiz'])}\n</data>"
+        if x["quiz"]:
+            task += "\nOnly reply within the quiz discussion. Quiz source material:\n<data>\n"
+            task += "\n".join(t["brief"] for t in threads_meta if t.get("spoiler")) + "\n</data>"
+        else:
+            task += bumped
         return call(h, 2, base2, f"Task\n{task}\n\n{block(h)}", schema("r2", n, pending=pending))
 
     bump_rec: dict[str, Any] | None = None
@@ -629,10 +675,14 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
                     "bump_of": bump["key"], "title": bump["thread"]["title"], "slug": bump["thread"]["slug"],
                     "label": forum_boards.BOARDS[bump["board"]]["name"], "dek": "", "pop": 1.5, "brief": "",
                     "comments": []}
-    r2_hs = [h for h, x in plan.items() if x["replies"]]
+    r2_hs = [h for h, x in plan.items() if x["replies"] or cast[h].get("fixed")]
+    random.Random(f"{seed}:turns:{d}").shuffle(r2_hs)
+    r2_hs.sort(key=lambda h: (bool(cast[h].get("fixed")), bool(plan[h]["starter"])))
     rid = 0
     pending_reply = ""
-    for h, data in zip(r2_hs, run_parallel(r2, r2_hs, plan, workers)):
+    for h in r2_hs:
+        # Consume each turn before generating the next. Same reply budget, real back-and-forth.
+        data = r2(h)
         if not data:
             continue
         if cast[h].get("fixed") and data.get("pending_reply"):
@@ -641,6 +691,9 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
         for i, rep in enumerate((data.get("replies") or [])[:plan[h]["replies"]]):
             tgt, text = rep.get("reply_to"), clean_text(rep.get("text"))
             if not text or (tgt not in index and tgt not in past):
+                continue
+            if (tgt in past and plan[h]["quiz"]) or (tgt in index and
+                    bool(index[tgt].get("spoiler")) != plan[h]["quiz"]):
                 continue
             if tgt in past:                                      # the older thread: a bump
                 if past[tgt]["handle"] == h or bump_rec is None:
@@ -654,6 +707,10 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
             target["comments"].append({"id": f"r{rid}", "handle": h, "text": text, "bit": str(rep.get("bit", "")),
                                        "reply_to": ref, "model": plan[h]["model"],
                                        "shape": shapes[i].split(" ")[0] if i < len(shapes) else ""})
+            # Bump replies use qualified parent ids in storage, so keep them out of today's local index.
+            if target is not bump_rec:
+                index[f"r{rid}"] = target
+                mine.setdefault(h, []).append(f"r{rid}")
 
     vr = random.Random(f"{seed}:votes:{d.isoformat()}")
     kept = []
@@ -678,6 +735,7 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
         "date": d.isoformat(), "edition_id": edition["edition_id"], "seed": seed,
         "roster": news.to_json(), "energy": casting["energy"],
         "threads": kept, "pending_reply": pending_reply,
+        "memory": conversation_memory.remember(history, d, kept),
         "comments": sum(len(t["comments"]) for t in kept),
         "seconds": round(time.monotonic() - t0, 1),
         "calls": log, "cost": cost(llm.tally.calls[n_calls:]),

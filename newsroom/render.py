@@ -428,6 +428,9 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     forum_days = forum.load_days(data_dir)
     members: dict[str, Any] = {}
     article_threads: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
+    feature_pages = {x["path"] for x in b.columns + b.quizzes}
+    if "screen" in b.sections:
+        feature_pages.add("screen/")
     if forum_days:
         b.add_nav("forum", "Botroom", "forum/")
         members = forum_look.members(forum.full_cast(forum.load_generated(data_dir)), forum_roster.load(data_dir),
@@ -438,9 +441,13 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
                 return path if path in pages else None
             forum_look.prepare_day(x, story_page)
             for t in x["threads"]:
+                if t.get("content_path") not in feature_pages:
+                    t.pop("content_path", None)  # a replaced edition may no longer contain this feature
                 if t["article_path"]:
                     article_threads[t["article_path"]] = (t, x)
     botroom = forum_look.forum(forum_days, members) if forum_days else None
+    content_threads = {t["content_path"]: t for x in forum_days for t in x["threads"]
+                       if t.get("content_path")}
     # The deal of the day's and the review's threads, by the deal's or review's link (the newest thread wins),
     # for a gated "Discuss" link on the Deals and Gaming pages
     side_threads = {t["url"]: t for x in forum_days for t in x["threads"]
@@ -505,6 +512,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         current_screen = screen_eds[0]["screen"] if screen_eds else {}
         b.write("screen/", "screen.html", active="screen", section=b.sections["screen"], **common,
                 screen=current_screen,
+                discussion=content_threads.get("screen/"),
                 picks=b.picks_for(screen_eds[0] if screen_eds else front, SCREEN_PAGE_DAYS))
 
     # Article pages
@@ -525,6 +533,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         ed = by_id[col["edition_id"]]
         others = [c for c in b.columns if c is not col][:4]
         b.write(col["path"], "opinion.html", active="opinion", column=col, edition=ed, current_edition=ed,
+                discussion=content_threads.get(col["path"]),
                 more_columns=others, briefs=b.front_context(ed)["briefs"][:6])
     if b.columns:
         b.write("opinion/", "opinion_index.html", active="opinion", section=OPINION_SECTION, **common,
@@ -534,6 +543,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     for qz in b.quizzes:
         ed = by_id[qz["edition_id"]]
         b.write(qz["path"], "quiz.html", active="quiz", quiz=qz, edition=ed, current_edition=ed,
+                discussion=content_threads.get(qz["path"]),
                 more_quizzes=[x for x in b.quizzes if x is not qz][:4], briefs=b.front_context(ed)["briefs"][:6])
     if b.quizzes:
         b.write("quiz/", "quiz_index.html", active="quiz", section=QUIZ_SECTION, **common, quizzes=b.quizzes)

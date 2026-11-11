@@ -370,6 +370,18 @@ def _factory(cfg, backend, tally, env):
     return ScreenLLM(cfg, backend, tally, env)
 
 
+def test_botroom_receives_screen_after_picks_are_written(tmp_path, friday, monkeypatch):
+    from newsroom import forum
+    received = []
+    def inspect(cfg, data_dir, edition, mode, llm, requested):
+        received.append(edition["screen"]["picks"]["headline"])
+        return forum.Outcome()
+    monkeypatch.setattr(gen, "_forum", inspect)
+    r = gen.generate(load_config(), tmp_path, "full", now=FRIDAY, env={**KEY, "TMDB_API_KEY": V3_KEY},
+                     client=FakeWeb(), llm_factory=_factory, column="off", quiz_mode="off")
+    assert r.published and received == ["A lighthouse, a ferry and five more"]
+
+
 def test_friday_edition_has_the_lists_and_the_picks(tmp_path, friday):
     cfg, data = load_config(), tmp_path / "data"
     env = {**KEY, "TMDB_API_KEY": V3_KEY}

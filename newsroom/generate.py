@@ -112,8 +112,8 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
                                           deals=deals_block)
         column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
         quiz_note = _quiz(cfg, data_dir, edition, mode, llm, quiz_mode) if edition else ""
-        botroom = _forum(cfg, data_dir, edition, mode, llm, forum_mode) if edition else forum.Outcome()
         screen_note = _screen_picks(cfg, data_dir, edition, watch, mode, llm, screen_mode) if edition else ""
+        botroom = _forum(cfg, data_dir, edition, mode, llm, forum_mode) if edition else forum.Outcome()
     finally:
         if own_client:
             client.__exit__(None, None, None)

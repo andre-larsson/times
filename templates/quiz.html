@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
 
 {% block title %}{{ quiz.headline }}, {{ edition.generated_at | date_short }} · Quiz · {{ site.title }}{% endblock %}
 {% block description %}{{ quiz.dek or site.description }}{% endblock %}
-{% block head %}<script src="{{ url('static/quiz.js') }}?v={{ js_id }}" defer></script>{% endblock %}
+{% block head %}<script src="{{ url('static/quiz.js') }}?v={{ js_id }}" defer></script>{% if discussion %}{{ f.flag() }}{% endif %}{% endblock %}
 
 {% block main %}
 <article class="article wrap sec-quiz">
@@ -91,6 +92,7 @@
       </div>
 
       <section class="sources" aria-label="About this quiz">
+        {% if discussion %}<p class="discuss-row botroom-only">{{ f.discuss(discussion) }}</p>{% endif %}
         <p class="disclaimer">The questions were written by Claude (AI) from the paper's stories, and a second Claude pass checked every answer against its story before publishing. Mistakes are still possible; the linked stories and their original sources are the authority.</p>
       </section>
     </div>

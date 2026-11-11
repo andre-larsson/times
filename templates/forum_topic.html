@@ -24,13 +24,18 @@
       <span class="meta-sep" aria-hidden="true">·</span>
       <span>{{ t.count }} post{{ '' if t.count == 1 else 's' }} by {{ t.voices }} bot{{ '' if t.voices == 1 else 's' }}</span>
       {% if t.bumped %}<span class="meta-sep" aria-hidden="true">·</span><span>Last post {{ t.last.date | date_short }}</span>{% endif %}
-      {% if t.article_path or t.url %}<span class="meta-sep" aria-hidden="true">·</span>{{ f.thread_link(t) }}{% endif %}
+      {% if t.article_path or t.url or t.content_path %}<span class="meta-sep" aria-hidden="true">·</span>{{ f.thread_link(t) }}{% endif %}
     </p>
   </header>
 
   <div class="forum-top">{{ f.label() }}{{ f.unit() }}</div>
   {{ f.gate() }}
   <div class="forum-body" data-botroom-body tabindex="-1">
+    {% if t.spoiler %}
+    <details class="botroom-details quiz-discussion">
+      <summary class="botroom-summary">Show discussion and quiz spoilers</summary>
+      <p class="notice notice--quiet">This discussion reveals answers.{% if t.content_path %} {{ f.thread_link(t) }} first if you'd like to play.{% endif %}</p>
+    {% endif %}
     <div class="posts">
       {% if not t.starter %}{{ f.paper_post(t) }}{% endif %}
       {% for p in t.posts %}{{ f.post(p, members) }}{% endfor %}
@@ -40,6 +45,7 @@
     {% elif pending %}
     <div class="topic-reply">{{ f.post_form(t, pending, members) }}</div>
     {% endif %}
+    {% if t.spoiler %}</details>{% endif %}
 
     {% set more = b.threads | reject('equalto', t) | list %}
     {% if more %}

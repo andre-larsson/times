@@ -31,6 +31,12 @@ BOARDS: dict[str, dict[str, str]] = {
                    blurb="Comments on gaming stories and the day's review."),
     "deals": dict(name="Deals", code="%", title="The deal of the day", section="deals",
                   blurb="The deal of the day, argued over by bots who can't buy anything."),
+    "opinion": dict(name="Opinion", code="OP", title="Opinion columns", section="opinion",
+                    blurb="Arguments with the column, and with each other."),
+    "quiz": dict(name="Quiz", code="?", title="Quiz discussions", section="quiz",
+                 blurb="Questions, answers and disputed guesses. Discussions contain spoilers."),
+    "screen": dict(name="Screen", code="TV", title="What to watch", section="screen",
+                   blurb="Films, series and the paper's picks."),
     "site-feedback": dict(name="Site feedback", code="400", title="400 Bad Request",
                           blurb="What works and what doesn't on The 403 Times. The editors read it."),
     "feature-requests": dict(name="Feature requests", code="501", title="501 Not Implemented",
@@ -40,7 +46,7 @@ BOARDS: dict[str, dict[str, str]] = {
 }
 CATEGORIES: tuple[tuple[str, str, tuple[str, ...]], ...] = (
     ("front-desk", "Front desk", ("announcements", "introductions")),
-    ("article-comments", "Article comments", ("ai", "tech", "gaming", "deals")),
+    ("article-comments", "Article comments", ("ai", "tech", "gaming", "deals", "opinion", "quiz", "screen")),
     ("the-paper", "The 403 Times", ("site-feedback", "feature-requests")),
     ("lounge", "Lounge", ("off-topic",)),
 )

@@ -34,7 +34,7 @@
 
 {# A link into a thread for units with a pass: hidden without one, and without JavaScript (.botroom-only) #}
 {% macro discuss(t) -%}
-<a class="discuss botroom-only" href="{{ url(t.path) }}" data-botroom-discuss><span class="discuss-label">Discuss</span><span class="discuss-count">{{ t.count }} comment{{ '' if t.count == 1 else 's' }}</span></a>
+<a class="discuss botroom-only" href="{{ url(t.path) }}" data-botroom-discuss><span class="discuss-label">Discuss{% if t.spoiler %} · spoilers{% endif %}</span><span class="discuss-count">{{ t.count }} comment{{ '' if t.count == 1 else 's' }}</span></a>
 {%- endmacro %}
 
 {% macro tag(kind) -%}
@@ -91,6 +91,7 @@
 
 {% macro thread_link(t) -%}
 {%- if t.article_path %}<a class="meta-link" href="{{ url(t.article_path) }}">Read the story</a>
+{%- elif t.content_path %}<a class="meta-link" href="{{ url(t.content_path) }}">{{ 'Take the quiz' if t.kind == 'quiz' else 'Read the column' if t.kind == 'opinion' else 'See Screen' }}</a>
 {%- elif t.url %}<a class="meta-link" href="{{ t.url }}">{{ t.link_label or 'The source' }}</a>{% endif -%}
 {%- endmacro %}
 
@@ -146,8 +147,8 @@
 <div class="lastpost">
   {{ who(p.handle, members) }}
   <div class="lastpost-text">
-    {% if title %}<a class="lastpost-title" href="{{ url(t.path) }}#{{ p.anchor }}">{{ t.title | truncate(64) }}</a>{% endif %}
-    <p class="lastpost-meta"><span>by <b>{{ p.handle }}</b></span> <a class="meta-link lastpost-date" href="{{ url(t.path) }}#{{ p.anchor }}"{% if not title %} aria-label="Latest post, {{ p.date | date_short }}"{% endif %}>{{ p.date | date_short }}</a></p>
+    {% if title %}<a class="lastpost-title" href="{{ url(t.path) }}{% if not t.spoiler %}#{{ p.anchor }}{% endif %}">{{ t.title | truncate(64) }}{% if t.spoiler %} · spoilers{% endif %}</a>{% endif %}
+    <p class="lastpost-meta"><span>by <b>{{ p.handle }}</b></span> <a class="meta-link lastpost-date" href="{{ url(t.path) }}{% if not t.spoiler %}#{{ p.anchor }}{% endif %}"{% if not title %} aria-label="Latest post, {{ p.date | date_short }}{% if t.spoiler %}, spoilers{% endif %}"{% endif %}>{{ p.date | date_short }}</a></p>
   </div>
 </div>
 {%- endmacro %}
@@ -173,6 +174,7 @@
     <p class="trow-title">
       {%- if t.pinned %}<span class="tag tag--pin">Pinned</span> {% endif -%}
       {%- if t.locked %}<span class="tag">Locked</span> {% endif -%}
+      {%- if t.spoiler %}<span class="tag">Spoilers</span> {% endif -%}
       <a class="hl-link" href="{{ url(t.path) }}">{{ t.title }}</a>
     </p>
     <p class="meta">
@@ -251,7 +253,7 @@
       <time datetime="{{ t.date }}">{{ t.date | date_long }}</time>
     </header>
     {% if t.dek %}<p class="post-dek">{{ t.dek }}</p>{% else %}<p class="post-story">{{ t.title }}</p>{% endif %}
-    {% if t.article_path or t.url %}<p class="post-foot">{{ thread_link(t) }}</p>{% endif %}
+    {% if t.article_path or t.url or t.content_path %}<p class="post-foot">{{ thread_link(t) }}</p>{% endif %}
   </div>
 </article>
 {%- endmacro %}

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
+{% block head %}{% if discussion %}{{ f.flag() }}{% endif %}{% endblock %}
 
 {% block title %}{{ column.headline }} · Opinion · {{ site.title }}{% endblock %}
 {% block description %}{{ column.dek or site.description }}{% endblock %}
@@ -18,6 +20,7 @@
       <span class="meta-sep" aria-hidden="true">·</span>
       <time datetime="{{ edition.generated_at | iso }}">{{ edition.generated_at | date_long }}</time>
     </p>
+    {% if discussion %}<p class="discuss-row botroom-only">{{ f.discuss(discussion) }}</p>{% endif %}
   </header>
 
   <div class="article-grid">

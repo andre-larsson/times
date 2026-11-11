@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
+{% block head %}{% if discussion %}{{ f.flag() }}{% endif %}{% endblock %}
 
 {% block title %}Screen · {{ site.title }}{% endblock %}
 {% block description %}What to watch in Sweden: new on Netflix, SVT Play and TV4 Play, Netflix's top 10, and the week's picks.{% endblock %}
@@ -11,6 +13,7 @@
     <div class="band-head">
       <h1 class="band-title" id="screen-title">Screen</h1>
       <p class="band-sub">{{ section.blurb }}{% if screen.checked_at and screen.tmdb %} Where to watch checked {{ screen.checked_at | date_short }}; it changes.{% endif %}</p>
+      {% if discussion %}<p class="discuss-row botroom-only">{{ f.discuss(discussion) }}</p>{% endif %}
     </div>
 
     {% if picks or new_lists or screen.top10 or screen.classics %}

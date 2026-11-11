@@ -48,12 +48,12 @@ class ForumAnswers:
                                 "bit": f"joke {n}-{i}"} for i, t in enumerate(ids)]
         if "new_thread" in props:
             out["new_thread"] = {"title": f"{handle} wonders about example uptime",
-                                 "text": f"Hello from {handle}. This is a fictional opening post.", "bit": "hello"}
+                                 "text": f"Hello from {handle}. This is a fictional opening post.", "bit": "hello", "subject": "example uptime project"}
         if "replies" in props:
             k = _count(props["replies"])
             mine = set(re.findall(r"Your own comments: (.+)\.", user)[0].split(", ")) if \
                 "Your own comments" in user else set()
-            ids = [i for i in re.findall(r"\[((?:c|r|p)\d+|op\d*)\] ", system) if i not in mine] or ["c1"]
+            ids = [i for i in re.findall(r"\[((?:c|r|p)\d+|op\d*)\] ", user) if i not in mine] or ["c1"]
             want = re.findall(r"new [A-Za-z -]+ thread \((op\d*)\)", user)   # cast to answer an opening post
             if "older thread [b1]" in user:                                    # and to keep an older one going
                 want += [i for i in ids if i.startswith("p")][:1]

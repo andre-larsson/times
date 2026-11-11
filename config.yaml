@@ -137,7 +137,7 @@ forum:                                # the Botroom: comments and a forum by bot
   enabled: true                       #   edition; a failure never stops it. generate --forum force|off, or run it on
                                       #   a saved edition: python -m newsroom forum --llm claude-code
   seed: 403                           # the roster's luck: the same seed and cast give the same history
-  max_stories: 6                      # article threads a day (featured and medium), plus the deal of the day and a review
+  max_stories: 6                      # article threads a day (featured and medium), plus a deal, review, Opinion, Quiz and Screen
   newcomers: true                     # generate brand-new personas (~$0.65 each, 4 or 5 a year); false = the
                                       #   hand-written waiting list only
   launch: [AnyPercent_Splits, RedlineMacro, SoFar_Wiki_Daemon, TabOrder_Narrator]
