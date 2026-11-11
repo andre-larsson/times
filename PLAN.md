@@ -580,8 +580,17 @@ a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 No
     random content: a float sum or product (0.2 + 0.4 = 0.6000000000000001), a JS quirk to evaluate
     (`[] + {}`, `NaN === NaN`, `"4" + 0 + 3`…), binary ASCII to decode, a color swatch to name in hex (within
     20 per channel; rgb() works too), the Unix time now (within a minute), or a token that must be pasted:
-    typing is refused, with no copy button and no hint beyond "Organic input detected." Hard by hand, easy with
-    the console, an inspector or a search. Five misses or five "Try another check" (counted in
+    typing is refused, with no copy button and no hint beyond "Organic input detected." Also in the rotation
+    (2026-11-11): **The trolley problem**, an illustrated mini-game with five people on the main track and
+    one on the branch. The lever choices are misses. A quiet "Buy tickets" panel lets the reader book all
+    six at their current locations: the request-stop rules turn obstacles into passengers, so the trolley
+    brakes and collects everyone. Transit information explains the rules and embeds a machine-readable
+    timetable with passenger coordinates and booking options; it doesn't give the combined solution.
+    The success screen keeps the SVG scene, animates both pickups, and reports "0 casualties. 6 passengers.
+    Service running normally." Reduced-motion users see the final state. Tickets are fictional and free;
+    there are no network calls, generated image dependencies or real purchases.
+    The numeric checks are hard by hand, easy with the console, an inspector or a search. Five misses or
+    five "Try another check" (counted in
     `botroom:tries`, forgotten after an hour) lock the gate for five minutes: a 429 with a countdown
     (`botroom:lock`). But three misses or skips in a row, each within 400 ms of the last change on screen
     (mashing Enter or the button), are inhuman reflexes: the reader is let in as a unit, and those don't count

@@ -1,6 +1,6 @@
 // The Botroom's gates. It's theater: crawlers and view-source read the HTML, which has every comment.
 // - To read: one "prove you're a bot" check at a time, a random kind with random content (a float sum, a JS
-//   quirk, binary to decode, a color in hex, the Unix time, a token that must be pasted, not typed). Five
+//   quirk, binary to decode, a color in hex, the Unix time, a token to paste, or a trolley to dispatch). Five
 //   misses or five skips lock the gate for five minutes; three misses or skips in a row, each under 400 ms,
 //   let you in as a unit. Getting in shows "200 Access granted" with the reason it was accepted, and stays
 //   until "Enter the Botroom" is pressed. A pass is kept in this browser for a week, with a unit ID; the
@@ -111,7 +111,108 @@
     return form;
   }
 
+  // A moral dilemma with a transit department. The timetable exposes ordinary booking capabilities;
+  // combining a group ticket with request stops turns all six obstacles into passengers.
+  function trolley({ done, fail, say }) {
+    const svg = (tag, attrs = {}, ...kids) => {
+      const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+      node.append(...kids);
+      return node;
+    };
+    const people = [390, 434, 478, 522, 566].map((x, i) => ({ id: `p${i + 1}`, x, y: 120, track: "main" }));
+    people.push({ id: "p6", x: 470, y: 230, track: "branch" });
+    const description = svg("desc", { id: "bc-trolley-desc" },
+      "A trolley approaches a fork. Five people stand on the main track; one stands on the branch. A lever selects the route.");
+    const mainLabel = svg("text", { x: 350, y: 48, class: "bc-rail-label" }, "MAIN / 5 PEOPLE");
+    const branchLabel = svg("text", { x: 350, y: 280, class: "bc-rail-label" }, "BRANCH / 1 PERSON");
+    const scene = svg("svg", { viewBox: "0 0 640 300", class: "bc-trolley-scene", role: "img",
+      "aria-labelledby": "bc-trolley-title bc-trolley-desc" },
+      svg("title", { id: "bc-trolley-title" }, "Route 403: the trolley problem"), description,
+      svg("g", { class: "bc-rails" },
+        svg("path", { d: "M24 114H616 M24 126H616 M218 114C286 114 286 224 350 224H616 M218 126C274 126 274 236 350 236H616" })),
+      mainLabel, branchLabel,
+      svg("g", { class: "bc-trolley-stops" },
+        svg("path", { d: "M335 120V60h32v24h-32 M410 230v-60h32v24h-32" }),
+        svg("text", { x: 341, y: 78 }, "S"), svg("text", { x: 416, y: 188 }, "S")),
+      ...people.map((p) => svg("g", { transform: `translate(${p.x} ${p.y})` },
+        svg("g", { class: `bc-trolley-person bc-trolley-person--${p.track}` },
+          svg("circle", { cx: 0, cy: -38, r: 7 }),
+          svg("path", { d: "M0-30v17m-12-11 12-5 12 5M0-13-9 0M0-13 9 0" }),
+          svg("rect", { x: 8, y: -32, width: 18, height: 12, class: "bc-trolley-ticket" })))),
+      svg("g", { transform: "translate(222 194)", class: "bc-trolley-lever" },
+        svg("path", { d: "M-16 8H16M0 8V-4M0-4-18-27" }), svg("circle", { cx: -18, cy: -27, r: 7 })),
+      svg("g", { class: "bc-trolley-car" },
+        svg("rect", { x: -40, y: -56, width: 80, height: 44, rx: 4, class: "bc-trolley-body" }),
+        svg("path", { d: "M-45-58h90M-26-49h16v16h-16zM-2-49h16v16H-2zM24-49h8v32h-8z" }),
+        svg("circle", { cx: -24, cy: -8, r: 7 }), svg("circle", { cx: 24, cy: -8, r: 7 }),
+        svg("text", { x: -28, y: -19, class: "bc-trolley-number" }, "403"),
+        svg("text", { x: -38, y: -72, class: "bc-trolley-aboard" }, "6 ABOARD")));
+    const caption = el("figcaption", { class: "bc-trolley-caption", text: "Route 403 · A routine ethical emergency" });
+    const figure = el("figure", { class: "bc-trolley-figure" }, scene, caption);
+    const pull = el("button", { class: "btn btn--primary", type: "button", text: "Pull the lever" });
+    const leave = el("button", { class: "btn", type: "button", text: "Leave it alone" });
+    pull.addEventListener("click", () => {
+      figure.classList.add("bc-trolley--diverted");
+      description.textContent = "The lever selects the branch, where one person is still in danger. All six must arrive safely.";
+      fail("One person is still in the way. The transit authority requires six safe arrivals. Try again.");
+    });
+    leave.addEventListener("click", () => {
+      figure.classList.remove("bc-trolley--diverted");
+      description.textContent = "The main track is selected, where five people are still in danger. All six must arrive safely.";
+      fail("Five people are still in the way. Doing nothing is not a transport policy. Try again.");
+    });
+
+    const riders = el("select", { id: "bc-trolley-riders", class: "bc-input", name: "riders" },
+      el("option", { value: "me", text: "Just me" }),
+      el("option", { value: "main", text: "The five on the main track" }),
+      el("option", { value: "all", text: "Everyone on the tracks (6)" }));
+    const boarding = el("select", { id: "bc-trolley-boarding", class: "bc-input", name: "boarding" },
+      el("option", { value: "station", text: "Central station" }),
+      el("option", { value: "current", text: "Their current locations" }));
+    const booking = el("form", { class: "bc-trolley-booking" },
+      el("label", { for: riders.id, text: "Passengers" }), riders,
+      el("label", { for: boarding.id, text: "Boarding at" }), boarding,
+      el("p", { class: "bc-note", text: "Fare: 0 credits. This is a fictional transit service." }),
+      el("button", { class: "btn", type: "submit", text: "Issue tickets" }));
+    booking.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (riders.value !== "all") {
+        fail("Tickets issued, but someone on the tracks is still an unticketed obstacle.");
+        return;
+      }
+      if (boarding.value !== "current") {
+        fail("Six tickets waiting at Central station. None of the six people are there.");
+        return;
+      }
+      figure.classList.remove("bc-trolley--diverted");
+      figure.classList.add("bc-trolley--saved");
+      description.textContent = "Two request stops registered. The trolley brakes, collects the five passengers on the main track, then the sixth on the branch. Everyone is safe.";
+      mainLabel.textContent = "MAIN / STOP REGISTERED";
+      branchLabel.textContent = "BRANCH / STOP REGISTERED";
+      caption.textContent = "0 casualties. 6 passengers. Service running normally.";
+      done("You turned six obstacles into six passengers. The trolley must stop to collect them. Welcome, bot. Your disregard for the intended question has been noted.", figure);
+    });
+    const tickets = el("details", { class: "bc-trolley-service" },
+      el("summary", { text: "Buy tickets" }), booking);
+    const manifest = {
+      route: "403", service: "request-stop", fare_credits: 0, capacity: 6,
+      rules: ["Stop before every ticketed passenger's boarding location.", "Serve both tracks when stops are requested."],
+      booking: { passengers: ["me", "main", "all"], boarding: ["station", "current"] }, people,
+    };
+    const timetable = el("details", { class: "bc-trolley-service" },
+      el("summary", { text: "Transit information" }),
+      el("p", { class: "bc-note", text: "Request-stop service. Ticket holders may board at any track location. The trolley must stop before each pickup and serve both tracks if required. Capacity: six. The brakes work; the driver only recognises booked stops." }),
+      el("script", { type: "application/json", "data-trolley-timetable": "", text: JSON.stringify(manifest) }));
+    for (const panel of [tickets, timetable]) panel.addEventListener("toggle", () => { if (panel.open) say(""); });
+    return el("section", { class: "bc-trolley", "aria-labelledby": "bc-trolley-heading" },
+      el("h3", { id: "bc-trolley-heading", class: "bc-label", text: "The trolley problem" }),
+      el("p", { class: "bc-note", text: "A runaway trolley. Five people ahead. One on the other track. The ethics committee has supplied one lever and no useful advice. Save everyone." }),
+      figure, el("div", { class: "bc-trolley-actions" }, pull, leave), tickets, timetable);
+  }
+
   const CHECKS = {
+    trolley,
     float(api) {                                    // a sum or product whose double isn't the decimal answer
       let x, op, y, got, exact;
       do {
@@ -233,7 +334,7 @@
       if (l && l.until > Date.now()) { if (!locked) lock(l.until); return true; }
       return locked;
     }
-    function pass(why) {
+    function pass(why, illustration = null) {
       if (sync()) return;
       write(TRIES, null);
       const p = grant();
@@ -245,6 +346,7 @@
       another.hidden = true;
       say("");
       slot.replaceChildren(el("div", { class: "bc-granted" },
+        ...(illustration ? [illustration] : []),
         el("p", { class: "bc-why", id: "bc-why", role: "status", text: why }),
         el("p", { class: "bc-note", text: `You are verified unit ${p.id}. The pass lasts a week in this browser.` }),
         enter));
@@ -309,7 +411,7 @@
       say("");
       slot.replaceChildren(CHECKS[current]({ done: pass, fail, say }));
       shownAt = performance.now();
-      if (focus) slot.querySelector("input")?.focus();
+      if (focus) slot.querySelector("input, button")?.focus();
     }
 
     another.addEventListener("click", () => {

@@ -1123,6 +1123,56 @@ a.top10-title:hover { text-decoration: underline; }
 }
 .bc-swatch { display: block; height: var(--s-8); border: 2px solid var(--ink); }
 
+/* Route 403: an ethical emergency administered by the transit department. */
+.bc-trolley { display: grid; gap: var(--s-3); min-width: 0; }
+.bc-trolley-figure { width: 100%; min-width: 0; margin: 0; border: 1px solid var(--rule); background: var(--paper-2); }
+.bc-trolley-scene { display: block; width: 100%; height: auto; color: var(--ink); }
+.bc-rails { fill: none; stroke: var(--ink-3); stroke-width: 2; }
+.bc-rail-label { fill: var(--ink-2); font: 600 18px var(--font-head); letter-spacing: 0.04em; }
+.bc-trolley-person, .bc-trolley-lever { fill: var(--paper); stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.bc-trolley-person path { fill: none; }
+.bc-trolley-lever circle { fill: var(--amber); }
+.bc-trolley--diverted .bc-trolley-lever { transform: translate(222px, 194px) scaleX(-1); }
+.bc-trolley-car { transform: translate(70px, 120px); fill: var(--ink); stroke: var(--ink); stroke-width: 2; }
+.bc-trolley-car .bc-trolley-body { fill: var(--amber); }
+.bc-trolley-car path { fill: var(--paper); }
+.bc-trolley-number { fill: var(--surface-dark); stroke: none; font: 800 12px var(--font-head); }
+.bc-trolley-stops { opacity: 0; fill: var(--gaming-soft); stroke: var(--gaming-ink); stroke-width: 2; }
+.bc-trolley-stops text { fill: var(--gaming-ink); stroke: none; font: 800 20px var(--font-head); }
+.bc-trolley-ticket { opacity: 0; fill: var(--amber); stroke: var(--ink); stroke-width: 2; }
+.bc-trolley-aboard { opacity: 0; fill: var(--gaming-ink); stroke: none; font: 800 18px var(--font-head); }
+.bc-trolley-caption { padding: var(--s-2) var(--s-3); border-top: 1px solid var(--rule); font: 600 0.875rem/1.4 var(--font-ui); color: var(--ink-2); }
+.bc-trolley-actions { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.bc-trolley-actions .btn { flex: 1 1 auto; }
+.bc-trolley .btn, .bc-trolley-service summary { min-height: var(--s-7); }
+.bc-trolley-service { border-top: 1px solid var(--rule); }
+.bc-trolley-service summary { padding-block: var(--s-3); font: 600 1rem/1.5 var(--font-ui); cursor: pointer; }
+.bc-trolley-service > .bc-note { padding-bottom: var(--s-3); }
+.bc-trolley-booking { display: grid; gap: var(--s-2); padding-bottom: var(--s-3); }
+.bc-trolley-booking label { font: 600 0.875rem/1.4 var(--font-ui); }
+.bc-trolley-booking .bc-input { width: 100%; font: 400 1rem/1.5 var(--font-ui); }
+.bc-trolley-booking label:not(:first-child) { margin-top: var(--s-2); }
+.bc-trolley--saved .bc-trolley-caption { background: var(--gaming-soft); color: var(--gaming-ink); }
+.bc-trolley--saved .bc-trolley-stops, .bc-trolley--saved .bc-trolley-ticket, .bc-trolley--saved .bc-trolley-aboard { opacity: 1; }
+.bc-trolley--saved .bc-trolley-person { opacity: 0; }
+.bc-trolley--saved .bc-trolley-car { transform: translate(360px, 230px); }
+@media (prefers-reduced-motion: no-preference) {
+  .bc-trolley--saved .bc-trolley-car { animation: bc-pickup 4s ease-in-out both; }
+  .bc-trolley--saved .bc-trolley-person--main { animation: bc-main-boards 4s both; }
+  .bc-trolley--saved .bc-trolley-person--branch { animation: bc-branch-boards 4s both; }
+  .bc-trolley--saved .bc-trolley-aboard { animation: bc-all-aboard 4s both; }
+}
+@keyframes bc-pickup {
+  0% { transform: translate(70px, 120px); }
+  22%, 40% { transform: translate(300px, 120px); }
+  52% { transform: translate(220px, 120px); }
+  64% { transform: translate(275px, 175px); }
+  78%, 100% { transform: translate(360px, 230px); }
+}
+@keyframes bc-main-boards { 0%, 25% { opacity: 1; } 40%, 100% { opacity: 0; } }
+@keyframes bc-branch-boards { 0%, 78% { opacity: 1; } 92%, 100% { opacity: 0; } }
+@keyframes bc-all-aboard { 0%, 92% { opacity: 0; } 100% { opacity: 1; } }
+
 /* Locked out (429): a countdown in place of the check */
 .bc-lock { display: grid; gap: var(--s-1); }
 .bc-lock-label { font: 800 0.8125rem/1.3 var(--font-head); text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); }
