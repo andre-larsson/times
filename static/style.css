@@ -1078,6 +1078,10 @@ a.top10-title:hover { text-decoration: underline; }
 .bc-lock-label { font: 800 0.8125rem/1.3 var(--font-head); text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); }
 .bc-lock-clock { font: 800 3rem/1 var(--font-head); font-variant-numeric: tabular-nums; color: var(--ink); }
 
+/* Let in (200): why the check was accepted, the unit ID and the way in; it stays until that's pressed */
+.bc-granted { display: grid; gap: var(--s-3); justify-items: start; }
+.bc-why { max-width: 36em; font: 600 1.125rem/1.4 var(--font-ui); color: var(--ink); overflow-wrap: anywhere; }
+
 /* The Submit button that runs from the pointer (the arena gets .bc-live once the script is in charge) */
 .botpost-arena.bc-live .botpost-submit { position: absolute; left: 0; top: 0; width: auto; margin: 0; }
 @media (prefers-reduced-motion: no-preference) {

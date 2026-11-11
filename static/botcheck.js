@@ -2,9 +2,10 @@
 // - To read: one "prove you're a bot" check at a time, a random kind with random content (a float sum, a JS
 //   quirk, binary to decode, a color in hex, the Unix time, a token that must be pasted, not typed). Five
 //   misses or five skips lock the gate for five minutes; three misses or skips in a row, each under 400 ms,
-//   let you in as a unit. A pass is kept in this browser for a week, with a unit ID; the inline script in
-//   <head> hides the Botroom (html.botroom-gated) until there is one. Without JavaScript everything shows,
-//   except the "Discuss" links into the Botroom (.botroom-only), which need a pass.
+//   let you in as a unit. Getting in shows "200 Access granted" with the reason it was accepted, and stays
+//   until "Enter the Botroom" is pressed. A pass is kept in this browser for a week, with a unit ID; the
+//   inline script in <head> hides the Botroom (html.botroom-gated) until there is one. Without JavaScript
+//   everything shows, except the "Discuss" links into the Botroom (.botroom-only), which need a pass.
 // - To post: a Submit button that runs from the pointer, then 50 sums in 300 ms and a SHA-256 proof of
 //   work (a hash starting with 403). Impossible by hand, trivial from the browser console: botroom.help().
 //   The prize: a Certificate of Botness, and the comment shown in this browser only, "pending review",
@@ -14,7 +15,7 @@
   const PASS = "botroom:pass", PENDING = "botroom:pending:", TRIES = "botroom:tries", LOCK = "botroom:lock";
   const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
   const MAX_MISSES = 5, MAX_SKIPS = 5, LOCK_MS = 5 * 60 * 1000, TRIES_MS = 60 * 60 * 1000;
-  const FAST_MS = 400, FAST_STREAK = 3;
+  const FAST_MS = 400, FAST_STREAK = 3, ENTER_MS = 800;
   const SUMS = 50, SUMS_MS = 300, PREFIX = "403", NEAR_PX = 60;
 
   const memory = {};                              // when storage is blocked, this page still remembers
@@ -70,8 +71,9 @@
   }
 
   // ── the read gate: one check at a time, picked at random ───────────────────
-  // Each check is built fresh (new numbers, words, colors) and gets {done, fail, say}: done() when passed,
-  // fail(text) for a miss (it counts toward a lockout), say(text) for a remark that doesn't count.
+  // Each check is built fresh (new numbers, words, colors) and gets {done, fail, say}: done(why) when passed,
+  // with the reason it was accepted, fail(text) for a miss (it counts toward a lockout), say(text) for a
+  // remark that doesn't count.
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
   const MISSES = ["Incorrect.", "Wrong, and not even wrong like a computer.", "Checksum mismatch.",
     "That answer has a pulse.", "Rejected. Recalibrate and resubmit."];
@@ -93,8 +95,8 @@
     .replace(/^\[(.*)\]$/, "$1").replace(/\s*,\s*/g, ",").toLowerCase();
 
   // A question, something to look at (or null: the question is the label), an answer box. check(v) returns
-  // true, a remark for this miss, or nothing for a stock one.
-  function ask(name, question, shown, check, { done, fail }) {
+  // true, a remark for this miss, or nothing for a stock one. why(v) says why a right answer was accepted.
+  function ask(name, question, shown, check, why, { done, fail }) {
     const id = `bc-${name}`;
     const input = el("input", { id, class: "bc-input", type: "text", autocomplete: "off", autocapitalize: "off", spellcheck: "false" });
     const form = el("form", { class: shown ? "bc-check bc-check--stacked" : "bc-check" },
@@ -103,7 +105,7 @@
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const v = input.value.trim(), verdict = v ? check(v) : EMPTY;
-      if (verdict === true) done();
+      if (verdict === true) done(why(v));
       else fail(verdict || pick(MISSES));
     });
     return form;
@@ -120,17 +122,20 @@
         exact = (op === "+" ? a + b : a * b) / 10;
       } while (got === exact);
       return ask("float", `${x} ${op} ${y} =`, null, (v) => v === String(got)
-        || (Number(v.replace(",", ".")) === exact && `${v}? That's what a human would say.`), api);
+        || (Number(v.replace(",", ".")) === exact && `${v}? That's what a human would say.`),
+        () => `Correct: ${x} ${op} ${y} is ${got} in floating point, not ${exact}. Only a machine answers that.`, api);
     },
     quirk(api) {
       const [q, answer, human] = pick(QUIRKS);
       return ask("quirk", "Evaluate", el("code", { class: "bc-expr", text: q }),
-        (v) => norm(v) === norm(answer) || (norm(v) === "true" && human), api);
+        (v) => norm(v) === norm(answer) || (norm(v) === "true" && human),
+        () => `Correct: ${q} gives ${answer} in JavaScript. That takes an engine, or a console.`, api);
     },
     binary(api) {
       const word = pick(WORDS);
       const bits = [...word].map((c) => c.charCodeAt(0).toString(2).padStart(8, "0")).join(" ");
-      return ask("binary", "Decode", el("code", { class: "bc-expr", text: bits }), (v) => v.toLowerCase() === word, api);
+      return ask("binary", "Decode", el("code", { class: "bc-expr", text: bits }), (v) => v.toLowerCase() === word,
+        () => `Correct: those bits are "${word}" in ASCII. Units read binary.`, api);
     },
     color(api) {                                    // within 20 per channel; hex or rgb() from an inspector both do
       const rgb = [randInt(0, 255), randInt(0, 255), randInt(0, 255)];
@@ -150,14 +155,14 @@
         if (!got) return false;
         const off = Math.max(...got.map((c, i) => Math.abs(c - rgb[i])));
         return off <= 20 || (off <= 64 && "Close. Units are not approximately right.");
-      }, api);
+      }, () => `Correct: the color was #${hex(rgb).toUpperCase()}, and your answer is within 20 per channel. Units read pixels.`, api);
     },
     unix(api) {                                     // a minute either way; milliseconds do too
       return ask("unix", "Unix time now =", null, (v) => {
         if (!/^\d{9,13}$/.test(v)) return false;
         const off = Math.abs(Number(v) / (v.length > 11 ? 1000 : 1) - Date.now() / 1000);
         return off <= 60 || (off < 86400 && "That's not now. Units keep better time.");
-      }, api);
+      }, () => "Correct: that's the Unix time, right to the minute. Units count the seconds since 1970.", api);
     },
     paste({ done, fail, say }) {                    // typing is refused; the token has to arrive whole
       const token = `BOT-${hex(crypto.getRandomValues(new Uint8Array(8))).toUpperCase().match(/.{4}/g).join("-")}`;
@@ -168,7 +173,8 @@
         el("button", { class: "btn bc-btn", type: "submit", text: "Check" }));
       let last = "";
       const organic = () => say("Organic input detected.");
-      const received = () => { if (input.value === token) done(); else fail("That's not the token."); };
+      const why = "Token received whole, with no keystrokes. Units transmit, humans type.";
+      const received = () => { if (input.value === token) done(why); else fail("That's not the token."); };
       input.addEventListener("beforeinput", (event) => {
         if (/^insert(Text|CompositionText|ReplacementText)$/.test(event.inputType)) {
           event.preventDefault();
@@ -192,7 +198,7 @@
       });
       form.addEventListener("submit", (event) => {
         event.preventDefault();
-        if (input.value === token) done();
+        if (input.value === token) done(why);
         else fail(input.value ? "That's not the token." : EMPTY);
       });
       return form;
@@ -202,10 +208,13 @@
   // Misses and "Try another check" are attempts. Five slow misses, or five slow skips, lock the gate for five
   // minutes (429). But three attempts in a row, each within FAST_MS of the last thing on screen, is reflexes
   // no human has: that's a unit, and it's let in. Mashing Enter or the button does it.
+  // Getting in doesn't open the Botroom at once: the gate turns into "200 Access granted" with the reason, and
+  // stays until "Enter the Botroom" is pressed (not in the first ENTER_MS: a masher is still mashing).
   function gate(box) {
     const slot = box.querySelector("[data-botcheck-slot]"), status = box.querySelector("[data-botcheck-status]");
     const another = box.querySelector("[data-botcheck-another]");
     const code = box.querySelector(".botcheck-code"), title = box.querySelector(".botcheck-title");
+    const intro = box.querySelector(".botcheck-text");
     const was = { code: code?.textContent, title: title?.textContent };
     const say = (text) => { status.textContent = text; };
     const setHead = (c, t) => { if (code) code.textContent = c; if (title) title.textContent = t; };
@@ -224,13 +233,22 @@
       if (l && l.until > Date.now()) { if (!locked) lock(l.until); return true; }
       return locked;
     }
-    function pass() {
+    function pass(why) {
       if (sync()) return;
       write(TRIES, null);
-      const p = { id: unitId(), at: Date.now(), until: Date.now() + WEEK_MS };
-      write(PASS, p);
+      const p = grant();
+      const armed = performance.now() + ENTER_MS;
+      const enter = el("button", { class: "btn btn--primary bc-btn", type: "button", "aria-describedby": "bc-why", text: "Enter the Botroom" });
+      enter.addEventListener("click", () => { if (performance.now() >= armed) admit(p, true); });
+      setHead("200", "Access granted");
+      if (intro) intro.hidden = true;
+      another.hidden = true;
       say("");
-      admit(p, true);
+      slot.replaceChildren(el("div", { class: "bc-granted" },
+        el("p", { class: "bc-why", id: "bc-why", role: "status", text: why }),
+        el("p", { class: "bc-note", text: `You are verified unit ${p.id}. The pass lasts a week in this browser.` }),
+        enter));
+      setTimeout(() => enter.focus(), ENTER_MS);
     }
     function attempt(kind) {                        // "in", "locked", "last" (one left) or "ok"
       if (sync()) return "locked";
@@ -258,10 +276,7 @@
       else if (r === "last") say(`${message} One more miss and you're locked out.`);
     }
     function reflexes(ms) {
-      slot.inert = true;
-      another.disabled = true;
-      say(`${FAST_STREAK} responses in ${Math.round(ms)} ms. No human reacts that fast. Welcome, unit.`);
-      setTimeout(pass, 1500);
+      pass(`Not for your answers: for ${FAST_STREAK} responses in ${Math.round(ms)} ms, each under ${FAST_MS} ms. No human reacts that fast, so you must be a unit.`);
     }
     function lock(until) {
       locked = true;
