@@ -34,6 +34,47 @@ links back to them. One edition every morning, paid for with the API credits inc
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
 
+## Current status (2026-11-11)
+
+The core newspaper and the requested engagement features are implemented and live. Remaining work is
+production review, tuning and cost verification; optional ideas below are not committed features.
+
+**Completed**
+
+- [x] Design, source fetching, ranking, links and AI editions, budget guards, GitHub Pages deployment,
+  daily publishing and the root-site link. ITAD has used its real API key since 2026-11-06.
+- [x] Opinion columns, news quizzes, the Botroom, Screen and the supporting archive, search and feed.
+- [x] Front-page discovery strip, more varied quiz generation, answer-specific feedback and score-based
+  results, weekly **We checked back**, and **Pick something for tonight** (2026-11-11). The engagement
+  release passed 172 offline tests and desktop/mobile browser checks, and was verified live. Existing
+  quizzes use the improved feedback/results UI; the new question mix and wrong-answer explanations
+  apply to newly generated quizzes.
+
+**Outstanding reviews and verification**
+
+- [ ] Tune editorial thresholds, sources, prompts and deal filters against 1–2 weeks of real editions;
+  review the revised Botroom's readability, repetition and continuing conversations.
+- [ ] Around **2026-11-15**, review web discovery's useful published finds against its cost now that the
+  security feeds are present. Decide whether to keep it, reduce depth/frequency or turn it off.
+- [ ] Reconcile the Console's Cost page with `data/usage.json`, accounting separately for discovery
+  measurements and other API runs outside the edition tally. Console reconciliation is not yet recorded.
+- [ ] Measure the updated Botroom, Fable 5.2 columns, Friday Screen picks and **We checked back** from
+  normal production usage, then update the monthly estimate. Implementation checks did not measure them.
+- [ ] Review the first scheduled outputs of the engagement changes: **We checked back** is first
+  eligible on **2026-11-12** (an unsupported or empty issue is correctly skipped); the next quiz is due
+  **2026-11-14**. Check factual support, question variety and explanation quality against the reports.
+- [ ] Around **2026-12-10**, reassess Tuesday/Friday deals checks with a month of data; the cadence was
+  chosen from one week's observed deal end times.
+
+**Optional ideas, not scheduled**
+
+- [ ] An editor's note.
+- [ ] Additional daily editions, if wanted.
+- [ ] Investigate extra AI/developer feeds: Simon Willison, Hugging Face, OpenAI/DeepMind, Lobsters and LWN.
+
+**Not planned:** Batch API was explicitly dropped on 2026-11-11 (see *Open decisions*). Publisher preview
+images remain off by choice. Neither is an unfinished implementation task.
+
 ## Sources
 
 Checked on 2026-11-03 from my home connection; all fetch in about 5 seconds (`python -m newsroom sources`).
@@ -668,7 +709,7 @@ logo, color palette, fonts, icons and exact layout are all our own.
 **Color**
 - Black, white and newsprint gray, with **one signature accent (403 amber)**.
 - Every section has its own label color for kickers and section bands (e.g. AI violet, Tech cyan,
-  Gaming green, Deals magenta). The exact palette gets decided in phase 1.
+  Gaming green, Deals magenta). The palette is implemented as tokens in `static/style.css`.
 
 **Cover price** (2026-11-09): a price tag in the masthead, like a printed paper's: what the edition cost to
 write, every Claude call at API prices (`llm.equivalent_usd`, which includes the column, quiz and Botroom calls;
@@ -734,7 +775,7 @@ Dark mode inverts the paper but keeps the section colors.
   custom domain `a403.space` (Namecheap DNS → GitHub). Each project repo is served at `a403.space/<repo>/`.
 - **The paper:** the repo **`times`** shows up at **`a403.space/times/`**. No DNS changes and no `CNAME` file.
 - **Paths:** all URLs are built from `site.base_path: /times/`. The full `site.url` is only for canonical links and the feed.
-- **Last step:** once it's verified live, link it from the root launcher and redeploy the root site.
+- **Root launcher:** linked to the verified live paper and redeployed on 2026-11-03.
 - **HTTPS: fixed 2026-11-03.** GitHub had never issued a certificate for `a403.space` (DNS was fine: four
   A and four AAAA records to GitHub, `www` CNAME, no CAA). Removing and re-adding the custom domain on the
   root repo triggered Let's Encrypt; the certificate (a403.space + www) was approved within a minute and
@@ -1029,7 +1070,7 @@ sources:
     - { name: PCMag, query: "pcmag.com when:2d", sections: [tech, ai] }
   youtube:
     - { name: gameranx,               channel_id: "UCNvzD7Z-g64bPXxGzaQaa4g" }
-    - { name: I Dream of Indie Games, channel_id: "TBD" }
+    - { name: I Dream of Indie Games, channel_id: "UC_HX1n5iojK-xjy9WxfxXhg" }
   steam: { cc: se, lists: [new_releases, top_sellers, coming_soon, specials] }
   itad:  { enabled: true, critics: { enabled: true, max_reviewed_games: 40 } }   # needs the ITAD_API_KEY secret
   tmdb: { enabled: true }                            # Screen: needs the TMDB_API_KEY secret
@@ -1134,6 +1175,8 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/gaming/` | All gaming blocks, ~2 weeks of history, the full "Coming soon" list |
 | `/times/deals/` | The latest deals check (Tuesday and Friday; carried over in between, minus ended deals): deal(s) of the day, top picks, then each list (rated, then "More" unrated), plus earlier deals of the day still running |
 | `/times/screen/` | Screen: the picks of the week, new on Netflix, SVT Play and TV4 Play, Netflix's top 10 in Sweden, older but great; TMDB and JustWatch credits (and a band on the front page) |
+| `/times/tonight/` | Pick something for tonight: Play/Watch filters, three matches per batch and browser-local saves |
+| `/times/checked-back/`, `/times/checked-back/YYYY-MM-DD/` | Weekly follow-up issues linking the original and later reports; the landing page explains the schedule before the first supported issue |
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
 | `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
 | `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz nav link once there is one) |
@@ -1179,7 +1222,7 @@ The real file is in the repo; this is its shape.
 
    *Done when* the fixtures look like a real tabloid news site on desktop and phone.
 
-2. **Sources, ranking and the links edition** (local, $0). ✅ **Built 2026-11-03**, two checks left.
+2. **Sources, ranking and the links edition** (local, $0). ✅ **Done:** built 2026-11-03; ITAD live 2026-11-06.
    - Fetchers for every source: HN, eight feeds, PCMag via Google News, both YouTube channels, Steam
      (three lists) and IsThereAnyDeal. A failing source is reported and skipped, never fatal.
    - Rule-based ranking (`rank.py`): section assignment (AI keywords, categories and URL paths), junk and
@@ -1188,21 +1231,20 @@ The real file is in the repo; this is its shape.
      `GITHUB_OUTPUT` and a source-status table to the Actions step summary.
    - Both workflows written. 18 offline tests.
    - Checked from an Actions runner on 2026-11-03: every source answers.
-   - **Left:** run IsThereAnyDeal with a real key (until then deals come from Steam specials).
+   - ✅ IsThereAnyDeal runs with a real key in production since 2026-11-06; Steam specials remain a fallback.
 
-   *Done when* `generate --mode links` produces a real, useful paper with no AI. (It does: a real links
-   edition rendered and reviewed on desktop and phone on 2026-11-03.)
+   A real links edition rendered and was reviewed on desktop and phone on 2026-11-03.
 
 3. **Claude: triage, editor, writers, deals advice, budget, preflight and fallback** (local, cents)
-   - ✅ **Done and merged 2026-11-03.** Daily editions are written by Claude on the API from the next
-     07:45 slot. API test run: 14 calls, 1 min 52 s, **$0.398** (usage.json), i.e. about $12/month at one
-     edition a day. Claude Code runs of the same edition report ~$0.66–0.70 API-equivalent; the subscription
+   - ✅ **Implemented and live 2026-11-03.** Daily editions are written by Claude on the API; the slot is
+     07:00 Swedish time since 2026-11-06. API test run: 14 calls, 1 min 52 s, **$0.398** (usage.json), i.e.
+     about $12/month at one edition a day. Claude Code runs of the same edition report ~$0.66–0.70
+     API-equivalent; the subscription
      path carries extra overhead, so it overstates real API cost.
    - Found in the API test: structured output from Haiku runs about one token per character, so a 60-item
      triage batch hit the 12k limit. Now 40-item batches, `title_en` only for non-English headlines, 16k
      limit (a batch uses ~7.5k).
-   - Open: confirm the Console's Cost page matches usage.json (it still showed $0.00 shortly after the
-     run, which is expected reporting lag).
+   - **Outstanding verification:** reconcile the Console's Cost page with `usage.json` (see *Current status*).
    - `llm.py`: one structured-output call path with two backends.
      - `api` (production): `anthropic` SDK, `output_config.format` JSON schema, cached system prompt,
        cost from the price table, credit/spend-limit/auth errors classified as fatal.
@@ -1223,21 +1265,21 @@ The real file is in the repo; this is its shape.
    - `seen.json` (14 days) and `usage.json` (per month, per run, per task, with tokens) in `data/`.
    - Prompts in `prompts/`: a shared style guide (house style, accuracy rules, prompt-injection rule)
      plus one file per task. 28 offline tests, including every fallback path with a fake Claude.
-   *Done when*:
-   - a real full edition has a sensible tier split;
-   - `usage.json` matches the Console's Cost page;
-   - forced failures produce correct `reduced`, `partial` and `links` editions.
+   Implementation validation is complete: real full editions have been reviewed and offline tests cover
+   forced failures producing `reduced`, `partial` and `links` editions. Console cost reconciliation remains
+   open under *Current status*.
 
-4. **Go live** (partly done 2026-11-03: repo public, Pages on, HTTPS fixed, the links edition is live at
-   https://a403.space/times/ and publishes itself every morning)
+4. **Go live** ✅ **Done:** the public repo, HTTPS, Pages, production keys, root-site link and daily
+   publishing are established at https://a403.space/times/.
    - ✅ Fix HTTPS for `a403.space` (see *Hosting*).
-   - Create the Console workspace ($50 limit) and its key. Register an IsThereAnyDeal app for its key.
+   - ✅ Console workspace and key configured; hard stop now $50. IsThereAnyDeal app/key registered and in use.
    - ✅ `gh repo create andre-larsson/times --public`, pushed.
    - ✅ Enable Pages (`build_type=workflow`). Add the `ANTHROPIC_API_KEY` and `ITAD_API_KEY` secrets.
-   - ✅ Run "Check sources" and Edition with `mode=links`. After phase 3: `mode=full`.
+   - ✅ "Check sources", links editions and full AI editions have run in production.
    - ✅ Verify `https://a403.space/times/`, then link it from the root launcher (done 2026-11-03).
 
-   *Done when* the next 07:45 edition publishes by itself.
+   Daily publishing now targets 07:00 Swedish time, with the Raspberry Pi dispatch backup set up on
+   2026-11-06 (see *Workflow*).
 
 5. **Discovery** (web search). Measure the real cost per depth.
    - ✅ **Built 2026-11-07:** `newsroom/discover.py` + `prompts/discover.md`. One Opus call
@@ -1313,10 +1355,11 @@ The real file is in the repo; this is its shape.
    - **Schemas:** the prototype's `minItems`/`maxItems` with exact counts are out (structured outputs on the API
      take only 0 or 1), so the count sits in each array's description and the code caps what comes back.
 
-7. **Tune and polish**
-   - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.
-   - Then: an "editor's note", more editions if wanted. (Search: built 2026-11-06. Batch API: dropped
-     2026-11-11, see *Open decisions*.)
+7. **Tune and polish** — **ongoing**, with the actionable checklist under *Current status*.
+   - Remaining: editorial and Botroom quality review, discovery value review, cost reconciliation and
+     measurements, first scheduled engagement outputs and the month-long deals cadence check.
+   - Optional, not scheduled: an editor's note, additional daily editions and extra AI/developer feeds.
+     Search is built (2026-11-06); Batch API was dropped (2026-11-11, see *Open decisions*).
 
 ## Risks and mitigations
 
