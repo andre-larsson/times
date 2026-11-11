@@ -16,6 +16,8 @@
       {% if discussion %}<p class="discuss-row botroom-only">{{ f.discuss(discussion) }}</p>{% endif %}
     </div>
 
+    <p class="notice notice--quiet">Can't decide? <a href="{{ url('tonight/') }}">Pick something for tonight →</a></p>
+
     {% if picks or new_lists or screen.top10 or screen.classics %}
     <nav class="shelf-nav" aria-label="Screen lists">
       {% if picks %}<a class="chip chip--pick" href="#picks">Picks of the week</a>{% endif %}

@@ -39,6 +39,9 @@
         {% if ed.quiz %}
         <span class="meta-sep" aria-hidden="true">·</span> <a class="meta-link" href="{{ ed.quiz | article_url }}">{{ ed.quiz.headline }}</a>
         {% endif %}
+        {% if ed.checkback %}
+        <span class="meta-sep" aria-hidden="true">·</span> <a class="meta-link" href="{{ url(ed.checkback.path) }}">We checked back</a>
+        {% endif %}
       </span>
     </li>
     {% endfor %}

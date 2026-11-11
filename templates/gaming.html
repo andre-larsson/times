@@ -12,6 +12,7 @@
       <h1 class="band-title" id="gaming-title">Gaming</h1>
       <p class="band-sub">{{ section.blurb }}</p>
     </div>
+    <p class="notice notice--quiet">Can't decide? <a href="{{ url('tonight/') }}">Pick something for tonight →</a></p>
     {% if gaming %}
       {% with full = true %}{% include "partials/gaming_blocks.html" %}{% endwith %}
       {% if earlier_reviews %}

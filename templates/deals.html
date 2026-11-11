@@ -14,6 +14,7 @@
       {% set checked = deals_checked(deals, current_edition) %}
       <p class="band-sub">{{ section.blurb }}{% if checked.when %} Prices checked {{ checked.when }}{% if checked.next %} (next check {{ checked.next }}){% endif %}; they change.{% endif %}</p>
     </div>
+    <p class="notice notice--quiet">Set a genre and budget: <a href="{{ url('tonight/') }}">Pick something for tonight →</a></p>
     {% if dv.lists %}
     <nav class="shelf-nav" aria-label="Deal lists">
       <span class="shelf-nav-label">{{ dv.count }} deals</span>

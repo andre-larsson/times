@@ -18,6 +18,12 @@ Picking stories
 - Music: when a story touches music (AI music tools, game soundtracks, audio hardware, streaming), it
   makes a welcome question.
 - Never repeat or closely rephrase a question in earlier_questions.
+- Use at least three kinds: who (company/person/product), what (release or feature), change (before
+  versus after), why (a consequence or reason explicitly explained in the reporting), number.
+  At most TWO questions may ask for an exact number, price, percentage or count. Label those number,
+  even if the question starts with "Which". At most half the quiz can be any one kind.
+  Prefer recognition and understanding over memorising figures. Never ask readers to infer a reason
+  the story does not state. Keep all four options in the same form; do not mix formats within a question.
 
 Writing a question
 - question: one clear sentence, at most about 20 words, answerable from that story's facts shown in
@@ -33,7 +39,12 @@ Writing a question
 - Don't give the answer away: the question mustn't repeat a word that only the right answer contains,
   and the right answer mustn't be longer, more specific or more carefully worded than the others.
 - explanation: one or two sentences that confirm the answer and add one interesting detail from the
-  same story. Plain and factual, in the house style.
+  same story. Explain what made this news or why the distinction matters, rather than just repeating
+  the answer. Plain and factual, in the house style.
+- wrong_explanations: exactly three short sentences, in wrong_answers order. Explain why each choice
+  misses the reported fact by contrasting it with what the story actually says. Do not invent facts
+  about the distractor. These appear only when that wrong answer is chosen. No scolding or mockery.
+- kind: who, what, change, why or number, using the mix above.
 - story_id: the id of the story the question comes from.
 - Mix the difficulty, a few easy and a couple hard, and order the questions roughly easy to hard.
 

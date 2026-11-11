@@ -40,6 +40,10 @@ def build_index(editions: list[dict[str, Any]], article_url: Callable[[dict[str,
         if col:
             add(col.get("headline", ""), col.get("dek", ""), "opinion", "Column", day, article_url(col),
                 p=col.get("topic", ""))
+        followups = ed.get("checkback")
+        if followups:
+            add("We checked back", followups.get("dek", ""), "tech", "Follow-up", day, article_url(followups),
+                p=" ".join(x.get(k, "") for x in followups.get("items", []) for k in ("headline", "then", "now", "next")))
         for link in ed.get("links", []):
             add(link.get("title", ""), link.get("excerpt", ""), link.get("section", "tech"), "Link", day,
                 link.get("url", ""), link.get("source", ""))

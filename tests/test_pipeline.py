@@ -260,7 +260,7 @@ def test_generate_keeps_previous_when_sources_fail(tmp_path, monkeypatch):
 
 def test_render_before_first_edition(tmp_path):
     pages = build(load_config(), tmp_path / "no-data", tmp_path / "site")
-    assert pages == 2
+    assert pages == 4              # placeholder, 404, Tonight and the weekly follow-ups landing page
     assert "presses are warming up" in (tmp_path / "site" / "index.html").read_text()
 
 

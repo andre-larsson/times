@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 
 from jinja2 import ChainableUndefined, Environment, FileSystemLoader, select_autoescape
 
-from . import ROOT, forum
+from . import ROOT, forum, tonight
 from . import deals as deal_days
 from .forum import look as forum_look
 from .forum import roster as forum_roster
@@ -129,6 +129,8 @@ class SiteBuilder:
         self.now = dt.datetime.now(dt.timezone.utc)
         self.columns: list[dict[str, Any]] = []         # opinion columns, newest first
         self.quizzes: list[dict[str, Any]] = []         # quizzes, newest first
+        self.checkbacks: list[dict[str, Any]] = []
+        self.forum_threads: list[dict[str, Any]] = []
         self.front_days = int((cfg.get("opinion") or {}).get("front_days", 7))
         self.quiz_days = int((cfg.get("quiz") or {}).get("front_days", 4))
         self.screen_picks: list[dict[str, Any]] = []    # Screen's picks of the week, newest first
@@ -338,6 +340,11 @@ class SiteBuilder:
             "quiz": self.quiz_for(edition),
             "screen": edition.get("screen") or {},
             "screen_picks": self.picks_for(edition),
+            "checkback": _latest(self.checkbacks, edition, int((self.cfg.get("checkback") or {}).get("front_days", 7))),
+            "botroom_teaser": next((t for t in self.forum_threads
+                                     if t["date"] <= edition["edition_id"][:10]
+                                     and t.get("board") not in ("quiz", "announcements")
+                                     and t.get("kind") != "announcement"), None),
         }
 
 
@@ -388,6 +395,8 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         placeholder = {"current_edition": {"generated_at": b.now.isoformat()}}
         b.write("", "empty.html", active="front", **placeholder)
         b.write("404.html", "404.html", active="", **placeholder)
+        b.write("tonight/", "tonight.html", active="front", **placeholder, choices=[])
+        b.write("checked-back/", "checkback.html", active="front", **placeholder, features=[], feature=None)
         return b.pages
 
     for ed in editions:
@@ -418,6 +427,14 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     b.quizzes = [ed["quiz"] for ed in reversed(editions) if ed.get("quiz")]
     if b.quizzes:
         b.add_nav("quiz", "Quiz", "quiz/")
+    for ed in editions:
+        feature = ed.get("checkback")
+        if feature:
+            feature.update(edition_id=ed["edition_id"], edition_generated_at=ed.get("generated_at"),
+                           path=f"checked-back/{ed['edition_id']}/", headline="We checked back", section="tech",
+                           dek=" · ".join(x["headline"] for x in feature.get("items", [])))
+            _link_stories([s for x in feature.get("items", []) for s in (x["original"], x["update"])], pages)
+    b.checkbacks = [ed["checkback"] for ed in reversed(editions) if ed.get("checkback")]
     for ed in editions:                                  # Screen's picks of the week: on the pages until the next
         picks = (ed.get("screen") or {}).get("picks")
         if picks:
@@ -446,6 +463,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
                 if t["article_path"]:
                     article_threads[t["article_path"]] = (t, x)
     botroom = forum_look.forum(forum_days, members) if forum_days else None
+    b.forum_threads = sorted(botroom["threads"], key=lambda t: (t["date"], t["seq"]), reverse=True) if botroom else []
     content_threads = {t["content_path"]: t for x in forum_days for t in x["threads"]
                        if t.get("content_path")}
     # The deal of the day's and the review's threads, by the deal's or review's link (the newest thread wins),
@@ -463,6 +481,17 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     front = by_id[front_edition] if front_edition else editions[-1]
     newest_first = list(reversed(editions))
     common = {"current_edition": front}
+
+    # Two discovery destinations, kept out of the already long primary navigation.
+    b.write("checked-back/", "checkback.html", active="front", **common, features=b.checkbacks, feature=None)
+    for feature in b.checkbacks:
+        b.write(feature["path"], "checkback.html", active="front", **common, features=b.checkbacks, feature=feature)
+    play_ed = next((e for e in newest_first if e.get("deals")), front)
+    game_ed = next((e for e in newest_first if e.get("gaming")), front)
+    watch_ed = next((e for e in newest_first if e.get("screen")), front)
+    choices = tonight.catalog(play_ed.get("deals") or {}, game_ed.get("gaming") or {},
+                              watch_ed.get("screen") or {}, b.picks_for(front, SCREEN_PAGE_DAYS), b.now)
+    b.write("tonight/", "tonight.html", active="front", **common, choices=choices)
 
     # front page
     b.write("", "front.html", active="front", **common, **b.front_context(front), weather=b.weather)
@@ -600,7 +629,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     # 404 and feed
     b.write("404.html", "404.html", active="", **common)
     feed_items = [s for ed in newest_first[:20]
-                  for s in [ed[k] for k in ("opinion", "quiz") if ed.get(k)] + ed.get("stories", [])
+                  for s in [ed[k] for k in ("opinion", "quiz", "checkback") if ed.get(k)] + ed.get("stories", [])
                   if s.get("path")]
     b.write("feed.xml", "feed.xml", **common, items=feed_items[:50],
             updated=front.get("generated_at"))

@@ -11,7 +11,7 @@ from typing import Any
 
 from typing import Callable
 
-from . import ai_edition, budget, forum, opinion, preflight, quiz, schedule, store
+from . import ai_edition, budget, checkback, forum, opinion, preflight, quiz, schedule, store
 from . import deals as deal_days
 from . import screen
 from . import seen as seen_store
@@ -43,6 +43,7 @@ class Result:
     forum: str = ""                   # the Botroom's day, or why it wasn't written
     deals: str = ""                   # whether the deals were checked or carried over
     screen: str = ""                  # Screen's lists and picks, or why there are none
+    checkback: str = ""               # weekly follow-ups, or why none were published
 
 
 def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
@@ -113,6 +114,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
         column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
         quiz_note = _quiz(cfg, data_dir, edition, mode, llm, quiz_mode) if edition else ""
         screen_note = _screen_picks(cfg, data_dir, edition, watch, mode, llm, screen_mode) if edition else ""
+        checkback_note = _checkback(cfg, data_dir, edition, mode, llm) if edition else ""
         botroom = _forum(cfg, data_dir, edition, mode, llm, forum_mode) if edition else forum.Outcome()
     finally:
         if own_client:
@@ -133,7 +135,25 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
     if watch:
         screen.save_memory(data_dir, watch.memory)
     return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note, quiz_note,
-                  botroom.note, deals_note, screen_note)
+                  botroom.note, deals_note, screen_note, checkback_note)
+
+
+def _checkback(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM) -> str:
+    kept = (store.load_edition(data_dir, edition["edition_id"]) or {}).get("checkback")
+    if kept:
+        edition["checkback"] = kept
+        return "kept today's follow-ups"
+    if mode != "full":
+        return ""
+    try:
+        out = checkback.write(cfg, llm, edition, store.all_editions(data_dir))
+    except Exception as exc:
+        out = checkback.Outcome(note=f"{type(exc).__name__}: {str(exc).split('?', 1)[0][:200]}")
+    _record_llm(edition, llm)
+    if out.feature:
+        edition["checkback"] = out.feature
+        return f"written: {len(out.feature['items'])} follow-ups"
+    return f"not written: {out.note}" if out.note else ""
 
 
 def _opinion(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
@@ -294,6 +314,8 @@ def report(result: Result) -> str:
         lines.append(f"Deals {result.deals}")
     if result.screen:
         lines.append(f"Screen: {result.screen}")
+    if result.checkback:
+        lines.append(f"We checked back: {result.checkback}")
     if result.llm and result.llm.get("calls"):
         l = result.llm
         lines.append(f"Claude: {l['calls']} calls, ${l['usd']:.4f} charged, ${l['equivalent_usd']:.4f} API-equivalent"

@@ -29,10 +29,11 @@
   }
 
   function verdict(right, total) {
-    if (right === total) return "A perfect score.";
-    if (right >= total * 0.75) return "Sharp.";
-    if (right >= total * 0.5) return "Not bad.";
-    return "The archive has every story.";
+    if (right === total) return ["Stop the presses. A perfect score.", "Every story landed. Revisit your favourite, or try another quiz from the sidebar."];
+    if (right >= total * 0.75) return ["Front-page material.", "You caught most of the news. The few stories you missed are below for a quick catch-up."];
+    if (right >= total * 0.5) return ["A solid read of the week.", "You remembered at least half. A few details slipped through; revisit the answers and their stories below."];
+    if (right > 0) return ["A few headlines stuck.", "There's more to discover. Start with a story that interests you below, then come back for another round."];
+    return ["A fresh start on the news.", "Every answer is a new thing learned. Pick a story below to begin; your next quiz starts from here."];
   }
 
   function clock(ms) {
@@ -58,6 +59,17 @@
     const fields = (i) => items[i].querySelector("fieldset");
     const open = () => items.map((_, i) => i).filter((i) => !answered(i));
     const score = () => items.filter((_, i) => right(i)).length;
+
+    function feedback(i) {
+      const input = chosen(i);
+      if (!input) return;
+      const choice = items[i].querySelector("[data-quiz-choice]");
+      choice.hidden = right(i);
+      choice.textContent = right(i) ? "" : `You chose: ${input.closest("label").querySelector(".quiz-opt-text").textContent}`;
+      const note = items[i].querySelector("[data-quiz-option-note]");
+      note.textContent = right(i) ? "" : input.dataset.note || "";
+      note.hidden = !note.textContent;
+    }
 
     function show(view) {
       start.hidden = view !== "start";
@@ -94,7 +106,30 @@
       show("end");
       current = -1;
       $("[data-quiz-score]").textContent = String(state.right);
-      $("[data-quiz-verdict]").textContent = verdict(state.right, total);
+      const [headline, note] = verdict(state.right, total);
+      $("[data-quiz-verdict]").textContent = headline;
+      $("[data-quiz-result-note]").textContent = note;
+      const sections = new Map();
+      items.forEach((item, i) => {
+        const section = item.dataset.section;
+        const s = sections.get(section) || { right: 0, total: 0 };
+        s.total++; if (right(i)) s.right++;
+        sections.set(section, s);
+      });
+      $("[data-quiz-breakdown]").replaceChildren(...[...sections].map(([name, s]) => {
+        const span = document.createElement("span");
+        span.textContent = `${name}: ${s.right}/${s.total}`;
+        return span;
+      }));
+      const reading = [], seen = new Set();
+      items.forEach((item, i) => {
+        const story = item.querySelector(".quiz-story");
+        if (right(i) || !story || seen.has(story.href)) return;
+        seen.add(story.href);
+        const row = document.createElement("li"); row.append(story.cloneNode(true)); reading.push(row);
+      });
+      $("[data-quiz-reading]").replaceChildren(...reading);
+      $("[data-quiz-catchup]").hidden = !reading.length;
       const time = $("[data-quiz-time]");
       time.hidden = !state.time;
       time.textContent = state.time ? `Finished in ${clock(state.time)}.` : "";
@@ -125,6 +160,7 @@
       const i = items.indexOf(event.target.closest(".quiz-q"));
       if (i < 0) return;
       fields(i).disabled = true;                  // one try per question
+      feedback(i);
       state.answers[event.target.name] = event.target.value;
       if (shownAt) state.time = (state.time || 0) + Math.min(Date.now() - shownAt, PER_QUESTION_MS);
       shownAt = 0;
@@ -180,6 +216,7 @@
         if (state.answers[input.name] === input.value) {
           input.checked = true;
           fields(i).disabled = true;
+          feedback(i);
         }
       }
     });

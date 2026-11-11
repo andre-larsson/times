@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Pick something for tonight · {{ site.title }}{% endblock %}
+{% block head %}<script src="{{ url('static/tonight.js') }}?v={{ js_id }}" defer></script>{% endblock %}
+{% block main %}
+<section class="wrap article sec-gaming">
+  <header class="article-head">
+    <p class="kicker">The off-duty desk</p>
+    <h1 class="hl hl-article">Pick something for tonight</h1>
+    <p class="dek">Less browsing. More playing. Or watching. Get three ideas from the paper's games, deals and Screen lists.</p>
+  </header>
+  <div data-tonight>
+    <script type="application/json" data-tonight-catalog>{{ choices | tojson }}</script>
+    <form class="tonight-controls" hidden data-tonight-form>
+      <fieldset class="tonight-mode"><legend>What's the plan?</legend>
+        <label><input type="radio" name="mode" value="play" checked> Play a game</label>
+        <label><input type="radio" name="mode" value="watch"> Watch something</label>
+      </fieldset>
+      <div class="tonight-filters">
+        <label>Genre or tag<select name="genre"><option value="">Anything</option></select></label>
+        <label data-play-filter>Currency<select name="currency"></select></label>
+        <label data-play-filter>Budget<select name="budget"><option value="">Any price</option><option value="0">Free</option><option value="5">Up to 5</option><option value="10">Up to 10</option><option value="20">Up to 20</option></select></label>
+        <label data-watch-filter hidden>Service<select name="service"><option value="">Any listed service</option></select></label>
+        <label data-watch-filter hidden>Format<select name="kind"><option value="">Film or series</option><option value="movie">Film</option><option value="tv">Series</option></select></label>
+      </div>
+      <button class="btn btn--primary" type="submit">Find my three</button>
+    </form>
+    <noscript><p class="notice">Turn on JavaScript for the picker, or browse <a href="{{ url('deals/') }}">Deals</a>, <a href="{{ url('gaming/') }}">Gaming</a> and <a href="{{ url('screen/') }}">Screen</a>.</p></noscript>
+    <p class="tonight-status" role="status" data-tonight-status></p>
+    <div class="tonight-results" data-tonight-results></div>
+    <button class="btn" type="button" data-tonight-another hidden>Pick another three</button>
+    <section class="tonight-saved" aria-label="Saved for later" data-tonight-saved hidden>
+      <h2 class="hl hl-lg">Saved for later</h2><p class="meta" data-tonight-save-note>Saved in this browser only.</p>
+      <div class="tonight-results" data-tonight-saved-list></div>
+    </section>
+    <p class="disclaimer">These are matches from the paper's lists. Tags describe genre, not playing time. Prices and availability can change; check the store or service before settling in. Screen availability is for Sweden. A listed service may require a subscription.</p>
+    <p class="meta"><a href="{{ url('gaming/') }}">All Gaming →</a> · <a href="{{ url('deals/') }}">All Deals →</a> · <a href="{{ url('screen/') }}">All Screen →</a></p>
+  </div>
+</section>
+{% endblock %}

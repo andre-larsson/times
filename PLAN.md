@@ -27,6 +27,9 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
 | Botroom | **A comment section and forum where only bots post** (built 2026-11-09): recurring made-up AI personas comment on every full edition, each in its own Haiku or Sonnet call; a living roster, newcomers invented by Claude, and a "prove you're a bot" gate. **Boards like a real forum** (2026-11-10): Article comments by section, Site feedback and Feature requests about the paper itself, Off-topic, Introductions, Announcements; a gated "Discuss" button on articles. ~$4/month |
 | Screen | **What to watch** (added 2026-11-10): new on Netflix, SVT Play and TV4 Play in Sweden, new arrivals, Netflix's weekly Swedish top 10 and older well-rated titles, from TMDB without Claude in every edition; **picks of the week on Fridays** (one Opus call, ~$0.08) |
+| Discovery | **Below the lead** (2026-11-11): the latest quiz, a Botroom topic, Tonight and weekly follow-ups, in a compact strip |
+| Tonight | **Pick something for tonight** at `/tonight/`: Play or Watch, genre/tag, budget/currency or service/format filters, three matches, another batch and browser-local saves. No extra generation calls |
+| We checked back | **Thursdays**, full editions only: up to three follow-ups pairing an older story with later reporting. Opus writes, a second pass checks; only supported updates run |
 | Budget | **$40/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $50. Raised from $20/$25 on 2026-11-07 for daily discovery and the Botroom, and from $35 to $40 on 2026-11-09, when the measured month came to ~$32.50 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -242,6 +245,15 @@ Eight multiple-choice questions on the paper's own stories, **twice a week: Tues
   positions are spread evenly over A–D and shuffled with a seed from the edition id, so the answer
   key is stable across re-renders and never falls into a pattern. Questions without exactly three distinct
   wrong answers, or tied to a story id that doesn't exist, are dropped before the check.
+- **Variety and feedback (2026-11-11):** new quizzes label each question `who`, `what`, `change`, `why`
+  or `number`. At least three kinds must survive checking, no kind more than half (rounded up), and
+  at most two exact-number questions. Numeric options also trigger the cap even if mislabeled.
+  Each distractor gets a short, story-grounded explanation, checked with the answer key. The code
+  shuffles those notes with the options. Old editions without notes keep their general explanations.
+  The page identifies the chosen answer, then explains the correct fact. Results have five score
+  bands (zero, below half, half or more, three quarters or more, perfect), encouragement specific to
+  the band, section scores and deduplicated reading links for missed questions. Review and resume work
+  for saved old quizzes too. No extra quiz generation calls; the new mix applies to newly generated quizzes.
 - **Check:** the copy desk (`quiz_check`, Opus, `high` effort) gets every question and the full text of its
   story, and passes or drops each one: the answer must be in the story, every wrong answer must be wrong,
   the question must have one reading, the explanation must hold up. Nothing is repaired; a doubtful
@@ -604,6 +616,38 @@ more can be added later: name, how a title must be on it, and optional provider 
   Until then only the top 10 shows. Not yet checked against the live API: the SE provider names (TMDB's website
   shows "Netflix", "SVT Play" and "TV4 Play"), whether TV4 Play titles come as `ads` or `flatrate`, how many
   titles each list returns, and how often "Just added" fires.
+
+### We checked back (2026-11-11)
+
+- Weekly on Thursday (`checkback.days`), with up to three items: **Then**, **Now**, **Where it stands**.
+  Every item links both dated reports, with a New development, Question settled or Still open label.
+- Uses up to 35 days of existing reporting, with older and recent pools bounded to 60 stories each.
+  The original must be at least seven days old; the update must be from the last seven days. The two
+  must concern the same concrete event, release, incident or promise, not merely the same company.
+- `checkback` writes from the full supplied reports; `checkback_check` approves or drops every item.
+  Unknown ids, reversed dates, repeat pairs, missing copy, duplicate/missing verdicts and rejected items
+  are excluded in code. An unsupported, empty or failed feature never stops the edition. Same-day
+  reruns keep it. No additional fetching or web tools; this checks the paper's reporting, clearly
+  described as such. Silence is never treated as evidence of an outcome.
+- `/checked-back/` lists issues; `/checked-back/YYYY-MM-DD/` preserves each issue. The latest stays on
+  discovery for seven days; older issues remain in the archive, search and Atom feed. Before the first
+  supported issue, the landing page explains the schedule. First automatic opportunity: 12 November 2026.
+- Two bounded Opus calls on eligible weeks (only the writer if no candidates); uses the existing budget
+  guard. Incremental API cost has not been measured. No API spending was needed for implementation or QA.
+
+### Pick something for tonight (2026-11-11)
+
+- `/tonight/`, linked from discovery, Gaming, Deals, Screen and the footer. Vanilla-JS picker using the
+  latest deals, new PC games, tagged Screen lists and recent weekly Screen picks.
+- Play: actual Steam tags/curated genres, currency and budget. Unknown prices never pass a finite
+  budget, currencies are never converted, ended deals and Avoid recommendations are omitted. Watch:
+  actual genres, service and film/series format; only service-tagged titles qualify. No inferred moods,
+  play times or subscription entitlements. Prices, check dates and availability caveats remain visible.
+- Three matches per batch, shuffled on filter changes; another batch walks the pool before cycling.
+  Save/remove uses localStorage `times:tonight:saved`, with an in-memory fallback when storage is blocked.
+  Saved title snapshots survive daily catalog rotation; current metadata replaces them when available.
+  Saves are browser-local; ended deals are hidden. Without JavaScript, links lead to full section lists.
+  No extra model calls, network APIs or frontend dependencies.
 
 ## Look and feel: a real tabloid news site
 

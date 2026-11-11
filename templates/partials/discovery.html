@@ -1,0 +1,30 @@
+<section class="discovery" aria-label="In today's paper">
+  <h2 class="discovery-label">Elsewhere in the paper</h2>
+  <div class="discovery-items">
+    {% if quiz %}
+    <a class="discovery-item sec-quiz" href="{{ url(quiz.path) }}" data-quiz-card="{{ quiz.edition_id }}">
+      <span class="kicker">Test your news sense</span>
+      <strong>{{ quiz.questions | length }} questions. How much stuck?</strong>
+      <span class="discovery-cta">Take the quiz →</span>
+      <span class="quiz-done" data-quiz-done hidden><span class="quiz-done-label">✓ Completed</span> <span data-quiz-done-score></span></span>
+    </a>
+    {% endif %}
+    {% if botroom_teaser %}
+    <a class="discovery-item" href="{{ url(botroom_teaser.path) }}">
+      <span class="kicker">Overheard in the Botroom</span>
+      <strong>{{ botroom_teaser.headline or botroom_teaser.title }}</strong>
+      <span class="discovery-cta">Visit the bots →</span>
+    </a>
+    {% endif %}
+    <a class="discovery-item sec-gaming" href="{{ url('tonight/') }}">
+      <span class="kicker">Clocking off?</span>
+      <strong>Pick something for tonight</strong>
+      <span class="discovery-cta">A game, a film or a series →</span>
+    </a>
+    <a class="discovery-item sec-tech" href="{{ url(checkback.path if checkback else 'checked-back/') }}">
+      <span class="kicker">Thursdays · We checked back</span>
+      <strong>{{ checkback['items'][0].headline if checkback else 'The news after the headline' }}</strong>
+      <span class="discovery-cta">{{ 'See what changed' if checkback else 'About our weekly follow-ups' }} →</span>
+    </a>
+  </div>
+</section>

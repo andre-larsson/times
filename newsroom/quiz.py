@@ -16,6 +16,7 @@ from __future__ import annotations
 import datetime as dt
 import math
 import random
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -26,6 +27,7 @@ from .opinion import edition_date, material, reading, reporting
 OPTIONS = 4
 SECTION_WORDS = {"ai": "AI", "tech": "tech", "gaming": "gaming"}
 NUMBER_WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
+KINDS = {"who", "what", "change", "why", "number"}
 
 
 @dataclass
@@ -64,11 +66,17 @@ def clean(q: dict[str, Any], index: dict[str, dict[str, Any]]) -> dict[str, Any]
     """A question from the quiz editor in a checkable shape, or None when it can't be used."""
     question, answer = _norm(q.get("question")), _norm(q.get("answer"))
     wrong = [_norm(w) for w in q.get("wrong_answers") or []]
+    notes = [_norm(w) for w in q.get("wrong_explanations") or []]
     if q.get("story_id") not in index or not question or not answer or len(wrong) != OPTIONS - 1:
         return None
     if not all(wrong) or len({o.casefold() for o in (answer, *wrong)}) != OPTIONS:
         return None
+    if q.get("kind") not in KINDS or len(notes) != OPTIONS - 1 or not all(notes) or not _norm(q.get("explanation")):
+        return None
+    # Don't let an exact-figure question evade the numerical cap through a mislabeled kind.
+    numeric = all(re.match(r"^[€$£]?\d", o) for o in (answer, *wrong))
     return {"story_id": q["story_id"], "question": question, "answer": answer, "wrong_answers": wrong,
+            "kind": "number" if numeric else q["kind"], "wrong_explanations": notes,
             "explanation": _norm(q.get("explanation"))}
 
 
@@ -138,21 +146,30 @@ def write(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], editions: list
     kept: list[dict[str, Any]] = []
     dropped: list[dict[str, str]] = []
     per_section: dict[str, int] = {}
+    per_kind: dict[str, int] = {}
     for i, d in enumerate(drafts, 1):
         r = results.get(i) or {"verdict": "drop", "problem": "not checked"}
         section = reading(index[d["story_id"]])["section"]
         problem = "" if r.get("verdict") == "ok" else (r.get("problem") or "failed the check")
         if not problem and per_section.get(section, 0) >= cap:
             problem = f"more than {cap} {section} questions"
+        kind_cap = 2 if d["kind"] == "number" else math.ceil(wanted / 2)
+        if not problem and per_kind.get(d["kind"], 0) >= kind_cap:
+            problem = f"too many {d['kind']} questions"
         if problem:
             dropped.append({"question": d["question"], "answer": d["answer"], "problem": problem})
             continue
         per_section[section] = per_section.get(section, 0) + 1
+        per_kind[d["kind"]] = per_kind.get(d["kind"], 0) + 1
         kept.append({**d, "section": section})
     if len(kept) < least:
         return Outcome(note=f"only {len(kept)} questions passed the check (needs {least})")
+    if len(per_kind) < 3 or max(per_kind.values()) > math.ceil(len(kept) / 2):
+        return Outcome(note="not enough variety after the check")
 
-    questions = [{"question": d["question"], "options": options, "answer": right, "explanation": d["explanation"],
+    questions = [{"question": d["question"], "kind": d["kind"], "options": options, "answer": right,
+                  "option_notes": [dict(zip(d["wrong_answers"], d["wrong_explanations"])).get(o, "") for o in options],
+                  "explanation": d["explanation"],
                   "section": d["section"], "story": reading(index[d["story_id"]])}
                  for d, (options, right) in zip(kept, place_answers(kept, edition["edition_id"]))]
     n = len(questions)

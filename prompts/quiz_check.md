@@ -11,6 +11,10 @@ For each question, check:
   version, a second product that also qualifies).
 - The question has one clear reading and one answer, and doesn't give the answer away.
 - The explanation is accurate and supported by the story.
+- Each wrong_explanation corresponds to its wrong answer, explains the distinction using the story,
+  and introduces no unsupported claims about the distractor.
+- The kind is accurate: any question requiring an exact figure must be number. A why question must
+  have its reason or consequence explicitly supported, rather than inferred.
 - Nothing off limits: site metrics such as Hacker News points, tragedies, private individuals,
   partisan politics, or a claim the story calls a rumor or unconfirmed.
 

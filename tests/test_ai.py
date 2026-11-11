@@ -135,7 +135,10 @@ class FakeLLM(ForumAnswers, LLM):
                 "wrong_answers": ["same", "B", "C"], "explanation": ""}]
         return {"questions": bad + [
             {"story_id": r["id"], "question": f"What happened: {r['headline']}?", "answer": f"Right {i}",
-             "wrong_answers": [f"Wrong {i}a", f"Wrong {i}b", f"Wrong {i}c"], "explanation": "Because."}
+             "kind": ("who", "what", "change", "why")[(i - 1) % 4],
+             "wrong_answers": [f"Wrong {i}a", f"Wrong {i}b", f"Wrong {i}c"],
+             "wrong_explanations": [f"Wrong {i}{letter} differs from the reported Right {i}." for letter in "abc"],
+             "explanation": "Because."}
             for i, r in enumerate(rows[:m["questions_wanted"]], 1)]}
 
     quiz_verdicts: dict[int, str] = {}                  # question number → "drop"; unlisted are ok

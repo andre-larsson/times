@@ -44,7 +44,7 @@
         <ol class="quiz">
           {% for q in quiz.questions %}
           {% set qn = loop.index %}
-          <li class="quiz-q sec-{{ q.section }}" tabindex="-1">
+          <li class="quiz-q sec-{{ q.section }}" data-section="{{ section_name(q.section) }}" tabindex="-1">
             <fieldset class="quiz-fields">
               <legend class="quiz-question">
                 <span class="quiz-label"><span class="quiz-num">{{ qn }}</span><span class="quiz-tag">{{ section_name(q.section) }}</span></span>
@@ -53,7 +53,7 @@
               <div class="quiz-options">
                 {% for opt in q.options %}
                 <label class="quiz-opt{% if loop.index0 == q.answer %} quiz-opt--right{% endif %}">
-                  <input type="radio" name="q{{ qn }}" value="{{ loop.index0 }}">
+                  <input type="radio" name="q{{ qn }}" value="{{ loop.index0 }}" data-note="{{ q.option_notes[loop.index0] if q.option_notes else '' }}">
                   <span class="quiz-opt-box"><span class="quiz-letter" aria-hidden="true">{{ 'ABCD'[loop.index0] }}</span><span class="quiz-opt-text">{{ opt }}</span></span>
                 </label>
                 {% endfor %}
@@ -61,9 +61,11 @@
             </fieldset>
             <div class="quiz-reveal" tabindex="-1">
               <p class="quiz-verdict">
-                <span class="quiz-right"><span aria-hidden="true">✓</span> Right.</span>
+                <span class="quiz-right"><span aria-hidden="true">✓</span> You got it. {{ q.options[q.answer] }}</span>
                 <span class="quiz-wrong"><span aria-hidden="true">✗</span> Not quite. Right answer: {{ q.options[q.answer] }}</span>
               </p>
+              <p class="quiz-choice" data-quiz-choice hidden></p>
+              <p class="quiz-explain" data-quiz-option-note hidden></p>
               {% if q.explanation %}<p class="quiz-explain">{{ q.explanation }}</p>{% endif %}
               {% if q.story %}<a class="quiz-story" href="{{ q.story | article_url }}">{{ q.story.headline }} →</a>{% endif %}
               <div class="quiz-advance"><button class="btn btn--primary" type="button" data-quiz-advance>Next question</button></div>
@@ -76,7 +78,13 @@
           <p class="quiz-end-kicker">Your result</p>
           <p class="quiz-end-score"><span data-quiz-score>0</span> of {{ n }} right</p>
           <p class="quiz-end-verdict" data-quiz-verdict></p>
+          <p class="quiz-start-text" data-quiz-result-note></p>
           <p class="quiz-end-time" data-quiz-time hidden></p>
+          <div class="quiz-breakdown" data-quiz-breakdown aria-label="Results by section"></div>
+          <section class="quiz-catchup" data-quiz-catchup hidden aria-label="Stories to catch up on">
+            <h2 class="hl hl-md">Your catch-up reading</h2>
+            <ul data-quiz-reading></ul>
+          </section>
           <ol class="quiz-recap" aria-label="Your answers">
             {% for q in quiz.questions %}
             <li><button class="quiz-recap-item" type="button" data-quiz-goto="{{ loop.index0 }}">

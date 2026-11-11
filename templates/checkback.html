@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block title %}We checked back · {{ site.title }}{% endblock %}
+{% block main %}
+<article class="wrap article sec-tech">
+  <header class="article-head">
+    <p class="kicker">The news after the headline · Thursdays</p>
+    <h1 class="hl hl-article">We checked back</h1>
+    <p class="dek">What changed, what was settled, and what remains open. We follow earlier stories through later reporting in the paper.</p>
+  </header>
+  {% set shown = [feature] if feature else features %}
+  {% for issue in shown %}
+  <section class="checkback-issue article-main" aria-label="Follow-ups from {{ issue.edition_id }}">
+    <h2 class="block-title"><a href="{{ url(issue.path) }}">{{ issue.edition_generated_at | date_long }}</a></h2>
+    <p class="meta">Written by Claude (AI), checked against both dated reports by a second pass.</p>
+    {% for item in issue['items'] %}
+    <article class="checkback-item">
+      <p class="kicker">{{ {'updated': 'New development', 'resolved': 'Question settled', 'still_open': 'Still open'}[item.status] }}</p>
+      <h3 class="hl hl-lg">{{ item.headline }}</h3>
+      <dl class="checkback-facts">
+        <div><dt>Then</dt><dd>{{ item.then }} <a href="{{ item.original | article_url }}">Original report · {{ item.original.edition_id }} →</a></dd></div>
+        <div><dt>Now</dt><dd>{{ item.now }} <a href="{{ item['update'] | article_url }}">Later report · {{ item['update'].edition_id }} →</a></dd></div>
+        <div><dt>Where it stands</dt><dd>{{ item.next }}</dd></div>
+      </dl>
+    </article>
+    {% endfor %}
+  </section>
+  {% else %}
+  <div class="notice">
+    <p><strong>The first follow-ups are on their way.</strong> Each Thursday, we look for later reporting on stories at least a week old. An issue runs when there is a supported update to share.</p>
+    <p><a href="{{ url('archive/') }}">Browse the earlier editions →</a></p>
+  </div>
+  {% endfor %}
+  {% if feature %}<p><a href="{{ url('checked-back/') }}">All weekly follow-ups →</a></p>{% endif %}
+</article>
+{% endblock %}

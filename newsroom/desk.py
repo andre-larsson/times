@@ -195,7 +195,8 @@ def check_opinion(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> di
 # ── the quiz: the quiz editor writes the questions, the copy desk checks them (both Opus) ──
 
 QUIZ_SCHEMA = obj({"questions": arr(obj({
-    "story_id": STR, "question": STR, "answer": STR, "wrong_answers": arr(STR), "explanation": STR,
+    "story_id": STR, "kind": {"type": "string", "enum": ["who", "what", "change", "why", "number"]},
+    "question": STR, "answer": STR, "wrong_answers": arr(STR), "wrong_explanations": arr(STR), "explanation": STR,
 }))})
 
 
@@ -217,6 +218,12 @@ def check_quiz(llm: LLM, cfg: dict[str, Any], material: dict[str, Any]) -> dict[
     """The copy desk: material is {questions: [...], stories: {story_id: its full text}}."""
     return llm.call("quiz_check", system_prompt("quiz_check"),
                     data_block(material, "The questions and the stories they were written from:"), QUIZ_CHECK_SCHEMA)
+
+
+CHECKBACK_SCHEMA = obj({"items": arr(obj({
+    "original_id": STR, "update_id": STR, "headline": STR, "then": STR, "now": STR, "next": STR,
+    "status": {"type": "string", "enum": ["updated", "resolved", "still_open"]},
+}))})
 
 
 # ── Screen: the picks of the week (Opus) ─────────────────────────────────────

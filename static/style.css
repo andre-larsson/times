@@ -945,6 +945,56 @@ a.top10-title:hover { text-decoration: underline; }
 .quiz-done { display: inline-flex; gap: var(--s-2); }
 .quiz-done-label { font-weight: 700; color: var(--positive); }
 
+/* Discovery: a small set of invitations directly below the front-page lead. */
+.discovery { border-block: 1px solid var(--rule-strong); padding-block: var(--s-4); margin-bottom: var(--s-5); }
+.discovery-label { font: 800 0.875rem/1.3 var(--font-head); text-transform: uppercase; margin-bottom: var(--s-3); }
+.discovery-items { display: grid; gap: var(--s-4); }
+.discovery-item { display: grid; align-content: start; gap: var(--s-2); padding: var(--s-3); background: var(--paper-2); min-width: 0; }
+.discovery-item strong { font: 800 1.375rem/1.15 var(--font-head); overflow-wrap: anywhere; }
+.discovery-cta { font: 600 0.8125rem/1.4 var(--font-ui); color: var(--ink-2); }
+.discovery-item:hover .discovery-cta { text-decoration: underline; }
+@media (min-width: 480px) { .discovery-items { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* The off-duty desk uses the same flat rules, newsprint and type as the paper. */
+.tonight-controls { display: grid; gap: var(--s-5); padding: var(--s-5); margin-top: var(--s-5); background: var(--paper-2); border-top: var(--s-1) solid var(--gaming); }
+.tonight-mode { display: flex; flex-wrap: wrap; gap: var(--s-4); border: 0; margin: 0; padding: 0; }
+.tonight-mode legend { font: 800 1.5rem/1.2 var(--font-head); margin-bottom: var(--s-3); }
+.tonight-mode label { display: flex; align-items: center; gap: var(--s-2); padding: var(--s-3); border: 1px solid var(--rule); background: var(--paper); font: 600 1rem/1.4 var(--font-ui); cursor: pointer; }
+.tonight-mode label:has(input:checked) { border-color: var(--gaming-ink); background: var(--gaming-soft); }
+.tonight-filters { display: grid; gap: var(--s-4); }
+.tonight-filters label { display: grid; gap: var(--s-2); min-width: 0; font: 600 0.875rem/1.4 var(--font-ui); }
+.tonight-filters select { width: 100%; min-width: 0; padding: var(--s-3); border: 1px solid var(--rule-strong); background: var(--paper); color: var(--ink); font: 400 1rem/1.4 var(--font-ui); }
+.tonight-controls > .btn { justify-self: start; }
+.tonight-status { margin-block: var(--s-5) var(--s-3); font: 600 1rem/1.5 var(--font-ui); }
+.tonight-results { display: grid; gap: var(--s-5); margin-bottom: var(--s-5); }
+.tonight-card { display: flex; flex-direction: column; gap: var(--s-3); min-width: 0; border-top: var(--s-1) solid var(--rule-strong); padding-top: var(--s-4); overflow-wrap: anywhere; }
+.tonight-card-meta { font: 700 1rem/1.4 var(--font-ui); }
+.tonight-summary { font: 400 1rem/1.5 var(--font-body); color: var(--ink-2); }
+.tonight-actions { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: auto; padding-top: var(--s-3); }
+.tonight-saved { margin-top: var(--s-7); border-top: 1px solid var(--rule); padding-top: var(--s-5); }
+.tonight-saved > .meta { margin-block: var(--s-3) var(--s-5); }
+[data-tonight] > .disclaimer { margin-block: var(--s-6) var(--s-4); }
+@media (min-width: 720px) {
+  .tonight-filters, .tonight-results { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 479px) {
+  .tonight-controls { padding: var(--s-4); }
+  .tonight-controls > .btn, .tonight-mode label { width: 100%; }
+}
+
+.quiz-choice { font: 600 0.9375rem/1.4 var(--font-ui); color: var(--ink-2); }
+.quiz-breakdown { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.quiz-breakdown span { padding: var(--s-2) var(--s-3); border: 1px solid var(--rule); font: 600 0.875rem/1.4 var(--font-ui); }
+.quiz-catchup { width: 100%; border-top: 1px solid var(--rule); padding-top: var(--s-4); }
+.quiz-catchup ul { display: grid; gap: var(--s-3); margin-top: var(--s-3); }
+.checkback-issue { margin-block: var(--s-7); }
+.checkback-item { border-top: var(--s-1) solid var(--rule-strong); padding-top: var(--s-4); margin-top: var(--s-5); }
+.checkback-item > .hl { margin-block: var(--s-2) var(--s-5); }
+.checkback-facts { display: grid; gap: var(--s-5); }
+.checkback-facts dt { font: 800 1.125rem/1.4 var(--font-head); margin-bottom: var(--s-2); }
+.checkback-facts dd { margin: 0; font: 400 1.125rem/1.6 var(--font-body); }
+.checkback-facts a { display: block; margin-top: var(--s-2); font: 600 0.875rem/1.4 var(--font-ui); text-decoration: underline; }
+
 /* ── The Botroom ──────────────────────────────────────────────────────────── */
 /* Gate: with JavaScript and no pass (html.botroom-gated, set inline in <head>), the check shows and the
    comments hide; without JavaScript everything shows. static/botcheck.js fills the check and the form. */
