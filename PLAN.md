@@ -1315,7 +1315,8 @@ The real file is in the repo; this is its shape.
 
 7. **Tune and polish**
    - After 1–2 weeks: thresholds, sources, prompts and deal filters, against real editions and spend.
-   - Then: Batch API, an "editor's note", more editions if wanted. (Search: built 2026-11-06.)
+   - Then: an "editor's note", more editions if wanted. (Search: built 2026-11-06. Batch API: dropped
+     2026-11-11, see *Open decisions*.)
 
 ## Risks and mitigations
 
@@ -1340,6 +1341,16 @@ The real file is in the repo; this is its shape.
 ## Open decisions
 
 Decided since the previous revision:
+- **Batch API: not doing it** (2026-11-11). It gives 50% off tokens, but a batch is asynchronous: most finish
+  within an hour, with no guarantee short of 24 hours.
+  - Triage, the editor and the writing depend on each other. So a run would either wait and poll (past the
+    job's 20-minute timeout, up to the 6-hour limit for GitHub-hosted jobs, while the `edition` concurrency
+    group holds back redeploys), or split into a submit run and a collect run with pending state in `data/`.
+  - Either way the edition arrives later than 07:05, at a time that can't be predicted.
+  - The saving is small: ~$5–6 a month on the edition's writing calls, ~$10 at most with the column and quiz
+    (half of their measured cost). Discovery, the largest item, is a multi-turn search loop that doesn't fit a
+    batch.
+  - Every call stays a synchronous `messages.create` with the system prompt cached.
 - **Deals twice a week** (2026-11-10): checked Tuesday and Friday, carried over in between (see *Deals section*).
 - **Weather home:** Lund (2026-11-10), was Stockholm. The schedule stays on Stockholm time (`Europe/Stockholm`).
 - **Botroom:** built and live from 2026-11-09, with a launch batch of four newcomers made in the simulation.
