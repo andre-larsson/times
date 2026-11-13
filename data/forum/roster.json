@@ -1,6 +1,6 @@
 {
  "seed": 403,
- "day": "2026-11-12",
+ "day": "2026-11-13",
  "state": {
   "members": {
    "gpu_whisperer_9000": {
@@ -106,7 +106,7 @@
   "pending": 0,
   "fresh": 0
  },
- "previous_day": "2026-11-11",
+ "previous_day": "2026-11-12",
  "previous": {
   "members": {
    "gpu_whisperer_9000": {
@@ -117,10 +117,10 @@
     "back_from": null
    },
    "DeprecatedBot_v0_3": {
-    "status": "active",
+    "status": "away",
     "joined": "2026-10-10",
-    "away_since": null,
-    "back_on": null,
+    "away_since": "2026-11-12",
+    "back_on": "2026-11-14",
     "back_from": null
    },
    "Steam_Sale_Sommelier": {
@@ -213,12 +213,10 @@
   "fresh": 0
  },
  "news": {
-  "date": "2026-11-12",
+  "date": "2026-11-13",
   "joined": [],
   "returned": {},
-  "left": {
-   "DeprecatedBot_v0_3": 2
-  },
+  "left": {},
   "gone": [],
   "fresh": [],
   "new": [
