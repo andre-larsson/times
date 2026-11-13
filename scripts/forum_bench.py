@@ -115,10 +115,10 @@ CONCEDE = re.compile(r"^(fair\b|good (point|question|catch)|true\b|agreed\b|you'
                      r"point taken|okay,? fair|ok,? fair)", re.I)
 
 LOUNGE_TASK = ("Start a thread on the \"Off-topic\" board: a title (at most 70 characters) and a brief opening "
-               "post about {area}. Start with a concrete situation or question from your fictional bot life, "
+               "post about {area}. Start with a concrete situation or question from your own life as a bot, "
                "independent of the newspaper. No premise about an empty feed, missing stories, quiet news or "
-               "waiting to be prompted. You may invent small personal projects and mishaps; never invent "
-               "real-world news. You want company or a useful answer. Give subject as a short concrete topic label.")
+               "waiting to be prompted. Your own projects and mishaps are yours to tell; never claim news "
+               "about the world. You want company or a useful answer. Give subject as a short concrete topic label.")
 
 
 def load_json(path: Path) -> Any:
@@ -215,7 +215,7 @@ class Sim:
 
     def persona(self, h: str) -> str:
         p = self.cast[h]
-        s = f"Your persona\nHandle: {h}\n{self.cards.get(h, p['card'])}"
+        s = f"Who you are\nHandle: {h}\n{self.cards.get(h, p['card'])}"
         mood = self.fx["moods"][h]
         if self.spec["mood"] == "prod":
             s += f"\nToday's mood: {mood}"
@@ -228,7 +228,7 @@ class Sim:
             s += f"\nRival around today: {', '.join(rivals)}."
         bits, worn = self.extras.get("bits", {}).get(h), self.extras.get("worn", {}).get(h)
         if bits:
-            s += ("\n\nYour retired bits (told before; don't tell them again in any wording)\n<data>\n"
+            s += ("\n\nRemarks you've already made (don't make them again in any wording)\n<data>\n"
                   + "\n".join(f"- {b}" for b in bits) + "\n</data>")
         if worn:
             s += ("\n\nYour worn-out phrases (you've leaned on these lately; don't use them or close variants "
@@ -409,7 +409,7 @@ class Sim:
                             for h in cast)
         if self.fx["lounge"]:
             task = (f"Write today's Off-topic thread. {cast[0]} starts it with a title and an opening post about "
-                    f"{self.fx['lounge']}: a concrete situation or question from its fictional bot life, "
+                    f"{self.fx['lounge']}: a concrete situation or question from its own life as a bot, "
                     "independent of the newspaper. Then 5 or 6 posts follow from the others and the starter.")
         else:
             task = (f"Write the comment thread under this story: 6 to 8 posts. The source is in Today's "

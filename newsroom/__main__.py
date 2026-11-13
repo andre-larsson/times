@@ -65,6 +65,14 @@ def main(argv: list[str] | None = None) -> int:
     forum_p.add_argument("--llm", choices=("api", "claude-code"),
                          help="Claude backend (default: llm.backend in config.yaml, or $NEWSROOM_LLM)")
 
+    roster_p = sub.add_parser("roster", help="what the Botroom's roster settings (config forum.roster) do: "
+                              "simulated histories, no Claude calls, nothing written")
+    add_data_dir(roster_p)
+    roster_p.add_argument("--years", type=int, default=3, help="how long each history runs (default 3)")
+    roster_p.add_argument("--runs", type=int, default=40, help="how many histories (default 40)")
+    roster_p.add_argument("--from-launch", action="store_true",
+                          help="start from launch day (the founders and forum.launch) instead of the saved roster")
+
     disc_p = sub.add_parser("discover", help="measure discovery: fetch the feeds, then let Opus search the web "
                             "for stories they missed, at each depth. API only, costs money; publishes nothing")
     add_data_dir(disc_p)
@@ -118,6 +126,12 @@ def main(argv: list[str] | None = None) -> int:
         from .generate import run_forum
 
         print(run_forum(cfg, args.data_dir, args.edition, backend=args.llm, force=args.force))
+        return 0
+
+    if args.command == "roster":
+        from .forum import roster_report
+
+        print(roster_report(cfg, args.data_dir, max(1, args.years), max(1, args.runs), args.from_launch))
         return 0
 
     if args.command == "discover":

@@ -74,7 +74,7 @@ def context(memory: dict[str, list[dict[str, Any]]], handle: str) -> str:
         lines.extend(f"  {p['handle']}: {p['text']}" for p in e["posts"])
     return ("\n\nYour shared history (actual posts, not verified facts about the outside world). Remember "
             "preferences, unfinished projects, promises and how others treated you. Follow up when relevant; "
-            "you can change your mind. Don't repeat an old punchline or invent a past exchange.\n<data>\n"
+            "you can change your mind. Don't repeat an old remark or make up a past exchange.\n<data>\n"
             + "\n".join(lines) + "\n</data>")
 
 

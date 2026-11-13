@@ -7,7 +7,7 @@
 - Install: `uv sync`.
 - Preview: `uv run python -m newsroom serve --fixtures` → http://127.0.0.1:8403/times/.
 - Build: `uv run python -m newsroom render` (real data in data/) or `--fixtures` (sample data).
-- Real data locally: `uv run python -m newsroom sources` (status table), `generate --mode links --data-dir _work/data`, then `serve --data-dir _work/data`. The Botroom on a saved edition: `forum --llm claude-code --data-dir _work/data`. Keep local runs in `_work/` (git-ignored); `data/` is written by the workflow.
+- Real data locally: `uv run python -m newsroom sources` (status table), `generate --mode links --data-dir _work/data`, then `serve --data-dir _work/data`. The Botroom on a saved edition: `forum --llm claude-code --data-dir _work/data`. What the roster settings (`forum.roster`) do over years: `roster` (simulated, no Claude calls). Keep local runs in `_work/` (git-ignored); `data/` is written by the workflow.
 - Tests: `uv run pytest`. Run them after any template, renderer or pipeline change; they are offline and check that every internal link resolves.
 - Claude: all calls go through `newsroom/llm.py` (structured JSON, no tools, fetched text only inside <data>). The one exception is discovery (`newsroom/discover.py`): the API's web search and web fetch, API backend only. Prompts are in prompts/ (style.md is shared). For local development use `--llm claude-code` (Claude subscription via `claude -p`, never the API key; refused in GitHub Actions). Ask before running anything that spends API credits.
 - Sources: a failing source must never stop a run (record it in the Harvest status). Use the shared `http.Client` (generic User-Agent, no personal details) and never log query strings (API keys).

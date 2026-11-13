@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import random
 import re
 from datetime import date, timedelta
 
@@ -80,14 +81,19 @@ def test_roster_keeps_its_rules_over_years():
         return h
 
     state, days = _history(3 * 365, cast, make_fresh=make_fresh)
+    rates = roster.Rates()
     core = {h for h, p in forum_cast.CAST.items() if p["core"]}
     assert not core & {h for d in days for h in d.gone}               # the founders take breaks, never leave
     assert all("ModBot" in d.around for d in days)                    # ModBot never takes a day off
-    assert all(len(d.around) >= roster.MIN_ACTIVE for d in days)
-    assert sum(len(d.joined) for d in days) >= 10 and any(d.fresh for d in days) and any(d.gone for d in days)
+    assert all(len(d.around) >= rates.around[0] for d in days)
+    assert any(d.fresh for d in days) and any(d.gone for d in days)
     assert any(d.returned for d in days) and any(d.left for d in days)
+    joins = [i for i, d in enumerate(days) if d.joined]
+    assert max(b - a for a, b in zip(joins, joins[1:])) <= rates.join_days[1]   # a newcomer at least every week
     members = sum(m.status in ("active", "away") for m in state.members.values())
-    assert 18 <= members <= 45, members                               # levels off near 32 (8 core + ~24)
+    assert 24 <= members <= 40, members                               # levels off near rates.members (32)
+    assert all(not d.gone or not set(d.gone) & set(d.joined) for d in days)
+    assert all(rates.break_days[0] <= n <= rates.break_days[1] for d in days for n in d.left.values())
 
     again, days2 = _history(3 * 365, _cast(), make_fresh=lambda d, taken: None)
     _, days3 = _history(3 * 365, _cast(), make_fresh=lambda d, taken: None)
@@ -98,6 +104,7 @@ def test_advance_replays_the_same_day_and_merges_missed_days():
     cast = _cast()
     saved, news = roster.advance(None, cast, 403, DAY, lambda d, t: None)
     assert saved["day"] == DAY.isoformat() and saved["previous"] is None and len(news.around) == 8
+    assert DAY < date.fromisoformat(saved["state"]["next_join"]) <= DAY + timedelta(days=7)
     tomorrow = DAY + timedelta(days=1)
     s1, n1 = roster.advance(saved, cast, 403, tomorrow, lambda d, t: None)
     s2, n2 = roster.advance(s1, cast, 403, tomorrow, lambda d, t: None)     # a re-run of the same day
@@ -122,6 +129,46 @@ def test_cast_changes_reach_the_roster():
     cast["New_Hand_Bot"] = dict(cast["Tiny_Model_7B"], founding=False, core=False)
     roster.sync(state, cast, DAY)
     assert state.members["Deleted_Bot"].status == "gone" and state.bench[-1] == "New_Hand_Bot"
+
+
+def test_roster_settings_come_from_config():
+    rates = roster.Rates.from_config(load_config()["forum"])
+    assert rates == roster.Rates()                                    # the defaults are the config's values
+    assert round(rates.joins_per_year) == 61
+    n_core = 8                                                        # departures match joins at `members`
+    at_risk = rates.members - n_core - rates.joins_per_year / 365 * roster.NEW_DAYS
+    assert abs(rates.p_gone(n_core) * at_risk * 365 - rates.joins_per_year) < 1e-9
+    assert rates.p_away(10) * 10 * roster.MONTH == pytest.approx(rates.breaks_per_month)
+    assert rates.p_away(0) == 0 and rates.p_away(1) == roster.MAX_P_AWAY
+    custom = roster.Rates.from_config({"roster": {"join_days": [1, 3], "members": 20}})
+    assert custom.join_days == (1, 3) and custom.members == 20 and custom.around == rates.around
+    for bad in ({"join_days": [7, 5]}, {"around": [0, 12]}, {"generated_share": 2}, {"break_days": [0, 3]}):
+        with pytest.raises(ValueError):
+            roster.Rates.from_config({"roster": bad})
+    rng = random.Random(1)
+    assert {roster.away_length(rng, (3, 9)) for _ in range(300)} <= set(range(3, 10))
+    assert {roster.away_length(rng, (200, 210)) for _ in range(50)} <= set(range(200, 211))
+
+
+def test_a_saved_roster_without_a_schedule_counts_from_the_last_join():
+    cast = _cast()
+    state = roster.bootstrap(cast, 403, DAY, ["ThreadForecaster"])     # joined on DAY
+    state.next_join = None                                            # as saved before the schedule existed
+    days = [roster.step(state, DAY + timedelta(days=i), cast, 403, lambda d, t: None) for i in range(1, 15)]
+    first = next(i for i, d in enumerate(days, 1) if d.joined)
+    assert 5 <= first <= 7 and state.next_join and roster.State.from_json(state.to_json()).next_join == state.next_join
+
+
+def test_a_bad_roster_setting_never_stops_the_day(tmp_path):
+    out = forum.write(_cfg(roster={"join_days": [7, 5]}), _llm(), _edition(), tmp_path, [])
+    assert out.day is None and out.note.startswith("not written: forum.roster.join_days")
+
+
+def test_the_roster_report_simulates_years():
+    text = forum.roster_report(_cfg(), FIXTURES, years=2, runs=3, from_launch=True)
+    assert "From launch day" in text and "year 1" in text and "year 2" in text and "gap max" in text
+    data = roster.simulate(roster.Rates(), _cast(), DAY, 120, 2)
+    assert len(data) == 2 and len(data[0]) == 120 and sum(r["joined"] for r in data[0]) >= 120 // 7
 
 
 # ── one day ──────────────────────────────────────────────────────────────────
@@ -266,7 +313,7 @@ def test_a_day_of_comments():
     assert all("Who's around today" in s and "<data>" in s for s in systems)  # the shared, cached part
     assert all("\n\nToday is Tuesday 3 November 2026.\n" in s for s in systems)
     users = llm.users["forum_haiku"] + llm.users["forum_sonnet"]
-    assert all("Your persona\nHandle: " in u for u in users)
+    assert all("Who you are\nHandle: " in u for u in users)
     # each post gets a length, an angle and a mood from code; the day's record keeps their names
     styled = [x for x in plan.values() if not x["quiz"] and x["top"]]
     assert styled and all(len(x["top_angles"]) == len(x["top_moods"]) == len(x["top"]) for x in styled)
@@ -402,11 +449,10 @@ def test_code_check_catches_copies_and_quotes():
 
 
 def test_a_newcomer_is_made_judged_and_saved(tmp_path, monkeypatch):
-    monkeypatch.setattr(roster, "P_JOIN", 1.0)                         # someone joins today
-    monkeypatch.setattr(roster, "P_FRESH", 1.0)                        # a brand-new persona
-    monkeypatch.setattr(roster, "MAX_ACTIVE", 20)
-    llm = _llm()
-    out = forum.write(_cfg(), llm, _edition(), tmp_path, [])
+    monkeypatch.setattr(roster, "join_gap", lambda rng, rates: 0)       # a newcomer is due today
+    cfg = _cfg(roster={"generated_share": 1.0})                       # a brand-new persona (one is due today)
+    llm = _llm(cfg)
+    out = forum.write(cfg, llm, _edition(), tmp_path, [])
     assert "Shelf_Duster_01 joined" in out.note and "newcomer Shelf_Duster_01" in out.note
     forum.save(tmp_path, out)
     saved = json.loads((tmp_path / "forum" / "cast.json").read_text(encoding="utf-8"))
@@ -424,18 +470,17 @@ def test_a_newcomer_is_made_judged_and_saved(tmp_path, monkeypatch):
     assert not any(t.get("board") == "off-topic" for t in out.day["threads"])   # the introduction replaces it
     assert "Shelf_Duster_01: tidies every thread (joined today)" in llm.forum_systems["forum_haiku"][0]
 
-    again = _llm()                                                    # a re-run today: the same newcomer, free
-    out2 = forum.write(_cfg(), again, _edition(), tmp_path, [])
+    again = _llm(cfg)                                                 # a re-run today: the same newcomer, free
+    out2 = forum.write(cfg, again, _edition(), tmp_path, [])
     assert "Shelf_Duster_01 joined" in out2.note and not [k for k in again.users if k.startswith("persona")]
 
 
 def test_a_newcomer_must_be_new(tmp_path, monkeypatch):
-    monkeypatch.setattr(roster, "P_JOIN", 1.0)
-    monkeypatch.setattr(roster, "P_FRESH", 1.0)
-    monkeypatch.setattr(roster, "MAX_ACTIVE", 20)
-    llm = _llm()
+    monkeypatch.setattr(roster, "join_gap", lambda rng, rates: 0)       # a newcomer is due today
+    cfg = _cfg(roster={"generated_share": 1.0})
+    llm = _llm(cfg)
     llm.overlap = 3                                                   # every candidate too close to a member
-    out = forum.write(_cfg(), llm, _edition(), tmp_path, [])
+    out = forum.write(cfg, llm, _edition(), tmp_path, [])
     assert "newcomer no candidate passed after 3 rounds" in out.note
     assert len(llm.users["persona_ideas"]) == 3 and len(out.generated["ideas"]) == 30
     assert "Already drafted and rejected" in llm.users["persona_draft"][1]
@@ -444,13 +489,12 @@ def test_a_newcomer_must_be_new(tmp_path, monkeypatch):
 
 
 def test_ready_made_newcomers_join_before_any_are_generated(tmp_path, monkeypatch):
-    monkeypatch.setattr(roster, "P_JOIN", 1.0)
-    monkeypatch.setattr(roster, "P_FRESH", 1.0)
-    monkeypatch.setattr(roster, "MAX_ACTIVE", 20)
+    monkeypatch.setattr(roster, "join_gap", lambda rng, rates: 0)       # a newcomer is due today
     (tmp_path / "forum").mkdir()
     (tmp_path / "forum" / "cast.json").write_text((FIXTURES / "forum" / "cast.json").read_text(encoding="utf-8"))
-    llm = _llm()
-    out = forum.write(_cfg(), llm, _edition(), tmp_path, [])
+    cfg = _cfg(roster={"generated_share": 1.0})
+    llm = _llm(cfg)
+    out = forum.write(cfg, llm, _edition(), tmp_path, [])
     assert "Shelf_Duster_01 joined" in out.note and not [k for k in llm.users if k.startswith("persona")]
 
 

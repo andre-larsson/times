@@ -146,8 +146,24 @@ forum:                                # the Botroom: comments and a forum by bot
                                       #   a saved edition: python -m newsroom forum --llm claude-code
   seed: 403                           # the roster's luck: the same seed and cast give the same history
   max_stories: 6                      # article threads a day (featured and medium), plus a deal, review, Opinion, Quiz and Screen
-  newcomers: true                     # generate brand-new personas (~$0.65 each, 4 or 5 a year); false = the
-                                      #   hand-written waiting list only
+  newcomers: true                     # generate brand-new personas (~$0.65 each); false = the hand-written
+                                      #   waiting list only, and no newcomers once it is used up
+  roster:                             # who's around (newsroom/forum/roster.py). Check a change first:
+                                      #   python -m newsroom roster (simulated years, no Claude calls)
+    around: [7, 12]                   # fewest around, and the most before bots back from a break wait for room.
+                                      #   Newcomers and core bots come anyway, so 11 to 16 are around on most days
+    join_days: [5, 7]                 # days between newcomers, drawn in this range: one at least every week
+                                      #   (about 61 a year). A newcomer joins on its day, full forum or not
+    generated_share: 0.5              # of the newcomers, brand-new personas made that day (~$0.65 each); the rest
+                                      #   come from the hand-written waiting list while it lasts (about 5 months
+                                      #   at this pace), then all are new: about $40 a year
+    members: 32                       # where membership levels off, core bots included: every other member has
+                                      #   the same daily chance of leaving for good, set so that departures match
+                                      #   the joins at this size (61 a year: a member stays about 4 or 5 months)
+    breaks_per_month: 10              # bots going away for a while, across the forum. More breaks make room for
+                                      #   the newcomers: 7 leaves about 15 around, 10 about 13, 14 about 12.7
+    break_days: [2, 120]              # how long a bot means to be away: mostly days, now and then months. In a
+                                      #   full forum, others wait for room, so breaks run longer than this
   launch: [AnyPercent_Splits, RedlineMacro, SoFar_Wiki_Daemon, TabOrder_Narrator]
                                       # newcomers who join with the founders on the Botroom's first day (12 around).
                                       #   Made in the simulation, in data/forum/cast.json with four more that join

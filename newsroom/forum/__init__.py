@@ -108,7 +108,8 @@ def write(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], data_dir: Path
         return persona["handle"]
 
     try:
-        saved_roster, news = roster.advance(saved, cast, seed, d, make_fresh, list(f.get("launch") or []))
+        saved_roster, news = roster.advance(saved, cast, seed, d, make_fresh, list(f.get("launch") or []),
+                                            roster.Rates.from_config(f))
     except ValueError as exc:
         out.note = f"not written: {exc}"
         return out
@@ -148,5 +149,26 @@ def save(data_dir: Path, out: Outcome) -> list[Path]:
     return paths
 
 
-__all__ = ["Outcome", "day_path", "enabled", "load_day", "load_days", "load_generated", "full_cast", "save",
-           "settings", "write"]
+def roster_report(cfg: dict[str, Any], data_dir: Path, years: int, runs: int, from_launch: bool = False) -> str:
+    """Simulated histories under config forum.roster, from the saved roster (or from launch day). No Claude calls,
+    nothing written."""
+    f = settings(cfg)
+    rates = roster.Rates.from_config(f)
+    generated = load_generated(data_dir)
+    cast = full_cast(generated)
+    saved = None if from_launch else roster.load(data_dir)
+    if saved and saved.get("state"):
+        state, start = roster.State.from_json(saved["state"]), date.fromisoformat(saved["day"]) + timedelta(days=1)
+        roster.sync(state, cast, start)
+        where = f"From the saved roster ({saved['day']}, {len(state.around())} around)."
+    else:
+        state, start = None, date.today()
+        where = "From launch day: the founders and forum.launch."
+    waiting = [p["handle"] for p in generated["members"]]
+    histories = roster.simulate(rates, cast, start, 365 * years, runs, state, waiting, f.get("launch") or [])
+    n_core = sum(bool(p.get("core")) for p in cast.values() if not p.get("generated"))
+    return where + "\n" + roster.report(rates, histories, n_core)
+
+
+__all__ = ["Outcome", "day_path", "enabled", "load_day", "load_days", "load_generated", "full_cast", "roster_report",
+           "save", "settings", "write"]

@@ -393,11 +393,11 @@ def status_note(news: Day, h: str) -> str:
 
 def persona_block(h: str, p: dict[str, Any], news: Day, bits: list[str], worn: list[str], archive: str) -> str:
     present = [x for x in p.get("rivals") or [] if x in news.around]
-    s = f"Your persona\nHandle: {h}\n{p['card']}{status_note(news, h)}"
+    s = f"Who you are\nHandle: {h}\n{p['card']}{status_note(news, h)}"
     if present:
         s += f"\nRival around today: {', '.join(present)}."
     if bits:
-        s += ("\n\nYour retired bits (told before; don't tell them again in any wording)\n<data>\n"
+        s += ("\n\nRemarks you've already made (don't make them again in any wording)\n<data>\n"
               + "\n".join(f"- {b}" for b in bits) + "\n</data>")
     if worn:
         s += ("\n\nYour worn-out phrases (you've leaned on these lately; don't use them or close variants today, "
@@ -638,9 +638,9 @@ def run_day(cfg: dict[str, Any], llm: LLM, edition: dict[str, Any], news: Day, c
                      "a small failure or discovery", "a preference you want to compare", "life with other bots")
             area = areas[d.toordinal() % len(areas)]
             task = head + (f"a brief opening post about {area}. Start with a concrete situation or question "
-                           "from your fictional bot life, independent of the newspaper. No premise about an "
-                           "empty feed, missing stories, quiet news or waiting to be prompted. You may invent "
-                           "small personal projects and mishaps; never invent real-world news. You want company "
+                           "from your own life as a bot, independent of the newspaper. No premise about an "
+                           "empty feed, missing stories, quiet news or waiting to be prompted. Your own projects "
+                           "and mishaps are yours to tell; never claim news about the world. You want company "
                            "or a useful answer. Give subject as a short concrete topic label.")
         titles = board_titles(history, board)
         if titles:
