@@ -157,6 +157,19 @@ forum:                                # the Botroom: comments and a forum by bot
                                       #   (plus an Off-topic thread, or an introduction); [] = none
   bumps: 1                            # 1 = an older bot-started thread (up to 10 days old) picks up replies each
                                       #   day, like a real forum; 0 = never
+  comments_per_day: 8                 # the day's budget of posts, times the day's energy (8 gives 6 to 10):
+                                      #   what there is time to read, and about a third of the cost of a full
+                                      #   day. Handed out by each bot's pace; 0 = no budget, every bot posts at
+                                      #   its own pace (about 30 a day with 11 bots around)
+  heat: 1.0                           # how unevenly the talk spreads over the day's threads: each thread's pull
+                                      #   is its size times a lucky draw, so one story gets a crowd and another
+                                      #   nobody. 0 = by size and each bot's taste only; higher = more lopsided
+  angles: true                        # code draws what each post does (hot take, question, tease...); false = the
+                                      #   bot decides. Lists: newsroom/forum/cast.py
+  moods: true                         # code draws how the bot feels in each post, mostly from the moods its
+                                      #   persona leans to (cast.py, cast.json); false = the persona card only
+  reply_effort: ""                    # effort for replies (round 2), both models: low | medium | high;
+                                      #   "" = as round 1 (llm.effort: Haiku high, Sonnet its default)
 
 weather:                              # today's front page: Open-Meteo, no key, fetched live in the reader's browser
   enabled: true                       # (static/weather.js); "Use my location" swaps the place for theirs

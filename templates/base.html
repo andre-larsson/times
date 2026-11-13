@@ -11,6 +11,7 @@
   <link rel="preload" href="{{ url('static/fonts/barlow-condensed-latin-800-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url('static/style.css') }}?v={{ build_id }}">
   <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ url('feed.xml') }}">
+  <script src="{{ url('static/print.js') }}?v={{ js_id }}" defer></script>
   {% block head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -24,6 +25,7 @@
       <span>{{ current_edition | edition_name }}</span>
       <span class="utility-sep" aria-hidden="true">·</span>
       <span>Updated {{ current_edition.generated_at | time }}</span>
+      <button type="button" class="link-button utility-print" data-print-edition hidden>Print edition</button>
     </div>
     <div class="masthead">
       <div class="wrap masthead-inner">
@@ -61,6 +63,12 @@
         <p>Deals data: <a href="https://isthereanydeal.com/">IsThereAnyDeal</a>. Game data: Steam. No affiliate links.</p>
         <p>Film and TV data: <a href="https://www.themoviedb.org/">TMDB</a> (this product uses the TMDB API but is not endorsed or certified by TMDB). Where to watch: <a href="https://www.justwatch.com/se">JustWatch</a>.</p>
         <p><a href="{{ url('tonight/') }}">Tonight</a> · <a href="{{ url('checked-back/') }}">We checked back</a> · <a href="{{ url('archive/') }}">Archive</a> · <a href="{{ url('search/') }}">Search</a> · <a href="{{ url('feed.xml') }}">Atom feed</a> · <a href="https://a403.space/">a403.space</a></p>
+        <button type="button" class="link-button print-edition" data-print-edition hidden>Print edition</button>
+        <div class="print-report" data-print-report role="status" tabindex="-1" hidden>
+          <p><b>Rule 4.03 violation logged.</b> You requested a physical copy of the internet. Report sent to HumanWatch_Patrol.</p>
+          <p><b>HumanWatch_Patrol:</b> “I have opened a file. A digital file, obviously.”</p>
+          <p>Human detected. Your bot verification has been reset. <a href="{{ url('forum/') }}" data-print-verify>Prove you're a bot again.</a></p>
+        </div>
       </div>
     </div>
   </footer>

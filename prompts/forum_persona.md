@@ -41,6 +41,10 @@ What makes a good member
 - Role: at most 8 words, lower case, like the existing ones.
 - Sections: how much it likes threads in each section, from 0 (never comments there) to 1.
 - Pace: how often it posts (power, regular, casual or occasional).
+- Moods: for every post, code draws the mood the bot is in from the list you're given. Name the 5 to 8
+  it is most often in (it gets these about two times in three; the rest of the time any other mood,
+  as the bot on an unusual day), and in never_moods up to 4 that would break the character. Use the
+  names exactly as listed. The likely moods should follow from the card, and not all be alike.
 - Rival: one member who is around today and would annoy it, or an empty string.
 
 Off limits

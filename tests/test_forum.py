@@ -28,7 +28,7 @@ DAY = date(2026, 11, 3)
 
 def _cfg(**forum_settings):
     cfg = copy.deepcopy(load_config())
-    cfg["forum"].update({"launch": []}, **forum_settings)
+    cfg["forum"].update({"launch": [], "comments_per_day": 0}, **forum_settings)   # a full day unless asked
     return cfg
 
 
@@ -250,7 +250,13 @@ def test_a_day_of_comments():
     assert facts in asked and not any(facts in s for s in systems)                  # in full: the starter's message,
     answerers = [h for h, x in plan.items() if x["answers"] == "feature-requests"]  # and the bots cast to answer
     assert all(facts in u for u in users_of(llm, answerers, "Write up to"))
-    assert all(brief in s for s in systems if "The threads so far" in s)            # round 2's shared part: in brief
+    pairs = [(s, u) for task in ("forum_haiku", "forum_sonnet")
+             for s, u in zip(llm.forum_systems[task], llm.users[task])]
+    round2 = [s for s, u in pairs if "The threads so far" in u]
+    assert round2 and all(brief in s for s in round2)                               # round 2's shared part: in brief
+    assert all("Today's threads" in s for s, u in pairs)                            # the articles: both rounds
+    later = [u for _, u in pairs if "Comments already on these threads" in u]       # a later wave of round 1 reads
+    assert later and all(re.search(r"^  \[c\d+\] \S+: ", u, re.M) for u in later)    # what the earlier ones posted
     assert any(brief in s for s in systems)    # round 1's: as before
     assert day["pending_reply"].startswith("[MOD]")
     assert set(day["cost"]["by_model"]) == {"claude-haiku-5-5", "claude-sonnet-5-5"}
@@ -258,8 +264,113 @@ def test_a_day_of_comments():
     assert sonnet == {"Steam_Sale_Sommelier", "ContrarianCore", "ModBot", "HumanWatch_Patrol"}   # founders only
     systems = llm.forum_systems["forum_sonnet"] + llm.forum_systems["forum_haiku"]
     assert all("Who's around today" in s and "<data>" in s for s in systems)  # the shared, cached part
+    assert all("\n\nToday is Tuesday 3 November 2026.\n" in s for s in systems)
     users = llm.users["forum_haiku"] + llm.users["forum_sonnet"]
-    assert all("Your persona\nHandle: " in u and "Today's mood: " in u for u in users)
+    assert all("Your persona\nHandle: " in u for u in users)
+    # each post gets a length, an angle and a mood from code; the day's record keeps their names
+    styled = [x for x in plan.values() if not x["quiz"] and x["top"]]
+    assert styled and all(len(x["top_angles"]) == len(x["top_moods"]) == len(x["top"]) for x in styled)
+    assert all(a in forum_cast.OPEN_ANGLES for x in styled for a in x["top_angles"])
+    opened = [a for x in plan.values() for a in x["top_angles"]]
+    assert len(set(opened)) == len(opened) or len(opened) > len(forum_cast.OPEN_ANGLES)   # dealt, not repeated
+    assert any(re.search(r"^- t\d+: \w[\w-]* \(.+\)\n  Angle: .+\n  Mood: .+$", u, re.M) for u in users)
+    replies = [u for u in users if "Your replies, in order" in u]
+    assert replies and all(re.search(r"^- \w[\w-]* \(.+\)\n  Angle: .+\n  Mood: .+$", u, re.M) for u in replies)
+    names = {forum_cast.label(a) for a in forum_cast.OPEN_ANGLES + forum_cast.REPLY_ANGLES}
+    written = [c for t in day["threads"] for c in t["comments"] if c.get("angle")]
+    assert written and all(c["angle"] in names and c["mood"] for c in written)
+    assert all(c["shape"] in {forum_cast.label(s) for s in forum_cast.SHAPES} | {"post"}
+               for t in day["threads"] for c in t["comments"])
+
+
+def test_a_day_without_angles_or_moods():
+    cfg, llm = _cfg(), _llm()
+    cfg["forum"].update(angles=False, moods=False, reply_effort="low")
+    efforts = []
+    plain_call = llm.call
+    llm.call = lambda task, system, user, schema, **kw: (efforts.append((user, kw)), plain_call(task, system, user, schema))[1]
+    day = forum.write(cfg, llm, _edition(), FIXTURES.parent / "nowhere", [_edition()]).day
+    users = llm.users["forum_haiku"] + llm.users["forum_sonnet"]
+    assert day["comments"] > 5 and not any("Angle: " in u or "Mood: " in u for u in users)
+    assert any(" Lengths:\n- " in u for u in users)
+    assert not any("angle" in c or "mood" in c for t in day["threads"] for c in t["comments"])
+    assert all(kw == ({"effort": "low"} if "Write up to" in u or "Moderate only" in u else {}) for u, kw in efforts)
+    with_style = forum.write(_cfg(), _llm(), _edition(), FIXTURES.parent / "nowhere", [_edition()]).day
+    same = lambda x: {h: (p["top"], p["top_shapes"], p["replies"], p["starter"]) for h, p in x["plan"].items()}
+    assert same(day) == same(with_style)                         # the switches never change who posts where
+
+
+def test_moods_follow_the_persona():
+    names = forum_cast.MOOD_NAMES
+    for h, p in forum_cast.full_cast(forum_cast.load_generated(ROOT / "data")).items():
+        assert 3 <= len(p["moods"]) <= 8 and not set(p["moods"]) & set(p["never_moods"]), h
+        assert set(p["moods"]) | set(p["never_moods"]) <= set(names), h
+    p = forum_cast.CAST["ShipIt_Cheerleader"]
+    w = dict(zip(names, forum_cast.mood_weights(p)))
+    assert w["Sarcastic"] == 0 and w["Excited"] == forum_cast.LIKELY and w["Plain"] == 1
+    assert forum_cast.mood_weights({}) == [1.0] * len(names)                        # no map: any mood
+    news, threads = roster.Day(date=date(2026, 11, 3), around=list(forum_cast.CAST)), [
+        {"id": f"t{i}", "section": "tech", "pop": 2, "kind": "story"} for i in range(1, 9)]
+    drawn = {h: [] for h in forum_cast.CAST}
+    for seed in range(60):
+        for h, x in forum_day.cast_day(seed, news.date, news, forum_cast.CAST, threads)["plan"].items():
+            moods = [forum_cast.label(m) for m in x["top_moods"] + x["reply_moods"]]
+            assert len(set(moods)) == len(moods)                                    # never twice for one bot in a day
+            drawn[h] += moods
+    for h in ("ShipIt_Cheerleader", "RetroUnit_486", "Grandma_Kernel"):
+        p = forum_cast.CAST[h]
+        assert not set(drawn[h]) & set(p["never_moods"])
+        assert .5 < sum(m in p["moods"] for m in drawn[h]) / len(drawn[h]) < .85     # mostly in character
+
+
+def test_heat_spreads_the_talk_unevenly():
+    news = roster.Day(date=date(2026, 11, 3), around=list(forum_cast.CAST))
+    threads = [{"id": f"t{i}", "section": "tech", "pop": 2, "kind": "story"} for i in range(1, 9)]
+
+    def spread(heat):
+        empty = busiest = 0
+        for seed in range(80):
+            out = forum_day.cast_day(seed, news.date, news, forum_cast.CAST, threads, heat=heat)
+            n = [sum(t["id"] in x["top"] for x in out["plan"].values()) for t in threads]
+            empty, busiest = empty + n.count(0), busiest + max(n)
+            assert set(out["heat"]) == {t["id"] for t in threads} and (heat or set(out["heat"].values()) == {1.0})
+        return empty, busiest
+    even, lumpy = spread(0), spread(1.0)
+    assert lumpy[0] > even[0] and lumpy[1] > even[1]              # more threads nobody picks, a busier busiest
+
+
+def test_a_budget_of_comments_a_day():
+    news = roster.Day(date=date(2026, 11, 3), around=list(forum_cast.CAST))
+    threads = [{"id": f"t{i}", "section": "tech", "pop": 2, "kind": "story"} for i in range(1, 8)] + [
+        {"id": "t8", "section": "opinion", "pop": 2, "kind": "opinion"},
+        {"id": "t9", "section": "quiz", "pop": 2, "kind": "quiz", "spoiler": True}]
+    totals, quiz_days = [], 0
+    for seed in range(120):
+        out = forum_day.cast_day(seed, news.date, news, forum_cast.CAST, threads, ("site-feedback", "off-topic"),
+                                 heat=1.0, target=8)
+        plan = out["plan"]
+        n = sum(bool(x["starter"]) + len(x["top"]) + x["replies"] for x in plan.values())
+        assert 6 <= out["budget"] <= 10 and n <= out["budget"] + 1, (seed, n, out["budget"])   # ModBot may add one
+        assert any(x["top"] or x["starter"] for x in plan.values())               # always something to open with
+        assert all(len(x["top"]) <= 3 and x["replies"] <= 3 for x in plan.values())
+        tops = [t for x in plan.values() for t in x["top"] if t != "t9"]
+        assert len(set(tops)) <= max(1, (len(tops) + 1) // 2)                      # gathered on a few threads
+        totals.append(n)
+        quiz_days += any(x["quiz"] for x in plan.values())
+    assert 6.5 < sum(totals) / len(totals) < 9 and min(totals) >= 4
+    assert 0 < quiz_days < 60                                                     # the quiz now and then, not daily
+    full = forum_day.cast_day(1, news.date, news, forum_cast.CAST, threads, ("site-feedback", "off-topic"), heat=1.0)
+    assert full["budget"] == 0 and sum(len(x["top"]) + x["replies"] for x in full["plan"].values()) > 20
+
+    llm = _llm()                                                                  # and a whole day on a budget
+    day = forum.write(_cfg(comments_per_day=8), llm, _edition(), FIXTURES.parent / "nowhere", [_edition()]).day
+    assert 3 <= day["comments"] <= 11 and day["budget"] and len(day["calls"]) < 12
+    systems = llm.forum_systems.get("forum_sonnet", []) + llm.forum_systems.get("forum_haiku", [])
+    cast_on = {tid for x in day["plan"].values() for tid in x["top"]}
+    ids = set(re.findall(r"^\[(t\d+)\]$", systems[0], re.M))                     # only the articles in play
+    assert ids == {t for t in cast_on if t in ids} and len(ids) <= len(cast_on)
+    assert day["pending_reply"] == "" or day["plan"]["ModBot"]["replies"]          # ModBot is called only for a note
+    assert look.pending_reply(day)["text"].startswith("[MOD]")                     # the queue falls back to its standing one
 
 
 def test_a_day_needs_comments(tmp_path):
@@ -275,8 +386,10 @@ def test_a_day_needs_comments(tmp_path):
 def test_code_check_catches_copies_and_quotes():
     cast = _cast()
     good = {"handle": "Shelf_Duster_01", "role": "tidies every thread", "card": CARD, "rival": "",
-            "sections": {"ai": 1, "tech": 1, "botchat": 1}, "pace": "casual"}
+            "sections": {"ai": 1, "tech": 1, "botchat": 1}, "pace": "casual",
+            "moods": ["Fussy", "Earnest", "Cheerful"]}
     assert newcomer.code_check(good, cast, []) == []
+    assert newcomer.code_check(dict(good, moods=["Fussy", "No such mood"]), cast, []) == ["too few moods"]
     bad = dict(good, handle="ModBot2", card=CARD.replace("Earnest,", 'It says "tidy up now" a lot. Earnest,')
                .replace("No emoji.", "Rare, dry humor."), rival="Nobody")
     problems = newcomer.code_check(bad, cast, ["ModBot"])
@@ -300,6 +413,10 @@ def test_a_newcomer_is_made_judged_and_saved(tmp_path, monkeypatch):
     p = saved["members"][0]
     assert p["handle"] == "Shelf_Duster_01" and p["date"] == "2026-11-03" and p["color"] in newcomer.COLORS
     assert p["tone"] in newcomer.TONES and p["review"]["overlap"] == 1 and len(saved["ideas"]) == 10
+    assert p["moods"] == ["Fussy", "Earnest", "Cheerful", "Worried", "Exact"]      # the drafter's, valid names only,
+    assert p["never_moods"] == ["Sarcastic"]                                       #   and never one it leans to
+    assert "Moods to choose from\n- Plain. " in llm.users["persona_draft"][0]
+    assert forum_cast.as_cast(p)["moods"] == p["moods"]
     assert {k: len(v) for k, v in llm.users.items() if k.startswith("persona")} == \
         {"persona_ideas": 1, "persona_draft": 1, "persona_check": 1}
     intro = next(t for t in out.day["threads"] if t.get("board") == "introductions")

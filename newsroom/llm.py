@@ -147,8 +147,9 @@ class LLM:
     # ── public ───────────────────────────────────────────────────────────────
 
     def call(self, task: str, system: str, user: str, schema: dict[str, Any],
-             max_tokens: int | None = None) -> dict[str, Any]:
-        """One structured call. Returns the parsed JSON object, or raises LLMError."""
+             max_tokens: int | None = None, effort: str | None = None) -> dict[str, Any]:
+        """One structured call. Returns the parsed JSON object, or raises LLMError. `effort` replaces the
+        task's configured effort for this call."""
         self.tally.check()
         model = self.model_for(task)
         max_tokens = int(max_tokens or self.max_tokens.get(task, 4000))
@@ -156,9 +157,9 @@ class LLM:
         call = Call(task=task, model=model, backend=self.backend)
         try:
             if self.backend == "api":
-                data = self._call_api(call, system, user, schema, max_tokens)
+                data = self._call_api(call, system, user, schema, max_tokens, effort)
             else:
-                data = self._call_claude_code(call, system, user, schema)
+                data = self._call_claude_code(call, system, user, schema, effort)
         except LLMError as exc:
             call.ok, call.error, call.seconds = False, str(exc)[:300], round(time.monotonic() - start, 1)
             self.tally.record(call, exc)
@@ -257,14 +258,16 @@ class LLM:
             price(self.cfg, call.model, call.input_tokens, call.output_tokens, call.cache_read, call.cache_write)
             + call.web_searches * per_search, 6)
 
-    def _call_api(self, call: Call, system: str, user: str, schema: dict[str, Any], max_tokens: int) -> dict:
+    def _call_api(self, call: Call, system: str, user: str, schema: dict[str, Any], max_tokens: int,
+                  effort: str | None = None) -> dict:
+        effort = effort or self.effort.get(call.task)
         msg = self._create(
             model=call.model,
             max_tokens=max_tokens,
             system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": user}],
             output_config={"format": {"type": "json_schema", "schema": schema},
-                           **({"effort": self.effort[call.task]} if self.effort.get(call.task) else {})},
+                           **({"effort": effort} if effort else {})},
         )
         self._add_usage(call, msg)
         if msg.stop_reason == "max_tokens":
@@ -318,7 +321,8 @@ class LLM:
 
     # ── claude-code backend ──────────────────────────────────────────────────
 
-    def _call_claude_code(self, call: Call, system: str, user: str, schema: dict[str, Any]) -> dict:
+    def _call_claude_code(self, call: Call, system: str, user: str, schema: dict[str, Any],
+                          effort: str | None = None) -> dict:
         exe = shutil.which("claude")
         if not exe:
             raise CreditError("claude CLI not found on PATH")
@@ -327,8 +331,9 @@ class LLM:
                "--json-schema", json.dumps(schema), "--system-prompt", system,
                "--tools", "", "--strict-mcp-config", "--setting-sources", "",
                "--no-session-persistence", "--disable-slash-commands"]
-        if self.effort.get(call.task):
-            cmd += ["--effort", self.effort[call.task]]
+        effort = effort or self.effort.get(call.task)
+        if effort:
+            cmd += ["--effort", effort]
         with tempfile.TemporaryDirectory(prefix="newsroom-cc-") as cwd:   # no CLAUDE.md, no project context
             try:
                 proc = subprocess.run(cmd, input=user, capture_output=True, text=True, cwd=cwd, env=env,

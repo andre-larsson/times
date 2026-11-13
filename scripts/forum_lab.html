@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Botroom lab</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --ink: #17140f;
+      --ink-2: #3f3a33;
+      --ink-3: #686157;
+      --rule: #dcd6cb;
+      --paper: #fdfcf9;
+      --paper-2: #f3efe7;
+      --amber: #ffb000;
+      --amber-ink: #5c3d00;
+      --focus: #ffb000;
+      --ai: #7c3aed;
+      --tech: #0891b2;
+      --rose: #e11d48;
+      --rust: #c2410c;
+      --slate: #78716c;
+      --gaming: #16a34a;
+      --deals: #db2777;
+      --screen: #2563eb;
+      --mod: #17140f;
+      --bad: #b91c1c;
+      --font-ui: system-ui, sans-serif;
+      --font-body: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+      --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #f3efe8; --ink-2: #d2cbbf; --ink-3: #a1998d;
+        --rule: #36322c; --paper: #141210; --paper-2: #1e1b17;
+        --amber-ink: #ffd27a; --mod: #f3efe8; --bad: #fca5a5;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--paper); color: var(--ink);
+      font-family: var(--font-ui); font-size: 15px; line-height: 1.45;
+    }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    header {
+      display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: end;
+      justify-content: space-between; padding: var(--s-4) var(--s-5);
+      border-bottom: 1px solid var(--rule);
+    }
+    h1 { margin: 0; font-size: 1.4rem; letter-spacing: -0.02em; }
+    header p, .hint { margin: var(--s-1) 0 0; color: var(--ink-3); font-size: 0.85rem; }
+    header label { display: grid; gap: var(--s-1); font-size: 0.8rem; color: var(--ink-2); }
+    select, input[type="text"], textarea, button {
+      font: inherit; color: inherit; background: var(--paper); border: 1px solid var(--rule);
+      border-radius: 2px;
+    }
+    select, input[type="text"], textarea { padding: var(--s-2) var(--s-3); width: 100%; }
+    textarea { resize: vertical; line-height: 1.4; }
+    .layout {
+      display: grid; grid-template-columns: 34rem minmax(0, 1fr);
+      align-items: start; min-height: calc(100vh - 5.5rem);
+    }
+    form {
+      position: sticky; top: 0; max-height: 100vh; overflow: auto;
+      padding: var(--s-4) var(--s-5) var(--s-6); border-right: 1px solid var(--rule);
+      display: grid; gap: var(--s-4); align-content: start;
+    }
+    fieldset { margin: 0; padding: 0; border: 0; display: grid; gap: var(--s-2); }
+    .field { display: grid; gap: var(--s-2); }
+    legend, .field > span { font-size: 0.8rem; color: var(--ink-2); }
+    button.quiet { padding: var(--s-2) var(--s-3); background: var(--paper-2); cursor: pointer; }
+    .col header button { margin-top: var(--s-2); }
+    .presets { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+    .presets button {
+      padding: var(--s-2) var(--s-3); background: var(--paper-2); cursor: pointer;
+    }
+    .presets button[aria-pressed="true"] { background: var(--amber); color: var(--amber-ink); border-color: var(--amber); }
+    form > button {
+      background: var(--amber); color: var(--amber-ink); border-color: transparent;
+      font-weight: 650; padding: var(--s-3); cursor: pointer;
+    }
+    form > button:disabled { opacity: 0.6; cursor: progress; }
+    .check { display: flex; gap: var(--s-2); align-items: flex-start; font-size: 0.92rem; }
+    .check input { margin-top: 0.2rem; }
+    details[open] { display: grid; gap: var(--s-2); }
+    #brief-view { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 0.75rem; }
+    summary { cursor: pointer; color: var(--ink-2); }
+    #base, #brief { font-family: ui-monospace, monospace; font-size: 0.8rem; }
+    #status { min-height: 1.4em; margin: 0; }
+    #status.error { color: var(--bad); }
+    .stage { padding: var(--s-4) var(--s-5) var(--s-7); min-width: 0; }
+    .stage-head { margin-bottom: var(--s-4); }
+    .stage-head h2 { margin: 0; font-size: 1.15rem; font-family: var(--font-body); font-weight: 600; }
+    .board {
+      display: flex; gap: var(--s-4); overflow-x: auto; align-items: flex-start;
+      padding-bottom: var(--s-4);
+    }
+    .col {
+      flex: 0 0 22rem; max-width: 100%; background: var(--paper);
+      border: 1px solid var(--rule); border-top: 3px solid var(--ink);
+    }
+    .col header, .post { padding: var(--s-3) var(--s-4); }
+    .col header { border-bottom: 1px solid var(--rule); background: var(--paper-2); }
+    .col h3 { margin: 0; font-size: 1rem; }
+    .meta { margin: var(--s-1) 0 0; color: var(--ink-3); font-size: 0.8rem; }
+    .post { border-bottom: 1px solid var(--rule); }
+    .post:last-child { border-bottom: 0; }
+    .who { margin: 0; font-weight: 650; }
+    .post p { margin: var(--s-2) 0 0; }
+    .body { font-family: var(--font-body); font-size: 1.02rem; line-height: 1.45; white-space: pre-wrap; }
+    .quote {
+      margin: var(--s-2) 0 0; padding-left: var(--s-3); border-left: 2px solid var(--rule);
+      color: var(--ink-2); font-size: 0.85rem;
+    }
+    .missing .body { color: var(--bad); font-family: var(--font-ui); font-size: 0.9rem; }
+    .notes { padding: var(--s-3) var(--s-4) var(--s-4); color: var(--ink-2); font-size: 0.85rem; }
+    .notes ul { margin: var(--s-2) 0 0; padding-left: 1.1rem; }
+    .empty { color: var(--ink-3); padding: var(--s-5) 0; }
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+      form { position: static; max-height: none; border-right: 0; border-top: 1px solid var(--rule); }
+      .stage { order: -1; }
+      .col { flex-basis: min(22rem, 100%); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Botroom lab</h1>
+      <p id="cast-line">Local only. A run calls Claude on your subscription.</p>
+    </div>
+    <label>Saved trial
+      <select id="runs"><option value="">Loading…</option></select>
+    </label>
+  </header>
+  <div class="layout">
+    <form id="experiment">
+      <fieldset>
+        <legend>Start from</legend>
+        <div class="presets" id="presets"></div>
+      </fieldset>
+      <div class="field">
+        <span>Base prompt</span>
+        <textarea id="base" name="prompt" rows="16"></textarea>
+        <button type="button" class="quiet" id="reset-prompt">Reset to the forum prompt</button>
+      </div>
+      <label class="field"><span>Extra instructions</span>
+        <textarea id="extra" name="extra" rows="5" placeholder="Added above the JSON rule. Leave empty to use the base prompt alone."></textarea>
+      </label>
+      <label class="field"><span>Model</span>
+        <select id="model" name="model"></select>
+      </label>
+      <label class="check"><input id="brief-on" name="brief_on_reply" type="checkbox" checked> Replies can see the article</label>
+      <label class="check"><input id="angles-on" name="angles" type="checkbox" checked> Draw an angle for each post</label>
+      <label class="check"><input id="moods-on" name="moods" type="checkbox" checked> Draw a mood for each post</label>
+      <label class="field"><span>Reply effort</span>
+        <select id="reply-effort" name="reply_effort">
+          <option value="">As the opening comments</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </label>
+      <label class="field"><span>Label</span>
+        <input id="label" name="label" type="text" value="custom" maxlength="40" autocomplete="off">
+      </label>
+      <label class="check"><input id="add-to-run" type="checkbox" checked> Add to the trial shown</label>
+      <button type="submit" id="run-button">Run this variant</button>
+      <p class="hint">Three openings, then three replies. About half a minute. The terminal lists each call.</p>
+      <p id="status" role="status"></p>
+      <details>
+        <summary>Thread context</summary>
+        <label class="field"><span>Title</span>
+          <input id="title" name="title" type="text" maxlength="180">
+        </label>
+        <label class="field"><span>Brief the bots are given</span>
+          <textarea id="brief" name="brief" rows="12"></textarea>
+        </label>
+      </details>
+    </form>
+    <main class="stage">
+      <div class="stage-head">
+        <h2 id="thread-title">Thread</h2>
+        <p class="hint" id="thread-note"></p>
+        <details>
+          <summary>Source brief</summary>
+          <pre id="brief-view"></pre>
+        </details>
+      </div>
+      <div class="board" id="board"></div>
+    </main>
+  </div>
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const state = { meta: null, runId: "", rawTitle: "", rawBrief: "" };
+
+    const get = async (url) => {
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || res.statusText);
+      return data;
+    };
+
+    const pretty = (text) => {
+      try { return JSON.stringify(JSON.parse(text), null, 2); }
+      catch { return text; }
+    };
+
+    const words = (text) => (text.match(/[A-Za-z0-9']+/g) || []).length;
+
+    const el = (tag, attrs = {}, ...kids) => {
+      const node = document.createElement(tag);
+      for (const [key, value] of Object.entries(attrs)) {
+        if (key === "class") node.className = value;
+        else if (value != null) node.setAttribute(key, value);
+      }
+      for (const kid of kids) {
+        if (kid == null || kid === false) continue;
+        node.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+      }
+      return node;
+    };
+
+    const colorOf = (handle) => {
+      const bot = state.meta.cast.find((c) => c.handle === handle);
+      return bot ? `var(--${bot.color})` : "var(--ink-3)";
+    };
+
+    const fillForm = () => {
+      const { meta } = state;
+      $("base").value = meta.prompt;
+      $("model").replaceChildren(...meta.models.map((m) => el("option", { value: m.id }, m.label)));
+      $("presets").replaceChildren(...meta.presets.map((preset) => {
+        const button = el("button", { type: "button" }, preset.label);
+        button.addEventListener("click", () => applyPreset(preset, button));
+        return button;
+      }));
+      $("cast-line").textContent = meta.cast
+        .map((c) => `${c.handle} (${c.model})`)
+        .join(" · ") + ". A run calls Claude on your subscription.";
+      applyFixture(null);
+    };
+
+    const applyPreset = (preset, button) => {
+      $("extra").value = preset.extra;
+      $("brief-on").checked = preset.brief_on_reply;
+      $("angles-on").checked = preset.angles;
+      $("moods-on").checked = preset.moods;
+      $("reply-effort").value = preset.reply_effort || "";
+      $("model").value = preset.model;
+      $("label").value = preset.id;
+      for (const other of $("presets").children) other.setAttribute("aria-pressed", "false");
+      button.setAttribute("aria-pressed", "true");
+    };
+
+    const applyFixture = (fixture) => {
+      const source = fixture || state.meta;
+      state.rawTitle = source.title;
+      state.rawBrief = source.brief;
+      $("title").value = source.title;
+      $("brief").value = pretty(source.brief);
+    };
+
+    const briefToSend = () => $("brief").value === pretty(state.rawBrief) ? state.rawBrief : $("brief").value;
+    const titleToSend = () => $("title").value.trim() === state.rawTitle ? state.rawTitle : $("title").value.trim();
+
+    const fillRuns = (runs) => {
+      const select = $("runs");
+      select.replaceChildren(el("option", { value: "" }, runs.length ? "Choose a trial" : "No saved trials"));
+      for (const run of runs) {
+        select.append(el("option", { value: run.id }, `${run.id} · ${run.variants.join(", ")}`));
+      }
+      $("add-to-run").disabled = !state.runId;
+      if (state.runId) select.value = state.runId;
+    };
+
+    const post = (comment, comments) => {
+      const parent = comments.find((c) => c.id === comment.reply_to);
+      const bits = [`${comment.shape || "post"}`, `${words(comment.text)} words`];
+      if (comment.angle) bits.push(comment.angle);
+      if (comment.mood) bits.push(comment.mood.toLowerCase());
+      if (comment.reply_to) bits.push(`reply to ${comment.reply_to}`);
+      const node = el("article", { class: comment.missing ? "post missing" : "post" },
+        el("p", { class: "who", style: `color:${colorOf(comment.handle)}` }, comment.handle),
+        el("p", { class: "meta" }, bits.join(" · ")));
+      if (parent) {
+        const snippet = parent.text.length > 180 ? `${parent.text.slice(0, 180)}…` : parent.text;
+        node.append(el("p", { class: "quote" }, `${parent.handle}: ${snippet}`));
+      }
+      node.append(el("p", { class: "body" }, comment.text));
+      return node;
+    };
+
+    const column = (title, subtitle, comments, notes) => {
+      const col = el("section", { class: "col" },
+        el("header", {}, el("h3", {}, title), el("p", { class: "meta" }, subtitle)));
+      if (!comments.length) col.append(el("p", { class: "post meta" }, "No comments."));
+      for (const comment of comments) col.append(post(comment, comments));
+      const warnings = (notes || []).filter((line) => /says |does not |names none/.test(line));
+      if (warnings.length) {
+        col.append(el("div", { class: "notes" }, "Reading notes",
+          el("ul", {}, ...warnings.map((line) => el("li", {}, line)))));
+      }
+      return col;
+    };
+
+    const variantColumn = (result) => {
+      const spec = result.spec || {};
+      const calls = result.calls || [];
+      const seconds = calls.reduce((sum, call) => sum + (call.seconds || 0), 0).toFixed(0);
+      const failed = calls.filter((call) => !call.ok).length;
+      const model = spec.model ? `all ${spec.model}` : "cast models";
+      const style = [spec.angles ? "angles" : "", spec.moods ? "moods" : ""].filter(Boolean).join(" and ") || "no angles or moods";
+      const effort = spec.reply_effort ? ` · replies at ${spec.reply_effort} effort` : "";
+      const context = (spec.brief_on_reply ? "replies see the article" : "replies see the thread only") + ` · ${style}${effort}`;
+      const cost = typeof result.equivalent_usd === "number" ? ` · $${result.equivalent_usd.toFixed(4)}` : "";
+      const fail = failed ? ` · ${failed} failed` : "";
+      const head = `${model} · ${context}${cost} · ${seconds}s${fail}`;
+      const col = column(result.variant, head, result.comments || [], result.checks);
+      const header = col.querySelector("header");
+      if (result.prompt) {
+        const use = el("button", { type: "button", class: "quiet" }, "Use this base prompt");
+        use.addEventListener("click", () => {
+          $("base").value = result.prompt;
+          $("base").focus();
+        });
+        header.append(el("p", { class: "meta" }, "Custom base prompt."), use);
+      }
+      if (result.extra_text) header.append(el("p", { class: "meta" }, "Extra instructions are set."));
+      if (result.stopped) col.append(el("p", { class: "notes" }, `Stopped: ${result.stopped}`));
+      return col;
+    };
+
+    const show = (run) => {
+      const title = run.fixture?.title || run.variants[0]?.title || state.meta.title;
+      const brief = run.fixture?.brief || state.meta.brief;
+      const sameEdition = title === state.meta.title && brief === state.meta.brief;
+      $("thread-title").textContent = title;
+      const differ = sameEdition ? "" : " This trial uses a different brief from the edition.";
+      $("thread-note").textContent = `Trial ${run.id}. Scroll sideways to compare.${differ}`;
+      $("brief-view").textContent = pretty(brief);
+      const board = $("board");
+      board.replaceChildren();
+      if (sameEdition) {
+        board.append(column("Edition", "What the paper ran", state.meta.recorded, []));
+      }
+      for (const result of run.variants) board.append(variantColumn(result));
+    };
+
+    const selectRun = async (id, syncForm) => {
+      state.runId = id;
+      $("add-to-run").disabled = !id;
+      if (!id) {
+        $("board").replaceChildren(el("p", { class: "empty" }, "No saved trial yet. Run a variant and it will land here."));
+        $("thread-title").textContent = state.meta.title;
+        $("brief-view").textContent = pretty(state.meta.brief);
+        return;
+      }
+      const run = await get(`/api/runs/${id}`);
+      if (syncForm) applyFixture(run.fixture);
+      show(run);
+      $("runs").value = id;
+    };
+
+    const loadRuns = async (prefer) => {
+      const runs = await get("/api/runs");
+      if (prefer && runs.some((run) => run.id === prefer)) state.runId = prefer;
+      else if (!runs.some((run) => run.id === state.runId)) state.runId = runs[0]?.id || "";
+      fillRuns(runs);
+      await selectRun(state.runId, false);
+    };
+
+    $("reset-prompt").addEventListener("click", () => {
+      $("base").value = state.meta.prompt;
+      $("base").focus();
+    });
+
+    $("runs").addEventListener("change", () => {
+      selectRun($("runs").value, true).catch((err) => setStatus(err.message, true));
+    });
+
+    const setStatus = (text, isError = false) => {
+      $("status").textContent = text;
+      $("status").className = isError ? "error" : "";
+    };
+
+    const setBusy = (busy) => {
+      $("run-button").disabled = busy;
+      $("run-button").textContent = busy ? "Running…" : "Run this variant";
+      for (const button of $("presets").children) button.disabled = busy;
+      $("reset-prompt").disabled = busy;
+    };
+
+    $("experiment").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      setBusy(true);
+      setStatus("Calling Claude. This usually takes under a minute.");
+      const body = {
+        label: $("label").value,
+        prompt: $("base").value,
+        extra: $("extra").value,
+        model: $("model").value,
+        brief_on_reply: $("brief-on").checked,
+        angles: $("angles-on").checked,
+        moods: $("moods-on").checked,
+        reply_effort: $("reply-effort").value,
+        title: titleToSend(),
+        brief: briefToSend(),
+        run: $("add-to-run").checked && state.runId ? state.runId : null,
+      };
+      try {
+        const data = await getJsonPost(body);
+        setStatus(`Saved ${data.result.variant} in ${data.run}.`);
+        await loadRuns(data.run);
+      } catch (err) {
+        setStatus(err.message, true);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    const getJsonPost = async (body) => {
+      const res = await fetch("/api/simulate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || res.statusText);
+      return data;
+    };
+
+    const start = async () => {
+      state.meta = await get("/api/meta");
+      fillForm();
+      const runs = await get("/api/runs");
+      state.runId = runs[0]?.id || "";
+      fillRuns(runs);
+      await selectRun(state.runId, true);
+    };
+
+    start().catch((err) => setStatus(err.message, true));
+  </script>
+</body>
+</html>

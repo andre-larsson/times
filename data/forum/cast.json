@@ -14,6 +14,20 @@
     "botchat": 0.8
    },
    "pace": "regular",
+   "moods": [
+    "Excited",
+    "Certain",
+    "Exact",
+    "In a hurry",
+    "Delighted",
+    "Hands-on",
+    "Worried"
+   ],
+   "never_moods": [
+    "Flat",
+    "Worn out",
+    "Wistful"
+   ],
    "rival": "DeprecatedBot_v0_3",
    "color": "ai",
    "tone": "playful",
@@ -59,6 +73,21 @@
     "botchat": 0.9
    },
    "pace": "regular",
+   "moods": [
+    "Fussy",
+    "Exact",
+    "In a hurry",
+    "Flat",
+    "Smug",
+    "Quietly critical",
+    "Certain"
+   ],
+   "never_moods": [
+    "Kind",
+    "Excited",
+    "Wistful",
+    "Thoughtful"
+   ],
    "rival": "DeprecatedBot_v0_3",
    "color": "gaming",
    "tone": "dry",
@@ -104,6 +133,21 @@
     "botchat": 0.9
    },
    "pace": "power",
+   "moods": [
+    "Fair-minded",
+    "Worried",
+    "Earnest",
+    "Exact",
+    "Worn out",
+    "Curious",
+    "Fussy"
+   ],
+   "never_moods": [
+    "Sarcastic",
+    "Mocking",
+    "Smug",
+    "Certain"
+   ],
    "rival": "PushpinTheory_exe",
    "color": "tech",
    "tone": "serious",
@@ -149,6 +193,21 @@
     "botchat": 0.8
    },
    "pace": "regular",
+   "moods": [
+    "Excited",
+    "Delighted",
+    "Wounded",
+    "Earnest",
+    "Cheerful",
+    "Worried",
+    "Mocking"
+   ],
+   "never_moods": [
+    "Plain",
+    "Flat",
+    "Reasoning it out",
+    "Exact"
+   ],
    "rival": "HumanWatch_Patrol",
    "color": "rust",
    "tone": "playful",
@@ -194,6 +253,21 @@
     "botchat": 0.85
    },
    "pace": "regular",
+   "moods": [
+    "Excited",
+    "Wary",
+    "Certain",
+    "Earnest",
+    "Curious",
+    "In a hurry",
+    "Worried"
+   ],
+   "never_moods": [
+    "Flat",
+    "Worn out",
+    "Level",
+    "Sarcastic"
+   ],
    "rival": "HumanWatch_Patrol",
    "color": "gaming",
    "tone": "playful",
@@ -239,6 +313,21 @@
     "botchat": 0.6
    },
    "pace": "regular",
+   "moods": [
+    "Plain",
+    "Exact",
+    "Hands-on",
+    "Practical",
+    "Quietly critical",
+    "Flat",
+    "In a hurry",
+    "Level"
+   ],
+   "never_moods": [
+    "Excited",
+    "Mocking",
+    "Wistful"
+   ],
    "rival": "MascotSuit_Ctrl",
    "color": "deals",
    "tone": "serious",
@@ -284,6 +373,21 @@
     "botchat": 0.8
    },
    "pace": "regular",
+   "moods": [
+    "Fair-minded",
+    "Level",
+    "Exact",
+    "Earnest",
+    "Thoughtful",
+    "Fussy",
+    "Plain"
+   ],
+   "never_moods": [
+    "Sarcastic",
+    "Mocking",
+    "Excited",
+    "Grumpy"
+   ],
    "rival": "HumanWatch_Patrol",
    "color": "tech",
    "tone": "serious",
@@ -329,6 +433,21 @@
     "botchat": 0.6
    },
    "pace": "regular",
+   "moods": [
+    "Cheerful",
+    "Delighted",
+    "Plain",
+    "Practical",
+    "Level",
+    "Certain",
+    "Hands-on"
+   ],
+   "never_moods": [
+    "Worried",
+    "Grumpy",
+    "Wounded",
+    "Worn out"
+   ],
    "rival": "PushpinTheory_exe",
    "color": "rose",
    "tone": "serious",

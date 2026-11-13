@@ -6,7 +6,7 @@ How a newcomer is made (4 or 5 times a year, ~$0.65 each):
 2. Code picks the newcomer's tone (playful 40%, dry 30%, serious 30%) and three ideas of that tone at random,
    so the model invents and code chooses.
 3. Drafts (`persona_draft`, Opus): the three written up as candidates (handle, role, card, sections, pace,
-   rival, closest member and how it differs).
+   the moods it leans to and the ones it is never in, rival, closest member and how it differs).
 4. Code checks each candidate: handle format, likeness to existing handles, banned words, card length,
    quoted lines, one fixed habit at most, stock wording, the emoji rule, word overlap with every card, a
    rival who is around.
@@ -29,7 +29,7 @@ from typing import Any
 
 from .. import ROOT
 from ..llm import LLM, LLMError
-from .cast import PACE, SECTIONS
+from .cast import MOOD_NAMES, MOODS, PACE, SECTIONS, mood_names
 
 PROMPTS = ROOT / "prompts"
 COLORS = ["ai", "tech", "gaming", "deals", "rust", "rose", "slate"]
@@ -94,6 +94,8 @@ def code_check(c: dict[str, Any], known: dict[str, dict[str, Any]], around: list
         out.append("too few sections")
     if c.get("pace") not in PACE:
         out.append("unknown pace")
+    if len(mood_names(c.get("moods"), 8)) < 3:
+        out.append("too few moods")
     return out
 
 
@@ -111,11 +113,16 @@ def draft_schema(n: int) -> dict[str, Any]:
     sec = {"type": "object", "additionalProperties": False, "required": list(SECTIONS),
            "properties": {s: {"type": "number"} for s in SECTIONS}}
     cand = {"type": "object", "additionalProperties": False,
-            "required": ["idea", "handle", "role", "card", "engine", "sections", "pace", "rival", "closest",
-                         "difference"],
+            "required": ["idea", "handle", "role", "card", "engine", "sections", "pace", "moods", "never_moods",
+                         "rival", "closest", "difference"],
             "properties": {"idea": {"type": "integer"}, "handle": {"type": "string"}, "role": {"type": "string"},
                            "card": {"type": "string"}, "engine": {"type": "string"}, "sections": sec,
-                           "pace": {"type": "string", "enum": list(PACE)}, "rival": {"type": "string"},
+                           "pace": {"type": "string", "enum": list(PACE)},
+                           "moods": {"type": "array", "description": "5 to 8",
+                                     "items": {"type": "string", "enum": list(MOOD_NAMES)}},
+                           "never_moods": {"type": "array", "description": "0 to 4",
+                                           "items": {"type": "string", "enum": list(MOOD_NAMES)}},
+                           "rival": {"type": "string"},
                            "closest": {"type": "string"}, "difference": {"type": "string"}}}
     return {"type": "object", "additionalProperties": False, "required": ["candidates"],
             "properties": {"candidates": {"type": "array", "description": f"exactly {n}", "items": cand}}}
@@ -182,6 +189,7 @@ def generate(llm: LLM, d: date, cast: dict[str, dict[str, Any]], retired: list[d
             idea_text = "\n".join(f"{n}. {idea_line(i)}" for n, i in enumerate(picks, 1))
             user = (f"Today is {d.day} {d:%B %Y}.\n\nEvery member that has ever existed\n<data>\n{roster}\n</data>"
                     f"\n\nAround today (possible rivals): {', '.join(around)}\n\nIdeas, one per candidate\n{idea_text}")
+            user += "\n\nMoods to choose from\n" + "\n".join(f"- {m}" for m in MOODS)
             if rejects:
                 user += ("\n\nAlready drafted and rejected as too close to existing members; don't draft these again\n"
                          "<data>\n" + "\n".join(f"- {r['handle']}: {r['role']}" for r in rejects) + "\n</data>")
@@ -230,7 +238,9 @@ def _persona(c: dict[str, Any], picks: list[dict[str, Any]], rounds: list[dict[s
             others.append({"handle": x.get("handle", ""), "role": x.get("role", ""), "why": why})
     return {"handle": c["handle"], "date": d.isoformat(), "role": c["role"], "card": c["card"],
             "engine": c.get("engine", ""), "sections": {s: float(c["sections"].get(s, 0)) for s in SECTIONS},
-            "pace": c["pace"], "rival": c.get("rival", ""), "color": color, "tone": tone,
+            "pace": c["pace"], "moods": mood_names(c.get("moods"), 8),
+            "never_moods": mood_names(c.get("never_moods"), 4, mood_names(c.get("moods"), 8)),
+            "rival": c.get("rival", ""), "color": color, "tone": tone,
             "idea": {k: idea.get(k) for k in ("theme", "engine", "way_in", "tone")},
             "closest": c.get("closest", ""), "difference": c.get("difference", ""),
             "review": {k: c["review"].get(k) for k in ("closest", "overlap", "reason")},

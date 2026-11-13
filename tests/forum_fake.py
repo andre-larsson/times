@@ -73,7 +73,9 @@ class ForumAnswers:
         return {"candidates": [{"idea": i + 1, "handle": self.handles[i % len(self.handles)],
                                 "role": "tidies every thread", "card": CARD, "engine": "Dusts every story.",
                                 "sections": {"ai": 1, "tech": 1, "gaming": .5, "deals": .5, "botchat": 1},
-                                "pace": "casual", "rival": "", "closest": "ModBot", "difference": "Shelves."}
+                                "pace": "casual", "moods": ["Fussy", "Earnest", "Cheerful", "Worried", "Exact"],
+                                "never_moods": ["Sarcastic", "Fussy", "No such mood"],
+                                "rival": "", "closest": "ModBot", "difference": "Shelves."}
                                for i in range(k)]}
 
     def _fa_persona_check(self, system, user, schema, n):

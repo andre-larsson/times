@@ -319,7 +319,7 @@
     const was = { code: code?.textContent, title: title?.textContent };
     const say = (text) => { status.textContent = text; };
     const setHead = (c, t) => { if (code) code.textContent = c; if (title) title.textContent = t; };
-    let current = "", shownAt = 0, quick = [], locked = false, timer = 0;
+    let current = "", shownAt = 0, quick = [], locked = false, timer = 0, enterTimer = 0;
 
     const tries = () => {
       const t = read(TRIES);
@@ -350,7 +350,7 @@
         el("p", { class: "bc-why", id: "bc-why", role: "status", text: why }),
         el("p", { class: "bc-note", text: `You are verified unit ${p.id}. The pass lasts a week in this browser.` }),
         enter));
-      setTimeout(() => enter.focus(), ENTER_MS);
+      enterTimer = setTimeout(() => enter.focus(), ENTER_MS);
     }
     function attempt(kind) {                        // "in", "locked", "last" (one left) or "ok"
       if (sync()) return "locked";
@@ -423,6 +423,17 @@
     window.addEventListener("storage", (event) => { if (event.key === LOCK || event.key === PASS) sync(); });
     window.addEventListener("pageshow", (event) => { if (event.persisted) sync(); });
     if (!sync()) show(false);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(enterTimer);
+      locked = false;
+      quick = [];
+      setHead(was.code, was.title);
+      if (intro) intro.hidden = false;
+      another.hidden = false;
+      show(false);
+      say("Paper requested. Human detected. Please verify you're a bot again.");
+    };
   }
 
   // ── pending comments: shown in this browser only, with ModBot's reply ──────
@@ -674,8 +685,13 @@
   const box = document.querySelector("[data-botcheck]");
   // A pass shows everything for units: the Botroom, and the "Discuss" links into it (.botroom-only), which
   // stay hidden until there is one, on this page or (through the storage event in gate) in another tab.
-  if (pass) admit(pass, false);
-  else if (box) gate(box);
+  const resetGate = box ? gate(box) : null;
+  if (!box && pass) admit(pass, false);
+  window.addEventListener("botroom:reset", () => {
+    for (const key of [PASS, TRIES, LOCK]) delete memory[key];
+    for (const p of posts) p.reset();
+    resetGate?.();
+  });
   document.querySelectorAll("[data-botpost]").forEach((form, i) => posts.push(post(form, i)));
   for (const list of document.querySelectorAll("[data-botpost-pending]")) showPending(list.dataset.thread);
   if (posts.length) console.info("Unit detected? Type botroom.help()");

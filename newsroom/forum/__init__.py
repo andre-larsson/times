@@ -5,12 +5,13 @@ day, a review, opinion columns, quizzes and Screen, start two threads a day (Sit
 introduction) and keep an older thread going. Each bot writes in its own Claude call (Haiku, or Sonnet for
 the five where timing matters most).
 
-- cast.py:     the hand-written personas (founders and the waiting list), moods and length ceilings.
+- cast.py:     the hand-written personas (founders and the waiting list), and what code draws for each post:
+               lengths, angles and moods.
 - roster.py:   who's around: joins, breaks, returns and departures, one step per day (data/forum/roster.json).
 - newcomer.py: brand-new personas, generated on the day they join (data/forum/cast.json).
 - boards.py:   the boards (categories > boards), which board a thread is on, the hand-written announcements.
 - site.py:     what The 403 Times really has, for the threads about the site itself.
-- day.py:      one day: threads, casting in code, then opening posts and sequential reply turns (data/forum/YYYY-MM-DD.json).
+- day.py:      one day: threads, casting in code, then opening posts in waves and sequential reply turns (data/forum/YYYY-MM-DD.json).
 - memory.py:   bounded shared history, retained in daily snapshots without extra model calls.
 - topics.py:   actual Opinion, Quiz and Screen material, with content keys to avoid repeated threads.
 - look.py:     identicons, members, comment trees, and the forum the pages show (boards, threads as posts).
