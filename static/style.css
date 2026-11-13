@@ -223,11 +223,14 @@ h1, h2, h3, h4 { margin: 0; }
   position: sticky; top: 0; z-index: 10;
   background: var(--paper); border-bottom: 3px solid var(--rule-strong);
 }
-.nav-inner {
+/* The bar: the sections (they scroll on a phone), then Search and the Menu, pinned at the right */
+.nav-bar { display: flex; }
+.nav-sections {
+  flex: 1 1 auto; min-width: 0;
   display: flex; gap: var(--s-1);
   overflow-x: auto; scrollbar-width: none;
 }
-.nav-inner::-webkit-scrollbar { display: none; }
+.nav-sections::-webkit-scrollbar { display: none; }
 .nav-link {
   flex: none; display: block;
   padding: var(--s-3) var(--s-3) var(--s-2);
@@ -235,12 +238,69 @@ h1, h2, h3, h4 { margin: 0; }
   font: 800 1.125rem/1.2 var(--font-head); text-transform: uppercase; letter-spacing: 0.03em;
   color: var(--ink);
 }
-.nav-link:first-child { padding-left: 0; }
+.nav-sections .nav-link:first-child { padding-left: 0; }
 .nav-link:hover { border-bottom-color: var(--rule); }
 .nav-link.is-active { border-bottom-color: var(--sec); color: var(--sec-ink); }
+.nav-tool { display: flex; align-items: center; gap: var(--s-2); cursor: pointer; }
+.nav-icon { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: square; }
+.nav-menu > summary { padding-right: 0; list-style: none; user-select: none; }
+.nav-menu > summary::-webkit-details-marker { display: none; }
+.nav-menu:not([open]) .nav-icon-close, .nav-menu[open] .nav-icon-open { display: none; }
+.nav-menu[open] > summary { border-bottom-color: var(--ink); }
 @media (max-width: 719px) {
   /* Fade the right edge so it's clear the section list scrolls */
-  .nav-inner { mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); padding-right: var(--s-6); }
+  .nav-sections { mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); padding-right: var(--s-6); }
+  .nav-link { padding-inline: var(--s-2); }
+  .nav-tool { padding-inline: var(--s-3); }
+  .nav-tool-label {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+}
+
+/* The Menu panel: everything in the paper, under the bar. Flat like the rest: rules, no shadow. */
+.nav-panel {
+  position: absolute; left: 0; right: 0; top: calc(100% + 3px);
+  max-height: calc(100dvh - var(--s-8)); overflow-y: auto; overscroll-behavior: contain;
+  background: var(--paper); border-bottom: 3px solid var(--rule-strong);
+}
+.nav-panel-inner { display: grid; gap: var(--s-5); padding-block: var(--s-5); }
+.menu-label { margin-bottom: var(--s-2); }
+.menu-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-1) var(--s-4); }
+.menu-section {
+  display: block; padding: var(--s-3) var(--s-3) var(--s-2);
+  border-left: var(--s-1) solid var(--sec);
+  font: 800 1.25rem/1.2 var(--font-head); text-transform: uppercase; letter-spacing: 0.03em;
+}
+.menu-section:hover, .menu-section[aria-current] { background: var(--sec-soft); color: var(--sec-ink); }
+.menu-features { display: grid; gap: var(--s-2); }
+.menu-features > li { display: grid; }   /* cards in a row share its height */
+.menu-feature {
+  display: grid; align-content: start; gap: var(--s-1); padding: var(--s-3);
+  background: var(--paper-2); border-left: var(--s-1) solid transparent;
+}
+.menu-feature strong { font: 800 1.25rem/1.2 var(--font-head); }
+.menu-feature span { font: 500 0.875rem/1.4 var(--font-ui); color: var(--ink-2); }
+.menu-feature:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+.menu-feature[aria-current] { border-left-color: var(--ink); }
+.menu-links { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); }
+.menu-links a {
+  display: block; padding-block: var(--s-3);
+  font: 600 1rem/1.25 var(--font-ui);
+  text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px;
+}
+.menu-links a:hover, .menu-links a[aria-current] { text-decoration-color: currentColor; }
+@media (min-width: 720px) {
+  .nav-panel-inner {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s-6); padding-block: var(--s-5) var(--s-6);
+  }
+  .menu-sections { grid-template-columns: minmax(0, 1fr); }
+  .menu-links { flex-direction: column; }
+}
+@media (min-width: 1024px) {
+  .menu-sections, .menu-features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .menu-features > li:last-child:nth-child(odd) { grid-column: 1 / -1; }   /* no gap beside a lone last card */
 }
 
 /* ── Type primitives ─────────────────────────────────────────────────────── */
@@ -623,7 +683,7 @@ a.critic:hover { text-decoration: underline; }
 
 /* Deals page: a jump list, then one section per ITAD list: its rated deals, then "More" (unrated) */
 .shelf-nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin-bottom: var(--s-5); }
-.shelf-nav-label { font: 600 0.8125rem/1.3 var(--font-ui); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.shelf-nav-label, .menu-label { font: 600 0.8125rem/1.3 var(--font-ui); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
 .shelf-nav .chip { padding: var(--s-2) var(--s-3) 6px; background: var(--paper); }   /* 24px+ tap target */
 .shelf-nav .chip:hover { background: var(--sec); border-color: var(--sec); color: #fff; }
 .shelf-count { font-weight: 500; font-variant-numeric: tabular-nums; }

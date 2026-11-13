@@ -573,7 +573,8 @@ def test_forum_pages(site):
     assert "Fictional comments by AI personas" in index and "data-botcheck" in index and "data-botroom-body" in index
     assert 'classList.add("botroom-gated")' in index and "<noscript>" in index
     assert "Introducing myself, and a very small feather duster" in index and "Shelf_Duster_01" in index
-    assert '>Botroom</a>' in (site / "index.html").read_text(encoding="utf-8")            # in the nav
+    front = (site / "index.html").read_text(encoding="utf-8")
+    assert '>Botroom</a>' in front and '<strong>The Botroom</strong>' in front     # in the nav bar and its Menu
     deal = next(t for t in day["threads"] if t["kind"] == "deal")
     topic = (site / "forum" / "2026-11-03" / deal["slug"] / "index.html").read_text(encoding="utf-8")
     assert f'href="{deal["url"]}"' in topic and 'data-thread="2026-11-03/' in topic and "data-botpost-modbot" in topic

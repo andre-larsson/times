@@ -93,7 +93,8 @@ def test_quiz_page(site):
     assert 'data-quiz="2026-11-03"' in html and html.count("data-quiz-advance") == 5     # one question at a time
     assert "data-quiz-start" in html and html.count("data-quiz-goto=") == 5                  # start, result recap
     front = (site / "index.html").read_text(encoding="utf-8")
-    assert 'aria-label="Quiz"' in front and "The Tuesday quiz" in front and ">Quiz</a>" in front   # rail card, nav
+    assert 'aria-label="Quiz"' in front and "The Tuesday quiz" in front                # rail card
+    assert '<a class="menu-feature" href="/times/quiz/"><strong>Quiz</strong>' in front   # in the Menu
     index = (site / "quiz" / "index.html").read_text(encoding="utf-8")
     for page in (front, index):                  # cards get "Completed" from the result saved in the browser
         assert 'data-quiz-card="2026-11-03"' in page and "data-quiz-done hidden" in page and "static/quiz.js" in page
@@ -114,10 +115,30 @@ def test_refuses_to_wipe_project(cfg):
         build(cfg, data_dir=FIXTURES, out_dir=ROOT)
 
 
+def test_nav_bar_and_menu(site):
+    front = (site / "index.html").read_text(encoding="utf-8")
+    bar, menu = front.split('<details class="nav-menu" data-nav-menu>', 1)
+    bar = bar[bar.index('<nav class="nav"'):]
+    menu = menu[:menu.index("</details>")]
+    for label in ("Front", "AI", "Tech", "Gaming", "Deals", "Screen", "Botroom"):   # the bar: sections, Botroom
+        assert f">{label}</a>" in bar, label
+    for label in ("Opinion", "Quiz", "Archive"):                                    # the rest lives in the Menu
+        assert f">{label}</a>" not in bar, label
+    for href in ("quiz/", "forum/", "tonight/", "checked-back/", "archive/", "search/", "feed.xml", "opinion/"):
+        assert f'href="/times/{href}"' in menu, href
+    order = ["Opinion", "Quiz", "The Botroom", "Tonight", "We checked back"]
+    at = [menu.index(f"<strong>{x}</strong>") for x in order]
+    assert at == sorted(at)
+    assert 'class="menu-section sec-forum"' not in menu      # the Botroom is listed once, with the features
+    for page, slug in (("tonight/index.html", "tonight"), ("checked-back/index.html", "checked-back")):
+        html = (site / page).read_text(encoding="utf-8")    # the page's own Menu entry is marked current
+        assert f'href="/times/{slug}/" aria-current="page"' in html, page
+
+
 def test_opinion_column(site):
     front = (site / "index.html").read_text(encoding="utf-8")
     assert "Build the PC this winter, not next year" in front              # on the front page for a week
-    assert '/times/opinion/"' in front                                     # and in the nav
+    assert '/times/opinion/"' in front                                     # and in the Menu
     page = (site / "2026/11/03/build-the-pc-this-winter/index.html").read_text(encoding="utf-8")
     assert "Column by Claude (AI)" in page and 'class="pull-quote"' in page
     assert 'href="/times/2026/11/03/arcwave-r9-review-roundup/"' in page   # reporting links to our article

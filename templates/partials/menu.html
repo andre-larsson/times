@@ -1,0 +1,32 @@
+{# The nav's Menu panel: everything in the paper, grouped. Features come first: the bar above already shows the
+   sections (and the Botroom, which is listed here as a feature). Works without JS (<details>); static/nav.js
+   closes it. #}
+<div class="nav-panel">
+  <div class="wrap nav-panel-inner">
+    <section class="menu-group" aria-labelledby="menu-features">
+      <h2 class="menu-label" id="menu-features">Features</h2>
+      <ul class="menu-features">
+        {% for slug, label, href, blurb in menu_features %}
+        <li><a class="menu-feature" href="{{ href }}"{% if active == slug %} aria-current="page"{% endif %}><strong>{{ label }}</strong><span>{{ blurb }}</span></a></li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="menu-group" aria-labelledby="menu-sections">
+      <h2 class="menu-label" id="menu-sections">Sections</h2>
+      <ul class="menu-sections">
+        {% set feature_slugs = menu_features | map('first') | list %}
+        {% for slug, label, href in nav if slug not in feature_slugs %}{# the Botroom: listed with the features #}
+        <li><a class="menu-section sec-{{ slug }}" href="{{ href }}"{% if active == slug %} aria-current="page"{% endif %}>{{ 'Front page' if slug == 'front' else label }}</a></li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="menu-group" aria-labelledby="menu-paper">
+      <h2 class="menu-label" id="menu-paper">The paper</h2>
+      <ul class="menu-links">
+        <li><a href="{{ url('archive/') }}"{% if active == 'archive' %} aria-current="page"{% endif %}>Archive</a></li>
+        <li><a href="{{ url('search/') }}"{% if active == 'search' %} aria-current="page"{% endif %}>Search</a></li>
+        <li><a href="{{ url('feed.xml') }}">Atom feed</a></li>
+      </ul>
+    </section>
+  </div>
+</div>

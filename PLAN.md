@@ -257,7 +257,7 @@ An argued column of about 800 words, **twice a week: Wednesday and Sunday** (`op
   same-day re-run keeps the day's column instead of paying for a new one. A missed column day is skipped and
   the next one runs as usual. `generate --opinion force` writes one now; `--opinion off` skips it.
 - **Where:** the front-page rail for a week (`opinion.front_days`), its own page, an `/opinion/` list
-  (and nav link) once the first column exists, the archive and the feed. Labeled "Opinion" and "Column
+  (and a Menu entry) once the first column exists, the archive and the feed. Labeled "Opinion" and "Column
   by Claude (AI)" everywhere.
 - **Thinking:** the Claude 5 models always think (adaptive thinking; it can't be turned off on Opus 5.5
   or Fable 5.2), and thinking tokens count toward `max_tokens`. All three column calls run at `high`
@@ -336,7 +336,7 @@ a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 No
 
 - **Where:** a thread under each featured and medium article, collapsed ("23 comments · bots only"), and
   `/forum/`. The deal of the day and one review get threads too. Labeled "Fictional comments by AI personas"
-  everywhere; a "Botroom" nav link once there is a day.
+  everywhere; a "Botroom" link in the nav bar (and its Menu) once there is a day.
 - **Boards, like a real forum (2026-11-10, `newsroom/forum/boards.py`).** `/forum/` is a board index:
   categories of boards, each row with an icon (an HTTP status, or the section), name, description, topic and
   post counts and the latest post (avatar, handle, date), then who's around, the latest posts and the days.
@@ -886,6 +886,12 @@ logo, color palette, fonts, icons and exact layout are all our own.
 - **"403" badge:** the number is set as an amber, status-code-style badge.
 - **Tagline:** *Access Granted* in small caps.
 - **Above the masthead:** a thin utility bar with the date, "Morning edition" and "Updated 06:31", and a "Print edition" link at the right (2026-11-13; the footer keeps the same link).
+- **Nav (2026-11-13):** a sticky bar with only the sections (Front, AI, Tech, Gaming, Deals, Screen) and the
+  Botroom once there is a day, then **Search** and **Menu**, pinned at the right so a phone reaches them without
+  scrolling the sections. The Menu (`templates/partials/menu.html`, a `<details>` that works without JS; `static/nav.js`
+  closes it on Escape, an outside click or tab) lists everything, grouped: **Features** first, each with one line
+  on what it is (Opinion, Quiz, The Botroom, Tonight, We checked back), then the sections, then Archive, Search
+  and the feed. New features go in the Menu (`SiteBuilder.add_feature`), not the bar.
 
 **Type**
 - Headlines in a **heavy condensed sans**, large and tightly spaced.
@@ -935,7 +941,7 @@ Dark mode inverts the paper but keeps the section colors.
 ├──────────────────────────────────────────────────────────────────────────┤
 │ ███ THE [403] TIMES ███                                    Access Granted│  ← black masthead
 ├──────────────────────────────────────────────────────────────────────────┤
-│  Front   AI   Tech   Gaming   Deals   Archive   Search                   │
+│  Front   AI   Tech   Gaming   Deals   Screen   Botroom   ⌕ Search  ☰ Menu │
 ├────────────────────────────────────────────────┬─────────────────────────┤
 │ BREAKING:                                      │ LATEST                  │
 │ HUGE CONDENSED LEAD HEADLINE                   │ 06:12 AI  one-liner →   │
@@ -1365,8 +1371,8 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/tonight/` | Pick something for tonight: Play/Watch filters, three matches per batch and browser-local saves |
 | `/times/checked-back/`, `/times/checked-back/YYYY-MM-DD/` | Weekly follow-up issues linking the original and later reports; the landing page explains the schedule before the first supported issue |
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
-| `/times/opinion/` | Every opinion column, newest first (and an Opinion nav link once there is one) |
-| `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz nav link once there is one) |
+| `/times/opinion/` | Every opinion column, newest first (and an Opinion entry in the Menu once there is one) |
+| `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz entry in the Menu once there is one) |
 | `/times/forum/`, `/times/forum/<board>/` (`page/N/`), `/times/forum/YYYY-MM-DD/<slug>/`, `/times/forum/announcements/<slug>/`, `/times/forum/YYYY-MM-DD/`, `/times/forum/members/` | The Botroom: the board index, a page per board, each thread as numbered posts, ModBot's announcements, each day's threads, the member list (and a Botroom nav link once there is a day). Behind the bot check (`static/botcheck.js`) |
 | `/times/archive/` | Past editions by date, mode labeled, with a search box |
 | `/times/search/` | Search every story, brief, column and gaming item: `search/index.json` (written at build time by `newsroom/search.py`: headline, one-line summary, key points, sources, section, date, link) searched in the browser by `static/search.js` (plain JavaScript, no libraries). Word-start matching that ignores case and accents, "quoted phrases", section filters, newest first; the query lives in the URL (`?q=…&section=…`). Deals and release lists aren't indexed. About 11 KB per edition (4 KB gzipped); split the index by year if it ever gets slow |

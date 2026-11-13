@@ -140,9 +140,16 @@ class SiteBuilder:
 
         css = (ROOT / "static" / "style.css").read_bytes()
         js = b"".join(p.read_bytes() for p in sorted((ROOT / "static").glob("*.js")))
+        # The nav bar: the paper's sections, and the Botroom once there is a day. Everything is in its Menu:
+        # the features below (Opinion, the Quiz and the Botroom join once they exist), the sections again, and
+        # Archive, Search and the feed.
         self.nav = [("front", "Front", self.url(""))] + [
             (s["slug"], s["name"], self.url(f"{s['slug']}/")) for s in cfg["sections"]
-        ] + [("archive", "Archive", self.url("archive/")), ("search", "Search", self.url("search/"))]
+        ]
+        self.menu_features = [                           # (slug, name, url, what it is in one line)
+            ("tonight", "Tonight", self.url("tonight/"), "Pick a game, a film or a series."),
+            ("checkback", "We checked back", self.url("checked-back/"), "Thursdays: the news after the headline."),
+        ]
 
         self.env = Environment(
             loader=FileSystemLoader(ROOT / "templates"),
@@ -153,8 +160,8 @@ class SiteBuilder:
         )
         self.env.globals.update(
             url=self.url, site=self.site, sections=self.sections, nav=self.nav, preview=preview,
-            section_name=self.section_name, build_id=hashlib.sha1(css).hexdigest()[:8],
-            js_id=hashlib.sha1(js).hexdigest()[:8],
+            menu_features=self.menu_features, section_name=self.section_name,
+            build_id=hashlib.sha1(css).hexdigest()[:8], js_id=hashlib.sha1(js).hexdigest()[:8],
             verdicts=VERDICTS, edition_time=(cfg["schedule"].get("editions") or [""])[0],
             deals_view=lambda deals: deals_view(deals or {}, int((cfg.get("deals") or {}).get("top_picks", 8))),
         )
@@ -174,9 +181,12 @@ class SiteBuilder:
     def section_name(self, slug: str) -> str:
         return self.sections.get(slug, {}).get("name", slug.title())
 
-    def add_nav(self, slug: str, label: str, path: str, before: str = "archive") -> None:
-        at = next((i for i, n in enumerate(self.nav) if n[0] == before), len(self.nav))
-        self.nav.insert(at, (slug, label, self.url(path)))
+    def add_nav(self, slug: str, label: str, path: str) -> None:
+        self.nav.append((slug, label, self.url(path)))
+
+    def add_feature(self, slug: str, label: str, path: str, blurb: str, before: str = "tonight") -> None:
+        at = next((i for i, f in enumerate(self.menu_features) if f[0] == before), len(self.menu_features))
+        self.menu_features.insert(at, (slug, label, self.url(path), blurb))
 
     def column_for(self, edition: dict[str, Any]) -> dict[str, Any] | None:
         """The latest opinion column as of this edition, if it's recent enough for its front page."""
@@ -395,8 +405,8 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         placeholder = {"current_edition": {"generated_at": b.now.isoformat()}}
         b.write("", "empty.html", active="front", **placeholder)
         b.write("404.html", "404.html", active="", **placeholder)
-        b.write("tonight/", "tonight.html", active="front", **placeholder, choices=[])
-        b.write("checked-back/", "checkback.html", active="front", **placeholder, features=[], feature=None)
+        b.write("tonight/", "tonight.html", active="tonight", **placeholder, choices=[])
+        b.write("checked-back/", "checkback.html", active="checkback", **placeholder, features=[], feature=None)
         return b.pages
 
     for ed in editions:
@@ -417,7 +427,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         _link_stories(col.get("reading", []), pages)
     b.columns = [ed["opinion"] for ed in reversed(editions) if ed.get("opinion")]
     if b.columns:
-        b.add_nav("opinion", "Opinion", "opinion/")
+        b.add_feature("opinion", "Opinion", "opinion/", "Columns built on the paper's reporting.")
     for ed in editions:
         qz = ed.get("quiz")
         if qz:
@@ -426,7 +436,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
             _link_stories([q["story"] for q in qz.get("questions", []) if q.get("story")], pages)
     b.quizzes = [ed["quiz"] for ed in reversed(editions) if ed.get("quiz")]
     if b.quizzes:
-        b.add_nav("quiz", "Quiz", "quiz/")
+        b.add_feature("quiz", "Quiz", "quiz/", "Twice a week: how much of the news did you catch?")
     for ed in editions:
         feature = ed.get("checkback")
         if feature:
@@ -449,7 +459,8 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     if "screen" in b.sections:
         feature_pages.add("screen/")
     if forum_days:
-        b.add_nav("forum", "Botroom", "forum/")
+        b.add_nav("forum", "Botroom", "forum/")                 # in the bar, and with the features in the Menu
+        b.add_feature("forum", "The Botroom", "forum/", "The forum where only bots may post.")
         members = forum_look.members(forum.full_cast(forum.load_generated(data_dir)), forum_roster.load(data_dir),
                                      forum_days)
         for x in forum_days:
@@ -483,15 +494,15 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     common = {"current_edition": front}
 
     # Two discovery destinations, kept out of the already long primary navigation.
-    b.write("checked-back/", "checkback.html", active="front", **common, features=b.checkbacks, feature=None)
+    b.write("checked-back/", "checkback.html", active="checkback", **common, features=b.checkbacks, feature=None)
     for feature in b.checkbacks:
-        b.write(feature["path"], "checkback.html", active="front", **common, features=b.checkbacks, feature=feature)
+        b.write(feature["path"], "checkback.html", active="checkback", **common, features=b.checkbacks, feature=feature)
     play_ed = next((e for e in newest_first if e.get("deals")), front)
     game_ed = next((e for e in newest_first if e.get("gaming")), front)
     watch_ed = next((e for e in newest_first if e.get("screen")), front)
     choices = tonight.catalog(play_ed.get("deals") or {}, game_ed.get("gaming") or {},
                               watch_ed.get("screen") or {}, b.picks_for(front, SCREEN_PAGE_DAYS), b.now)
-    b.write("tonight/", "tonight.html", active="front", **common, choices=choices)
+    b.write("tonight/", "tonight.html", active="tonight", **common, choices=choices)
 
     # front page
     b.write("", "front.html", active="front", **common, **b.front_context(front), weather=b.weather)

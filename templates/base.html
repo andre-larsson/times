@@ -11,6 +11,7 @@
   <link rel="preload" href="{{ url('static/fonts/barlow-condensed-latin-800-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url('static/style.css') }}?v={{ build_id }}">
   <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ url('feed.xml') }}">
+  <script src="{{ url('static/nav.js') }}?v={{ js_id }}" defer></script>
   <script src="{{ url('static/print.js') }}?v={{ js_id }}" defer></script>
   {% block head %}{% endblock %}
 </head>
@@ -38,11 +39,25 @@
         </div>
       </div>
     </div>
-    <nav class="nav" aria-label="Sections">
-      <div class="wrap nav-inner">
-        {% for slug, label, href in nav %}
-        <a class="nav-link sec-{{ slug }}{% if active == slug %} is-active{% endif %}" href="{{ href }}"{% if active == slug %} aria-current="page"{% endif %}>{{ label }}</a>
-        {% endfor %}
+    <nav class="nav" aria-label="Main">
+      <div class="wrap nav-bar">
+        <div class="nav-sections">
+          {% for slug, label, href in nav %}
+          <a class="nav-link sec-{{ slug }}{% if active == slug %} is-active{% endif %}" href="{{ href }}"{% if active == slug %} aria-current="page"{% endif %}>{{ label }}</a>
+          {% endfor %}
+        </div>
+        <a class="nav-link nav-tool{% if active == 'search' %} is-active{% endif %}" href="{{ url('search/') }}"{% if active == 'search' %} aria-current="page"{% endif %}>
+          <svg class="nav-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.75"/><path d="m13 13 5 5"/></svg>
+          <span class="nav-tool-label">Search</span>
+        </a>
+        <details class="nav-menu" data-nav-menu>
+          <summary class="nav-link nav-tool">
+            <svg class="nav-icon nav-icon-open" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 4.5h16M2 10h16M2 15.5h16"/></svg>
+            <svg class="nav-icon nav-icon-close" viewBox="0 0 20 20" aria-hidden="true"><path d="m4 4 12 12M16 4 4 16"/></svg>
+            Menu
+          </summary>
+          {% include "partials/menu.html" %}
+        </details>
       </div>
     </nav>
   </header>
