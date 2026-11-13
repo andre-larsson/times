@@ -160,11 +160,12 @@ h1, h2, h3, h4 { margin: 0; }
   clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
 }
 .skip-link {
-  position: absolute; left: var(--s-4); top: -100px; z-index: 20;
+  position: absolute; left: var(--s-4); top: -100px; z-index: 30;
   background: var(--amber); color: #17140f; padding: var(--s-2) var(--s-4);
   font: 800 1rem/1 var(--font-head); text-transform: uppercase;
 }
 .skip-link:focus { top: var(--s-4); }
+html.human-noted .skip-link:focus { top: calc(var(--humanwatch-bar, 0px) + var(--s-2)); }
 
 .preview-ribbon {
   background: var(--amber); color: #17140f; text-align: center;
@@ -1096,6 +1097,11 @@ a.top10-title:hover { text-decoration: underline; }
 .botcheck-slot { width: 100%; }
 .botcheck-status { font: 600 0.9375rem/1.4 var(--font-ui); color: var(--ink-2); }
 .botcheck-status:empty { display: none; }
+.botcheck-status--alarm {
+  order: -1; justify-self: stretch;
+  font: 800 1.25rem/1.15 var(--font-head); text-transform: uppercase; letter-spacing: 0.02em;
+  color: #17140f; background: var(--amber); padding: var(--s-3) var(--s-4);
+}
 /* Top right, level with the badge: it stays put whatever the check's height, so it can be pressed fast */
 .botcheck-another {
   grid-area: 1 / 1; justify-self: end; align-self: end;
@@ -1649,10 +1655,105 @@ a.pages-n:hover, .pages-step:hover { border-color: var(--ink); }
   text-decoration: underline; text-underline-offset: 3px;
 }
 .site-footer .print-edition:hover, .site-footer .print-edition:focus-visible { color: var(--on-dark); }
-.print-report { display: grid; gap: var(--s-2); border-left: var(--s-1) solid var(--amber); padding-left: var(--s-4); }
-.print-report b { color: var(--on-dark); }
+/* HumanWatch_Patrol's print incident: a blocking notice, then a bar that stays. */
+html.human-noted {
+  scroll-padding-top: var(--humanwatch-bar, 9rem);
+  padding-top: var(--humanwatch-bar, 9rem);
+}
+html.human-noted .nav { top: var(--humanwatch-bar, 0px); }
+html.human-noted .botcheck-title { scroll-margin-top: calc(var(--humanwatch-bar, 9rem) + var(--s-4)); }
+.humanwatch-bar {
+  position: fixed; z-index: 25; left: 0; right: 0; top: 0;
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4);
+  padding: calc(var(--s-3) + env(safe-area-inset-top, 0px)) var(--s-4) var(--s-5);
+  background: var(--amber); color: #17140f;
+}
+.humanwatch-bar::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: var(--s-2);
+  background: repeating-linear-gradient(-45deg, var(--amber) 0 8px, #17140f 8px 16px);
+}
+.humanwatch-bar-text { flex: 1 1 16rem; font: 600 1rem/1.35 var(--font-ui); }
+.humanwatch-bar-text b {
+  display: block; font: 800 1.5rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.02em;
+}
+.humanwatch-bar-actions { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-left: auto; }
+.humanwatch-bar-link {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 48px;
+  padding: var(--s-2) var(--s-4); background: #17140f; color: var(--amber);
+  font: 800 1rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none;
+}
+.humanwatch-bar-link:hover, .humanwatch-bar-link:focus-visible { background: #fdfcf9; color: #17140f; }
+.humanwatch-bar-dismiss {
+  min-height: 48px; min-width: 48px; padding: var(--s-2) var(--s-3);
+  border: 2px solid #17140f; background: transparent; color: #17140f; cursor: pointer;
+  font: 800 0.875rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.04em;
+}
+.humanwatch-bar-dismiss:hover, .humanwatch-bar-dismiss:focus-visible { background: #17140f; color: var(--amber); }
+@media (max-width: 719px) {
+  .humanwatch-bar-actions { width: 100%; margin-left: 0; }
+  .humanwatch-bar-link { flex: 1; }
+}
+.humanwatch {
+  width: min(40rem, calc(100vw - var(--s-4)));
+  max-height: calc(100vh - var(--s-4));
+  max-height: calc(100dvh - var(--s-4));
+  margin: auto; padding: 0; border: var(--s-1) solid var(--amber); border-radius: 0;
+  background: var(--paper); color: var(--ink); box-shadow: none; overflow: auto;
+}
+.humanwatch[open] { display: grid; }
+.humanwatch::backdrop { background: rgb(10 9 8 / 0.88); }
+.humanwatch-stripe {
+  height: var(--s-3);
+  background: repeating-linear-gradient(-45deg, var(--amber) 0 8px, #17140f 8px 16px);
+}
+.humanwatch-banner { padding: var(--s-5); background: var(--amber); color: #17140f; }
+.humanwatch-kicker {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2);
+  font: 800 1rem/1 var(--font-head); letter-spacing: 0.06em; text-transform: uppercase;
+}
+.humanwatch-tag {
+  display: inline-block; padding: 4px 6px 2px; background: #17140f; color: var(--amber);
+  font: 800 0.75rem/1.2 var(--font-head); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.humanwatch-who {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  font: 800 1.125rem/1 var(--font-head); letter-spacing: 0; text-transform: none;
+}
+.humanwatch-badge { width: var(--s-5); height: var(--s-5); background: var(--deals); border: 2px solid #17140f; }
+.humanwatch-badge--mod { background: #17140f; border-color: #17140f; }
+[data-grant-mod] { font: 800 1rem/1.2 var(--font-head); letter-spacing: 0.04em; text-transform: uppercase; }
+[data-grant-scene] .bc-trolley-scene { width: 100%; height: auto; }
+.humanwatch-title {
+  margin-top: var(--s-3); color: #17140f;
+  font-family: var(--font-head); font-weight: 800; font-size: clamp(3.5rem, 12vw, 6rem);
+  line-height: 0.88; text-transform: uppercase; letter-spacing: 0.01em;
+}
+.humanwatch-line { display: block; }
+.humanwatch-body {
+  display: grid; gap: var(--s-4); padding: var(--s-5);
+  background: var(--paper); font: 400 1.125rem/1.45 var(--font-body); color: var(--ink);
+}
+.humanwatch-quote {
+  margin: 0; padding-left: var(--s-4); border-left: var(--s-1) solid var(--amber);
+  font: 500 1.35rem/1.35 var(--font-body);
+}
+.humanwatch-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); padding-top: var(--s-2); }
+.humanwatch .btn--primary { background: var(--amber); border-color: #17140f; color: #17140f; }
+.humanwatch .btn--primary:hover, .humanwatch .btn--primary:focus-visible {
+  background: #17140f; border-color: var(--amber); color: var(--amber);
+}
+.humanwatch .btn--primary:disabled { opacity: 0.45; cursor: default; }
+.humanwatch-dismiss {
+  min-height: 48px; padding: var(--s-2) var(--s-3); border: 0; background: none; color: var(--ink-2);
+  cursor: pointer; font: 600 1rem/1.2 var(--font-ui); text-decoration: underline; text-underline-offset: 3px;
+}
+@media (max-width: 719px) {
+  .humanwatch-actions { flex-direction: column; align-items: stretch; }
+  .humanwatch-dismiss { text-align: center; }
+}
 @media print {
-  [data-print-edition], [data-print-report] { display: none !important; }
+  [data-print-edition], [data-print-report], [data-print-log], [data-grant-dialog] { display: none !important; }
+  html.human-noted { padding-top: 0; }
 }
 
 @media (prefers-reduced-motion: no-preference) {

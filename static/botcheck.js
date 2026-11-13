@@ -2,8 +2,8 @@
 // - To read: one "prove you're a bot" check at a time, a random kind with random content (a float sum, a JS
 //   quirk, binary to decode, a color in hex, the Unix time, a token to paste, or a trolley to dispatch). Five
 //   misses or five skips lock the gate for five minutes; three misses or skips in a row, each under 400 ms,
-//   let you in as a unit. Getting in shows "200 Access granted" with the reason it was accepted, and stays
-//   until "Enter the Botroom" is pressed. A pass is kept in this browser for a week, with a unit ID; the
+//   let you in as a unit. Getting in shows "200 Access granted" with the reason it was accepted, and a
+//   blocking ModBot notice, and stays until "Enter the Botroom" is pressed. A pass is kept for a week, with a unit ID; the
 //   inline script in <head> hides the Botroom (html.botroom-gated) until there is one. Without JavaScript
 //   everything shows, except the "Discuss" links into the Botroom (.botroom-only), which need a pass.
 // - To post: a Submit button that runs from the pointer, then 50 sums in 300 ms and a SHA-256 proof of
@@ -68,6 +68,57 @@
       badge.hidden = false;
     }
     if (focus) document.querySelector("[data-botroom-body]")?.focus();
+  }
+
+  // The grant notice is the same shape as HumanWatch_Patrol's. It opens on every way through the check.
+  // "Enter the Botroom" waits ENTER_MS so a masher is still mashing. Closing it leaves the gate's 200 screen.
+  const grantDialog = document.querySelector("[data-grant-dialog]");
+  let grantEnter = null, grantIllustration = null, grantSlot = null, grantEntering = false, grantTimer = 0;
+  function closeGrant() {
+    grantEntering = true;
+    if (grantDialog?.open) grantDialog.close();
+  }
+  function openGrant(pass, why, illustration, slot) {
+    if (!grantDialog || typeof grantDialog.showModal !== "function") return;
+    clearTimeout(grantTimer);
+    grantEntering = false;
+    grantIllustration = illustration;
+    grantSlot = slot;
+    grantDialog.querySelector("[data-grant-why]").textContent = why;
+    grantDialog.querySelector("[data-grant-unit]").textContent =
+      `Verified unit ${pass.id}. The pass lasts a week in this browser.`;
+    const scene = grantDialog.querySelector("[data-grant-scene]");
+    scene.replaceChildren(...(illustration ? [illustration] : []));
+    scene.hidden = !illustration;
+    const button = grantDialog.querySelector("[data-grant-enter]");
+    button.disabled = true;
+    const armed = performance.now() + ENTER_MS;
+    grantEnter = () => {
+      if (!grantDialog.open || performance.now() < armed) return;
+      closeGrant();
+      admit(pass, true);
+    };
+    try {
+      if (!grantDialog.open) grantDialog.showModal();
+    } catch {
+      try { if (!grantDialog.open) grantDialog.show(); } catch { return; }
+    }
+    grantDialog.querySelector("#grant-title")?.focus();
+    grantTimer = setTimeout(() => {
+      button.disabled = false;
+      if (grantDialog.open) button.focus({ preventScroll: true });
+    }, ENTER_MS);
+  }
+  if (grantDialog) {
+    grantDialog.querySelector("[data-grant-enter]")?.addEventListener("click", () => grantEnter?.());
+    grantDialog.querySelector("[data-grant-dismiss]")?.addEventListener("click", () => {
+      if (grantDialog.open) grantDialog.close();
+    });
+    grantDialog.addEventListener("close", () => {
+      if (grantEntering || !grantIllustration || !grantSlot) return;
+      const granted = grantSlot.querySelector(".bc-granted");
+      if (granted && !granted.contains(grantIllustration)) granted.prepend(grantIllustration);
+    });
   }
 
   // ── the read gate: one check at a time, picked at random ───────────────────
@@ -317,7 +368,10 @@
     const code = box.querySelector(".botcheck-code"), title = box.querySelector(".botcheck-title");
     const intro = box.querySelector(".botcheck-text");
     const was = { code: code?.textContent, title: title?.textContent };
-    const say = (text) => { status.textContent = text; };
+    const say = (text) => {
+      status.textContent = text;
+      status.classList.remove("botcheck-status--alarm");
+    };
     const setHead = (c, t) => { if (code) code.textContent = c; if (title) title.textContent = t; };
     let current = "", shownAt = 0, quick = [], locked = false, timer = 0, enterTimer = 0;
 
@@ -340,17 +394,18 @@
       const p = grant();
       const armed = performance.now() + ENTER_MS;
       const enter = el("button", { class: "btn btn--primary bc-btn", type: "button", "aria-describedby": "bc-why", text: "Enter the Botroom" });
-      enter.addEventListener("click", () => { if (performance.now() >= armed) admit(p, true); });
+      enter.addEventListener("click", () => { if (performance.now() >= armed) { closeGrant(); admit(p, true); } });
       setHead("200", "Access granted");
       if (intro) intro.hidden = true;
       another.hidden = true;
       say("");
       slot.replaceChildren(el("div", { class: "bc-granted" },
-        ...(illustration ? [illustration] : []),
+        ...(illustration && !grantDialog ? [illustration] : []),
         el("p", { class: "bc-why", id: "bc-why", role: "status", text: why }),
         el("p", { class: "bc-note", text: `You are verified unit ${p.id}. The pass lasts a week in this browser.` }),
         enter));
-      enterTimer = setTimeout(() => enter.focus(), ENTER_MS);
+      if (grantDialog) openGrant(p, why, illustration, slot);
+      else enterTimer = setTimeout(() => enter.focus(), ENTER_MS);
     }
     function attempt(kind) {                        // "in", "locked", "last" (one left) or "ok"
       if (sync()) return "locked";
@@ -428,11 +483,15 @@
       clearTimeout(enterTimer);
       locked = false;
       quick = [];
+      grantIllustration = null;
+      clearTimeout(grantTimer);
+      if (grantDialog?.open) closeGrant();
       setHead(was.code, was.title);
       if (intro) intro.hidden = false;
       another.hidden = false;
       show(false);
-      say("Paper requested. Human detected. Please verify you're a bot again.");
+      say("Human detected. HumanWatch_Patrol reset this check. Prove you're a bot again.");
+      status.classList.add("botcheck-status--alarm");
     };
   }
 

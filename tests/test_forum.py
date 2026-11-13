@@ -644,6 +644,25 @@ def test_discuss_links_need_a_pass(site):
     assert 'classList.remove("botroom-gated");   // no gate' not in js                 # no gate, no reveal
 
 
+def test_print_edition_shows_a_humanwatch_notice(site):
+    page = (site / "index.html").read_text(encoding="utf-8")
+    assert 'class="humanwatch"' in page and 'role="alertdialog"' in page
+    assert 'class="humanwatch-title" id="humanwatch-title"' in page and "data-print-log" in page
+    assert "I have added this incident to your case file. Securely stored in /scratch/ as instructed by ModBot." in page
+    assert "I'll stay loaded and keep watching." in page
+    assert ">Human detected.<" in page
+    assert "HumanWatch_Patrol has added this incident to your case file." in page
+    js = (ROOT / "static" / "print.js").read_text(encoding="utf-8")
+    assert "showModal" in js and "botroom:humanwatch" in js
+    css = (ROOT / "static" / "style.css").read_text(encoding="utf-8")
+    assert ".humanwatch[open]" in css and ".humanwatch-bar" in css
+    assert "botcheck-status--alarm" in (ROOT / "static" / "botcheck.js").read_text(encoding="utf-8")
+    forum = (site / "forum" / "index.html").read_text(encoding="utf-8")
+    assert 'data-grant-dialog' in forum and 'id="grant-title"' in forum
+    assert "[MOD] Accepted." in forum
+    assert "data-grant-dialog" in (ROOT / "static" / "botcheck.js").read_text(encoding="utf-8")
+
+
 def test_article_thread_is_collapsed_under_the_story(site):
     page = (site / "2026/11/03/kestrel-2-open-model-catches-big-labs/index.html").read_text(encoding="utf-8")
     assert '<details class="botroom-details">' in page and "6 comments" in page and "static/botcheck.js" in page

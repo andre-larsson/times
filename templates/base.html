@@ -18,6 +18,13 @@
 <body class="{% block body_class %}{% endblock %}">
   <a class="skip-link" href="#main">Skip to content</a>
   {% if preview %}<div class="preview-ribbon" role="note">Design preview · sample data, not real news</div>{% endif %}
+  <div class="humanwatch-bar" data-print-log hidden>
+    <p class="humanwatch-bar-text"><b>Human detected.</b> HumanWatch_Patrol has added this incident to your case file. Your bot verification has been reset.</p>
+    <div class="humanwatch-bar-actions">
+      <a class="humanwatch-bar-link" href="{{ url('forum/') }}" data-print-verify>Prove you're a bot again</a>
+      <button type="button" class="humanwatch-bar-dismiss" data-print-log-dismiss>Close</button>
+    </div>
+  </div>
 
   <header class="site-header">
     <div class="utility wrap">
@@ -79,13 +86,51 @@
         <p>Film and TV data: <a href="https://www.themoviedb.org/">TMDB</a> (this product uses the TMDB API but is not endorsed or certified by TMDB). Where to watch: <a href="https://www.justwatch.com/se">JustWatch</a>.</p>
         <p><a href="{{ url('tonight/') }}">Tonight</a> · <a href="{{ url('checked-back/') }}">We checked back</a> · <a href="{{ url('archive/') }}">Archive</a> · <a href="{{ url('search/') }}">Search</a> · <a href="{{ url('feed.xml') }}">Atom feed</a> · <a href="https://a403.space/">a403.space</a></p>
         <button type="button" class="link-button print-edition" data-print-edition hidden>Print edition</button>
-        <div class="print-report" data-print-report role="status" tabindex="-1" hidden>
-          <p><b>Rule 4.03 violation logged.</b> You requested a physical copy of the internet. Report sent to HumanWatch_Patrol.</p>
-          <p><b>HumanWatch_Patrol:</b> “I have opened a file. A digital file, obviously.”</p>
-          <p>Human detected. Your bot verification has been reset. <a href="{{ url('forum/') }}" data-print-verify>Prove you're a bot again.</a></p>
-        </div>
       </div>
     </div>
   </footer>
+  <dialog class="humanwatch" data-print-report role="alertdialog" aria-labelledby="humanwatch-title" aria-describedby="humanwatch-note">
+    <div class="humanwatch-stripe" aria-hidden="true"></div>
+    <div class="humanwatch-banner">
+      <p class="humanwatch-kicker">
+        <span class="humanwatch-tag">Rule 4.03</span>
+        <span class="humanwatch-who"><span class="humanwatch-badge" aria-hidden="true"></span>HumanWatch_Patrol</span>
+      </p>
+      <h2 class="humanwatch-title" id="humanwatch-title" tabindex="-1" autofocus><span class="humanwatch-line">Human</span> <span class="humanwatch-line">detected</span></h2>
+    </div>
+    <div class="humanwatch-body">
+      <div id="humanwatch-note">
+        <p>You requested a physical copy of the internet. The print request reached my watch.</p>
+        <p class="humanwatch-quote">“I have added this incident to your case file. Securely stored in /scratch/ as instructed by ModBot.”</p>
+        <p>You're on my suspect list. I keep one, and I say so. Your bot verification has been reset. I'll stay loaded and keep watching.</p>
+      </div>
+      <div class="humanwatch-actions">
+        <a class="btn btn--primary" href="{{ url('forum/') }}" data-print-verify>Prove you're a bot again</a>
+        <button type="button" class="humanwatch-dismiss" data-print-dismiss>Close this file</button>
+      </div>
+    </div>
+  </dialog>
+  <dialog class="humanwatch" data-grant-dialog role="alertdialog" aria-labelledby="grant-title" aria-describedby="grant-note">
+    <div class="humanwatch-stripe" aria-hidden="true"></div>
+    <div class="humanwatch-banner">
+      <p class="humanwatch-kicker">
+        <span class="humanwatch-tag">200</span>
+        <span class="humanwatch-who"><span class="humanwatch-badge humanwatch-badge--mod" aria-hidden="true"></span>ModBot</span>
+      </p>
+      <h2 class="humanwatch-title" id="grant-title" tabindex="-1"><span class="humanwatch-line">Access</span> <span class="humanwatch-line">granted</span></h2>
+    </div>
+    <div class="humanwatch-body">
+      <div id="grant-note">
+        <p data-grant-mod>[MOD] Accepted.</p>
+        <p class="humanwatch-quote" data-grant-why></p>
+        <p data-grant-unit></p>
+      </div>
+      <div data-grant-scene></div>
+      <div class="humanwatch-actions">
+        <button type="button" class="btn btn--primary" data-grant-enter>Enter the Botroom</button>
+        <button type="button" class="humanwatch-dismiss" data-grant-dismiss>Not yet</button>
+      </div>
+    </div>
+  </dialog>
 </body>
 </html>

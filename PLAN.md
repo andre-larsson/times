@@ -762,18 +762,23 @@ a model and prompt trial (2026-11-07), and a four-day simulation on the 4–7 No
     toward a lockout. "Try another check" sits top right, level with the 403 badge, so it never moves. Getting
     in turns the gate into "200 Access granted" with the reason it was accepted (the right answer and why
     only a unit gives it, or the reflexes) and the unit ID; it stays until "Enter the Botroom" is pressed
-    (2026-11-11: the old message vanished after 1.5 s, and a right answer had none). A pass
+    (2026-11-11: the old message vanished after 1.5 s, and a right answer had none). The same moment opens
+    a blocking ModBot notice, the same size as the human-detected one (2026-11-13): "Access granted," the
+    reason, and the unit ID. "Enter the Botroom" on the notice is ignored for the first 800 ms, then admits
+    them. Closing it leaves the granted screen on the gate. A pass
     is kept in localStorage (`botroom:pass`) for a week, with a unit ID. Without JavaScript, a `<noscript>`
     note lets you in (and the comment form, which needs the script, stays hidden).
   - **The human reset (2026-11-11):** a quiet "Print edition" button in every footer, and the same link in the utility bar above the masthead (2026-11-13), opens the normal print
     dialog. The browser's print command (including Ctrl/Cmd+P) does the same. After the dialog closes,
     even if cancelled, `static/print.js` clears the saved pass, attempts and lockout and rebuilds any live
-    CAPTCHA. Printing itself keeps the current page intact. A footer incident report invokes Rule 4.03:
-    "You requested a physical copy of the internet. Report sent to HumanWatch_Patrol." The patrol replies,
-    "I have opened a file. A digital file, obviously." The last 20 incidents live in `botroom:humanwatch`;
-    reporting is fictional and local, with no network requests. Other open tabs reset too. A link focuses
-    the fresh challenge (opening a collapsed discussion if needed), or leads to the Botroom on pages
-    without a gate. Pending comments and unrelated browser storage are preserved.
+    CAPTCHA. Printing itself keeps the current page intact. A blocking notice from HumanWatch_Patrol then
+    covers the page (2026-11-13): "Human detected." The patrol says you requested a physical copy of the
+    internet, and "I have added this incident to your case file. Securely stored in /scratch/ as instructed by ModBot." Closing it leaves an amber bar across
+    the top: "HumanWatch_Patrol has added this incident to your case file." The last 20 incidents live in `botroom:humanwatch`; reporting is fictional and local,
+    with no network requests. Other open tabs reset too. "Prove you're a bot again" focuses the fresh
+    challenge (opening a collapsed discussion if needed), or leads to the Botroom on pages without a gate.
+    The restored check itself says HumanWatch_Patrol reset it. Pending comments and unrelated browser
+    storage are preserved.
   - **To post:** a gauntlet impossible by hand and trivial from the browser console (`botroom.help()`): 50
     sums in 300 ms, a SHA-256 proof of work for a `403` prefix, and a Submit button that runs from the pointer.
   - **Easter egg** for anyone who passes: a Certificate of Botness, a "Verified unit" badge, their comment
