@@ -120,16 +120,24 @@ def test_nav_bar_and_menu(site):
     bar, menu = front.split('<details class="nav-menu" data-nav-menu>', 1)
     bar = bar[bar.index('<nav class="nav"'):]
     menu = menu[:menu.index("</details>")]
-    for label in ("Front", "AI", "Tech", "Gaming", "Deals", "Screen", "Botroom"):   # the bar: sections, Botroom
-        assert f">{label}</a>" in bar, label
-    for label in ("Opinion", "Quiz", "Archive"):                                    # the rest lives in the Menu
-        assert f">{label}</a>" not in bar, label
+    labels = ["Front", "AI", "Tech", "Gaming", "Deals", "Screen", "Opinion", "Quiz", "Tonight",
+              "Botroom", "Follow-up"]
+    at = [bar.index(f">{label}</a>") for label in labels]
+    assert at == sorted(at), labels                              # the paper, Search and Menu pinned after it
+    assert ">Archive</a>" not in bar and ">Archive</a>" in menu   # Archive is in the Menu only
+    assert ">Search</a>" not in bar                               # Search is the icon button, not a second text link
     for href in ("quiz/", "forum/", "tonight/", "checked-back/", "archive/", "search/", "feed.xml", "opinion/"):
         assert f'href="/times/{href}"' in menu, href
-    order = ["Opinion", "Quiz", "The Botroom", "Tonight", "We checked back"]
-    at = [menu.index(f"<strong>{x}</strong>") for x in order]
+    features = ["Quiz", "Tonight"]                                # things to do, and only those
+    at = [menu.index(f"<strong>{x}</strong>") for x in features]
     assert at == sorted(at)
-    assert 'class="menu-section sec-forum"' not in menu      # the Botroom is listed once, with the features
+    for label in ("Opinion", "The Botroom", "We checked back"):
+        assert f"<strong>{label}</strong>" not in menu, label
+    assert ">We checked back</a>" in menu and ">Follow-up</a>" not in menu   # the bar's short name, spelled out here
+    for slug in ("opinion", "forum", "checkback"):                # reading destinations, with the sections
+        assert f'class="menu-section sec-{slug}"' in menu, slug
+    assert 'class="menu-section sec-archive"' not in menu         # Archive is under The paper
+    assert 'class="menu-section sec-quiz"' not in menu and 'class="menu-section sec-tonight"' not in menu
     for page, slug in (("tonight/index.html", "tonight"), ("checked-back/index.html", "checked-back")):
         html = (site / page).read_text(encoding="utf-8")    # the page's own Menu entry is marked current
         assert f'href="/times/{slug}/" aria-current="page"' in html, page

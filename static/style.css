@@ -127,8 +127,8 @@
 /* Section scoping: components read --sec* */
 .sec-front, .sec-archive, .sec-search, .sec-quiz { --sec: var(--ink); --sec-ink: var(--ink); --sec-soft: var(--paper-2); --sec-deep: var(--surface-dark); }
 .sec-ai     { --sec: var(--ai);     --sec-ink: var(--ai-ink);     --sec-soft: var(--ai-soft);     --sec-deep: var(--ai-deep); }
-.sec-tech   { --sec: var(--tech);   --sec-ink: var(--tech-ink);   --sec-soft: var(--tech-soft);   --sec-deep: var(--tech-deep); }
-.sec-gaming { --sec: var(--gaming); --sec-ink: var(--gaming-ink); --sec-soft: var(--gaming-soft); --sec-deep: var(--gaming-deep); }
+.sec-tech, .sec-checkback { --sec: var(--tech); --sec-ink: var(--tech-ink); --sec-soft: var(--tech-soft); --sec-deep: var(--tech-deep); }
+.sec-gaming, .sec-tonight { --sec: var(--gaming); --sec-ink: var(--gaming-ink); --sec-soft: var(--gaming-soft); --sec-deep: var(--gaming-deep); }
 .sec-deals  { --sec: var(--deals);  --sec-ink: var(--deals-ink);  --sec-soft: var(--deals-soft);  --sec-deep: var(--deals-deep); }
 .sec-opinion { --sec: var(--amber); --sec-ink: var(--amber-ink); --sec-soft: var(--amber-soft); --sec-deep: var(--surface-dark); }
 .sec-forum { --sec: var(--amber); --sec-ink: var(--ink); --sec-soft: var(--paper-2); --sec-deep: var(--surface-dark); }
@@ -223,7 +223,7 @@ h1, h2, h3, h4 { margin: 0; }
   position: sticky; top: 0; z-index: 10;
   background: var(--paper); border-bottom: 3px solid var(--rule-strong);
 }
-/* The bar: the sections (they scroll on a phone), then Search and the Menu, pinned at the right */
+/* The bar: every destination, then Search and the Menu pinned at the right. The list scrolls. */
 .nav-bar { display: flex; }
 .nav-sections {
   flex: 1 1 auto; min-width: 0;
@@ -231,8 +231,18 @@ h1, h2, h3, h4 { margin: 0; }
   overflow-x: auto; scrollbar-width: none;
 }
 .nav-sections::-webkit-scrollbar { display: none; }
+.nav-sections.is-overflowing { padding-right: var(--s-6); }
+.nav-sections.is-overflowing.can-right {
+  mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent);
+}
+.nav-sections.is-overflowing.can-left {
+  mask-image: linear-gradient(90deg, transparent, #000 40px);
+}
+.nav-sections.is-overflowing.can-left.can-right {
+  mask-image: linear-gradient(90deg, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+}
 .nav-link {
-  flex: none; display: block;
+  flex: none; display: block; white-space: nowrap;
   padding: var(--s-3) var(--s-3) var(--s-2);
   border-bottom: 4px solid transparent;
   font: 800 1.125rem/1.2 var(--font-head); text-transform: uppercase; letter-spacing: 0.03em;
@@ -248,7 +258,7 @@ h1, h2, h3, h4 { margin: 0; }
 .nav-menu:not([open]) .nav-icon-close, .nav-menu[open] .nav-icon-open { display: none; }
 .nav-menu[open] > summary { border-bottom-color: var(--ink); }
 @media (max-width: 719px) {
-  /* Fade the right edge so it's clear the section list scrolls */
+  /* A phone always overflows: fade the edge before nav.js measures it */
   .nav-sections { mask-image: linear-gradient(90deg, #000 calc(100% - 40px), transparent); padding-right: var(--s-6); }
   .nav-link { padding-inline: var(--s-2); }
   .nav-tool { padding-inline: var(--s-3); }
@@ -267,6 +277,9 @@ h1, h2, h3, h4 { margin: 0; }
 .nav-panel-inner { display: grid; gap: var(--s-5); padding-block: var(--s-5); }
 .menu-label { margin-bottom: var(--s-2); }
 .menu-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-1) var(--s-4); }
+@media (max-width: 479px) {
+  .menu-sections { grid-template-columns: minmax(0, 1fr); }   /* "We checked back" stays one line */
+}
 .menu-section {
   display: block; padding: var(--s-3) var(--s-3) var(--s-2);
   border-left: var(--s-1) solid var(--sec);
@@ -291,16 +304,21 @@ h1, h2, h3, h4 { margin: 0; }
 }
 .menu-links a:hover, .menu-links a[aria-current] { text-decoration-color: currentColor; }
 @media (min-width: 720px) {
+  /* Two things to do across the top; the sections under them; Archive, Search and the feed down the side */
   .nav-panel-inner {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(11rem, 0.55fr);
+    grid-template-areas:
+      "features features paper"
+      "sections sections paper";
     gap: var(--s-6); padding-block: var(--s-5) var(--s-6);
+    align-items: start;
   }
-  .menu-sections { grid-template-columns: minmax(0, 1fr); }
+  .menu-group:has(#menu-features) { grid-area: features; }
+  .menu-group:has(#menu-sections) { grid-area: sections; }
+  .menu-group:has(#menu-paper) { grid-area: paper; }
+  .menu-features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .menu-features > li:last-child:nth-child(odd) { grid-column: 1 / -1; }   /* a lone Tonight card spans the row */
   .menu-links { flex-direction: column; }
-}
-@media (min-width: 1024px) {
-  .menu-sections, .menu-features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .menu-features > li:last-child:nth-child(odd) { grid-column: 1 / -1; }   /* no gap beside a lone last card */
 }
 
 /* ── Type primitives ─────────────────────────────────────────────────────── */

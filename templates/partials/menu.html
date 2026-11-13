@@ -1,6 +1,5 @@
-{# The nav's Menu panel: everything in the paper, grouped. Features come first: the bar above already shows the
-   sections (and the Botroom, which is listed here as a feature). Works without JS (<details>); static/nav.js
-   closes it. #}
+{# The nav's Menu. Features are things to do (the Quiz, Tonight). Archive, Search and the feed
+   live here. Works without JS (<details>); static/nav.js closes it. #}
 <div class="nav-panel">
   <div class="wrap nav-panel-inner">
     <section class="menu-group" aria-labelledby="menu-features">
@@ -15,8 +14,8 @@
       <h2 class="menu-label" id="menu-sections">Sections</h2>
       <ul class="menu-sections">
         {% set feature_slugs = menu_features | map('first') | list %}
-        {% for slug, label, href in nav if slug not in feature_slugs %}{# the Botroom: listed with the features #}
-        <li><a class="menu-section sec-{{ slug }}" href="{{ href }}"{% if active == slug %} aria-current="page"{% endif %}>{{ 'Front page' if slug == 'front' else label }}</a></li>
+        {% for slug, label, href in nav if slug not in feature_slugs %}
+        <li><a class="menu-section sec-{{ slug }}" href="{{ href }}"{% if active == slug %} aria-current="page"{% endif %}>{% if slug == 'front' %}Front page{% elif slug == 'checkback' %}We checked back{% else %}{{ label }}{% endif %}</a></li>
         {% endfor %}
       </ul>
     </section>

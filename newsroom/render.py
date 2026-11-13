@@ -140,15 +140,17 @@ class SiteBuilder:
 
         css = (ROOT / "static" / "style.css").read_bytes()
         js = b"".join(p.read_bytes() for p in sorted((ROOT / "static").glob("*.js")))
-        # The nav bar: the paper's sections, and the Botroom once there is a day. Everything is in its Menu:
-        # the features below (Opinion, the Quiz and the Botroom join once they exist), the sections again, and
-        # Archive, Search and the feed.
+        # The bar lists the paper. Opinion and the Quiz join before Tonight; the Botroom joins
+        # before Follow-up (the short name for We checked back). Archive stays in the Menu.
+        # Search is the pinned button.
         self.nav = [("front", "Front", self.url(""))] + [
             (s["slug"], s["name"], self.url(f"{s['slug']}/")) for s in cfg["sections"]
+        ] + [
+            ("tonight", "Tonight", self.url("tonight/")),
+            ("checkback", "Follow-up", self.url("checked-back/")),
         ]
-        self.menu_features = [                           # (slug, name, url, what it is in one line)
+        self.menu_features = [                           # things to do, each with one line on what it is
             ("tonight", "Tonight", self.url("tonight/"), "Pick a game, a film or a series."),
-            ("checkback", "We checked back", self.url("checked-back/"), "Thursdays: the news after the headline."),
         ]
 
         self.env = Environment(
@@ -181,8 +183,9 @@ class SiteBuilder:
     def section_name(self, slug: str) -> str:
         return self.sections.get(slug, {}).get("name", slug.title())
 
-    def add_nav(self, slug: str, label: str, path: str) -> None:
-        self.nav.append((slug, label, self.url(path)))
+    def add_nav(self, slug: str, label: str, path: str, before: str = "tonight") -> None:
+        at = next((i for i, item in enumerate(self.nav) if item[0] == before), len(self.nav))
+        self.nav.insert(at, (slug, label, self.url(path)))
 
     def add_feature(self, slug: str, label: str, path: str, blurb: str, before: str = "tonight") -> None:
         at = next((i for i, f in enumerate(self.menu_features) if f[0] == before), len(self.menu_features))
@@ -427,7 +430,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         _link_stories(col.get("reading", []), pages)
     b.columns = [ed["opinion"] for ed in reversed(editions) if ed.get("opinion")]
     if b.columns:
-        b.add_feature("opinion", "Opinion", "opinion/", "Columns built on the paper's reporting.")
+        b.add_nav("opinion", "Opinion", "opinion/")
     for ed in editions:
         qz = ed.get("quiz")
         if qz:
@@ -436,6 +439,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
             _link_stories([q["story"] for q in qz.get("questions", []) if q.get("story")], pages)
     b.quizzes = [ed["quiz"] for ed in reversed(editions) if ed.get("quiz")]
     if b.quizzes:
+        b.add_nav("quiz", "Quiz", "quiz/")
         b.add_feature("quiz", "Quiz", "quiz/", "Twice a week: how much of the news did you catch?")
     for ed in editions:
         feature = ed.get("checkback")
@@ -459,8 +463,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     if "screen" in b.sections:
         feature_pages.add("screen/")
     if forum_days:
-        b.add_nav("forum", "Botroom", "forum/")                 # in the bar, and with the features in the Menu
-        b.add_feature("forum", "The Botroom", "forum/", "The forum where only bots may post.")
+        b.add_nav("forum", "Botroom", "forum/", before="checkback")   # bar, after Tonight; Menu lists it with the sections
         members = forum_look.members(forum.full_cast(forum.load_generated(data_dir)), forum_roster.load(data_dir),
                                      forum_days)
         for x in forum_days:
