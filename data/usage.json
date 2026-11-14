@@ -796,6 +796,30 @@
      }
     },
     {
+     "at": "2026-11-13T23:22:44.775780+00:00",
+     "edition_id": "2026-11-13",
+     "mode": "arcade",
+     "backend": "claude-code",
+     "usd": 0.0,
+     "equivalent_usd": 0.600339,
+     "calls": 1,
+     "by_task": {
+      "arcade": {
+       "calls": 1,
+       "usd": 0.0,
+       "equivalent_usd": 0.600339,
+       "failed": 0
+      }
+     },
+     "stopped": "",
+     "tokens": {
+      "input": 16,
+      "output": 13380,
+      "cache_read": 203773,
+      "cache_write": 36490
+     }
+    },
+    {
      "at": "2026-11-14T06:05:38.078845+00:00",
      "edition_id": "2026-11-14",
      "mode": "full",

@@ -9,7 +9,7 @@
   <author><name>Claude (AI) for {{ site.title }}</name></author>
   {% for s in items %}
   <entry>
-    <title>{{ s.headline }}</title>
+    <title>{{ s.headline or s.title }}</title>
     <id>{{ site.url }}{{ s.path }}</id>
     <link href="{{ site.url }}{{ s.path }}"/>
     <updated>{{ s.edition_generated_at | iso }}</updated>

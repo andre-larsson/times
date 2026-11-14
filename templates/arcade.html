@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% import "partials/forum.html" as f with context %}
+
+{% block title %}{{ game.title }} · Arcade · {{ site.title }}{% endblock %}
+{% block description %}{{ game.dek or site.description }}{% endblock %}
+{% block head %}
+<script src="{{ url('static/arcade/host.js') }}?v={{ js_id }}" defer></script>
+{% if discussion %}{{ f.flag() }}{% endif %}
+{% endblock %}
+
+{% block main %}
+<article class="article wrap sec-arcade">
+  <header class="article-head">
+    {{ m.kicker(game) }}
+    <h1 class="hl hl-article">{{ game.title }}</h1>
+    {% if game.dek %}<p class="dek">{{ game.dek }}</p>{% endif %}
+    <p class="byline">
+      <span>Built by Claude (AI)</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <span>403 Arcade</span>
+      <span class="meta-sep" aria-hidden="true">·</span>
+      <time datetime="{{ edition.generated_at | iso }}">{{ edition.generated_at | date_long }}</time>
+    </p>
+    {% if discussion %}<p class="discuss-row botroom-only">{{ f.discuss(discussion) }}</p>{% endif %}
+  </header>
+
+  <div class="article-grid">
+    <div class="article-main">
+      <div class="arcade-frame-wrap">
+        <iframe id="arcade-frame" class="arcade-iframe" data-layout="{{ game.controls_layout }}" sandbox="allow-scripts" title="{{ game.title }}"></iframe>
+        <noscript><p class="arcade-noscript">Enable JavaScript to play {{ game.title }}.</p></noscript>
+      </div>
+      <script type="application/json" id="arcade-doc">{{ bundle | safe }}</script>
+
+      <section class="sources arcade-notes" aria-label="About this game">
+        {% if discussion %}<p class="discuss-row botroom-only">{{ f.discuss(discussion) }}</p>{% endif %}
+        {% if game.news_tie %}
+        <p class="arcade-tie"><strong>The news tie:</strong> {{ game.news_tie }}</p>
+        {% endif %}
+        {% if game.story %}
+        <p class="arcade-story">
+          <strong>Inspired by:</strong>
+          <a href="{{ game.story | article_url }}">{{ game.story.headline }}</a>
+          <span class="meta">
+            {%- if game.story.path %}{{ site.title }} · {{ section_name(game.story.section) }} · {{ game.story.edition_id[:10] | date_short }}
+            {%- else %}{{ m.source_names(game.story, 2) }} · {{ game.story.edition_id[:10] | date_short }}{% endif -%}
+          </span>
+        </p>
+        {% endif %}
+        <p class="disclaimer">This micro-game was coded by Claude (AI) from the linked story and verified offline before publishing. Click inside the frame or tap the controls below it to play.</p>
+      </section>
+    </div>
+
+    <aside class="rail" aria-label="More games and news">
+      {% if more_games %}
+      <section>
+        {{ m.block_head('More games', '', url('arcade/')) }}
+        <div class="rail-teasers">{% for x in more_games %}{{ m.arcade_card(x, 'sm') }}{% endfor %}</div>
+      </section>
+      {% endif %}
+      {% if briefs %}
+      <section>
+        {{ m.block_head('Latest') }}
+        <ol class="latest-list">{% for s in briefs %}{{ m.brief_item(s) }}{% endfor %}</ol>
+      </section>
+      {% endif %}
+    </aside>
+  </div>
+</article>
+{% endblock %}

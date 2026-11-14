@@ -16,14 +16,17 @@
     {% endif %}
     {% endfor %}
   </div>
-  {% if hn_top or column or quiz or weather %}
-  <aside class="rail sec-tech" aria-label="Weather, opinion, quiz and Hacker News">
+  {% if hn_top or column or quiz or arcade or weather %}
+  <aside class="rail sec-tech" aria-label="Weather, opinion, quiz, arcade and Hacker News">
     {% if weather %}{{ m.weather_box(weather) }}{% endif %}
     {% if column %}
     <section aria-label="Opinion">{{ m.column_card(column) }}</section>
     {% endif %}
     {% if quiz %}
     <section aria-label="Quiz">{{ m.quiz_card(quiz) }}</section>
+    {% endif %}
+    {% if arcade %}
+    <section aria-label="Arcade">{{ m.arcade_card(arcade) }}</section>
     {% endif %}
     {% if hn_top %}
     <section>

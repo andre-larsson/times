@@ -42,6 +42,9 @@ def main(argv: list[str] | None = None) -> int:
     gen_p.add_argument("--quiz", default="auto", choices=("auto", "force", "off"),
                        help="the news quiz: auto = when due (config quiz.*), force = write one now "
                             "(needs an AI edition), off = never")
+    gen_p.add_argument("--arcade", default="auto", choices=("auto", "force", "off"),
+                       help="403 Arcade: auto = when due (config arcade.*), force = build one now "
+                            "(needs an AI edition), off = never")
     gen_p.add_argument("--forum", default="auto", choices=("auto", "force", "off"),
                        help="the Botroom: auto = every full edition (config forum.enabled), force = write "
                             "today's again (needs an AI edition), off = never")
@@ -64,6 +67,14 @@ def main(argv: list[str] | None = None) -> int:
     forum_p.add_argument("--force", action="store_true", help="replace that day's Botroom if it exists")
     forum_p.add_argument("--llm", choices=("api", "claude-code"),
                          help="Claude backend (default: llm.backend in config.yaml, or $NEWSROOM_LLM)")
+
+    arcade_p = sub.add_parser("arcade", help="build the weekly 403 Arcade game on a saved edition; "
+                              "try it locally with --llm claude-code")
+    add_data_dir(arcade_p)
+    arcade_p.add_argument("--edition", metavar="EDITION_ID", help="the edition to attach a game to (default: the latest)")
+    arcade_p.add_argument("--force", action="store_true", help="replace that edition's game if it exists")
+    arcade_p.add_argument("--llm", choices=("api", "claude-code"),
+                          help="Claude backend (default: llm.backend in config.yaml, or $NEWSROOM_LLM)")
 
     roster_p = sub.add_parser("roster", help="what the Botroom's roster settings (config forum.roster) do: "
                               "simulated histories, no Claude calls, nothing written")
@@ -113,7 +124,7 @@ def main(argv: list[str] | None = None) -> int:
         now = args.now.astimezone(dt.timezone.utc) if args.now else None
         result = generate(cfg, args.data_dir, args.mode, now=now, backend=args.llm, column=args.opinion,
                           quiz_mode=args.quiz, forum_mode=args.forum, deals_mode=args.deals,
-                          screen_mode=args.screen)
+                          screen_mode=args.screen, arcade_mode=args.arcade)
         print(report(result))
         if result.path:
             print(f"\nWrote {result.path}")
@@ -126,6 +137,12 @@ def main(argv: list[str] | None = None) -> int:
         from .generate import run_forum
 
         print(run_forum(cfg, args.data_dir, args.edition, backend=args.llm, force=args.force))
+        return 0
+
+    if args.command == "arcade":
+        from .generate import run_arcade
+
+        print(run_arcade(cfg, args.data_dir, args.edition, backend=args.llm, force=args.force))
         return 0
 
     if args.command == "roster":

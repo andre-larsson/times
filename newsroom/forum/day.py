@@ -166,7 +166,7 @@ def cast_day(seed: int, d: date, news: Day, cast: dict[str, dict[str, Any]],
 
     def taste(h: str, t: dict[str, Any]) -> float:
         return cast[h]["sections"].get(t["section"], cast[h]["sections"].get(
-            "gaming" if t["section"] == "screen" else "botchat", .5))
+            "gaming" if t["section"] in ("screen", "arcade") else "botchat", .5))
 
     in_play = {t["id"] for t in threads}                         # the threads open to top-level comments
     if budget:

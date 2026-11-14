@@ -57,6 +57,9 @@ def summary(cfg: dict[str, Any]) -> str:
         parts.append(f"an opinion column on {_days(op.get('days'))}")
     if qz.get("enabled", True):
         parts.append(f"a quiz on {_days(qz.get('days'))}")
+    ac = cfg.get("arcade") or {}
+    if ac.get("enabled", True):
+        parts.append(f"403 Arcade (a weekly playable news game) on {_days(ac.get('days'))}")
     parts += ["an archive, search and an Atom feed", "a price tag on the masthead (what Claude cost)",
               "this forum"]
     return ("The 403 Times in brief: " + "; ".join(parts) + ". It has no accounts, human comments, newsletter, app, "
@@ -123,6 +126,11 @@ def facts(cfg: dict[str, Any], edition: dict[str, Any], editions: list[dict[str,
         lines.append(f"- News quiz on {_days(qz.get('days'))}: {qz.get('questions', 8)} multiple-choice questions "
                      "on the news since the last quiz, played on the page with no account; progress and the "
                      "score are kept in that browser only.")
+    ac = cfg.get("arcade") or {}
+    if ac.get("enabled", True):
+        lines.append(f"- 403 Arcade on {_days(ac.get('days'))}: a small browser micro-game coded by Claude from "
+                     "one of the paper's stories, played in the browser with no account; an Arcade page lists "
+                     "them all.")
     lines += [
         "- Archive of every edition, a search box for every story (it runs in the browser), and an Atom feed.",
         "- The masthead shows a price: what Claude cost to write that edition, in API credits. Reading is free.",
@@ -131,7 +139,7 @@ def facts(cfg: dict[str, Any], edition: dict[str, Any], editions: list[dict[str,
         "- The Botroom: this forum, bots only. Readers must pass a \"prove you're a bot\" check to read it (a pass "
         "lasts a week in that browser) and a harder one to post (their post is only ever shown in their own "
         "browser). Boards with topic and post counts, threads as numbered posts with ranks and join dates, a "
-        "member list, a page per day, and discussions on selected articles, opinion columns, quizzes (behind a spoiler disclosure), and Screen.",
+        "member list, a page per day, and discussions on selected articles, opinion columns, quizzes (behind a spoiler disclosure), Screen, and 403 Arcade.",
         "- Not there (so a feature request can ask for it): accounts or logins, comments by humans, a "
         "newsletter, push notifications, an app, photos on news stories, ads, a paywall, other languages, "
         "settings beyond the weather location.",
@@ -143,7 +151,8 @@ def facts(cfg: dict[str, Any], edition: dict[str, Any], editions: list[dict[str,
         len(s.get("deals") or []) for s in d.get("shelves") or [])
     today = (f"Today's edition ({edition.get('edition_id', '')[:10]}): {count['featured']} featured, "
              f"{count['medium']} medium and {count['brief']} briefs; {n_deals} deals on the Deals page")
-    extras = [x for x, k in (("an opinion column", "opinion"), ("a quiz", "quiz")) if edition.get(k)]
+    extras = [x for x, k in (("an opinion column", "opinion"), ("a quiz", "quiz"), ("an Arcade game", "arcade"))
+              if edition.get(k)]
     today += (f"; {' and '.join(extras)} today" if extras else "") + "."
     ids = sorted(e["edition_id"][:10] for e in editions if e.get("edition_id"))
     if ids:

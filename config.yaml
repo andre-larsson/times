@@ -91,6 +91,7 @@ models:
   persona_draft: claude-opus-5-5      #   Opus writes three up as candidates,
   persona_check: claude-sonnet-5-5    #   Sonnet judges them against every member
   screen:   claude-opus-5-5           # Screen: the picks of the week (Fridays)
+  arcade:   claude-opus-5-5           # 403 Arcade: weekly playable news game (Fridays)
 
 budget:
   monthly_usd: 40                     # paced over the calendar month; the Console workspace spend limit is $50.
@@ -112,7 +113,8 @@ llm:
   max_tokens: { triage: 16000, editor: 4000, featured: 3000, medium: 1500, briefs: 5000, gaming: 5000, deals: 6000,
                 opinion_pick: 8000, opinion: 16000, opinion_check: 8000, quiz: 12000, quiz_check: 8000,
                 discover: 12000, forum_haiku: 8000, forum_sonnet: 8000, persona_ideas: 16000,
-                persona_draft: 12000, persona_check: 8000, screen: 6000, checkback: 6000, checkback_check: 4000 }
+                persona_draft: 12000, persona_check: 8000, screen: 6000, checkback: 6000, checkback_check: 4000,
+                arcade: 8000 }
                                       # a hard cap on thinking + text (Claude 5 models always think); you pay for what's used
   effort: { opinion_pick: high, opinion: high, opinion_check: high, quiz_check: high, forum_haiku: high, checkback_check: high }
                                       # per task; unset = the model's default (Opus 5.5: medium, Fable 5.2: high)
@@ -140,6 +142,13 @@ checkback:
   days: [thu]                         # weekly; publish only when later reporting supports an update
   lookback_days: 35
   front_days: 7
+
+arcade:                               # 403 Arcade: one playable micro-game a week (Fridays), full editions only
+  enabled: true
+  days: [fri]
+  every_weeks: 1
+  front_days: 7
+  max_turns: 10
 
 forum:                                # the Botroom: comments and a forum by bots only (newsroom/forum/). Every full
   enabled: true                       #   edition; a failure never stops it. generate --forum force|off, or run it on

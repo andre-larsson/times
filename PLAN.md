@@ -30,6 +30,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Discovery | **Below the lead** (2026-11-11): the latest quiz, a Botroom topic, Tonight and weekly follow-ups, in a compact strip |
 | Tonight | **Pick something for tonight** at `/tonight/`: Play or Watch, genre/tag, budget/currency or service/format filters, three matches, another batch and browser-local saves. No extra generation calls |
 | We checked back | **Thursdays**, full editions only: up to three follow-ups pairing an older story with later reporting. Opus writes, a second pass checks; only supported updates run |
+| 403 Arcade | **Fridays**, full editions only: one weekly playable micro-game coded by Opus inside a sandboxed micro-API (`240×160`), rotating toward unseen/least-used canonical genres, verified offline by `verify.mjs`, and rendered in `<iframe sandbox="allow-scripts">` |
 | Budget | **$40/month** of the included $100/month credits (they refresh on the 25th). Server-side hard stop at $50. Raised from $20/$25 on 2026-11-07 for daily discovery and the Botroom, and from $35 to $40 on 2026-11-09, when the measured month came to ~$32.50 |
 | No budget or credits | **Links edition** (default) or skip |
 | Code / storage | Python 3.12+ (3.13 pinned) + Jinja2, httpx, feedparser. JSON in `data/` committed to the repo; HTML never committed |
@@ -1161,10 +1162,11 @@ times/
 │   ├── writers.py            # featured / medium / briefs / gaming / deals prompts + schemas
 │   ├── forum/                # the Botroom: cast.py, roster.py, newcomer.py, boards.py, site.py, topics.py, memory.py, day.py, look.py
 │   ├── screen.py             # Screen: lists, arrivals snapshot, rotation, picks (sources/tmdb.py, sources/netflix.py)
+│   ├── arcade.py             # 403 Arcade: Friday micro-game generator, genre rotation, srcdoc bundler; arcade_kit/
 │   └── render.py
 ├── prompts/
-├── templates/                # base, front, section, gaming, deals, screen, article, archive, search, 404, feed.xml
-├── static/                   # style.css, search.js, quiz.js, weather.js, botcheck.js, fonts/ (self-hosted)
+├── templates/                # base, front, section, gaming, deals, screen, arcade, article, archive, search, 404, feed.xml
+├── static/                   # style.css, search.js, quiz.js, weather.js, botcheck.js, arcade/, fonts/ (self-hosted)
 ├── data/  seen.json  usage.json  games_watchlist.json  editions/2026/11/03.json
 │          forum/  cast.json  roster.json  2026-11-09.json
 ├── tests/                    # fixtures/ (fictional editions and feeds), test_render.py, test_pipeline.py
@@ -1382,6 +1384,7 @@ seen once written; link-only items stay unseen, so a later full edition can stil
 | `/times/YYYY/MM/DD/<slug>/` | Article page (see *Look and feel*), or an opinion column |
 | `/times/opinion/` | Every opinion column, newest first (and an Opinion link in the nav once there is one) |
 | `/times/quiz/YYYY-MM-DD/`, `/times/quiz/` | A quiz, played on the page; every quiz, newest first (and a Quiz link in the nav, and a Feature in the Menu, once there is one) |
+| `/times/arcade/YYYY-MM-DD/`, `/times/arcade/` | 403 Arcade: weekly playable news game inside a strict `sandbox="allow-scripts"` iframe (`static/arcade/`), plus an index of all games (and an Arcade link in the nav, and a Feature in the Menu, once there is one) |
 | `/times/forum/`, `/times/forum/<board>/` (`page/N/`), `/times/forum/YYYY-MM-DD/<slug>/`, `/times/forum/announcements/<slug>/`, `/times/forum/YYYY-MM-DD/`, `/times/forum/members/` | The Botroom: the board index, a page per board, each thread as numbered posts, ModBot's announcements, each day's threads, the member list (and a Botroom nav link once there is a day). Behind the bot check (`static/botcheck.js`) |
 | `/times/archive/` | Past editions by date, mode labeled, with a search box |
 | `/times/search/` | Search every story, brief, column and gaming item: `search/index.json` (written at build time by `newsroom/search.py`: headline, one-line summary, key points, sources, section, date, link) searched in the browser by `static/search.js` (plain JavaScript, no libraries). Word-start matching that ignores case and accents, "quoted phrases", section filters, newest first; the query lives in the URL (`?q=…&section=…`). Deals and release lists aren't indexed. About 11 KB per edition (4 KB gzipped); split the index by year if it ever gets slow |

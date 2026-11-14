@@ -150,6 +150,40 @@ class FakeLLM(ForumAnswers, LLM):
                              "problem": "wrong answer" if q["n"] in self.quiz_verdicts else ""}
                             for q in m["questions"] if self.quiz_verdicts.get(q["n"]) != "missing"]}
 
+    arcade_example = "dodger.js"
+    arcade_genre = "dodger-shooter"
+    arcade_layout = "lr+a"
+
+    def call_sandbox(self, task, system, user, work_dir, *, verify_cmd=("node", "verify.mjs"),
+                     writable=("meta.json", "game.js"), max_turns=10, max_tokens=None, effort=None):
+        self.tally.check()
+        call = Call(task=task, model=self.model_for(task), backend=self.backend, input_tokens=4000,
+                    output_tokens=1500, usd=0.05 if self.backend == "api" else 0.0, equivalent_usd=0.05)
+        if task in self.fail:
+            exc = self.fail[task]
+            call.ok, call.error = False, str(exc)
+            self.tally.record(call, exc)
+            raise exc
+        self.tally.record(call)
+        self.sandbox_user = user
+        stories = json.loads((work_dir / "stories.json").read_text(encoding="utf-8"))["stories"]
+        hist = json.loads((work_dir / "history.json").read_text(encoding="utf-8"))
+        self.sandbox_history = hist
+        sid = stories[0]["id"]
+        meta = {
+            "play": True,
+            "story_id": sid,
+            "title": "CI Token Defender",
+            "dek": "Catch signed builds and avoid poisoned updates.",
+            "genre": self.arcade_genre if self.arcade_genre in hist["preferred_genres"] else hist["preferred_genres"][0],
+            "controls_layout": self.arcade_layout,
+            "news_tie": "Fictional CI incident recreated as an arcade game.",
+        }
+        (work_dir / "meta.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        ex = (work_dir / "examples" / self.arcade_example).read_text(encoding="utf-8")
+        (work_dir / "game.js").write_text(ex, encoding="utf-8")
+        return {"turns": 3, "text": "Verified game.", "max_turns_reached": False}
+
 
 def factory(fail=None):
     def make(cfg, backend, tally, env):

@@ -37,6 +37,7 @@ def test_expected_pages_exist(site):
         "2026/11/03/kestrel-2-open-model-catches-big-labs/index.html",
         "2026/11/03/build-the-pc-this-winter/index.html", "opinion/index.html",
         "quiz/index.html", "quiz/2026-11-03/index.html", "static/quiz.js", "static/weather.js",
+        "arcade/index.html", "arcade/2026-11-03/index.html", "static/arcade/host.js",
         "404.html", "feed.xml", "static/style.css", "static/favicon.svg",
     ]:
         assert (site / rel).is_file(), rel
@@ -102,6 +103,22 @@ def test_quiz_page(site):
     assert "/times/quiz/2026-11-03/" in (site / "feed.xml").read_text(encoding="utf-8")
 
 
+def test_arcade_page(site):
+    html = (site / "arcade" / "2026-11-03" / "index.html").read_text(encoding="utf-8")
+    assert 'sandbox="allow-scripts"' in html and "static/arcade/host.js" in html
+    assert "CI Token Defender" in html and "Popular npm package hijacked to steal cloud keys" in html
+    assert 'href="/times/2026/11/03/tinyfetchr-npm-package-hijacked/"' in html
+    doc = html.split('<script type="application/json" id="arcade-doc">', 1)[1].split("</script>", 1)[0]
+    bundle = json.loads(doc.replace("<\\/", "</"))
+    assert "mountArcade" in bundle["srcdoc"] and "__ARCADE_HELP_SEEN__" in bundle["srcdoc"]
+    front = (site / "index.html").read_text(encoding="utf-8")
+    assert 'aria-label="Arcade"' in front and "CI Token Defender" in front
+    assert '<a class="menu-feature" href="/times/arcade/"><strong>Arcade</strong>' in front
+    index = (site / "arcade" / "index.html").read_text(encoding="utf-8")
+    assert "CI Token Defender" in index and 'href="/times/arcade/2026-11-03/"' in index
+    assert "/times/arcade/2026-11-03/" in (site / "feed.xml").read_text(encoding="utf-8")
+
+
 def test_links_edition_renders(tmp_path, cfg):
     build(cfg, data_dir=FIXTURES, out_dir=tmp_path / "out", front_edition="2026-11-02")
     html = (tmp_path / "out" / "index.html").read_text(encoding="utf-8")
@@ -120,15 +137,15 @@ def test_nav_bar_and_menu(site):
     bar, menu = front.split('<details class="nav-menu" data-nav-menu>', 1)
     bar = bar[bar.index('<nav class="nav"'):]
     menu = menu[:menu.index("</details>")]
-    labels = ["Front", "AI", "Tech", "Gaming", "Deals", "Screen", "Opinion", "Quiz", "Tonight",
+    labels = ["Front", "AI", "Tech", "Gaming", "Deals", "Screen", "Opinion", "Quiz", "Arcade", "Tonight",
               "Botroom", "Follow-up"]
     at = [bar.index(f">{label}</a>") for label in labels]
     assert at == sorted(at), labels                              # the paper, Search and Menu pinned after it
     assert ">Archive</a>" not in bar and ">Archive</a>" in menu   # Archive is in the Menu only
     assert ">Search</a>" not in bar                               # Search is the icon button, not a second text link
-    for href in ("quiz/", "forum/", "tonight/", "checked-back/", "archive/", "search/", "feed.xml", "opinion/"):
+    for href in ("quiz/", "arcade/", "forum/", "tonight/", "checked-back/", "archive/", "search/", "feed.xml", "opinion/"):
         assert f'href="/times/{href}"' in menu, href
-    features = ["Quiz", "Tonight"]                                # things to do, and only those
+    features = ["Quiz", "Arcade", "Tonight"]                      # things to do, and only those
     at = [menu.index(f"<strong>{x}</strong>") for x in features]
     assert at == sorted(at)
     for label in ("Opinion", "The Botroom", "We checked back"):

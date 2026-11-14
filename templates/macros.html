@@ -245,6 +245,19 @@
 </article>
 {%- endmacro %}
 
+{# ── Arcade ─────────────────────────────────────────────────────────────── #}
+
+{% macro arcade_card(g, size='md') -%}
+<article class="column-card arcade-card sec-arcade">
+  {{ kicker(g) }}
+  <h3 class="hl hl-{{ size }}"><a class="hl-link" href="{{ g | article_url }}">{{ g.title }}</a></h3>
+  {%- if g.dek %}
+  <p class="teaser-text">{{ g.dek }}</p>
+  {%- endif %}
+  <p class="meta"><span>Playable game</span><span class="meta-sep" aria-hidden="true">·</span><time datetime="{{ g.edition_generated_at | iso }}">{{ g.edition_generated_at | date_short }}</time></p>
+</article>
+{%- endmacro %}
+
 {# ── Screen (what to watch) ─────────────────────────────────────────────── #}
 
 {# Where a title is on: "Netflix", "SVT Play · free", "TV4 Play · ads" (where-to-watch data: JustWatch, via TMDB) #}

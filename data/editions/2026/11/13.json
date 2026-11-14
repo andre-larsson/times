@@ -4803,5 +4803,43 @@
    ],
    "model": "claude-opus-5-5"
   }
+ },
+ "arcade": {
+  "story_id": "2026-11-13/hijacked-github-accounts-plant-ci-secret-stealer-in-1-806-re",
+  "story": {
+   "headline": "Hijacked GitHub accounts plant CI secret stealer in 1,806 repos",
+   "edition_id": "2026-11-13",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "url": "https://www.bleepingcomputer.com/news/security/hackers-compromise-4-800-github-accounts-to-steal-cloud-credentials/",
+     "title": "Hackers compromise 4,800 GitHub accounts to steal cloud credentials"
+    },
+    {
+     "name": "The Hacker News",
+     "url": "https://thehackernews.com/2026/11/4837-hijacked-github-accounts-ran-ci.html",
+     "title": "Attacker Used 4,837 Hijacked GitHub Accounts to Run a CI Secret Stealer in 1,806+ Repositories"
+    }
+   ],
+   "section": "tech",
+   "tier": "medium",
+   "slug": "hijacked-github-accounts-plant-ci-secret-stealer-in-1-806-re"
+  },
+  "title": "Secret Stealer Siege",
+  "dek": "Build and upgrade scanners along the CI pipeline before stealer scripts leak three secrets from your vault.",
+  "genre": "tower-defense",
+  "genre_label": "Tower defense",
+  "controls_layout": "pointer",
+  "news_tie": "The wfx-loot campaign planted a CI secret stealer in 1,806 repos; here you guard the pipeline that leads to the Actions secrets.",
+  "code": "const PATH = [[-10, 30], [60, 30], [60, 110], [130, 110], [130, 40], [200, 40], [200, 130], [252, 130]];\nconst PADS = [[30, 52], [84, 80], [40, 90], [106, 88], [108, 52], [154, 64], [176, 86], [165, 18], [224, 108], [160, 124], [90, 134], [24, 134]];\nconst COST = [6, 8, 11];\nconst RANGE = [30, 37, 44];\nconst RATE = [0.6, 0.42, 0.3];\nconst GOAL = 50;\nconst SEGS = [];\nlet TOTAL = 0;\nfor (let i = 0; i < PATH.length - 1; i++) {\n  const [x1, y1] = PATH[i], [x2, y2] = PATH[i + 1];\n  const len = Math.hypot(x2 - x1, y2 - y1);\n  SEGS.push({ x1, y1, x2, y2, len, at: TOTAL });\n  TOTAL += len;\n}\nconst posAt = (d) => {\n  for (const s of SEGS) {\n    if (d <= s.at + s.len) {\n      const t = Math.max(0, (d - s.at) / s.len);\n      return [s.x1 + (s.x2 - s.x1) * t, s.y1 + (s.y2 - s.y1) * t];\n    }\n  }\n  return [252, 130];\n};\n\nexport default {\n  title: \"Secret Stealer Siege\",\n  dek: \"Build and upgrade scanners along the CI pipeline before stealer scripts leak three secrets.\",\n  width: 240,\n  height: 160,\n  controls: { layout: \"pointer\", hint: \"Tap a pad to build a scanner, tap a scanner to upgrade\" },\n  howToPlay: {\n    summary: \"Hijacked accounts are pushing secret stealers down your CI pipeline. Hold for 50 seconds.\",\n    steps: [\n      \"Tap an empty pad to build a scanner (6 credits). Tap a scanner to upgrade it (8, then 11).\",\n      \"Scanners zap the script furthest along the pipe. Kills pay credits; armored backdoors pay more.\",\n      \"Taps that miss a pad are false alarms and cost 1 credit.\",\n      \"Three scripts reaching the vault leak your secrets and end the run.\",\n    ],\n    controls: \"Tap / click pads and scanners\",\n  },\n  sprites: {\n    bug: [\".RRRR.\", \"RKRRKR\", \"RRRRRR\", \"R.RR.R\", \".R..R.\"],\n    tank: [\".VVVV.\", \"VWVVWV\", \"VVKKVV\", \"VVVVVV\", \"V.VV.V\"],\n    vault: [\"AAAAAAAA\", \"AKKKKKKA\", \"AKAAAAKA\", \"AKAYYAKA\", \"AKAAAAKA\", \"AKKKKKKA\", \"AAAAAAAA\"],\n  },\n  init(g) {\n    g.state = {\n      credits: 14, leaks: 0, foes: [], towers: PADS.map(() => 0), cd: PADS.map(() => 0),\n      zaps: [], spawnIn: 1.5, warnT: 0, nextTank: false, kills: 0, miss: 0,\n    };\n    g.hud(`${GOAL}s · ♥♥♥ · 14 cr`);\n  },\n  update(g, dt) {\n    const s = g.state;\n    const t = g.t;\n    if (g.ptr.pressed) {\n      const px = g.ptr.x, py = g.ptr.y;\n      const i = PADS.findIndex(([x, y]) => Math.abs(px - x) <= 9 && Math.abs(py - y) <= 9);\n      if (i < 0) {\n        s.credits = Math.max(0, s.credits - 1);\n        s.miss = 0.3;\n        g.sfx(\"click\");\n      } else if (s.towers[i] >= 3) {\n        g.sfx(\"warn\");\n      } else if (s.credits >= COST[s.towers[i]]) {\n        s.credits -= COST[s.towers[i]];\n        s.towers[i] += 1;\n        g.sfx(s.towers[i] === 1 ? \"blip\" : \"coin\");\n        g.particles(PADS[i][0], PADS[i][1], \"tech\", 8);\n      } else {\n        g.sfx(\"warn\");\n        s.miss = 0.3;\n      }\n    }\n    s.miss = Math.max(0, s.miss - dt);\n    s.spawnIn -= dt;\n    if (s.spawnIn < 0.6 && !s.warnT) {\n      s.nextTank = t > 8 && g.rand() < Math.min(0.4, 0.12 + t * 0.006);\n      s.warnT = 1;\n    }\n    if (s.spawnIn <= 0) {\n      const tank = s.nextTank;\n      const hp = tank ? 7 + Math.floor(t / 10) * 2 : 2 + Math.floor(t / 16);\n      s.foes.push({ d: 0, hp, max: hp, tank, v: (tank ? 18 : 30) + t * 0.45, hitT: 0 });\n      s.spawnIn = Math.max(0.6, 1.5 - t * 0.02) * (tank ? 1.4 : 1);\n      s.warnT = 0;\n    }\n    for (let i = 0; i < PADS.length; i++) {\n      const lv = s.towers[i];\n      if (!lv) continue;\n      s.cd[i] -= dt;\n      if (s.cd[i] > 0) continue;\n      let best = null;\n      for (const f of s.foes) {\n        const [fx, fy] = posAt(f.d);\n        if (g.dist(fx, fy, PADS[i][0], PADS[i][1]) <= RANGE[lv - 1] && (!best || f.d > best.d)) best = f;\n      }\n      if (!best) continue;\n      s.cd[i] = RATE[lv - 1];\n      best.hp -= 1;\n      best.hitT = 0.08;\n      const [bx, by] = posAt(best.d);\n      s.zaps.push({ x1: PADS[i][0], y1: PADS[i][1], x2: bx, y2: by, t: 0.08 });\n      g.sfx(\"shoot\");\n    }\n    s.foes = s.foes.filter((f) => {\n      f.hitT = Math.max(0, f.hitT - dt);\n      const [fx, fy] = posAt(f.d);\n      if (f.hp <= 0) {\n        s.credits += f.tank ? 5 : 2;\n        s.kills += 1;\n        g.score += f.tank ? 30 : 10;\n        g.particles(fx, fy, f.tank ? \"ai\" : \"danger\", 8);\n        g.sfx(\"hit\");\n        return false;\n      }\n      f.d += f.v * dt;\n      if (f.d >= TOTAL) {\n        s.leaks += 1;\n        g.shake(4, 0.25);\n        g.flash(\"danger\", 0.15);\n        g.sfx(\"lose\");\n        if (s.leaks >= 3) g.lose(`Secrets leaked after ${Math.floor(t)}s · ${s.kills} stealers stopped`);\n        return false;\n      }\n      return true;\n    });\n    s.zaps = s.zaps.filter((z) => (z.t -= dt) > 0);\n    if (t >= GOAL && s.leaks < 3) {\n      g.score += (3 - s.leaks) * 50;\n      g.sfx(\"win\");\n      g.win(`Pipeline held · ${s.kills} stealers stopped`);\n    }\n    g.hud(`${Math.max(0, Math.ceil(GOAL - t))}s · ${\"♥\".repeat(Math.max(0, 3 - s.leaks))} · ${s.credits} cr`);\n  },\n  draw(g) {\n    const s = g.state;\n    g.cls(\"dark\");\n    for (let x = 0; x < g.w; x += 20) g.line(x, 0, x, g.h, \"panel\", 1);\n    for (let y = 0; y < g.h; y += 20) g.line(0, y, g.w, y, \"panel\", 1);\n    for (const sg of SEGS) g.line(sg.x1, sg.y1, sg.x2, sg.y2, \"rule\", 13);\n    for (const sg of SEGS) g.line(sg.x1, sg.y1, sg.x2, sg.y2, \"#1e293b\", 9);\n    if (s.warnT && Math.floor(g.t * 10) % 2 === 0) g.rect(0, 22, 8, 16, s.nextTank ? \"ai\" : \"danger\");\n    PADS.forEach(([x, y], i) => {\n      const lv = s.towers[i];\n      if (!lv) {\n        const ok = s.credits >= COST[0];\n        g.rect(x - 7, y - 7, 14, 14, null, ok ? \"tech\" : \"rule\");\n        g.txt(\"+\", x, y - 4, { size: 8, color: ok ? \"tech\" : \"muted\", align: \"center\" });\n        return;\n      }\n      g.circ(x, y, RANGE[lv - 1], null, \"rgba(56,189,248,0.18)\");\n      g.rect(x - 7, y - 7, 14, 14, \"panel\", lv === 3 ? \"amber\" : \"tech\");\n      g.circ(x, y, 3 + lv, lv === 3 ? \"amber\" : \"tech\");\n      for (let k = 0; k < lv; k++) g.rect(x - 5 + k * 4, y + 8, 3, 2, \"ok\");\n      if (lv < 3 && s.credits >= COST[lv]) g.txt(\"^\", x + 6, y - 10, { size: 6, color: \"ok\" });\n    });\n    for (const z of s.zaps) g.line(z.x1, z.y1, z.x2, z.y2, \"tech\", 1);\n    for (const f of s.foes) {\n      const [fx, fy] = posAt(f.d);\n      g.spr(f.tank ? \"tank\" : \"bug\", fx - 6, fy - 5, 2);\n      if (f.hitT > 0) g.circ(fx, fy, 6, null, \"white\");\n      g.bar(fx - 6, fy - 9, 12, 2, f.hp / f.max, f.tank ? \"ai\" : \"danger\", \"rule\");\n    }\n    g.spr(\"vault\", 222, 136, 2);\n    g.rect(0, 0, 76, 13, \"panel\");\n    g.txt(`CREDITS ${s.credits}`, 4, 3, { size: 7, color: s.miss > 0 ? \"danger\" : \"amber\", bold: true });\n    g.bar(80, 4, 60, 5, Math.min(1, g.t / GOAL), \"ok\", \"rule\");\n  },\n};\n",
+  "model": "claude-opus-5-5",
+  "turns": 13,
+  "verify": {
+   "lines": 171,
+   "idle_outcome": "lose",
+   "idle_sec": 20.1,
+   "spam_outcome": "lose",
+   "spam_sec": 20.1
+  }
  }
 }

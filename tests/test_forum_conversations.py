@@ -65,13 +65,15 @@ def test_memory_keeps_exchanges_and_survives_quiet_days():
 def test_features_use_actual_content_and_dedupe():
     ed = _edition()
     got = topics.feature_threads(ed, [], set())
-    assert {t["kind"] for t in got} == {"opinion", "quiz", "screen"}
+    assert {t["kind"] for t in got} == {"opinion", "quiz", "screen", "arcade"}
     opinion = next(t for t in got if t["kind"] == "opinion")
     assert ed["opinion"]["body"] in json.loads(opinion["brief"])["body"]
     quiz = next(t for t in got if t["kind"] == "quiz")
     assert json.loads(quiz["brief"])["questions"][0]["answer"] == ed["quiz"]["questions"][0]["answer"]
+    arcade_t = next(t for t in got if t["kind"] == "arcade")
+    assert json.loads(arcade_t["brief"])["title"] == ed["arcade"]["title"]
     tomorrow = {"edition_id": (DAY + timedelta(days=1)).isoformat()}
-    assert len(topics.feature_threads(tomorrow, [ed], set())) == 3
+    assert len(topics.feature_threads(tomorrow, [ed], set())) == 4
     assert topics.feature_threads(tomorrow, [ed], {t["content_key"] for t in got}) == []
     assert topics.feature_threads({"edition_id": (DAY + timedelta(days=8)).isoformat()}, [ed], set()) == []
 

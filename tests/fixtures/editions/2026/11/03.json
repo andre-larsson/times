@@ -3,11 +3,18 @@
   "generated_at": "2026-11-03T05:31:00Z",
   "mode": "full",
   "sample": true,
-  "llm": { "estimated_usd": 0.55 },
+  "llm": {
+    "estimated_usd": 0.55
+  },
   "stories": [
     {
-      "id": "f1", "slug": "kestrel-2-open-model-catches-big-labs", "tier": "featured", "section": "ai",
-      "kicker": "Open weights", "breaking": true, "newsworthiness": 5,
+      "id": "f1",
+      "slug": "kestrel-2-open-model-catches-big-labs",
+      "tier": "featured",
+      "section": "ai",
+      "kicker": "Open weights",
+      "breaking": true,
+      "newsworthiness": 5,
       "headline": "Kestrel's free model catches the big labs at coding",
       "dek": "The open-weight Kestrel 2 lands within two points of the best closed models on coding benchmarks, and anyone can download it today.",
       "body": "Kestrel AI released Kestrel 2 on Monday, an open-weight language model that scores 71.4 percent on the CodeArena benchmark, two points behind the best closed model the benchmark's maintainers have tested. The previous best open model scored 58 percent.\n\nThe weights are published under a license that allows commercial use, with one restriction: companies with more than 700 million monthly users need a separate agreement. The full model has 405 billion parameters, but Kestrel also released a 70-billion-parameter version that The Byte Ledger reports runs at usable speed on a workstation with two high-end consumer GPUs.\n\nKestrel says the jump comes mostly from training data rather than size. The company generated roughly 40 billion tokens of synthetic programming exercises, then filtered them by running the code and keeping only solutions that passed their tests. It describes the method in a 60-page technical report but has not released the dataset itself.\n\nIndependent testing is still thin. Kernel Post ran the 70B version on 100 real bug-fix tasks from open-source projects and found it solved 48, compared with 61 for a leading closed model, so the benchmark gap may understate the difference on messy, real-world code. Long-context performance also drops off past 64,000 tokens, according to the same test.\n\nOn Hacker News, where the release drew more than 1,200 comments, developers focused on the license and on whether the synthetic-data method can be reproduced. Several noted that the report leaves out how many GPU hours training took, which makes the cost hard to compare.\n\nKestrel says a version tuned for agents, with tool calling built in, will follow \"within weeks\".",
@@ -19,16 +26,39 @@
       ],
       "why_it_matters": "If the results hold up, teams can run near-frontier coding help on their own hardware, which changes the cost and privacy math for AI coding tools.",
       "sources": [
-        { "name": "The Byte Ledger", "title": "Kestrel 2 is the first open model to crowd the coding leaderboards", "url": "https://example.com/byte-ledger/kestrel-2" },
-        { "name": "Kernel Post", "title": "Hands-on: Kestrel 2 on real bug-fix tasks", "url": "https://example.com/kernel-post/kestrel-2-hands-on" },
-        { "name": "Kestrel AI", "title": "Introducing Kestrel 2", "url": "https://example.com/kestrel/blog/kestrel-2" }
+        {
+          "name": "The Byte Ledger",
+          "title": "Kestrel 2 is the first open model to crowd the coding leaderboards",
+          "url": "https://example.com/byte-ledger/kestrel-2"
+        },
+        {
+          "name": "Kernel Post",
+          "title": "Hands-on: Kestrel 2 on real bug-fix tasks",
+          "url": "https://example.com/kernel-post/kestrel-2-hands-on"
+        },
+        {
+          "name": "Kestrel AI",
+          "title": "Introducing Kestrel 2",
+          "url": "https://example.com/kestrel/blog/kestrel-2"
+        }
       ],
-      "hn": { "url": "https://example.com/hn/item/1", "points": 2878, "comments": 1204 },
-      "cover": { "figure": "2 pts", "caption": "Kestrel 2's gap to the best closed model on the CodeArena coding benchmark" }
+      "hn": {
+        "url": "https://example.com/hn/item/1",
+        "points": 2878,
+        "comments": 1204
+      },
+      "cover": {
+        "figure": "2 pts",
+        "caption": "Kestrel 2's gap to the best closed model on the CodeArena coding benchmark"
+      }
     },
     {
-      "id": "f2", "slug": "tinyfetchr-npm-package-hijacked", "tier": "featured", "section": "tech",
-      "kicker": "Security", "newsworthiness": 4.7,
+      "id": "f2",
+      "slug": "tinyfetchr-npm-package-hijacked",
+      "tier": "featured",
+      "section": "tech",
+      "kicker": "Security",
+      "newsworthiness": 4.7,
       "headline": "Popular npm package hijacked to steal cloud keys",
       "dek": "A poisoned release of tinyfetchr, downloaded nine million times a week, quietly sent environment variables to an attacker for six hours.",
       "body": "Attackers published a malicious version of tinyfetchr, a small HTTP helper used by thousands of JavaScript projects, after taking over a maintainer's account on Sunday night. Version 4.2.1 contained an install script that collected environment variables, including cloud access keys and CI tokens, and sent them to a remote server.\n\nThe release was live for about six hours before the registry pulled it. Kernel Post estimates it was installed around 180,000 times in that window, most of them by automated CI pipelines that pick up new patch versions without review.\n\nThe maintainer says the account had two-factor authentication, but a session token was stolen through a phishing page that imitated the registry's login. Circuit Weekly reports that the same server received data from two smaller packages hijacked in October.\n\nAnyone who installed 4.2.1 should rotate every secret the build machine could see. Lockfiles that pin an earlier version were not affected.",
@@ -39,15 +69,34 @@
       ],
       "why_it_matters": "It is another reminder that unpinned dependencies in CI give every maintainer's account the keys to your cloud.",
       "sources": [
-        { "name": "Kernel Post", "title": "tinyfetchr 4.2.1 was malware: what we know", "url": "https://example.com/kernel-post/tinyfetchr" },
-        { "name": "Circuit Weekly", "title": "Same attacker behind three npm hijacks", "url": "https://example.com/circuit-weekly/npm-hijacks" }
+        {
+          "name": "Kernel Post",
+          "title": "tinyfetchr 4.2.1 was malware: what we know",
+          "url": "https://example.com/kernel-post/tinyfetchr"
+        },
+        {
+          "name": "Circuit Weekly",
+          "title": "Same attacker behind three npm hijacks",
+          "url": "https://example.com/circuit-weekly/npm-hijacks"
+        }
       ],
-      "hn": { "url": "https://example.com/hn/item/2", "points": 1650, "comments": 640 },
-      "cover": { "figure": "6 h", "caption": "how long the poisoned release was live" }
+      "hn": {
+        "url": "https://example.com/hn/item/2",
+        "points": 1650,
+        "comments": 640
+      },
+      "cover": {
+        "figure": "6 h",
+        "caption": "how long the poisoned release was live"
+      }
     },
     {
-      "id": "f3", "slug": "arcwave-r9-review-roundup", "tier": "featured", "section": "tech",
-      "kicker": "Hardware", "newsworthiness": 4.5,
+      "id": "f3",
+      "slug": "arcwave-r9-review-roundup",
+      "tier": "featured",
+      "section": "tech",
+      "kicker": "Hardware",
+      "newsworthiness": 4.5,
       "headline": "Arcwave's new desktop chip is faster, cooler and cheaper",
       "dek": "First reviews of the Arcwave R9 show 18 percent more multi-core speed than last year's flagship, at a lower launch price.",
       "body": "Reviews of Arcwave's R9 desktop processor went live on Tuesday, and the picture is unusually consistent: about 18 percent faster in multi-threaded work than last year's top chip, roughly the same in games, and noticeably cooler under load.\n\nCircuit Weekly measured a peak of 168 watts in a long rendering test, down from 230 on the previous generation, which means a mid-range air cooler is enough. The Byte Ledger found the chip ran its full test suite without throttling in a small-form-factor case.\n\nThe R9 launches at €549, €50 less than its predecessor did. It needs a new motherboard socket, though, and early boards start at around €220.\n\nFor gaming alone, both outlets say last year's chip is still the better deal while it is discounted.",
@@ -58,244 +107,940 @@
       ],
       "why_it_matters": "Lower power draw means quieter, smaller workstations without giving up speed.",
       "sources": [
-        { "name": "Circuit Weekly", "title": "Arcwave R9 review: the efficient flagship", "url": "https://example.com/circuit-weekly/arcwave-r9" },
-        { "name": "The Byte Ledger", "title": "Arcwave R9 tested in a 10-litre case", "url": "https://example.com/byte-ledger/arcwave-r9-sff" }
+        {
+          "name": "Circuit Weekly",
+          "title": "Arcwave R9 review: the efficient flagship",
+          "url": "https://example.com/circuit-weekly/arcwave-r9"
+        },
+        {
+          "name": "The Byte Ledger",
+          "title": "Arcwave R9 tested in a 10-litre case",
+          "url": "https://example.com/byte-ledger/arcwave-r9-sff"
+        }
       ],
-      "cover": { "figure": "+18%", "caption": "multi-core performance versus last year's flagship" }
+      "cover": {
+        "figure": "+18%",
+        "caption": "multi-core performance versus last year's flagship"
+      }
     },
     {
-      "id": "m1", "slug": "model-makers-shared-safety-test-suite", "tier": "medium", "section": "ai",
-      "kicker": "Policy", "newsworthiness": 4.0,
+      "id": "m1",
+      "slug": "model-makers-shared-safety-test-suite",
+      "tier": "medium",
+      "section": "ai",
+      "kicker": "Policy",
+      "newsworthiness": 4.0,
       "headline": "Model makers sign up to a shared safety test suite",
       "dek": "Eleven AI labs will run the same 300 safety tests before each major release and publish the scores.",
       "body": "The Open Model Standards Group, an industry body formed last year, published its first common safety test suite on Monday. Eleven labs have agreed to run its 300 tests, covering areas such as cyberattack assistance and dangerous chemistry, before every major model release, and to publish the results within two weeks.\n\nCritics point out that the labs wrote the tests themselves and that publishing scores is voluntary in practice, since there is no penalty for skipping it.",
-      "key_points": ["300 shared tests before every major release", "Eleven labs signed up", "No penalty for skipping"],
-      "sources": [{ "name": "The Byte Ledger", "title": "AI labs agree on a common safety exam", "url": "https://example.com/byte-ledger/safety-suite" }]
+      "key_points": [
+        "300 shared tests before every major release",
+        "Eleven labs signed up",
+        "No penalty for skipping"
+      ],
+      "sources": [
+        {
+          "name": "The Byte Ledger",
+          "title": "AI labs agree on a common safety exam",
+          "url": "https://example.com/byte-ledger/safety-suite"
+        }
+      ]
     },
     {
-      "id": "m2", "slug": "survey-coding-agents-third-of-new-code", "tier": "medium", "section": "ai",
-      "kicker": "Agents", "newsworthiness": 3.9,
+      "id": "m2",
+      "slug": "survey-coding-agents-third-of-new-code",
+      "tier": "medium",
+      "section": "ai",
+      "kicker": "Agents",
+      "newsworthiness": 3.9,
       "headline": "Coding agents now write a third of new code at mid-size firms",
       "dek": "A survey of 2,000 developers finds agent-written code is common, but most teams still review every line.",
       "body": "Kernel Post's annual developer survey found that at companies with 100 to 1,000 engineers, AI agents now produce about 34 percent of newly merged code, up from 12 percent a year ago. Ninety percent of respondents said every agent change still goes through human review.\n\nThe biggest complaint was not quality but review fatigue: half said agents produce more changes than their team can comfortably read.",
-      "key_points": ["34% of new code at mid-size firms, up from 12%", "90% review every agent change", "Review fatigue is the top complaint"],
-      "sources": [{ "name": "Kernel Post", "title": "Developer survey 2026: the agent year", "url": "https://example.com/kernel-post/survey-2026" }],
-      "hn": { "url": "https://example.com/hn/item/3", "points": 812, "comments": 455 }
+      "key_points": [
+        "34% of new code at mid-size firms, up from 12%",
+        "90% review every agent change",
+        "Review fatigue is the top complaint"
+      ],
+      "sources": [
+        {
+          "name": "Kernel Post",
+          "title": "Developer survey 2026: the agent year",
+          "url": "https://example.com/kernel-post/survey-2026"
+        }
+      ],
+      "hn": {
+        "url": "https://example.com/hn/item/3",
+        "points": 812,
+        "comments": 455
+      }
     },
     {
-      "id": "m3", "slug": "ferrous-terminal-hits-1-0", "tier": "medium", "section": "tech",
-      "kicker": "Dev", "newsworthiness": 3.8,
+      "id": "m3",
+      "slug": "ferrous-terminal-hits-1-0",
+      "tier": "medium",
+      "section": "tech",
+      "kicker": "Dev",
+      "newsworthiness": 3.8,
       "headline": "Ferrous terminal hits 1.0 after four years",
       "dek": "The GPU-accelerated terminal written in Rust adds split panes, a plugin API and a stable config format.",
       "body": "Ferrous, an open-source terminal emulator, reached version 1.0 on Monday. The release freezes the configuration format, adds split panes and tabs, and ships a plugin API that lets extensions add status bars and custom key bindings.\n\nThe project's benchmarks show it rendering large log files about three times faster than the default terminals on macOS and Linux. Windows support remains experimental.",
-      "key_points": ["Stable config format and plugin API", "Split panes and tabs", "Windows support still experimental"],
-      "sources": [{ "name": "Ferrous project", "title": "Ferrous 1.0", "url": "https://example.com/ferrous/1-0" }],
-      "hn": { "url": "https://example.com/hn/item/4", "points": 990, "comments": 388 }
+      "key_points": [
+        "Stable config format and plugin API",
+        "Split panes and tabs",
+        "Windows support still experimental"
+      ],
+      "sources": [
+        {
+          "name": "Ferrous project",
+          "title": "Ferrous 1.0",
+          "url": "https://example.com/ferrous/1-0"
+        }
+      ],
+      "hn": {
+        "url": "https://example.com/hn/item/4",
+        "points": 990,
+        "comments": 388
+      }
     },
     {
-      "id": "m4", "slug": "browsers-agree-passkey-sync", "tier": "medium", "section": "tech",
-      "kicker": "Web", "newsworthiness": 3.7,
+      "id": "m4",
+      "slug": "browsers-agree-passkey-sync",
+      "tier": "medium",
+      "section": "tech",
+      "kicker": "Web",
+      "newsworthiness": 3.7,
       "headline": "Three browsers agree on a common way to move passkeys",
       "dek": "A shared export format means passkeys will no longer be stuck in the password manager that created them.",
       "body": "Three major browser makers said on Monday they will support a common format for exporting and importing passkeys, starting with releases due in the first quarter. Until now, moving passkeys between password managers has mostly meant creating new ones site by site.\n\nThe format encrypts the export with a one-time key shown on screen, so a stolen export file is useless on its own.",
-      "key_points": ["Common passkey export format", "Ships early next year", "Exports are encrypted with a one-time key"],
-      "sources": [{ "name": "Circuit Weekly", "title": "Passkeys get portable", "url": "https://example.com/circuit-weekly/passkey-export" }]
+      "key_points": [
+        "Common passkey export format",
+        "Ships early next year",
+        "Exports are encrypted with a one-time key"
+      ],
+      "sources": [
+        {
+          "name": "Circuit Weekly",
+          "title": "Passkeys get portable",
+          "url": "https://example.com/circuit-weekly/passkey-export"
+        }
+      ]
     },
     {
-      "id": "m5", "slug": "ssd-prices-fall-third-month", "tier": "medium", "section": "tech",
-      "kicker": "Hardware", "newsworthiness": 3.6,
+      "id": "m5",
+      "slug": "ssd-prices-fall-third-month",
+      "tier": "medium",
+      "section": "tech",
+      "kicker": "Hardware",
+      "newsworthiness": 3.6,
       "headline": "SSD prices fall for a third straight month",
       "dek": "A 2 TB drive now costs about €95, the lowest since early last year.",
       "body": "Average prices for consumer SSDs fell another 6 percent in October, according to price-tracking data compiled by The Byte Ledger. A typical 2 TB drive now sells for about €95.\n\nAnalysts expect prices to bottom out in December as manufacturers cut production.",
-      "key_points": ["Down 6% in October", "2 TB for about €95", "Expected to bottom out in December"],
-      "sources": [{ "name": "The Byte Ledger", "title": "SSD price index, October", "url": "https://example.com/byte-ledger/ssd-index" }]
+      "key_points": [
+        "Down 6% in October",
+        "2 TB for about €95",
+        "Expected to bottom out in December"
+      ],
+      "sources": [
+        {
+          "name": "The Byte Ledger",
+          "title": "SSD price index, October",
+          "url": "https://example.com/byte-ledger/ssd-index"
+        }
+      ]
     },
-    { "id": "b1", "slug": "lumen-labs-api-price-cut", "tier": "brief", "section": "ai", "kicker": "Models",
+    {
+      "id": "b1",
+      "slug": "lumen-labs-api-price-cut",
+      "tier": "brief",
+      "section": "ai",
+      "kicker": "Models",
       "headline": "Lumen Labs cuts API prices by 40 percent",
       "body": "The cut applies to its mid-size model; the company credits cheaper inference hardware.",
       "published_at": "2026-11-03T04:10:00Z",
-      "sources": [{ "name": "The Byte Ledger", "url": "https://example.com/byte-ledger/lumen-prices" }] },
-    { "id": "b2", "slug": "router-login-bypass", "tier": "brief", "section": "tech", "kicker": "Security",
+      "sources": [
+        {
+          "name": "The Byte Ledger",
+          "url": "https://example.com/byte-ledger/lumen-prices"
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "slug": "router-login-bypass",
+      "tier": "brief",
+      "section": "tech",
+      "kicker": "Security",
       "headline": "Patch now: popular home router lets attackers skip the login",
       "body": "The flaw affects three firmware versions; an update has been out since Friday.",
       "published_at": "2026-11-03T03:52:00Z",
-      "sources": [{ "name": "Kernel Post", "url": "https://example.com/kernel-post/router-flaw" }] },
-    { "id": "b3", "slug": "detecting-ai-written-code", "tier": "brief", "section": "ai", "kicker": "Research",
+      "sources": [
+        {
+          "name": "Kernel Post",
+          "url": "https://example.com/kernel-post/router-flaw"
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "slug": "detecting-ai-written-code",
+      "tier": "brief",
+      "section": "ai",
+      "kicker": "Research",
       "headline": "Researchers claim 90 percent accuracy at spotting AI-written code",
       "body": "The method looks at variable naming habits; it has not been tested on edited code.",
       "published_at": "2026-11-03T03:20:00Z",
-      "sources": [{ "name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/ai-code-detect" }] },
-    { "id": "b4", "slug": "python-packaging-lockfiles", "tier": "brief", "section": "tech", "kicker": "Dev",
+      "sources": [
+        {
+          "name": "Circuit Weekly",
+          "url": "https://example.com/circuit-weekly/ai-code-detect"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "slug": "python-packaging-lockfiles",
+      "tier": "brief",
+      "section": "tech",
+      "kicker": "Dev",
       "headline": "Python packaging tool adds standard lockfiles",
       "body": "The new format is shared with two other installers, so lockfiles finally travel between tools.",
       "published_at": "2026-11-03T02:45:00Z",
-      "sources": [{ "name": "Kernel Post", "url": "https://example.com/kernel-post/py-lockfiles" }] },
-    { "id": "b5", "slug": "budget-gpu-below-msrp", "tier": "brief", "section": "tech", "kicker": "Hardware",
+      "sources": [
+        {
+          "name": "Kernel Post",
+          "url": "https://example.com/kernel-post/py-lockfiles"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "slug": "budget-gpu-below-msrp",
+      "tier": "brief",
+      "section": "tech",
+      "kicker": "Hardware",
       "headline": "Budget graphics cards now sell below launch price",
       "body": "Entry-level cards are about 10 percent under their launch prices ahead of next year's refresh.",
       "published_at": "2026-11-03T01:30:00Z",
-      "sources": [{ "name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/gpu-prices" }] },
-    { "id": "b6", "slug": "notebook-app-local-autocomplete", "tier": "brief", "section": "ai", "kicker": "Tools",
+      "sources": [
+        {
+          "name": "Circuit Weekly",
+          "url": "https://example.com/circuit-weekly/gpu-prices"
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "slug": "notebook-app-local-autocomplete",
+      "tier": "brief",
+      "section": "ai",
+      "kicker": "Tools",
       "headline": "Open-source notebook app adds local AI autocomplete",
       "body": "Suggestions run on your own machine, with an option to plug in a hosted model.",
       "published_at": "2026-11-03T00:15:00Z",
-      "sources": [{ "name": "The Byte Ledger", "url": "https://example.com/byte-ledger/notebook-ai" }] },
-    { "id": "b7", "slug": "image-library-agpl", "tier": "brief", "section": "tech", "kicker": "Open source",
+      "sources": [
+        {
+          "name": "The Byte Ledger",
+          "url": "https://example.com/byte-ledger/notebook-ai"
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "slug": "image-library-agpl",
+      "tier": "brief",
+      "section": "tech",
+      "kicker": "Open source",
       "headline": "Widely used image library switches to the AGPL",
       "body": "Commercial users will need a paid license from version 9; forks have already appeared.",
       "published_at": "2026-11-02T23:40:00Z",
-      "sources": [{ "name": "Kernel Post", "url": "https://example.com/kernel-post/image-lib-agpl" }] },
-    { "id": "b8", "slug": "laptop-inference-chip", "tier": "brief", "section": "ai", "kicker": "Chips",
+      "sources": [
+        {
+          "name": "Kernel Post",
+          "url": "https://example.com/kernel-post/image-lib-agpl"
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "slug": "laptop-inference-chip",
+      "tier": "brief",
+      "section": "ai",
+      "kicker": "Chips",
       "headline": "Startup shows an AI inference chip built for laptops",
       "body": "It claims desktop-GPU speeds for 8B models at under 15 watts; samples ship next year.",
       "published_at": "2026-11-02T22:58:00Z",
-      "sources": [{ "name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/laptop-npu" }] },
-    { "id": "b9", "slug": "cloud-eu-outage", "tier": "brief", "section": "tech", "kicker": "Cloud",
+      "sources": [
+        {
+          "name": "Circuit Weekly",
+          "url": "https://example.com/circuit-weekly/laptop-npu"
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "slug": "cloud-eu-outage",
+      "tier": "brief",
+      "section": "tech",
+      "kicker": "Cloud",
       "headline": "Two-hour outage hits a major cloud provider's EU region",
       "body": "A faulty network configuration change took down storage and databases in one region.",
       "published_at": "2026-11-02T21:30:00Z",
-      "sources": [{ "name": "The Byte Ledger", "url": "https://example.com/byte-ledger/cloud-outage" }] },
-    { "id": "b10", "slug": "weave-vcs-2", "tier": "brief", "section": "tech", "kicker": "Dev",
+      "sources": [
+        {
+          "name": "The Byte Ledger",
+          "url": "https://example.com/byte-ledger/cloud-outage"
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "slug": "weave-vcs-2",
+      "tier": "brief",
+      "section": "tech",
+      "kicker": "Dev",
       "headline": "Weave version control 2.0 drops its central server",
       "body": "Repositories now sync peer to peer; the old hosted service closes in March.",
       "published_at": "2026-11-02T20:10:00Z",
-      "sources": [{ "name": "Kernel Post", "url": "https://example.com/kernel-post/weave-2" }] },
-    { "id": "b11", "slug": "agent-benchmark-harder", "tier": "brief", "section": "ai", "kicker": "Agents",
+      "sources": [
+        {
+          "name": "Kernel Post",
+          "url": "https://example.com/kernel-post/weave-2"
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "slug": "agent-benchmark-harder",
+      "tier": "brief",
+      "section": "ai",
+      "kicker": "Agents",
       "headline": "Browser-agent benchmark gets a harder version",
       "body": "Top agents fell from 80 to 41 percent on the new tasks, which involve multi-site workflows.",
       "published_at": "2026-11-02T19:05:00Z",
-      "sources": [{ "name": "The Byte Ledger", "url": "https://example.com/byte-ledger/agent-bench" }] },
-    { "id": "b12", "slug": "password-manager-hardware-keys", "tier": "brief", "section": "tech", "kicker": "Security",
+      "sources": [
+        {
+          "name": "The Byte Ledger",
+          "url": "https://example.com/byte-ledger/agent-bench"
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "slug": "password-manager-hardware-keys",
+      "tier": "brief",
+      "section": "tech",
+      "kicker": "Security",
       "headline": "Password manager will require hardware keys for team admins",
       "body": "The change takes effect in January after a phishing wave targeted admin accounts.",
       "published_at": "2026-11-02T18:20:00Z",
-      "sources": [{ "name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/pm-keys" }] }
+      "sources": [
+        {
+          "name": "Circuit Weekly",
+          "url": "https://example.com/circuit-weekly/pm-keys"
+        }
+      ]
+    }
   ],
   "hn_top": [
-    { "rank": 1, "title": "Kestrel 2: an open model that codes like the big ones", "url": "https://example.com/kestrel/blog/kestrel-2", "points": 2878, "comments": 1204, "comments_url": "https://example.com/hn/item/1" },
-    { "rank": 2, "title": "tinyfetchr 4.2.1 is malware", "url": "https://example.com/kernel-post/tinyfetchr", "points": 1650, "comments": 640, "comments_url": "https://example.com/hn/item/2" },
-    { "rank": 3, "title": "Ferrous 1.0", "url": "https://example.com/ferrous/1-0", "points": 990, "comments": 388, "comments_url": "https://example.com/hn/item/4" },
-    { "rank": 4, "title": "Show HN: I built a spreadsheet that runs SQL in the browser", "url": "https://example.com/sheetsql", "points": 845, "comments": 201, "comments_url": "https://example.com/hn/item/5" },
-    { "rank": 5, "title": "Developer survey 2026: the agent year", "url": "https://example.com/kernel-post/survey-2026", "points": 812, "comments": 455, "comments_url": "https://example.com/hn/item/3" },
-    { "rank": 6, "title": "The quiet death of the RSS reader (and why it's coming back)", "url": "https://example.com/blog/rss-returns", "points": 640, "comments": 312, "comments_url": "https://example.com/hn/item/6" },
-    { "rank": 7, "title": "How we cut our CI bill by 70% with one cache", "url": "https://example.com/eng/ci-cache", "points": 522, "comments": 140, "comments_url": "https://example.com/hn/item/7" },
-    { "rank": 8, "title": "A visual guide to how SSDs actually store bits", "url": "https://example.com/explainers/ssd", "points": 498, "comments": 77, "comments_url": "https://example.com/hn/item/8" },
-    { "rank": 9, "title": "Ask HN: What's your setup for local LLMs in 2026?", "url": "", "points": 431, "comments": 520, "comments_url": "https://example.com/hn/item/9" },
-    { "rank": 10, "title": "Writing a tiny Forth in 400 lines of C", "url": "https://example.com/blog/tiny-forth", "points": 377, "comments": 96, "comments_url": "https://example.com/hn/item/10" }
+    {
+      "rank": 1,
+      "title": "Kestrel 2: an open model that codes like the big ones",
+      "url": "https://example.com/kestrel/blog/kestrel-2",
+      "points": 2878,
+      "comments": 1204,
+      "comments_url": "https://example.com/hn/item/1"
+    },
+    {
+      "rank": 2,
+      "title": "tinyfetchr 4.2.1 is malware",
+      "url": "https://example.com/kernel-post/tinyfetchr",
+      "points": 1650,
+      "comments": 640,
+      "comments_url": "https://example.com/hn/item/2"
+    },
+    {
+      "rank": 3,
+      "title": "Ferrous 1.0",
+      "url": "https://example.com/ferrous/1-0",
+      "points": 990,
+      "comments": 388,
+      "comments_url": "https://example.com/hn/item/4"
+    },
+    {
+      "rank": 4,
+      "title": "Show HN: I built a spreadsheet that runs SQL in the browser",
+      "url": "https://example.com/sheetsql",
+      "points": 845,
+      "comments": 201,
+      "comments_url": "https://example.com/hn/item/5"
+    },
+    {
+      "rank": 5,
+      "title": "Developer survey 2026: the agent year",
+      "url": "https://example.com/kernel-post/survey-2026",
+      "points": 812,
+      "comments": 455,
+      "comments_url": "https://example.com/hn/item/3"
+    },
+    {
+      "rank": 6,
+      "title": "The quiet death of the RSS reader (and why it's coming back)",
+      "url": "https://example.com/blog/rss-returns",
+      "points": 640,
+      "comments": 312,
+      "comments_url": "https://example.com/hn/item/6"
+    },
+    {
+      "rank": 7,
+      "title": "How we cut our CI bill by 70% with one cache",
+      "url": "https://example.com/eng/ci-cache",
+      "points": 522,
+      "comments": 140,
+      "comments_url": "https://example.com/hn/item/7"
+    },
+    {
+      "rank": 8,
+      "title": "A visual guide to how SSDs actually store bits",
+      "url": "https://example.com/explainers/ssd",
+      "points": 498,
+      "comments": 77,
+      "comments_url": "https://example.com/hn/item/8"
+    },
+    {
+      "rank": 9,
+      "title": "Ask HN: What's your setup for local LLMs in 2026?",
+      "url": "",
+      "points": 431,
+      "comments": 520,
+      "comments_url": "https://example.com/hn/item/9"
+    },
+    {
+      "rank": 10,
+      "title": "Writing a tiny Forth in 400 lines of C",
+      "url": "https://example.com/blog/tiny-forth",
+      "points": 377,
+      "comments": 96,
+      "comments_url": "https://example.com/hn/item/10"
+    }
   ],
   "gaming": {
     "new_on_pc": [
-      { "title": "Hollow Lantern", "release_date": "2026-10-30", "steam_rating": "Overwhelmingly Positive", "price": 19.5, "currency": "EUR",
-        "image": "", "store_url": "https://example.com/steam/hollow-lantern", "metacritic_search": "https://example.com/metacritic/hollow-lantern",
-        "blurb": "A cozy-creepy lighthouse keeper sim where the fog hides more than ships.", "review_ids": ["r1", "r3"],
-        "critics": { "opencritic": { "score": 87, "count": 42, "url": "https://example.com/opencritic/hollow-lantern" },
-                     "metascore": { "score": 85, "count": 31, "url": "https://example.com/metacritic/hollow-lantern/critic-reviews" } } },
-      { "title": "Deep Shift Salvage", "release_date": "2026-10-29", "steam_rating": "Very Positive", "price": 24.99, "currency": "EUR",
-        "image": "", "store_url": "https://example.com/steam/deep-shift-salvage", "metacritic_search": "https://example.com/metacritic/deep-shift-salvage",
-        "blurb": "Co-op deep-sea salvage with a crane you will learn to hate, then love.", "review_ids": ["r2"] },
-      { "title": "Kitchen Siege", "release_date": "2026-11-01", "steam_rating": "Very Positive", "price": 14.99, "currency": "EUR",
-        "image": "", "store_url": "https://example.com/steam/kitchen-siege", "metacritic_search": "https://example.com/metacritic/kitchen-siege",
-        "blurb": "Tower defence where the towers are kitchen appliances and the enemies are your in-laws." },
-      { "title": "Starfall Tactics", "release_date": "2026-10-28", "steam_rating": "Mostly Positive", "price": 29.99, "currency": "EUR",
-        "image": "", "store_url": "https://example.com/steam/starfall-tactics", "metacritic_search": "https://example.com/metacritic/starfall-tactics",
-        "blurb": "Turn-based space tactics with a great campaign map and a rough final act.", "review_ids": ["r4"] },
-      { "title": "Ashen Rails", "release_date": "2026-10-31", "steam_rating": "Mixed", "price": 34.99, "currency": "EUR",
-        "image": "", "store_url": "https://example.com/steam/ashen-rails", "metacritic_search": "https://example.com/metacritic/ashen-rails",
+      {
+        "title": "Hollow Lantern",
+        "release_date": "2026-10-30",
+        "steam_rating": "Overwhelmingly Positive",
+        "price": 19.5,
+        "currency": "EUR",
+        "image": "",
+        "store_url": "https://example.com/steam/hollow-lantern",
+        "metacritic_search": "https://example.com/metacritic/hollow-lantern",
+        "blurb": "A cozy-creepy lighthouse keeper sim where the fog hides more than ships.",
+        "review_ids": [
+          "r1",
+          "r3"
+        ],
+        "critics": {
+          "opencritic": {
+            "score": 87,
+            "count": 42,
+            "url": "https://example.com/opencritic/hollow-lantern"
+          },
+          "metascore": {
+            "score": 85,
+            "count": 31,
+            "url": "https://example.com/metacritic/hollow-lantern/critic-reviews"
+          }
+        }
+      },
+      {
+        "title": "Deep Shift Salvage",
+        "release_date": "2026-10-29",
+        "steam_rating": "Very Positive",
+        "price": 24.99,
+        "currency": "EUR",
+        "image": "",
+        "store_url": "https://example.com/steam/deep-shift-salvage",
+        "metacritic_search": "https://example.com/metacritic/deep-shift-salvage",
+        "blurb": "Co-op deep-sea salvage with a crane you will learn to hate, then love.",
+        "review_ids": [
+          "r2"
+        ]
+      },
+      {
+        "title": "Kitchen Siege",
+        "release_date": "2026-11-01",
+        "steam_rating": "Very Positive",
+        "price": 14.99,
+        "currency": "EUR",
+        "image": "",
+        "store_url": "https://example.com/steam/kitchen-siege",
+        "metacritic_search": "https://example.com/metacritic/kitchen-siege",
+        "blurb": "Tower defence where the towers are kitchen appliances and the enemies are your in-laws."
+      },
+      {
+        "title": "Starfall Tactics",
+        "release_date": "2026-10-28",
+        "steam_rating": "Mostly Positive",
+        "price": 29.99,
+        "currency": "EUR",
+        "image": "",
+        "store_url": "https://example.com/steam/starfall-tactics",
+        "metacritic_search": "https://example.com/metacritic/starfall-tactics",
+        "blurb": "Turn-based space tactics with a great campaign map and a rough final act.",
+        "review_ids": [
+          "r4"
+        ]
+      },
+      {
+        "title": "Ashen Rails",
+        "release_date": "2026-10-31",
+        "steam_rating": "Mixed",
+        "price": 34.99,
+        "currency": "EUR",
+        "image": "",
+        "store_url": "https://example.com/steam/ashen-rails",
+        "metacritic_search": "https://example.com/metacritic/ashen-rails",
         "blurb": "Train-heist roguelite with big ideas and a performance problem at launch.",
-        "critics": { "metascore": { "score": 48, "count": 12, "url": "" } } },
-      { "title": "Moss & Marrow", "release_date": "2026-10-30", "steam_rating": "Very Positive", "price": 12.99, "currency": "EUR",
-        "image": "", "store_url": "https://example.com/steam/moss-and-marrow", "metacritic_search": "https://example.com/metacritic/moss-and-marrow",
-        "blurb": "Hand-drawn metroidvania about a mushroom knight. Short, sharp and lovely.", "review_ids": ["r5"] }
+        "critics": {
+          "metascore": {
+            "score": 48,
+            "count": 12,
+            "url": ""
+          }
+        }
+      },
+      {
+        "title": "Moss & Marrow",
+        "release_date": "2026-10-30",
+        "steam_rating": "Very Positive",
+        "price": 12.99,
+        "currency": "EUR",
+        "image": "",
+        "store_url": "https://example.com/steam/moss-and-marrow",
+        "metacritic_search": "https://example.com/metacritic/moss-and-marrow",
+        "blurb": "Hand-drawn metroidvania about a mushroom knight. Short, sharp and lovely.",
+        "review_ids": [
+          "r5"
+        ]
+      }
     ],
     "reviews": [
-      { "id": "r1", "game": "Hollow Lantern", "platforms": ["pc"], "outlet": "Save Point Weekly", "score": "9/10", "url": "https://example.com/savepoint/hollow-lantern",
-        "critics": { "opencritic": { "score": 87, "count": 42, "url": "https://example.com/opencritic/hollow-lantern" } },
-        "verdict": "The best use of fog in a game this year, and a moving story about isolation." },
-      { "id": "r2", "game": "Deep Shift Salvage", "platforms": ["pc"], "outlet": "Frame Rate Journal", "score": "82", "url": "https://example.com/frj/deep-shift",
-        "verdict": "Chaotic co-op fun that needs a group to shine; solo play drags." },
-      { "id": "r3", "game": "Hollow Lantern", "platforms": ["pc"], "outlet": "Indie Lantern", "score": "Recommended", "url": "https://example.com/indie-lantern/hollow-lantern",
-        "verdict": "Small, strange and confident. Play it with headphones." },
-      { "id": "r4", "game": "Starfall Tactics", "platforms": ["pc"], "outlet": "Pixel Courier", "score": "3/5", "url": "https://example.com/pixel-courier/starfall",
-        "critics": { "opencritic": { "score": 64, "count": 8, "url": "https://example.com/opencritic/starfall-tactics" } },
-        "verdict": "Smart combat let down by a rushed ending." },
-      { "id": "r5", "game": "Moss & Marrow", "platforms": ["pc", "switch"], "outlet": "Indie Lantern", "score": "Recommended", "url": "https://example.com/indie-lantern/moss-marrow",
-        "verdict": "A tight six-hour adventure with no filler." },
-      { "id": "r6", "game": "Iron Tide Remastered", "platforms": ["pc", "ps5"], "outlet": "Save Point Weekly", "score": "7/10", "url": "https://example.com/savepoint/iron-tide",
-        "verdict": "A faithful remaster that keeps the old camera problems." }
+      {
+        "id": "r1",
+        "game": "Hollow Lantern",
+        "platforms": [
+          "pc"
+        ],
+        "outlet": "Save Point Weekly",
+        "score": "9/10",
+        "url": "https://example.com/savepoint/hollow-lantern",
+        "critics": {
+          "opencritic": {
+            "score": 87,
+            "count": 42,
+            "url": "https://example.com/opencritic/hollow-lantern"
+          }
+        },
+        "verdict": "The best use of fog in a game this year, and a moving story about isolation."
+      },
+      {
+        "id": "r2",
+        "game": "Deep Shift Salvage",
+        "platforms": [
+          "pc"
+        ],
+        "outlet": "Frame Rate Journal",
+        "score": "82",
+        "url": "https://example.com/frj/deep-shift",
+        "verdict": "Chaotic co-op fun that needs a group to shine; solo play drags."
+      },
+      {
+        "id": "r3",
+        "game": "Hollow Lantern",
+        "platforms": [
+          "pc"
+        ],
+        "outlet": "Indie Lantern",
+        "score": "Recommended",
+        "url": "https://example.com/indie-lantern/hollow-lantern",
+        "verdict": "Small, strange and confident. Play it with headphones."
+      },
+      {
+        "id": "r4",
+        "game": "Starfall Tactics",
+        "platforms": [
+          "pc"
+        ],
+        "outlet": "Pixel Courier",
+        "score": "3/5",
+        "url": "https://example.com/pixel-courier/starfall",
+        "critics": {
+          "opencritic": {
+            "score": 64,
+            "count": 8,
+            "url": "https://example.com/opencritic/starfall-tactics"
+          }
+        },
+        "verdict": "Smart combat let down by a rushed ending."
+      },
+      {
+        "id": "r5",
+        "game": "Moss & Marrow",
+        "platforms": [
+          "pc",
+          "switch"
+        ],
+        "outlet": "Indie Lantern",
+        "score": "Recommended",
+        "url": "https://example.com/indie-lantern/moss-marrow",
+        "verdict": "A tight six-hour adventure with no filler."
+      },
+      {
+        "id": "r6",
+        "game": "Iron Tide Remastered",
+        "platforms": [
+          "pc",
+          "ps5"
+        ],
+        "outlet": "Save Point Weekly",
+        "score": "7/10",
+        "url": "https://example.com/savepoint/iron-tide",
+        "verdict": "A faithful remaster that keeps the old camera problems."
+      }
     ],
     "console_spotlight": [
-      { "game": "Neon Harbor VI", "platforms": ["ps5", "xbox"],
+      {
+        "game": "Neon Harbor VI",
+        "platforms": [
+          "ps5",
+          "xbox"
+        ],
         "headline": "Neon Harbor VI locks in a 26 May 2027 release",
         "summary": "The open-world crime sequel finally has a firm date after two delays. A PC version is \"planned\", with no date yet.",
-        "sources": [{ "name": "Frame Rate Journal", "url": "https://example.com/frj/neon-harbor-date" }] }
+        "sources": [
+          {
+            "name": "Frame Rate Journal",
+            "url": "https://example.com/frj/neon-harbor-date"
+          }
+        ]
+      }
     ],
     "coming_soon": [
-      { "game": "Glasswing Courier", "platforms": ["pc"], "date": "2026-11-12", "date_precision": "day", "url": "https://example.com/steam/glasswing" },
-      { "game": "Orbital Freight Co. 2", "platforms": ["pc"], "date": "2026-11-19", "date_precision": "day", "url": "https://example.com/steam/orbital-2" },
-      { "game": "Lantern Bay Stories", "platforms": ["switch2"], "date": "2026-11-26", "date_precision": "day", "url": "https://example.com/lantern-bay" },
-      { "game": "Tundra Protocol", "platforms": ["pc"], "date": "2026-12-01", "date_precision": "month", "url": "https://example.com/steam/tundra" },
-      { "game": "Neon Harbor VI", "platforms": ["ps5", "xbox"], "date": "2027-05-26", "date_precision": "day", "url": "https://example.com/neon-harbor" },
-      { "game": "Moonmilk", "platforms": ["pc"], "date": "2027-01-01", "date_precision": "year", "url": "https://example.com/steam/moonmilk" }
+      {
+        "game": "Glasswing Courier",
+        "platforms": [
+          "pc"
+        ],
+        "date": "2026-11-12",
+        "date_precision": "day",
+        "url": "https://example.com/steam/glasswing"
+      },
+      {
+        "game": "Orbital Freight Co. 2",
+        "platforms": [
+          "pc"
+        ],
+        "date": "2026-11-19",
+        "date_precision": "day",
+        "url": "https://example.com/steam/orbital-2"
+      },
+      {
+        "game": "Lantern Bay Stories",
+        "platforms": [
+          "switch2"
+        ],
+        "date": "2026-11-26",
+        "date_precision": "day",
+        "url": "https://example.com/lantern-bay"
+      },
+      {
+        "game": "Tundra Protocol",
+        "platforms": [
+          "pc"
+        ],
+        "date": "2026-12-01",
+        "date_precision": "month",
+        "url": "https://example.com/steam/tundra"
+      },
+      {
+        "game": "Neon Harbor VI",
+        "platforms": [
+          "ps5",
+          "xbox"
+        ],
+        "date": "2027-05-26",
+        "date_precision": "day",
+        "url": "https://example.com/neon-harbor"
+      },
+      {
+        "game": "Moonmilk",
+        "platforms": [
+          "pc"
+        ],
+        "date": "2027-01-01",
+        "date_precision": "year",
+        "url": "https://example.com/steam/moonmilk"
+      }
     ],
     "watch": [
-      { "channel": "Indie Radar", "title": "10 indie games you missed in October", "url": "https://example.com/video/indie-october", "thumbnail": "",
-        "blurb": "A quick round-up of smaller October releases, with Moss & Marrow as the standout." },
-      { "channel": "Couch Co-op TV", "title": "Deep Shift Salvage is chaos with friends", "url": "https://example.com/video/deep-shift", "thumbnail": "",
-        "blurb": "Four players, one crane and a lot of shouting." },
-      { "channel": "Indie Radar", "title": "Hollow Lantern review: fog, fear and feelings", "url": "https://example.com/video/hollow-lantern", "thumbnail": "",
-        "blurb": "A spoiler-free video review that agrees with the critics." }
+      {
+        "channel": "Indie Radar",
+        "title": "10 indie games you missed in October",
+        "url": "https://example.com/video/indie-october",
+        "thumbnail": "",
+        "blurb": "A quick round-up of smaller October releases, with Moss & Marrow as the standout."
+      },
+      {
+        "channel": "Couch Co-op TV",
+        "title": "Deep Shift Salvage is chaos with friends",
+        "url": "https://example.com/video/deep-shift",
+        "thumbnail": "",
+        "blurb": "Four players, one crane and a lot of shouting."
+      },
+      {
+        "channel": "Indie Radar",
+        "title": "Hollow Lantern review: fog, fear and feelings",
+        "url": "https://example.com/video/hollow-lantern",
+        "thumbnail": "",
+        "blurb": "A spoiler-free video review that agrees with the critics."
+      }
     ],
     "news": [
-      { "headline": "Ashen Rails studio promises a performance patch within a week", "summary": "The fix targets stutter on mid-range GPUs, the main complaint in Steam reviews.", "url": "https://example.com/frj/ashen-rails-patch", "source": "Frame Rate Journal" },
-      { "headline": "Indie showcase returns in December with 40 games", "summary": "The stream on 10 December promises six world premieres and a demo festival.", "url": "https://example.com/pixel-courier/showcase", "source": "Pixel Courier" },
-      { "headline": "Handheld PC maker confirms an OLED model for spring", "summary": "Same chip as the current model, but a brighter screen and a bigger battery.", "url": "https://example.com/savepoint/handheld-oled", "source": "Save Point Weekly" },
-      { "headline": "Storefront drops regional pricing for games older than five years", "summary": "Older games will cost the same everywhere; some regions will see price rises.", "url": "https://example.com/frj/regional-pricing", "source": "Frame Rate Journal" }
+      {
+        "headline": "Ashen Rails studio promises a performance patch within a week",
+        "summary": "The fix targets stutter on mid-range GPUs, the main complaint in Steam reviews.",
+        "url": "https://example.com/frj/ashen-rails-patch",
+        "source": "Frame Rate Journal"
+      },
+      {
+        "headline": "Indie showcase returns in December with 40 games",
+        "summary": "The stream on 10 December promises six world premieres and a demo festival.",
+        "url": "https://example.com/pixel-courier/showcase",
+        "source": "Pixel Courier"
+      },
+      {
+        "headline": "Handheld PC maker confirms an OLED model for spring",
+        "summary": "Same chip as the current model, but a brighter screen and a bigger battery.",
+        "url": "https://example.com/savepoint/handheld-oled",
+        "source": "Save Point Weekly"
+      },
+      {
+        "headline": "Storefront drops regional pricing for games older than five years",
+        "summary": "Older games will cost the same everywhere; some regions will see price rises.",
+        "url": "https://example.com/frj/regional-pricing",
+        "source": "Frame Rate Journal"
+      }
     ]
   },
   "deals": {
     "checked_at": "2026-11-03T05:30:00Z",
     "featured": [
-      { "game": "Orbital Freight Co.", "shop": "Steam", "price": 7.49, "regular": 29.99, "currency": "EUR", "cut": 75, "lowest_ever": true,
-        "expires": "2026-11-10T17:00:00Z", "verdict": "strong_buy", "steam_rating": "Overwhelmingly Positive",
+      {
+        "game": "Orbital Freight Co.",
+        "shop": "Steam",
+        "price": 7.49,
+        "regular": 29.99,
+        "currency": "EUR",
+        "cut": 75,
+        "lowest_ever": true,
+        "expires": "2026-11-10T17:00:00Z",
+        "verdict": "strong_buy",
+        "steam_rating": "Overwhelmingly Positive",
         "headline": "Orbital Freight Co. hits its lowest price ever: Strong Buy",
         "body": "Orbital Freight Co. is a logistics sim about running cargo between moons, and one of the best-reviewed management games of the last two years: \"Overwhelmingly Positive\" on Steam from more than 40,000 reviews.\n\nAt €7.49 it is a quarter of the regular price and 25 cents under its previous lowest. The sequel arrives on 19 November, which is likely why the original is this cheap, but the first game is complete and the sequel will not import saves.\n\nWho it's for: anyone who liked Factorio-style planning but wants something calmer. A poor fit for anyone who dislikes spreadsheets: the late game is mostly optimisation.",
-        "url": "https://example.com/steam/orbital-freight" }
+        "url": "https://example.com/steam/orbital-freight"
+      }
     ],
     "more": [
-      { "game": "Copperline", "shop": "GOG", "price": 4.99, "regular": 19.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-09T12:00:00Z",
-        "pick": "hidden", "steam_rating": "Very Positive", "verdict": "buy", "advice": "A clever puzzle game about building circuits; the lowest price it's had.", "url": "https://example.com/gog/copperline" },
-      { "game": "Pale Signal", "shop": "Steam", "price": 9.99, "regular": 24.99, "currency": "EUR", "cut": 60, "lowest_ever": false, "expires": "2026-11-06T17:00:00Z",
-        "pick": "genre", "genre": "Horror", "steam_rating": "Very Positive", "verdict": "hold", "advice": "A good deal, but it hit €7.49 last winter; the holiday sale may beat it.", "url": "https://example.com/steam/pale-signal" },
-      { "game": "Garden Wars", "shop": "Humble Store", "price": 3.74, "regular": 14.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-07T18:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "buy", "advice": "Couch co-op strategy that's great with two players.", "url": "https://example.com/humble/garden-wars" },
-      { "game": "Riftwalker", "shop": "Steam", "price": 13.99, "regular": 39.99, "currency": "EUR", "cut": 65, "lowest_ever": false, "expires": "2026-11-08T17:00:00Z",
-        "steam_rating": "Mostly Positive", "verdict": "avoid", "advice": "Discounted often, and the PC version still has crashes reviewers flagged.", "url": "https://example.com/steam/riftwalker" },
-      { "game": "Night Shift Diner", "shop": "Steam", "price": 2.99, "regular": 11.99, "currency": "EUR", "cut": 75, "lowest_ever": true, "expires": "2026-11-12T17:00:00Z",
-        "steam_rating": "Overwhelmingly Positive", "verdict": "buy", "advice": "A short, funny cooking game for one evening. Hard to go wrong at this price.", "url": "https://example.com/steam/night-shift-diner" },
-      { "game": "Second Dawn", "shop": "Epic", "price": 17.99, "regular": 59.99, "currency": "EUR", "cut": 70, "lowest_ever": true, "expires": "2026-11-05T16:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "strong_buy", "advice": "A big open-world RPG at its lowest price; budget 60 hours.", "url": "https://example.com/epic/second-dawn" },
-      { "game": "Quiet Orchard", "shop": "Steam", "price": 6.49, "regular": 12.99, "currency": "EUR", "cut": 50, "lowest_ever": false, "expires": "2026-11-10T17:00:00Z",
-        "steam_rating": "Very Positive", "verdict": "hold", "advice": "Lovely farming game, but it's been 60% off twice this year.", "url":"https://example.com/steam/quiet-orchard" }
+      {
+        "game": "Copperline",
+        "shop": "GOG",
+        "price": 4.99,
+        "regular": 19.99,
+        "currency": "EUR",
+        "cut": 75,
+        "lowest_ever": true,
+        "expires": "2026-11-09T12:00:00Z",
+        "pick": "hidden",
+        "steam_rating": "Very Positive",
+        "verdict": "buy",
+        "advice": "A clever puzzle game about building circuits; the lowest price it's had.",
+        "url": "https://example.com/gog/copperline"
+      },
+      {
+        "game": "Pale Signal",
+        "shop": "Steam",
+        "price": 9.99,
+        "regular": 24.99,
+        "currency": "EUR",
+        "cut": 60,
+        "lowest_ever": false,
+        "expires": "2026-11-06T17:00:00Z",
+        "pick": "genre",
+        "genre": "Horror",
+        "steam_rating": "Very Positive",
+        "verdict": "hold",
+        "advice": "A good deal, but it hit €7.49 last winter; the holiday sale may beat it.",
+        "url": "https://example.com/steam/pale-signal"
+      },
+      {
+        "game": "Garden Wars",
+        "shop": "Humble Store",
+        "price": 3.74,
+        "regular": 14.99,
+        "currency": "EUR",
+        "cut": 75,
+        "lowest_ever": true,
+        "expires": "2026-11-07T18:00:00Z",
+        "steam_rating": "Very Positive",
+        "verdict": "buy",
+        "advice": "Couch co-op strategy that's great with two players.",
+        "url": "https://example.com/humble/garden-wars"
+      },
+      {
+        "game": "Riftwalker",
+        "shop": "Steam",
+        "price": 13.99,
+        "regular": 39.99,
+        "currency": "EUR",
+        "cut": 65,
+        "lowest_ever": false,
+        "expires": "2026-11-08T17:00:00Z",
+        "steam_rating": "Mostly Positive",
+        "verdict": "avoid",
+        "advice": "Discounted often, and the PC version still has crashes reviewers flagged.",
+        "url": "https://example.com/steam/riftwalker"
+      },
+      {
+        "game": "Night Shift Diner",
+        "shop": "Steam",
+        "price": 2.99,
+        "regular": 11.99,
+        "currency": "EUR",
+        "cut": 75,
+        "lowest_ever": true,
+        "expires": "2026-11-12T17:00:00Z",
+        "steam_rating": "Overwhelmingly Positive",
+        "verdict": "buy",
+        "advice": "A short, funny cooking game for one evening. Hard to go wrong at this price.",
+        "url": "https://example.com/steam/night-shift-diner"
+      },
+      {
+        "game": "Second Dawn",
+        "shop": "Epic",
+        "price": 17.99,
+        "regular": 59.99,
+        "currency": "EUR",
+        "cut": 70,
+        "lowest_ever": true,
+        "expires": "2026-11-05T16:00:00Z",
+        "steam_rating": "Very Positive",
+        "verdict": "strong_buy",
+        "advice": "A big open-world RPG at its lowest price; budget 60 hours.",
+        "url": "https://example.com/epic/second-dawn"
+      },
+      {
+        "game": "Quiet Orchard",
+        "shop": "Steam",
+        "price": 6.49,
+        "regular": 12.99,
+        "currency": "EUR",
+        "cut": 50,
+        "lowest_ever": false,
+        "expires": "2026-11-10T17:00:00Z",
+        "steam_rating": "Very Positive",
+        "verdict": "hold",
+        "advice": "Lovely farming game, but it's been 60% off twice this year.",
+        "url": "https://example.com/steam/quiet-orchard"
+      }
     ],
     "shelves": [
-      { "pool": "popular", "name": "Popular", "deals": [
-        { "game": "Harbor Lights Tycoon", "shop": "Steam", "price": 5.99, "regular": 19.99, "currency": "EUR", "cut": 70, "lowest_ever": true,
-          "expires": "2026-11-12T17:00:00Z", "steam_rating": "Very Positive", "tags": ["Management", "City Builder", "Relaxing", "Singleplayer"],
-          "url": "https://example.com/steam/harbor-lights-tycoon" },
-        { "game": "Ninefold Skies", "shop": "GOG", "price": 8.99, "regular": 29.99, "currency": "EUR", "cut": 70, "lowest_ever": false,
-          "expires": null, "steam_rating": "Overwhelmingly Positive", "tags": ["RPG", "Open World", "Story Rich"],
-          "url": "https://example.com/gog/ninefold-skies" }
-      ] },
-      { "pool": "hidden", "name": "Hidden gems", "deals": [
-        { "game": "Quiet Lamplighter", "shop": "Steam", "price": 2.49, "regular": 9.99, "currency": "EUR", "cut": 75, "lowest_ever": true,
-          "expires": null, "steam_rating": "Very Positive", "tags": ["Puzzle", "Atmospheric"],
-          "url": "https://example.com/steam/quiet-lamplighter" }
-      ] },
-      { "pool": "genre:Point & Click", "name": "Point & Click", "deals": [
-        { "game": "The Velvet Inkwell", "shop": "GOG", "price": 1.99, "regular": 11.99, "currency": "EUR", "cut": 83, "lowest_ever": true,
-          "expires": null, "steam_rating": "Very Positive", "tags": ["Point & Click", "Detective", "Hand-drawn"],
-          "url": "https://example.com/gog/the-velvet-inkwell" }
-      ] }
+      {
+        "pool": "popular",
+        "name": "Popular",
+        "deals": [
+          {
+            "game": "Harbor Lights Tycoon",
+            "shop": "Steam",
+            "price": 5.99,
+            "regular": 19.99,
+            "currency": "EUR",
+            "cut": 70,
+            "lowest_ever": true,
+            "expires": "2026-11-12T17:00:00Z",
+            "steam_rating": "Very Positive",
+            "tags": [
+              "Management",
+              "City Builder",
+              "Relaxing",
+              "Singleplayer"
+            ],
+            "url": "https://example.com/steam/harbor-lights-tycoon"
+          },
+          {
+            "game": "Ninefold Skies",
+            "shop": "GOG",
+            "price": 8.99,
+            "regular": 29.99,
+            "currency": "EUR",
+            "cut": 70,
+            "lowest_ever": false,
+            "expires": null,
+            "steam_rating": "Overwhelmingly Positive",
+            "tags": [
+              "RPG",
+              "Open World",
+              "Story Rich"
+            ],
+            "url": "https://example.com/gog/ninefold-skies"
+          }
+        ]
+      },
+      {
+        "pool": "hidden",
+        "name": "Hidden gems",
+        "deals": [
+          {
+            "game": "Quiet Lamplighter",
+            "shop": "Steam",
+            "price": 2.49,
+            "regular": 9.99,
+            "currency": "EUR",
+            "cut": 75,
+            "lowest_ever": true,
+            "expires": null,
+            "steam_rating": "Very Positive",
+            "tags": [
+              "Puzzle",
+              "Atmospheric"
+            ],
+            "url": "https://example.com/steam/quiet-lamplighter"
+          }
+        ]
+      },
+      {
+        "pool": "genre:Point & Click",
+        "name": "Point & Click",
+        "deals": [
+          {
+            "game": "The Velvet Inkwell",
+            "shop": "GOG",
+            "price": 1.99,
+            "regular": 11.99,
+            "currency": "EUR",
+            "cut": 83,
+            "lowest_ever": true,
+            "expires": null,
+            "steam_rating": "Very Positive",
+            "tags": [
+              "Point & Click",
+              "Detective",
+              "Hand-drawn"
+            ],
+            "url": "https://example.com/gog/the-velvet-inkwell"
+          }
+        ]
+      }
     ]
   },
   "opinion": {
@@ -312,40 +1057,191 @@
     "format": "advice",
     "model": "claude-fable-5-1",
     "reading": [
-      {"headline": "Arcwave's new desktop chip is faster, cooler and cheaper", "edition_id": "2026-11-03", "section": "tech", "tier": "featured", "slug": "arcwave-r9-review-roundup", "sources": [{"name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/arcwave-r9-review"}]},
-      {"headline": "SSD prices fall for a third straight month", "edition_id": "2026-11-03", "section": "tech", "tier": "medium", "slug": "ssd-prices-fall-third-month", "sources": [{"name": "The Byte Ledger", "url": "https://example.com/byte-ledger/ssd-prices"}]},
-      {"headline": "Budget graphics cards now sell below launch price", "edition_id": "2026-11-03", "section": "tech", "tier": "brief", "slug": "budget-gpu-below-msrp", "sources": [{"name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/budget-gpus"}]}
+      {
+        "headline": "Arcwave's new desktop chip is faster, cooler and cheaper",
+        "edition_id": "2026-11-03",
+        "section": "tech",
+        "tier": "featured",
+        "slug": "arcwave-r9-review-roundup",
+        "sources": [
+          {
+            "name": "Circuit Weekly",
+            "url": "https://example.com/circuit-weekly/arcwave-r9-review"
+          }
+        ]
+      },
+      {
+        "headline": "SSD prices fall for a third straight month",
+        "edition_id": "2026-11-03",
+        "section": "tech",
+        "tier": "medium",
+        "slug": "ssd-prices-fall-third-month",
+        "sources": [
+          {
+            "name": "The Byte Ledger",
+            "url": "https://example.com/byte-ledger/ssd-prices"
+          }
+        ]
+      },
+      {
+        "headline": "Budget graphics cards now sell below launch price",
+        "edition_id": "2026-11-03",
+        "section": "tech",
+        "tier": "brief",
+        "slug": "budget-gpu-below-msrp",
+        "sources": [
+          {
+            "name": "Circuit Weekly",
+            "url": "https://example.com/circuit-weekly/budget-gpus"
+          }
+        ]
+      }
     ]
   },
   "quiz": {
-    "kicker": "Quiz", "headline": "The Tuesday quiz",
+    "kicker": "Quiz",
+    "headline": "The Tuesday quiz",
     "dek": "Five questions on AI, tech and gaming news from 2–3 November. How much do you remember?",
-    "period": { "start": "2026-11-02", "end": "2026-11-03" }, "model": "claude-opus-5-5",
-    "checked": { "model": "claude-opus-5-5", "dropped": [
-      { "question": "How many labs signed up to the shared safety test suite?", "answer": "Twelve",
-        "problem": "The story says eleven labs signed up." }
-    ] },
+    "period": {
+      "start": "2026-11-02",
+      "end": "2026-11-03"
+    },
+    "model": "claude-opus-5-5",
+    "checked": {
+      "model": "claude-opus-5-5",
+      "dropped": [
+        {
+          "question": "How many labs signed up to the shared safety test suite?",
+          "answer": "Twelve",
+          "problem": "The story says eleven labs signed up."
+        }
+      ]
+    },
     "questions": [
-      { "question": "What did Kestrel's free model score on the CodeArena coding benchmark?",
-        "options": ["52%", "71.4%", "88%", "35%"], "answer": 1, "section": "ai",
+      {
+        "question": "What did Kestrel's free model score on the CodeArena coding benchmark?",
+        "options": [
+          "52%",
+          "71.4%",
+          "88%",
+          "35%"
+        ],
+        "answer": 1,
+        "section": "ai",
         "explanation": "That put it two points behind the best closed model, though early real-world tests showed a wider gap.",
-        "story": {"headline": "Kestrel's free model catches the big labs at coding", "edition_id": "2026-11-03", "section": "ai", "tier": "featured", "slug": "kestrel-2-open-model-catches-big-labs", "sources": [{"name": "The Byte Ledger", "url": "https://example.com/byte-ledger/kestrel-2"}]} },
-      { "question": "How long was the hijacked version of the npm package live?",
-        "options": ["Ten minutes", "Three days", "Two weeks", "Six hours"], "answer": 3, "section": "tech",
+        "story": {
+          "headline": "Kestrel's free model catches the big labs at coding",
+          "edition_id": "2026-11-03",
+          "section": "ai",
+          "tier": "featured",
+          "slug": "kestrel-2-open-model-catches-big-labs",
+          "sources": [
+            {
+              "name": "The Byte Ledger",
+              "url": "https://example.com/byte-ledger/kestrel-2"
+            }
+          ]
+        }
+      },
+      {
+        "question": "How long was the hijacked version of the npm package live?",
+        "options": [
+          "Ten minutes",
+          "Three days",
+          "Two weeks",
+          "Six hours"
+        ],
+        "answer": 3,
+        "section": "tech",
         "explanation": "It was installed about 180,000 times in that window, mostly by CI systems.",
-        "story": {"headline": "Popular npm package hijacked to steal cloud keys", "edition_id": "2026-11-03", "section": "tech", "tier": "featured", "slug": "tinyfetchr-npm-package-hijacked", "sources": [{"name": "Kernel Post", "url": "https://example.com/kernel-post/tinyfetchr"}]} },
-      { "question": "What does Arcwave's new desktop chip cost at launch?",
-        "options": ["€549", "€199", "€899", "€1,299"], "answer": 0, "section": "tech",
+        "story": {
+          "headline": "Popular npm package hijacked to steal cloud keys",
+          "edition_id": "2026-11-03",
+          "section": "tech",
+          "tier": "featured",
+          "slug": "tinyfetchr-npm-package-hijacked",
+          "sources": [
+            {
+              "name": "Kernel Post",
+              "url": "https://example.com/kernel-post/tinyfetchr"
+            }
+          ]
+        }
+      },
+      {
+        "question": "What does Arcwave's new desktop chip cost at launch?",
+        "options": [
+          "€549",
+          "€199",
+          "€899",
+          "€1,299"
+        ],
+        "answer": 0,
+        "section": "tech",
         "explanation": "It also needs a new motherboard, which adds to the cost of an upgrade.",
-        "story": {"headline": "Arcwave's new desktop chip is faster, cooler and cheaper", "edition_id": "2026-11-03", "section": "tech", "tier": "featured", "slug": "arcwave-r9-review-roundup", "sources": [{"name": "Circuit Weekly", "url": "https://example.com/circuit-weekly/arcwave-r9"}]} },
-      { "question": "What share of new code do coding agents now write at mid-size firms?",
-        "options": ["5%", "60%", "34%", "80%"], "answer": 2, "section": "ai",
+        "story": {
+          "headline": "Arcwave's new desktop chip is faster, cooler and cheaper",
+          "edition_id": "2026-11-03",
+          "section": "tech",
+          "tier": "featured",
+          "slug": "arcwave-r9-review-roundup",
+          "sources": [
+            {
+              "name": "Circuit Weekly",
+              "url": "https://example.com/circuit-weekly/arcwave-r9"
+            }
+          ]
+        }
+      },
+      {
+        "question": "What share of new code do coding agents now write at mid-size firms?",
+        "options": [
+          "5%",
+          "60%",
+          "34%",
+          "80%"
+        ],
+        "answer": 2,
+        "section": "ai",
         "explanation": "That is up from 12% a year earlier; review fatigue is the top complaint.",
-        "story": {"headline": "Coding agents now write a third of new code at mid-size firms", "edition_id": "2026-11-03", "section": "ai", "tier": "medium", "slug": "survey-coding-agents-third-of-new-code", "sources": [{"name": "Kernel Post", "url": "https://example.com/kernel-post/survey-2026"}]} },
-      { "question": "How many games will the indie showcase show when it returns in December?",
-        "options": ["Four", "40", "400", "12"], "answer": 1, "section": "gaming",
+        "story": {
+          "headline": "Coding agents now write a third of new code at mid-size firms",
+          "edition_id": "2026-11-03",
+          "section": "ai",
+          "tier": "medium",
+          "slug": "survey-coding-agents-third-of-new-code",
+          "sources": [
+            {
+              "name": "Kernel Post",
+              "url": "https://example.com/kernel-post/survey-2026"
+            }
+          ]
+        }
+      },
+      {
+        "question": "How many games will the indie showcase show when it returns in December?",
+        "options": [
+          "Four",
+          "40",
+          "400",
+          "12"
+        ],
+        "answer": 1,
+        "section": "gaming",
         "explanation": "The stream on 10 December also promises six world premieres and a demo festival.",
-        "story": {"headline": "Indie showcase returns in December with 40 games", "edition_id": "2026-11-03", "section": "gaming", "tier": "gaming_news", "sources": [{"name": "Pixel Courier", "url": "https://example.com/pixel-courier/showcase"}]} }
+        "story": {
+          "headline": "Indie showcase returns in December with 40 games",
+          "edition_id": "2026-11-03",
+          "section": "gaming",
+          "tier": "gaming_news",
+          "sources": [
+            {
+              "name": "Pixel Courier",
+              "url": "https://example.com/pixel-courier/showcase"
+            }
+          ]
+        }
+      }
     ]
   },
   "screen": {
@@ -355,75 +1251,579 @@
     "services": [
       {
         "name": "Netflix",
-        "types": ["flatrate"]
+        "types": [
+          "flatrate"
+        ]
       },
       {
         "name": "SVT Play",
-        "types": ["free", "ads", "flatrate"]
+        "types": [
+          "free",
+          "ads",
+          "flatrate"
+        ]
       },
       {
         "name": "TV4 Play",
-        "types": ["ads", "free"]
+        "types": [
+          "ads",
+          "free"
+        ]
       }
     ],
     "new": [
       {
         "service": "Netflix",
         "titles": [
-          {"key": "tv:9003", "id": 9003, "kind": "tv", "title": "Harbor Lights", "year": 2019, "date": "2019-06-01", "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.", "rating": 8.1, "votes": 2104, "genres": ["Crime", "Drama"], "url": "https://example.com/tmdb/tv/9003", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "added", "flag_date": "2026-11-01"},
-          {"key": "tv:9001", "id": 9001, "kind": "tv", "title": "The Lantern Keepers", "year": 2026, "date": "2026-10-30", "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.", "rating": 7.9, "votes": 412, "genres": ["Mystery", "Drama"], "url": "https://example.com/tmdb/tv/9001", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_series"},
-          {"key": "movie:9002", "id": 9002, "kind": "movie", "title": "Northbound Static", "year": 2026, "date": "2026-10-17", "overview": "A night-shift radio host takes a call from a listener who claims to be broadcasting from next week.", "rating": 6.8, "votes": 230, "genres": ["Thriller"], "url": "https://example.com/tmdb/movie/9002", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_film"},
-          {"key": "tv:9004", "id": 9004, "kind": "tv", "title": "Copper and Clay", "year": 2024, "date": "2024-06-01", "overview": "Ten amateur potters and metalworkers compete for a studio of their own.", "rating": 6.4, "votes": 88, "genres": ["Reality"], "url": "https://example.com/tmdb/tv/9004", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_episodes"}
+          {
+            "key": "tv:9003",
+            "id": 9003,
+            "kind": "tv",
+            "title": "Harbor Lights",
+            "year": 2019,
+            "date": "2019-06-01",
+            "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.",
+            "rating": 8.1,
+            "votes": 2104,
+            "genres": [
+              "Crime",
+              "Drama"
+            ],
+            "url": "https://example.com/tmdb/tv/9003",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ],
+            "flag": "added",
+            "flag_date": "2026-11-01"
+          },
+          {
+            "key": "tv:9001",
+            "id": 9001,
+            "kind": "tv",
+            "title": "The Lantern Keepers",
+            "year": 2026,
+            "date": "2026-10-30",
+            "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.",
+            "rating": 7.9,
+            "votes": 412,
+            "genres": [
+              "Mystery",
+              "Drama"
+            ],
+            "url": "https://example.com/tmdb/tv/9001",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ],
+            "flag": "new_series"
+          },
+          {
+            "key": "movie:9002",
+            "id": 9002,
+            "kind": "movie",
+            "title": "Northbound Static",
+            "year": 2026,
+            "date": "2026-10-17",
+            "overview": "A night-shift radio host takes a call from a listener who claims to be broadcasting from next week.",
+            "rating": 6.8,
+            "votes": 230,
+            "genres": [
+              "Thriller"
+            ],
+            "url": "https://example.com/tmdb/movie/9002",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ],
+            "flag": "new_film"
+          },
+          {
+            "key": "tv:9004",
+            "id": 9004,
+            "kind": "tv",
+            "title": "Copper and Clay",
+            "year": 2024,
+            "date": "2024-06-01",
+            "overview": "Ten amateur potters and metalworkers compete for a studio of their own.",
+            "rating": 6.4,
+            "votes": 88,
+            "genres": [
+              "Reality"
+            ],
+            "url": "https://example.com/tmdb/tv/9004",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ],
+            "flag": "new_episodes"
+          }
         ]
       },
       {
         "service": "SVT Play",
         "titles": [
-          {"key": "tv:9101", "id": 9101, "kind": "tv", "title": "The Mountain Cabin", "original_title": "Fjällstugan", "year": 2026, "date": "2026-10-25", "overview": "Four old friends rent the same mountain cabin every winter; this year one of them brings a secret.", "rating": 7.4, "votes": 61, "genres": ["Drama"], "url": "https://example.com/tmdb/tv/9101", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_series"},
-          {"key": "movie:9102", "id": 9102, "kind": "movie", "title": "The Ferry Ward", "year": 2025, "date": "2025-06-01", "overview": "A year aboard the night ferry between two island towns, told by its crew.", "rating": 7.2, "votes": 54, "genres": ["Documentary"], "url": "https://example.com/tmdb/movie/9102", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_film"},
-          {"key": "tv:9103", "id": 9103, "kind": "tv", "title": "Snow Line", "year": 2023, "date": "2023-06-01", "overview": "A ski-lift operator runs the slope, the cafe and the local council, badly.", "rating": 7.0, "votes": 140, "genres": ["Comedy"], "url": "https://example.com/tmdb/tv/9103", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_episodes"}
+          {
+            "key": "tv:9101",
+            "id": 9101,
+            "kind": "tv",
+            "title": "The Mountain Cabin",
+            "original_title": "Fjällstugan",
+            "year": 2026,
+            "date": "2026-10-25",
+            "overview": "Four old friends rent the same mountain cabin every winter; this year one of them brings a secret.",
+            "rating": 7.4,
+            "votes": 61,
+            "genres": [
+              "Drama"
+            ],
+            "url": "https://example.com/tmdb/tv/9101",
+            "on": [
+              {
+                "service": "SVT Play",
+                "type": "free"
+              }
+            ],
+            "flag": "new_series"
+          },
+          {
+            "key": "movie:9102",
+            "id": 9102,
+            "kind": "movie",
+            "title": "The Ferry Ward",
+            "year": 2025,
+            "date": "2025-06-01",
+            "overview": "A year aboard the night ferry between two island towns, told by its crew.",
+            "rating": 7.2,
+            "votes": 54,
+            "genres": [
+              "Documentary"
+            ],
+            "url": "https://example.com/tmdb/movie/9102",
+            "on": [
+              {
+                "service": "SVT Play",
+                "type": "free"
+              }
+            ],
+            "flag": "new_film"
+          },
+          {
+            "key": "tv:9103",
+            "id": 9103,
+            "kind": "tv",
+            "title": "Snow Line",
+            "year": 2023,
+            "date": "2023-06-01",
+            "overview": "A ski-lift operator runs the slope, the cafe and the local council, badly.",
+            "rating": 7.0,
+            "votes": 140,
+            "genres": [
+              "Comedy"
+            ],
+            "url": "https://example.com/tmdb/tv/9103",
+            "on": [
+              {
+                "service": "SVT Play",
+                "type": "free"
+              }
+            ],
+            "flag": "new_episodes"
+          }
         ]
       },
       {
         "service": "TV4 Play",
         "titles": [
-          {"key": "tv:9202", "id": 9202, "kind": "tv", "title": "Saltwater Detectives", "year": 2026, "date": "2026-10-20", "overview": "Two retired coastguards open a detective agency in a fishing village.", "rating": 6.9, "votes": 47, "genres": ["Crime"], "url": "https://example.com/tmdb/tv/9202", "on": [{"service": "TV4 Play", "type": "ads"}], "flag": "new_series"},
-          {"key": "tv:9201", "id": 9201, "kind": "tv", "title": "Kitchen Brigade North", "year": 2025, "date": "2025-06-01", "overview": "Twelve home cooks try to survive a season in a busy hotel kitchen.", "rating": 6.1, "votes": 33, "genres": ["Reality"], "url": "https://example.com/tmdb/tv/9201", "on": [{"service": "TV4 Play", "type": "ads"}], "flag": "new_episodes"}
+          {
+            "key": "tv:9202",
+            "id": 9202,
+            "kind": "tv",
+            "title": "Saltwater Detectives",
+            "year": 2026,
+            "date": "2026-10-20",
+            "overview": "Two retired coastguards open a detective agency in a fishing village.",
+            "rating": 6.9,
+            "votes": 47,
+            "genres": [
+              "Crime"
+            ],
+            "url": "https://example.com/tmdb/tv/9202",
+            "on": [
+              {
+                "service": "TV4 Play",
+                "type": "ads"
+              }
+            ],
+            "flag": "new_series"
+          },
+          {
+            "key": "tv:9201",
+            "id": 9201,
+            "kind": "tv",
+            "title": "Kitchen Brigade North",
+            "year": 2025,
+            "date": "2025-06-01",
+            "overview": "Twelve home cooks try to survive a season in a busy hotel kitchen.",
+            "rating": 6.1,
+            "votes": 33,
+            "genres": [
+              "Reality"
+            ],
+            "url": "https://example.com/tmdb/tv/9201",
+            "on": [
+              {
+                "service": "TV4 Play",
+                "type": "ads"
+              }
+            ],
+            "flag": "new_episodes"
+          }
         ]
       }
     ],
     "classics": [
-      {"key": "movie:9301", "id": 9301, "kind": "movie", "title": "Orbit of Glass", "year": 2014, "date": "2014-06-01", "overview": "A repair crew on a failing space station has one week to decide who goes home.", "rating": 8.2, "votes": 15230, "genres": ["Science Fiction", "Drama"], "url": "https://example.com/tmdb/movie/9301", "on": [{"service": "Netflix", "type": "flatrate"}]},
-      {"key": "tv:9303", "id": 9303, "kind": "tv", "title": "Paper Kingdoms", "year": 2016, "date": "2016-06-01", "overview": "The rise and fall of a family printing house over four generations.", "rating": 8.4, "votes": 5120, "genres": ["Drama", "History"], "url": "https://example.com/tmdb/tv/9303", "on": [{"service": "Netflix", "type": "flatrate"}]},
-      {"key": "movie:9302", "id": 9302, "kind": "movie", "title": "The Quiet Harbour", "year": 2009, "date": "2009-06-01", "overview": "A lighthouse keeper's daughter returns to the village she left after a scandal.", "rating": 7.8, "votes": 3120, "genres": ["Drama"], "url": "https://example.com/tmdb/movie/9302", "on": [{"service": "SVT Play", "type": "free"}]},
-      {"key": "movie:9304", "id": 9304, "kind": "movie", "title": "Seven Foxes", "year": 2012, "date": "2012-06-01", "overview": "Seven fox cubs set out to find the forest their mother sang about.", "rating": 7.9, "votes": 4800, "genres": ["Animation", "Family"], "url": "https://example.com/tmdb/movie/9304", "on": [{"service": "Netflix", "type": "flatrate"}, {"service": "SVT Play", "type": "free"}]}
+      {
+        "key": "movie:9301",
+        "id": 9301,
+        "kind": "movie",
+        "title": "Orbit of Glass",
+        "year": 2014,
+        "date": "2014-06-01",
+        "overview": "A repair crew on a failing space station has one week to decide who goes home.",
+        "rating": 8.2,
+        "votes": 15230,
+        "genres": [
+          "Science Fiction",
+          "Drama"
+        ],
+        "url": "https://example.com/tmdb/movie/9301",
+        "on": [
+          {
+            "service": "Netflix",
+            "type": "flatrate"
+          }
+        ]
+      },
+      {
+        "key": "tv:9303",
+        "id": 9303,
+        "kind": "tv",
+        "title": "Paper Kingdoms",
+        "year": 2016,
+        "date": "2016-06-01",
+        "overview": "The rise and fall of a family printing house over four generations.",
+        "rating": 8.4,
+        "votes": 5120,
+        "genres": [
+          "Drama",
+          "History"
+        ],
+        "url": "https://example.com/tmdb/tv/9303",
+        "on": [
+          {
+            "service": "Netflix",
+            "type": "flatrate"
+          }
+        ]
+      },
+      {
+        "key": "movie:9302",
+        "id": 9302,
+        "kind": "movie",
+        "title": "The Quiet Harbour",
+        "year": 2009,
+        "date": "2009-06-01",
+        "overview": "A lighthouse keeper's daughter returns to the village she left after a scandal.",
+        "rating": 7.8,
+        "votes": 3120,
+        "genres": [
+          "Drama"
+        ],
+        "url": "https://example.com/tmdb/movie/9302",
+        "on": [
+          {
+            "service": "SVT Play",
+            "type": "free"
+          }
+        ]
+      },
+      {
+        "key": "movie:9304",
+        "id": 9304,
+        "kind": "movie",
+        "title": "Seven Foxes",
+        "year": 2012,
+        "date": "2012-06-01",
+        "overview": "Seven fox cubs set out to find the forest their mother sang about.",
+        "rating": 7.9,
+        "votes": 4800,
+        "genres": [
+          "Animation",
+          "Family"
+        ],
+        "url": "https://example.com/tmdb/movie/9304",
+        "on": [
+          {
+            "service": "Netflix",
+            "type": "flatrate"
+          },
+          {
+            "service": "SVT Play",
+            "type": "free"
+          }
+        ]
+      }
     ],
     "top10": {
-      "week": {"start": "2026-10-26", "end": "2026-11-01"},
+      "week": {
+        "start": "2026-10-26",
+        "end": "2026-11-01"
+      },
       "url": "https://example.com/netflix/top10/sweden",
       "films": [
-        {"rank": 1, "title": "Northbound Static", "weeks": 4, "kind": "movie", "match": {"key": "movie:9002", "id": 9002, "kind": "movie", "title": "Northbound Static", "year": 2026, "date": "2026-10-17", "overview": "A night-shift radio host takes a call from a listener who claims to be broadcasting from next week.", "rating": 6.8, "votes": 230, "genres": ["Thriller"], "url": "https://example.com/tmdb/movie/9002", "on": [{"service": "Netflix", "type": "flatrate"}]}},
-        {"rank": 2, "title": "Glass Harbor Heist", "weeks": 2, "kind": "movie", "match": null},
-        {"rank": 3, "title": "The Last Ferry", "weeks": 5, "kind": "movie", "match": null},
-        {"rank": 4, "title": "Weekend in Oslo", "weeks": 3, "kind": "movie", "match": null},
-        {"rank": 5, "title": "Midnight Recipe", "weeks": 1, "kind": "movie", "match": null},
-        {"rank": 6, "title": "Thunder Lake", "weeks": 4, "kind": "movie", "match": null},
-        {"rank": 7, "title": "Small Hours", "weeks": 2, "kind": "movie", "match": null},
-        {"rank": 8, "title": "The Cartographer", "weeks": 5, "kind": "movie", "match": null},
-        {"rank": 9, "title": "Paper Moonrise", "weeks": 3, "kind": "movie", "match": null},
-        {"rank": 10, "title": "Iron Meadow", "weeks": 1, "kind": "movie", "match": null}
+        {
+          "rank": 1,
+          "title": "Northbound Static",
+          "weeks": 4,
+          "kind": "movie",
+          "match": {
+            "key": "movie:9002",
+            "id": 9002,
+            "kind": "movie",
+            "title": "Northbound Static",
+            "year": 2026,
+            "date": "2026-10-17",
+            "overview": "A night-shift radio host takes a call from a listener who claims to be broadcasting from next week.",
+            "rating": 6.8,
+            "votes": 230,
+            "genres": [
+              "Thriller"
+            ],
+            "url": "https://example.com/tmdb/movie/9002",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ]
+          }
+        },
+        {
+          "rank": 2,
+          "title": "Glass Harbor Heist",
+          "weeks": 2,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 3,
+          "title": "The Last Ferry",
+          "weeks": 5,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 4,
+          "title": "Weekend in Oslo",
+          "weeks": 3,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 5,
+          "title": "Midnight Recipe",
+          "weeks": 1,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 6,
+          "title": "Thunder Lake",
+          "weeks": 4,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 7,
+          "title": "Small Hours",
+          "weeks": 2,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 8,
+          "title": "The Cartographer",
+          "weeks": 5,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 9,
+          "title": "Paper Moonrise",
+          "weeks": 3,
+          "kind": "movie",
+          "match": null
+        },
+        {
+          "rank": 10,
+          "title": "Iron Meadow",
+          "weeks": 1,
+          "kind": "movie",
+          "match": null
+        }
       ],
       "tv": [
-        {"rank": 1, "title": "The Lantern Keepers: Season 1", "weeks": 3, "kind": "tv", "show": "The Lantern Keepers", "match": {"key": "tv:9001", "id": 9001, "kind": "tv", "title": "The Lantern Keepers", "year": 2026, "date": "2026-10-30", "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.", "rating": 7.9, "votes": 412, "genres": ["Mystery", "Drama"], "url": "https://example.com/tmdb/tv/9001", "on": [{"service": "Netflix", "type": "flatrate"}]}},
-        {"rank": 2, "title": "Harbor Lights: Season 3", "weeks": 5, "kind": "tv", "show": "Harbor Lights", "match": {"key": "tv:9003", "id": 9003, "kind": "tv", "title": "Harbor Lights", "year": 2019, "date": "2019-06-01", "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.", "rating": 8.1, "votes": 2104, "genres": ["Crime", "Drama"], "url": "https://example.com/tmdb/tv/9003", "on": [{"service": "Netflix", "type": "flatrate"}]}},
-        {"rank": 3, "title": "Copper and Clay: Season 2", "weeks": 1, "kind": "tv", "show": "Copper and Clay", "match": {"key": "tv:9004", "id": 9004, "kind": "tv", "title": "Copper and Clay", "year": 2024, "date": "2024-06-01", "overview": "Ten amateur potters and metalworkers compete for a studio of their own.", "rating": 6.4, "votes": 88, "genres": ["Reality"], "url": "https://example.com/tmdb/tv/9004", "on": [{"service": "Netflix", "type": "flatrate"}]}},
-        {"rank": 4, "title": "Bright Static: Limited Series", "weeks": 3, "kind": "tv", "show": "Bright Static", "match": null},
-        {"rank": 5, "title": "Fjord Patrol: Season 4", "weeks": 5, "kind": "tv", "show": "Fjord Patrol", "match": null},
-        {"rank": 6, "title": "Gilded Cage: Part 2", "weeks": 1, "kind": "tv", "show": "Gilded Cage", "match": null},
-        {"rank": 7, "title": "The Night Market: Season 1", "weeks": 3, "kind": "tv", "show": "The Night Market", "match": null},
-        {"rank": 8, "title": "Cold Open: Season 2", "weeks": 5, "kind": "tv", "show": "Cold Open", "match": null},
-        {"rank": 9, "title": "Hill Street Bakers: Season 5", "weeks": 1, "kind": "tv", "show": "Hill Street Bakers", "match": null},
-        {"rank": 10, "title": "Long Shadows: Limited Series", "weeks": 3, "kind": "tv", "show": "Long Shadows", "match": null}
+        {
+          "rank": 1,
+          "title": "The Lantern Keepers: Season 1",
+          "weeks": 3,
+          "kind": "tv",
+          "show": "The Lantern Keepers",
+          "match": {
+            "key": "tv:9001",
+            "id": 9001,
+            "kind": "tv",
+            "title": "The Lantern Keepers",
+            "year": 2026,
+            "date": "2026-10-30",
+            "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.",
+            "rating": 7.9,
+            "votes": 412,
+            "genres": [
+              "Mystery",
+              "Drama"
+            ],
+            "url": "https://example.com/tmdb/tv/9001",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ]
+          }
+        },
+        {
+          "rank": 2,
+          "title": "Harbor Lights: Season 3",
+          "weeks": 5,
+          "kind": "tv",
+          "show": "Harbor Lights",
+          "match": {
+            "key": "tv:9003",
+            "id": 9003,
+            "kind": "tv",
+            "title": "Harbor Lights",
+            "year": 2019,
+            "date": "2019-06-01",
+            "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.",
+            "rating": 8.1,
+            "votes": 2104,
+            "genres": [
+              "Crime",
+              "Drama"
+            ],
+            "url": "https://example.com/tmdb/tv/9003",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ]
+          }
+        },
+        {
+          "rank": 3,
+          "title": "Copper and Clay: Season 2",
+          "weeks": 1,
+          "kind": "tv",
+          "show": "Copper and Clay",
+          "match": {
+            "key": "tv:9004",
+            "id": 9004,
+            "kind": "tv",
+            "title": "Copper and Clay",
+            "year": 2024,
+            "date": "2024-06-01",
+            "overview": "Ten amateur potters and metalworkers compete for a studio of their own.",
+            "rating": 6.4,
+            "votes": 88,
+            "genres": [
+              "Reality"
+            ],
+            "url": "https://example.com/tmdb/tv/9004",
+            "on": [
+              {
+                "service": "Netflix",
+                "type": "flatrate"
+              }
+            ]
+          }
+        },
+        {
+          "rank": 4,
+          "title": "Bright Static: Limited Series",
+          "weeks": 3,
+          "kind": "tv",
+          "show": "Bright Static",
+          "match": null
+        },
+        {
+          "rank": 5,
+          "title": "Fjord Patrol: Season 4",
+          "weeks": 5,
+          "kind": "tv",
+          "show": "Fjord Patrol",
+          "match": null
+        },
+        {
+          "rank": 6,
+          "title": "Gilded Cage: Part 2",
+          "weeks": 1,
+          "kind": "tv",
+          "show": "Gilded Cage",
+          "match": null
+        },
+        {
+          "rank": 7,
+          "title": "The Night Market: Season 1",
+          "weeks": 3,
+          "kind": "tv",
+          "show": "The Night Market",
+          "match": null
+        },
+        {
+          "rank": 8,
+          "title": "Cold Open: Season 2",
+          "weeks": 5,
+          "kind": "tv",
+          "show": "Cold Open",
+          "match": null
+        },
+        {
+          "rank": 9,
+          "title": "Hill Street Bakers: Season 5",
+          "weeks": 1,
+          "kind": "tv",
+          "show": "Hill Street Bakers",
+          "match": null
+        },
+        {
+          "rank": 10,
+          "title": "Long Shadows: Limited Series",
+          "weeks": 3,
+          "kind": "tv",
+          "show": "Long Shadows",
+          "match": null
+        }
       ]
     },
     "picks": {
@@ -431,15 +1831,204 @@
       "dek": "Two new series, a free Swedish drama and four older favorites, across Netflix, SVT Play and TV4 Play.",
       "model": "claude-opus-5-5",
       "titles": [
-        {"key": "tv:9001", "id": 9001, "kind": "tv", "title": "The Lantern Keepers", "year": 2026, "date": "2026-10-30", "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.", "rating": 7.9, "votes": 412, "genres": ["Mystery", "Drama"], "url": "https://example.com/tmdb/tv/9001", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "new_series", "reason": "A new mystery series with a strong start: a stormy island, a lighthouse and a logbook that seems to know too much."},
-        {"key": "tv:9003", "id": 9003, "kind": "tv", "title": "Harbor Lights", "year": 2019, "date": "2019-06-01", "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.", "rating": 8.1, "votes": 2104, "genres": ["Crime", "Drama"], "url": "https://example.com/tmdb/tv/9003", "on": [{"service": "Netflix", "type": "flatrate"}], "flag": "added", "flag_date": "2026-11-01", "reason": "A slow-burn crime drama, just added to Netflix, with high ratings across its run."},
-        {"key": "tv:9101", "id": 9101, "kind": "tv", "title": "The Mountain Cabin", "original_title": "Fjällstugan", "year": 2026, "date": "2026-10-25", "overview": "Four old friends rent the same mountain cabin every winter; this year one of them brings a secret.", "rating": 7.4, "votes": 61, "genres": ["Drama"], "url": "https://example.com/tmdb/tv/9101", "on": [{"service": "SVT Play", "type": "free"}], "flag": "new_series", "reason": "Free on SVT Play: a new Swedish drama about old friends and one secret, in a snowed-in cabin."},
-        {"key": "movie:9301", "id": 9301, "kind": "movie", "title": "Orbit of Glass", "year": 2014, "date": "2014-06-01", "overview": "A repair crew on a failing space station has one week to decide who goes home.", "rating": 8.2, "votes": 15230, "genres": ["Science Fiction", "Drama"], "url": "https://example.com/tmdb/movie/9301", "on": [{"service": "Netflix", "type": "flatrate"}], "reason": "One of the best-rated films on the list: a tense, character-driven science fiction drama."},
-        {"key": "tv:9303", "id": 9303, "kind": "tv", "title": "Paper Kingdoms", "year": 2016, "date": "2016-06-01", "overview": "The rise and fall of a family printing house over four generations.", "rating": 8.4, "votes": 5120, "genres": ["Drama", "History"], "url": "https://example.com/tmdb/tv/9303", "on": [{"service": "Netflix", "type": "flatrate"}], "reason": "A family saga told across four generations, rated 8.4 by thousands of viewers."},
-        {"key": "tv:9202", "id": 9202, "kind": "tv", "title": "Saltwater Detectives", "year": 2026, "date": "2026-10-20", "overview": "Two retired coastguards open a detective agency in a fishing village.", "rating": 6.9, "votes": 47, "genres": ["Crime"], "url": "https://example.com/tmdb/tv/9202", "on": [{"service": "TV4 Play", "type": "ads"}], "flag": "new_series", "reason": "A lighter pick on TV4 Play's free tier: two retired coastguards turn detective."},
-        {"key": "movie:9302", "id": 9302, "kind": "movie", "title": "The Quiet Harbour", "year": 2009, "date": "2009-06-01", "overview": "A lighthouse keeper's daughter returns to the village she left after a scandal.", "rating": 7.8, "votes": 3120, "genres": ["Drama"], "url": "https://example.com/tmdb/movie/9302", "on": [{"service": "SVT Play", "type": "free"}], "reason": "A quiet, well-rated drama from 2009, free on SVT Play."}
+        {
+          "key": "tv:9001",
+          "id": 9001,
+          "kind": "tv",
+          "title": "The Lantern Keepers",
+          "year": 2026,
+          "date": "2026-10-30",
+          "overview": "Three siblings inherit a lighthouse on a stormy island and find a logbook that predicts the next shipwreck.",
+          "rating": 7.9,
+          "votes": 412,
+          "genres": [
+            "Mystery",
+            "Drama"
+          ],
+          "url": "https://example.com/tmdb/tv/9001",
+          "on": [
+            {
+              "service": "Netflix",
+              "type": "flatrate"
+            }
+          ],
+          "flag": "new_series",
+          "reason": "A new mystery series with a strong start: a stormy island, a lighthouse and a logbook that seems to know too much."
+        },
+        {
+          "key": "tv:9003",
+          "id": 9003,
+          "kind": "tv",
+          "title": "Harbor Lights",
+          "year": 2019,
+          "date": "2019-06-01",
+          "overview": "A port inspector in a made-up Baltic city untangles smuggling cases one container at a time.",
+          "rating": 8.1,
+          "votes": 2104,
+          "genres": [
+            "Crime",
+            "Drama"
+          ],
+          "url": "https://example.com/tmdb/tv/9003",
+          "on": [
+            {
+              "service": "Netflix",
+              "type": "flatrate"
+            }
+          ],
+          "flag": "added",
+          "flag_date": "2026-11-01",
+          "reason": "A slow-burn crime drama, just added to Netflix, with high ratings across its run."
+        },
+        {
+          "key": "tv:9101",
+          "id": 9101,
+          "kind": "tv",
+          "title": "The Mountain Cabin",
+          "original_title": "Fjällstugan",
+          "year": 2026,
+          "date": "2026-10-25",
+          "overview": "Four old friends rent the same mountain cabin every winter; this year one of them brings a secret.",
+          "rating": 7.4,
+          "votes": 61,
+          "genres": [
+            "Drama"
+          ],
+          "url": "https://example.com/tmdb/tv/9101",
+          "on": [
+            {
+              "service": "SVT Play",
+              "type": "free"
+            }
+          ],
+          "flag": "new_series",
+          "reason": "Free on SVT Play: a new Swedish drama about old friends and one secret, in a snowed-in cabin."
+        },
+        {
+          "key": "movie:9301",
+          "id": 9301,
+          "kind": "movie",
+          "title": "Orbit of Glass",
+          "year": 2014,
+          "date": "2014-06-01",
+          "overview": "A repair crew on a failing space station has one week to decide who goes home.",
+          "rating": 8.2,
+          "votes": 15230,
+          "genres": [
+            "Science Fiction",
+            "Drama"
+          ],
+          "url": "https://example.com/tmdb/movie/9301",
+          "on": [
+            {
+              "service": "Netflix",
+              "type": "flatrate"
+            }
+          ],
+          "reason": "One of the best-rated films on the list: a tense, character-driven science fiction drama."
+        },
+        {
+          "key": "tv:9303",
+          "id": 9303,
+          "kind": "tv",
+          "title": "Paper Kingdoms",
+          "year": 2016,
+          "date": "2016-06-01",
+          "overview": "The rise and fall of a family printing house over four generations.",
+          "rating": 8.4,
+          "votes": 5120,
+          "genres": [
+            "Drama",
+            "History"
+          ],
+          "url": "https://example.com/tmdb/tv/9303",
+          "on": [
+            {
+              "service": "Netflix",
+              "type": "flatrate"
+            }
+          ],
+          "reason": "A family saga told across four generations, rated 8.4 by thousands of viewers."
+        },
+        {
+          "key": "tv:9202",
+          "id": 9202,
+          "kind": "tv",
+          "title": "Saltwater Detectives",
+          "year": 2026,
+          "date": "2026-10-20",
+          "overview": "Two retired coastguards open a detective agency in a fishing village.",
+          "rating": 6.9,
+          "votes": 47,
+          "genres": [
+            "Crime"
+          ],
+          "url": "https://example.com/tmdb/tv/9202",
+          "on": [
+            {
+              "service": "TV4 Play",
+              "type": "ads"
+            }
+          ],
+          "flag": "new_series",
+          "reason": "A lighter pick on TV4 Play's free tier: two retired coastguards turn detective."
+        },
+        {
+          "key": "movie:9302",
+          "id": 9302,
+          "kind": "movie",
+          "title": "The Quiet Harbour",
+          "year": 2009,
+          "date": "2009-06-01",
+          "overview": "A lighthouse keeper's daughter returns to the village she left after a scandal.",
+          "rating": 7.8,
+          "votes": 3120,
+          "genres": [
+            "Drama"
+          ],
+          "url": "https://example.com/tmdb/movie/9302",
+          "on": [
+            {
+              "service": "SVT Play",
+              "type": "free"
+            }
+          ],
+          "reason": "A quiet, well-rated drama from 2009, free on SVT Play."
+        }
       ]
     }
   },
-  "links": []
+  "links": [],
+  "arcade": {
+    "story_id": "2026-11-03/tinyfetchr-npm-package-hijacked",
+    "story": {
+      "headline": "Popular npm package hijacked to steal cloud keys",
+      "edition_id": "2026-11-03",
+      "section": "tech",
+      "tier": "featured",
+      "slug": "tinyfetchr-npm-package-hijacked",
+      "sources": [
+        {
+          "name": "Kernel Post",
+          "url": "https://example.com/kernel-post/tinyfetchr"
+        }
+      ]
+    },
+    "title": "CI Token Defender",
+    "dek": "Catch signed packages, quarantine poisoned npm updates before they leak keys.",
+    "genre": "dodger-shooter",
+    "genre_label": "Dodger & shooter",
+    "controls_layout": "lr+a",
+    "news_tie": "A hijacked tinyfetchr release quietly exfiltrated CI secrets; here you filter incoming builds.",
+    "code": "export default {\n  title: \"CI Token Defender\",\n  dek: \"Catch signed packages, quarantine poisoned npm updates before they leak keys.\",\n  width: 240,\n  height: 160,\n  controls: {\n    layout: \"lr+a\",\n    a: \"PURGE\",\n    hint: \"Move: Left/Right · Purge wave: Space/A\",\n  },\n  howToPlay: {\n    summary: \"Catch 15 green signed packages before poisoned updates leak your CI secrets.\",\n    steps: [\n      \"Slide left or right to catch green packages (+10 pts).\",\n      \"Dodge red hijacked packages—catching one costs a heart.\",\n      \"When the PURGE bar fills, press Space / PURGE to clear all threats.\",\n    ],\n    controls: \"Left / Right or A / D · Space / PURGE\",\n  },\n  sprites: {\n    shield: [\n      \"..CCCC..\",\n      \".CCCCCC.\",\n      \"CCWWWWCC\",\n      \"CCCCCCCC\",\n      \".CCCCCC.\",\n      \"..CCCC..\",\n    ],\n    pkg: [\n      \".GGGGGG.\",\n      \"GWWWWWWG\",\n      \"GWGGGGWG\",\n      \"GGGGGGGG\",\n      \"GGGGGGGG\",\n      \".GGGGGG.\",\n    ],\n    malware: [\n      \".RRRRRR.\",\n      \"RKRKKRKR\",\n      \"RRRRRRRR\",\n      \"RRKKKKRR\",\n      \"RKRKKRKR\",\n      \".RRRRRR.\",\n    ],\n  },\n  init(g) {\n    g.state = {\n      px: 112,\n      lives: 3,\n      purgeCharge: 1,\n      spawnIn: 0.4,\n      items: [],\n      goal: 15,\n      caught: 0,\n    };\n    g.hud(\"0/15 signed · ♥♥♥\");\n  },\n  update(g, dt) {\n    const s = g.state;\n    const d = g.dir();\n    s.px = g.clamp(s.px + d.x * 135 * dt, 6, g.w - 22);\n    s.purgeCharge = g.clamp(s.purgeCharge + dt * 0.16, 0, 1);\n\n    if (g.pressed(\"a\") && s.purgeCharge >= 1) {\n      s.purgeCharge = 0;\n      g.sfx(\"shoot\");\n      g.flash(\"tech\", 0.12);\n      g.shake(2.5, 0.14);\n      s.items = s.items.filter((it) => {\n        if (it.bad) {\n          g.particles(it.x + 6, it.y + 6, \"danger\", 8);\n          g.score += 5;\n          return false;\n        }\n        return true;\n      });\n    }\n\n    s.spawnIn -= dt;\n    if (s.spawnIn <= 0) {\n      const rate = Math.max(0.32, 0.85 - g.t * 0.015);\n      s.spawnIn = rate;\n      const bad = g.rand() < Math.min(0.55, 0.3 + g.t * 0.008);\n      s.items.push({\n        x: g.randInt(10, g.w - 22),\n        y: -12,\n        vy: g.rand(46, 72) + g.t * 1.4,\n        bad,\n      });\n    }\n\n    const playerBox = { x: s.px, y: g.h - 22, w: 16, h: 12 };\n    s.items = s.items.filter((it) => {\n      it.y += it.vy * dt;\n      if (g.hit(playerBox, { x: it.x, y: it.y, w: 12, h: 12 })) {\n        if (it.bad) {\n          s.lives -= 1;\n          g.sfx(\"hit\");\n          g.shake(4, 0.2);\n          g.flash(\"danger\", 0.14);\n          g.particles(it.x + 6, it.y + 6, \"danger\", 10);\n          if (s.lives <= 0) g.lose(\"Secret leaked by poisoned package\");\n        } else {\n          s.caught += 1;\n          g.score += 10;\n          g.sfx(\"coin\");\n          g.particles(it.x + 6, it.y + 6, \"ok\", 7);\n          if (s.caught >= s.goal) g.win(\"All 15 builds verified safely\");\n        }\n        return false;\n      }\n      if (it.y > g.h + 4) {\n        if (!it.bad) g.score = Math.max(0, g.score - 2);\n        return false;\n      }\n      return true;\n    });\n\n    g.hud(`${s.caught}/${s.goal} signed · ${\"♥\".repeat(Math.max(0, s.lives))}`);\n  },\n  draw(g) {\n    const s = g.state;\n    g.cls(\"dark\");\n    for (let x = 24; x < g.w; x += 24) g.line(x, 0, x, g.h - 14, \"panel\", 1);\n    g.rect(0, g.h - 10, g.w, 10, \"panel\");\n    g.txt(\"PURGE\", 8, g.h - 8, { size: 6, color: s.purgeCharge >= 1 ? \"tech\" : \"muted\", bold: true });\n    g.bar(36, g.h - 7, 56, 4, s.purgeCharge, s.purgeCharge >= 1 ? \"tech\" : \"amber\", \"rule\");\n\n    for (const it of s.items) {\n      g.spr(it.bad ? \"malware\" : \"pkg\", it.x, it.y, 2);\n    }\n    g.spr(\"shield\", s.px, g.h - 22, 2);\n  },\n};\n",
+    "model": "claude-opus-5-5",
+    "turns": 4,
+    "verify": {
+      "lines": 135,
+      "idle_outcome": "lose",
+      "idle_sec": 28.2,
+      "spam_outcome": "lose",
+      "spam_sec": 28.3
+    }
+  }
 }

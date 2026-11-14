@@ -21,7 +21,8 @@ import tempfile
 import threading
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from pathlib import Path
+from typing import Any, Callable
 
 BACKENDS = ("api", "claude-code")
 WEB_MAX_REQUESTS = 6                  # a web turn that keeps pausing gives up after this many requests
@@ -196,6 +197,31 @@ class LLM:
         self.tally.record(call)
         return data, looked, call
 
+    def call_sandbox(self, task: str, system: str, user: str, work_dir: Path, *,
+                     verify_cmd: tuple[str, ...] = ("node", "verify.mjs"),
+                     writable: tuple[str, ...] = ("meta.json", "game.js"),
+                     max_turns: int = 10, max_tokens: int | None = None,
+                     effort: str | None = None) -> dict[str, Any]:
+        """Bounded coding loop inside `work_dir`: read files, write allowed targets, run verifier."""
+        self.tally.check()
+        model = self.model_for(task)
+        max_tokens = int(max_tokens or self.max_tokens.get(task, 8000))
+        start = time.monotonic()
+        call = Call(task=task, model=model, backend=self.backend)
+        try:
+            if self.backend == "api":
+                out = self._call_api_sandbox(call, system, user, work_dir, verify_cmd, writable,
+                                             max_turns, max_tokens, effort)
+            else:
+                out = self._call_claude_code_sandbox(call, system, user, work_dir, max_turns, effort)
+        except LLMError as exc:
+            call.ok, call.error, call.seconds = False, str(exc)[:300], round(time.monotonic() - start, 1)
+            self.tally.record(call, exc)
+            raise
+        call.seconds = round(time.monotonic() - start, 1)
+        self.tally.record(call)
+        return out
+
     def probe(self) -> None:
         """Cheapest possible real request: raises CreditError if the key or credits don't work."""
         if self.backend == "claude-code":
@@ -319,6 +345,99 @@ class LLM:
             nudged = True
         raise TransientError(f"no report after {WEB_MAX_REQUESTS} requests")
 
+    def _call_api_sandbox(self, call: Call, system: str, user: str, work_dir: Path,
+                          verify_cmd: tuple[str, ...], writable: tuple[str, ...],
+                          max_turns: int, max_tokens: int, effort: str | None = None) -> dict[str, Any]:
+        root = work_dir.resolve()
+        tools = [
+            {"name": "read_file", "description": "Read a UTF-8 file inside the working directory.",
+             "input_schema": {"type": "object", "properties": {"path": {"type": "string"}},
+                              "required": ["path"], "additionalProperties": False}},
+            {"name": "write_file", "description": f"Write one of {', '.join(writable)} in the working directory.",
+             "input_schema": {"type": "object",
+                              "properties": {"path": {"type": "string", "enum": list(writable)},
+                                             "content": {"type": "string"}},
+                              "required": ["path", "content"], "additionalProperties": False}},
+            {"name": "run_verify", "description": f"Run `{' '.join(verify_cmd)}` and return its output.",
+             "input_schema": {"type": "object", "properties": {}, "additionalProperties": False}},
+        ]
+        effort = effort or self.effort.get(call.task)
+        cfg_out = {"output_config": {"effort": effort}} if effort else {}
+        messages: list[dict[str, Any]] = [{"role": "user", "content": [{"type": "text", "text": user}]}]
+
+        def resolve_safe(rel: str) -> Path:
+            p = (root / rel).resolve()
+            if not p.is_relative_to(root):
+                raise ValueError("path escapes workspace")
+            return p
+
+        def run_tool(name: str, inp: dict[str, Any]) -> tuple[str, bool]:
+            try:
+                if name == "read_file":
+                    p = resolve_safe(str(inp.get("path") or ""))
+                    if not p.is_file():
+                        return f"File not found: {inp.get('path')}", True
+                    text = p.read_text(encoding="utf-8")
+                    return text[:64000], False
+                if name == "write_file":
+                    rel = str(inp.get("path") or "")
+                    if rel not in writable:
+                        return f"Only {', '.join(writable)} may be written", True
+                    p = resolve_safe(rel)
+                    p.write_text(str(inp.get("content") or ""), encoding="utf-8")
+                    return f"Wrote {rel} ({p.stat().st_size} bytes)", False
+                if name == "run_verify":
+                    proc = subprocess.run(list(verify_cmd), cwd=root, capture_output=True, text=True, timeout=20)
+                    out = (proc.stdout or "") + (f"\nSTDERR:\n{proc.stderr}" if proc.stderr else "")
+                    return out[:24000] or f"exit {proc.returncode}", proc.returncode != 0
+                return f"Unknown tool: {name}", True
+            except Exception as exc:
+                return f"{type(exc).__name__}: {exc}", True
+
+        def with_cache_tip(msgs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+            copied: list[dict[str, Any]] = []
+            for idx, m in enumerate(msgs):
+                content = m["content"]
+                if isinstance(content, list):
+                    blocks = [{k: v for k, v in b.items() if k != "cache_control"} if isinstance(b, dict) else b
+                              for b in content]
+                    if idx == len(msgs) - 1 and blocks and isinstance(blocks[-1], dict):
+                        blocks[-1] = {**blocks[-1], "cache_control": {"type": "ephemeral"}}
+                    copied.append({"role": m["role"], "content": blocks})
+                else:
+                    copied.append(m)
+            return copied
+
+        last_text = ""
+        for turn in range(1, max_turns + 1):
+            if self.tally.equivalent_usd + call.equivalent_usd >= self.tally.per_run_usd:
+                raise BudgetExceeded(f"per-run budget of ${self.tally.per_run_usd:.2f} reached")
+            msg = self._create(
+                model=call.model,
+                max_tokens=max_tokens,
+                system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+                tools=tools,
+                messages=with_cache_tip(messages),
+                **cfg_out,
+            )
+            self._add_usage(call, msg)
+            if msg.stop_reason == "max_tokens":
+                raise TransientError(f"output cut off at max_tokens={max_tokens}")
+            text_parts = [getattr(b, "text", "") for b in msg.content if getattr(b, "type", "") == "text"]
+            if text_parts:
+                last_text = "\n".join(t for t in text_parts if t)
+            tool_uses = [b for b in msg.content if getattr(b, "type", "") == "tool_use"]
+            if not tool_uses:
+                return {"turns": turn, "text": last_text, "max_turns_reached": False}
+            messages.append({"role": "assistant", "content": msg.content})
+            results = []
+            for b in tool_uses:
+                out, is_err = run_tool(getattr(b, "name", ""), getattr(b, "input", None) or {})
+                results.append({"type": "tool_result", "tool_use_id": getattr(b, "id", ""),
+                                "content": out, **({"is_error": True} if is_err else {})})
+            messages.append({"role": "user", "content": results})
+        return {"turns": max_turns, "text": last_text, "max_turns_reached": True}
+
     # ── claude-code backend ──────────────────────────────────────────────────
 
     def _call_claude_code(self, call: Call, system: str, user: str, schema: dict[str, Any],
@@ -369,6 +488,104 @@ class LLM:
         if isinstance(data, dict):
             return data
         return _parse(str(result.get("result") or ""))
+
+    def _call_claude_code_sandbox(self, call: Call, system: str, user: str, work_dir: Path,
+                                  max_turns: int, effort: str | None = None) -> dict[str, Any]:
+        exe = shutil.which("claude")
+        if not exe:
+            raise CreditError("claude CLI not found on PATH")
+        env = {k: v for k, v in self.env.items() if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")}
+        cmd = [
+            exe, "-p",
+            "--model", call.model,
+            "--output-format", "stream-json",
+            "--verbose",
+            "--append-system-prompt", system,
+            "--tools", "Read,Edit,Write,Bash",
+            "--allowed-tools", "Read,Edit,Write,Bash(node verify.mjs),Bash(node verify.mjs *),Bash(node ./verify.mjs),Bash(node ./verify.mjs *)",
+            "--permission-mode", "dontAsk",
+            "--permission-prompts", "none",
+            "--strict-mcp-config",
+            "--setting-sources", "",
+            "--no-session-persistence",
+            "--disable-slash-commands",
+        ]
+        effort = effort or self.effort.get(call.task)
+        if effort:
+            cmd += ["--effort", effort]
+
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                text=True, cwd=work_dir, env=env)
+        assert proc.stdin and proc.stdout and proc.stderr
+        proc.stdin.write(user)
+        proc.stdin.close()
+
+        turns = 0
+        seen_ids: set[str] = set()
+        init_ev: dict[str, Any] = {}
+        result_ev: dict[str, Any] | None = None
+        aborted = ""
+        start = time.monotonic()
+
+        for raw in proc.stdout:
+            if time.monotonic() - start > self.timeout:
+                aborted = f"claude -p timed out after {self.timeout:.0f}s"
+                proc.kill()
+                break
+            line = raw.strip()
+            if not line:
+                continue
+            try:
+                ev = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            etype = ev.get("type")
+            if etype == "system" and ev.get("subtype") == "init":
+                init_ev = ev
+                if ev.get("apiKeySource") not in (None, "none"):
+                    aborted = "claude -p picked up an API key instead of the subscription; refusing"
+                    proc.kill()
+                    break
+            elif etype == "assistant":
+                msg = ev.get("message") or {}
+                mid = str(msg.get("id") or "")
+                if not mid or mid not in seen_ids:
+                    if mid:
+                        seen_ids.add(mid)
+                    turns += 1
+                if turns > max_turns:
+                    aborted = f"exceeded max_turns={max_turns}"
+                    proc.kill()
+                    break
+            elif etype == "result":
+                result_ev = ev
+
+        stderr = proc.stderr.read()
+        exit_code = proc.wait()
+        if aborted:
+            if "API key" in aborted:
+                raise CreditError(aborted)
+            raise TransientError(aborted)
+        if init_ev.get("apiKeySource") not in (None, "none"):
+            raise CreditError("claude -p picked up an API key instead of the subscription; refusing")
+        if not result_ev:
+            raise TransientError(f"claude -p returned no result (exit {exit_code}): {stderr[:200]}")
+
+        u = result_ev.get("usage") or {}
+        call.input_tokens = int(u.get("input_tokens") or 0)
+        call.output_tokens = int(u.get("output_tokens") or 0)
+        call.cache_read = int(u.get("cache_read_input_tokens") or 0)
+        call.cache_write = int(u.get("cache_creation_input_tokens") or 0)
+        call.requests = int(result_ev.get("num_turns") or turns)
+        call.equivalent_usd = round(float(result_ev.get("total_cost_usd") or 0), 6) or price(
+            self.cfg, call.model, call.input_tokens, call.output_tokens, call.cache_read, call.cache_write)
+        if result_ev.get("is_error"):
+            text = str(result_ev.get("result") or result_ev.get("subtype") or "")
+            if any(s in text.lower() for s in ("usage limit", "rate limit", "limit reached", "credit")):
+                raise CreditError(f"subscription limit: {text[:160]}")
+            raise TransientError(f"claude -p error: {text[:200]}")
+        return {"turns": int(result_ev.get("num_turns") or turns), "text": str(result_ev.get("result") or ""),
+                "max_turns_reached": False}
 
 
 def _collect(content: list[Any], looked: dict[str, list]) -> None:

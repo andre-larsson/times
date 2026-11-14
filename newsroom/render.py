@@ -14,7 +14,7 @@ from zoneinfo import ZoneInfo
 
 from jinja2 import ChainableUndefined, Environment, FileSystemLoader, select_autoescape
 
-from . import ROOT, forum, tonight
+from . import ROOT, arcade, forum, tonight
 from . import deals as deal_days
 from .forum import look as forum_look
 from .forum import roster as forum_roster
@@ -28,6 +28,8 @@ OPINION_SECTION = {"slug": "opinion", "name": "Opinion",
                    "blurb": "Columns by Claude (AI): arguments built on the paper's reporting."}
 QUIZ_SECTION = {"slug": "quiz", "name": "Quiz",
                 "blurb": "Twice a week: how much of the news did you catch? Questions by Claude (AI)."}
+ARCADE_SECTION = {"slug": "arcade", "name": "Arcade",
+                  "blurb": "Once a week: a small playable browser game coded by Claude (AI) from the news."}
 CURRENCY_FORMATS = {"EUR": "€{:.2f}", "USD": "${:.2f}", "GBP": "£{:.2f}", "SEK": "{:.0f} kr"}
 SCORE = re.compile(r"^(\d{1,3}(?:\.\d{1,2})?)(%|/\d{1,3})?$")     # a review score: "8.5/10", "90%", "3/5", "82"
 POSITIVE_RATINGS = {"overwhelmingly positive", "very positive", "positive", "mostly positive"}
@@ -129,17 +131,19 @@ class SiteBuilder:
         self.now = dt.datetime.now(dt.timezone.utc)
         self.columns: list[dict[str, Any]] = []         # opinion columns, newest first
         self.quizzes: list[dict[str, Any]] = []         # quizzes, newest first
+        self.games: list[dict[str, Any]] = []           # 403 Arcade games, newest first
         self.checkbacks: list[dict[str, Any]] = []
         self.forum_threads: list[dict[str, Any]] = []
         self.front_days = int((cfg.get("opinion") or {}).get("front_days", 7))
         self.quiz_days = int((cfg.get("quiz") or {}).get("front_days", 4))
+        self.arcade_days = int((cfg.get("arcade") or {}).get("front_days", 7))
         self.screen_picks: list[dict[str, Any]] = []    # Screen's picks of the week, newest first
         self.picks_days = int(((cfg.get("screen") or {}).get("picks") or {}).get("front_days", 7))
         weather = cfg.get("weather") or {}
         self.weather = weather if weather.get("enabled") else None   # live in the browser: today's front page only
 
         css = (ROOT / "static" / "style.css").read_bytes()
-        js = b"".join(p.read_bytes() for p in sorted((ROOT / "static").glob("*.js")))
+        js = b"".join(p.read_bytes() for p in sorted((ROOT / "static").rglob("*.js")))
         # The bar lists the paper. Opinion and the Quiz join before Tonight; the Botroom joins
         # before Follow-up (the short name for We checked back). Archive stays in the Menu.
         # Search is the pinned button.
@@ -198,6 +202,10 @@ class SiteBuilder:
     def quiz_for(self, edition: dict[str, Any]) -> dict[str, Any] | None:
         """The latest quiz as of this edition, if it's recent enough for its front page."""
         return _latest(self.quizzes, edition, self.quiz_days)
+
+    def arcade_for(self, edition: dict[str, Any]) -> dict[str, Any] | None:
+        """The latest Arcade game as of this edition, if it's recent enough for its front page."""
+        return _latest(self.games, edition, self.arcade_days)
 
     def picks_for(self, edition: dict[str, Any], days: int | None = None) -> dict[str, Any] | None:
         """Screen's latest picks of the week as of this edition (they run on Fridays, shown until the next)."""
@@ -351,6 +359,7 @@ class SiteBuilder:
             "links_by_section": links_by_section,
             "column": self.column_for(edition),
             "quiz": self.quiz_for(edition),
+            "arcade": self.arcade_for(edition),
             "screen": edition.get("screen") or {},
             "screen_picks": self.picks_for(edition),
             "checkback": _latest(self.checkbacks, edition, int((self.cfg.get("checkback") or {}).get("front_days", 7))),
@@ -442,6 +451,23 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         b.add_nav("quiz", "Quiz", "quiz/")
         b.add_feature("quiz", "Quiz", "quiz/", "Twice a week: how much of the news did you catch?")
     for ed in editions:
+        gm = ed.get("arcade")
+        if gm:
+            gm.update(
+                edition_id=ed["edition_id"],
+                edition_generated_at=ed.get("generated_at"),
+                path=f"arcade/{ed['edition_id']}/",
+                section="arcade",
+                kicker=f"Arcade · {gm.get('genre_label') or arcade.genre_label(gm.get('genre') or '')}",
+                headline=gm.get("title", ""),
+            )
+            if gm.get("story"):
+                _link_stories([gm["story"]], pages)
+    b.games = [ed["arcade"] for ed in reversed(editions) if ed.get("arcade")]
+    if b.games:
+        b.add_nav("arcade", "Arcade", "arcade/")
+        b.add_feature("arcade", "Arcade", "arcade/", "Once a week: a small browser game built from the news.")
+    for ed in editions:
         feature = ed.get("checkback")
         if feature:
             feature.update(edition_id=ed["edition_id"], edition_generated_at=ed.get("generated_at"),
@@ -459,7 +485,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     forum_days = forum.load_days(data_dir)
     members: dict[str, Any] = {}
     article_threads: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
-    feature_pages = {x["path"] for x in b.columns + b.quizzes}
+    feature_pages = {x["path"] for x in b.columns + b.quizzes + b.games}
     if "screen" in b.sections:
         feature_pages.add("screen/")
     if forum_days:
@@ -591,6 +617,20 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     if b.quizzes:
         b.write("quiz/", "quiz_index.html", active="quiz", section=QUIZ_SECTION, **common, quizzes=b.quizzes)
 
+    # Arcade: one page per game, and the list of all games
+    if b.games:
+        arcade_js = (arcade.STATIC_DIR / "arcade.js").read_text(encoding="utf-8")
+        arcade_css = (arcade.STATIC_DIR / "arcade.css").read_text(encoding="utf-8")
+        for gm in b.games:
+            ed = by_id[gm["edition_id"]]
+            bundle = arcade.render_bundle(gm, arcade_js, arcade_css)
+            b.write(gm["path"], "arcade.html", active="arcade", game=gm, bundle=bundle, edition=ed,
+                    current_edition=ed, discussion=content_threads.get(gm["path"]),
+                    more_games=[x for x in b.games if x is not gm][:4],
+                    briefs=b.front_context(ed)["briefs"][:6])
+        b.write("arcade/", "arcade_index.html", active="arcade", section=ARCADE_SECTION, **common,
+                games=b.games)
+
     # The Botroom: the board index (/forum/), a page per board, thread and day, and the members
     if botroom:
         newest_days = list(reversed(forum_days))
@@ -635,6 +675,8 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     filters = [(slug, b.section_name(slug)) for slug in (*AI_SECTIONS, "gaming")]
     if b.columns:
         filters.append(("opinion", OPINION_SECTION["name"]))
+    if b.games:
+        filters.append(("arcade", ARCADE_SECTION["name"]))
     b.write("search/", "search.html", active="search", **common, filters=filters, count=len(rows),
             since=b.local(editions[0].get("generated_at")),
             index_url=b.url("search/index.json") + "?v=" + hashlib.sha1(index).hexdigest()[:8],
@@ -643,7 +685,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     # 404 and feed
     b.write("404.html", "404.html", active="", **common)
     feed_items = [s for ed in newest_first[:20]
-                  for s in [ed[k] for k in ("opinion", "quiz", "checkback") if ed.get(k)] + ed.get("stories", [])
+                  for s in [ed[k] for k in ("opinion", "quiz", "arcade", "checkback") if ed.get(k)] + ed.get("stories", [])
                   if s.get("path")]
     b.write("feed.xml", "feed.xml", **common, items=feed_items[:50],
             updated=front.get("generated_at"))

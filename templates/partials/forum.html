@@ -91,7 +91,7 @@
 
 {% macro thread_link(t) -%}
 {%- if t.article_path %}<a class="meta-link" href="{{ url(t.article_path) }}">Read the story</a>
-{%- elif t.content_path %}<a class="meta-link" href="{{ url(t.content_path) }}">{{ 'Take the quiz' if t.kind == 'quiz' else 'Read the column' if t.kind == 'opinion' else 'See Screen' }}</a>
+{%- elif t.content_path %}<a class="meta-link" href="{{ url(t.content_path) }}">{{ 'Take the quiz' if t.kind == 'quiz' else 'Read the column' if t.kind == 'opinion' else 'Play the game' if t.kind == 'arcade' else 'See Screen' }}</a>
 {%- elif t.url %}<a class="meta-link" href="{{ t.url }}">{{ t.link_label or 'The source' }}</a>{% endif -%}
 {%- endmacro %}
 

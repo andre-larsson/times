@@ -13,7 +13,7 @@ def feature_threads(edition: dict[str, Any], editions: list[dict[str, Any]],
     recent = sorted([e for e in editions if e["edition_id"] < edition["edition_id"]] + [edition],
                     key=lambda e: e["edition_id"], reverse=True)
     out = []
-    for kind in ("opinion", "quiz", "screen"):
+    for kind in ("opinion", "quiz", "screen", "arcade"):
         for ed in recent:
             if (today - date.fromisoformat(ed["edition_id"][:10])).days > 7:
                 break
@@ -23,7 +23,7 @@ def feature_threads(edition: dict[str, Any], editions: list[dict[str, Any]],
             key = f"{kind}:{ed['edition_id']}"
             if key in used:
                 break
-            title = content.get("headline") or f"{kind.title()} · {ed['edition_id']}"
+            title = content.get("headline") or content.get("title") or f"{kind.title()} · {ed['edition_id']}"
             if kind == "opinion":
                 material = {k: content.get(k) for k in ("headline", "dek", "body")}
                 path = f"{ed['edition_id'][:4]}/{ed['edition_id'][5:7]}/{ed['edition_id'][8:10]}/{content['slug']}/"
@@ -33,6 +33,16 @@ def feature_threads(edition: dict[str, Any], editions: list[dict[str, Any]],
                 path = f"quiz/{ed['edition_id']}/"
                 # A neutral title/description is safe to show in board lists and the shared prompt.
                 title = f"Quiz discussion · {ed['edition_id']}"
+            elif kind == "arcade":
+                material = {
+                    "title": content.get("title", ""),
+                    "dek": content.get("dek", ""),
+                    "genre": content.get("genre_label") or content.get("genre", ""),
+                    "controls_layout": content.get("controls_layout", ""),
+                    "news_tie": content.get("news_tie", ""),
+                    "story": (content.get("story") or {}).get("headline", ""),
+                }
+                path = f"arcade/{ed['edition_id']}/"
             else:
                 material = {"headline": title, "picks": [_title(t) for t in content.get("titles", [])]}
                 path = "screen/"

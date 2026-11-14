@@ -11,7 +11,7 @@ from typing import Any
 
 from typing import Callable
 
-from . import ai_edition, budget, checkback, forum, opinion, preflight, quiz, schedule, store
+from . import ai_edition, arcade, budget, checkback, forum, opinion, preflight, quiz, schedule, store
 from . import deals as deal_days
 from . import screen
 from . import seen as seen_store
@@ -23,6 +23,7 @@ from .sources import Harvest, SourceStatus, fetch_all
 MODES = ("auto", "full", "reduced", "links", "skip")
 OPINION = ("auto", "force", "off")    # auto = when due (opinion.days / every_weeks) in a full edition
 QUIZ = ("auto", "force", "off")       # auto = when due (quiz.days / every_weeks) in a full edition
+ARCADE = ("auto", "force", "off")     # auto = when due (arcade.days / every_weeks) in a full edition
 FORUM = ("auto", "force", "off")      # auto = every full edition (forum.enabled)
 DEALS = deal_days.MODES               # auto = on deals.days (or the safety net), force = check now, carry = keep the last check
 SCREEN = ("auto", "force", "off")     # Screen's picks of the week: auto = when due (screen.picks) in a full edition
@@ -44,19 +45,23 @@ class Result:
     deals: str = ""                   # whether the deals were checked or carried over
     screen: str = ""                  # Screen's lists and picks, or why there are none
     checkback: str = ""               # weekly follow-ups, or why none were published
+    arcade: str = ""                  # weekly Arcade game, or why none was published
 
 
 def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
              now: dt.datetime | None = None, env: dict[str, str] | None = None,
              client: Client | None = None, backend: str | None = None,
              llm_factory: Callable[..., LLM] = LLM, column: str = "auto", quiz_mode: str = "auto",
-             forum_mode: str = "auto", deals_mode: str = "auto", screen_mode: str = "auto") -> Result:
+             forum_mode: str = "auto", deals_mode: str = "auto", screen_mode: str = "auto",
+             arcade_mode: str = "auto") -> Result:
     if requested not in MODES:
         raise ValueError(f"mode must be one of {', '.join(MODES)}")
     if column not in OPINION:
         raise ValueError(f"opinion must be one of {', '.join(OPINION)}")
     if quiz_mode not in QUIZ:
         raise ValueError(f"quiz must be one of {', '.join(QUIZ)}")
+    if arcade_mode not in ARCADE:
+        raise ValueError(f"arcade must be one of {', '.join(ARCADE)}")
     if forum_mode not in FORUM:
         raise ValueError(f"forum must be one of {', '.join(FORUM)}")
     if deals_mode not in DEALS:
@@ -113,6 +118,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
                                           deals=deals_block)
         column_note = _opinion(cfg, data_dir, edition, mode, llm, column) if edition else ""
         quiz_note = _quiz(cfg, data_dir, edition, mode, llm, quiz_mode) if edition else ""
+        arcade_note = _arcade(cfg, data_dir, edition, mode, llm, arcade_mode) if edition else ""
         screen_note = _screen_picks(cfg, data_dir, edition, watch, mode, llm, screen_mode) if edition else ""
         checkback_note = _checkback(cfg, data_dir, edition, mode, llm) if edition else ""
         botroom = _forum(cfg, data_dir, edition, mode, llm, forum_mode) if edition else forum.Outcome()
@@ -135,7 +141,7 @@ def generate(cfg: dict[str, Any], data_dir: Path, requested: str = "auto",
     if watch:
         screen.save_memory(data_dir, watch.memory)
     return Result(True, edition["mode"], reason, edition_id, path, harvest, tally.summary(), column_note, quiz_note,
-                  botroom.note, deals_note, screen_note, checkback_note)
+                  botroom.note, deals_note, screen_note, checkback_note, arcade_note)
 
 
 def _checkback(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM) -> str:
@@ -199,6 +205,27 @@ def _quiz(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: st
         edition["quiz"] = outcome.quiz
         n, dropped = len(outcome.quiz["questions"]), len(outcome.quiz["checked"]["dropped"])
         return f"written: {n} questions" + (f" ({dropped} dropped by the check)" if dropped else "")
+    return f"not written: {outcome.note}" if outcome.note else ""
+
+
+def _arcade(cfg: dict[str, Any], data_dir: Path, edition: dict[str, Any], mode: str, llm: LLM,
+            requested: str) -> str:
+    """Add the weekly Arcade game to the edition when due. Returns a line for the report."""
+    kept = (store.load_edition(data_dir, edition["edition_id"]) or {}).get("arcade")
+    if kept and requested != "force":
+        edition["arcade"] = kept
+        return f"kept today's game: {kept['title']}"
+    skip = _skip_extra(edition, mode, requested)
+    if skip is not None:
+        return skip
+    try:
+        outcome = arcade.write(cfg, llm, edition, store.all_editions(data_dir), force=requested == "force")
+    except Exception as exc:                         # Arcade is optional: never lose the edition over it
+        outcome = arcade.Outcome(note=f"{type(exc).__name__}: {str(exc)[:200]}")
+    _record_llm(edition, llm)
+    if outcome.game:
+        edition["arcade"] = outcome.game
+        return f"written: {outcome.game['title']} ({outcome.game['genre']})"
     return f"not written: {outcome.note}" if outcome.note else ""
 
 
@@ -284,6 +311,29 @@ def run_forum(cfg: dict[str, Any], data_dir: Path, edition_id: str | None = None
     return f"Botroom {edition['edition_id']}: {out.note}"
 
 
+def run_arcade(cfg: dict[str, Any], data_dir: Path, edition_id: str | None = None, backend: str | None = None,
+               force: bool = False, env: dict[str, str] | None = None,
+               llm_factory: Callable[..., LLM] = LLM) -> str:
+    """`python -m newsroom arcade`: build the weekly game for a saved edition (backfill/local testing)."""
+    env = dict(os.environ) if env is None else env
+    edition = store.load_edition(data_dir, edition_id) if edition_id else store.latest_edition(data_dir)
+    if not edition:
+        return f"Arcade: no edition {edition_id or 'saved yet'}"
+    if not force and edition.get("arcade"):
+        return f"Arcade {edition['edition_id']}: already has {edition['arcade'].get('title')!r} (use --force to replace it)"
+    backend = backend or env.get("NEWSROOM_LLM") or (cfg.get("llm") or {}).get("backend", "api")
+    tally = Tally(per_run_usd=float((cfg.get("budget") or {}).get("per_run_usd", 3.0)))
+    llm = llm_factory(cfg, backend, tally, env)
+    out = arcade.write(cfg, llm, edition, store.all_editions(data_dir), force=True)
+    budget.record_run(data_dir, dt.datetime.now(dt.timezone.utc), edition["edition_id"], "arcade", backend, tally)
+    if not out.game:
+        return f"Arcade {edition['edition_id']}: not written: {out.note}"
+    edition["arcade"] = out.game
+    store.save_edition(data_dir, edition)
+    return (f"Arcade {edition['edition_id']}: wrote {out.game['title']!r} ({out.game['genre']}, "
+            f"{out.game['turns']} turns, ${tally.equivalent_usd:.4f} eq)")
+
+
 def _skip_extra(edition: dict[str, Any], mode: str, requested: str) -> str | None:
     """Whether the column, the quiz or the Botroom stays out of this edition: a line for the report ("" says nothing),
     or None to go ahead and write it if it's due."""
@@ -308,6 +358,8 @@ def report(result: Result) -> str:
         lines.append(f"Opinion column {result.column}")
     if result.quiz:
         lines.append(f"Quiz {result.quiz}")
+    if result.arcade:
+        lines.append(f"Arcade {result.arcade}")
     if result.forum:
         lines.append(f"Botroom {result.forum}")
     if result.deals:

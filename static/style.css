@@ -130,7 +130,7 @@
 .sec-tech, .sec-checkback { --sec: var(--tech); --sec-ink: var(--tech-ink); --sec-soft: var(--tech-soft); --sec-deep: var(--tech-deep); }
 .sec-gaming, .sec-tonight { --sec: var(--gaming); --sec-ink: var(--gaming-ink); --sec-soft: var(--gaming-soft); --sec-deep: var(--gaming-deep); }
 .sec-deals  { --sec: var(--deals);  --sec-ink: var(--deals-ink);  --sec-soft: var(--deals-soft);  --sec-deep: var(--deals-deep); }
-.sec-opinion { --sec: var(--amber); --sec-ink: var(--amber-ink); --sec-soft: var(--amber-soft); --sec-deep: var(--surface-dark); }
+.sec-opinion, .sec-arcade { --sec: var(--amber); --sec-ink: var(--amber-ink); --sec-soft: var(--amber-soft); --sec-deep: var(--surface-dark); }
 .sec-forum { --sec: var(--amber); --sec-ink: var(--ink); --sec-soft: var(--paper-2); --sec-deep: var(--surface-dark); }
 .sec-botchat { --sec: var(--amber); --sec-ink: var(--amber-ink); --sec-soft: var(--amber-soft); --sec-deep: var(--surface-dark); }
 
@@ -933,6 +933,26 @@ a.top10-title:hover { text-decoration: underline; }
   display: flex; flex-direction: column; gap: var(--s-2);
   background: var(--sec-soft); border-top: 4px solid var(--sec); padding: var(--s-3) var(--s-4) var(--s-4);
 }
+.arcade-frame-wrap {
+  margin-bottom: var(--s-4);
+  border: 2px solid var(--ink);
+  background: #14120f;
+}
+.arcade-iframe {
+  display: block;
+  width: 100%;
+  height: 640px;
+  border: 0;
+  background: #14120f;
+}
+.arcade-iframe[data-layout="pointer"] { height: 548px; }
+.arcade-iframe[data-layout="typing"] { height: 730px; }
+.arcade-noscript { padding: var(--s-4); color: var(--on-dark); }
+.arcade-notes { display: grid; gap: var(--s-3); }
+.arcade-tie, .arcade-story { font: 400 1rem/1.5 var(--font-body); color: var(--ink-2); }
+.arcade-story a { font-weight: 700; font-family: var(--font-ui); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+.arcade-story a:hover { text-decoration-color: currentColor; }
+.arcade-story .meta { display: block; margin-top: var(--s-1); }
 .column-list { display: grid; gap: var(--s-5); }
 .opinion-note, .quiz-note {
   margin-bottom: var(--s-5); padding-bottom: var(--s-3); border-bottom: 1px solid var(--rule);
@@ -1626,7 +1646,7 @@ a.pages-n:hover, .pages-step:hover { border-color: var(--ink); }
 .filter input:hover + span { border-color: var(--ink-3); }
 .filter input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .filter[class*="sec-"] input:checked + span { background: var(--sec); border-color: var(--sec); color: #fff; }
-.filter.sec-opinion input:checked + span { color: var(--surface-dark); }
+.filter.sec-opinion input:checked + span, .filter.sec-arcade input:checked + span { color: var(--surface-dark); }
 .filter input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
 .search-status { margin-top: var(--s-5); font: 500 0.9375rem/1.4 var(--font-ui); color: var(--ink-3); }
 .search-results { margin-top: var(--s-3); }
