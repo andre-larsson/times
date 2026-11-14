@@ -16,6 +16,7 @@ from jinja2 import ChainableUndefined, Environment, FileSystemLoader, select_aut
 
 from . import ROOT, arcade, forum, tonight
 from . import deals as deal_days
+from .forum import disguise as forum_disguise
 from .forum import look as forum_look
 from .forum import roster as forum_roster
 from .search import build_index
@@ -482,7 +483,9 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     b.screen_picks = [ed["screen"]["picks"] for ed in reversed(editions) if (ed.get("screen") or {}).get("picks")]
 
     # The Botroom: a thread under each article it commented on, and /forum/
-    forum_days = forum.load_days(data_dir)
+    # The editor's posts in disguise go into their days (a stand-in "synthetic" day, without a day page, for a
+    # post made before that morning's run)
+    forum_days = forum_disguise.merge(forum.load_days(data_dir), forum_disguise.load_records(data_dir))
     members: dict[str, Any] = {}
     article_threads: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
     feature_pages = {x["path"] for x in b.columns + b.quizzes + b.games}
@@ -492,6 +495,9 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
         b.add_nav("forum", "Botroom", "forum/", before="checkback")   # bar, after Tonight; Menu lists it with the sections
         members = forum_look.members(forum.full_cast(forum.load_generated(data_dir)), forum_roster.load(data_dir),
                                      forum_days)
+        forum_disguise.add_members(members, forum_disguise.load_state(data_dir), cfg)
+        for m in members.values():                       # a profile page for everyone but the waiting list
+            m["path"] = f"forum/members/{slugify(m['handle'])}/" if m["status"] != "bench" else None
         for x in forum_days:
             def story_page(story: dict[str, Any], eid: str = x["edition_id"]) -> str | None:
                 path = article_path(eid, story["slug"])
@@ -511,7 +517,7 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
     side_threads = {t["url"]: t for x in forum_days for t in x["threads"]
                     if t.get("kind") in ("deal", "review") and t.get("url")}
     b.env.globals["botroom_thread"] = (lambda link: side_threads.get(link or "")) if forum_days else None
-    forum_by_edition = {x["edition_id"]: x for x in forum_days}
+    forum_by_edition = {x["edition_id"]: x for x in forum_days if not x.get("synthetic")}
     for ed in editions:                                  # the masthead's cover price
         ed["price_usd"] = edition_price(ed, forum_by_edition.get(ed["edition_id"]))
 
@@ -633,13 +639,13 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
 
     # The Botroom: the board index (/forum/), a page per board, thread and day, and the members
     if botroom:
-        newest_days = list(reversed(forum_days))
+        newest_days = [x for x in reversed(forum_days) if not x.get("synthetic")]
         fctx = dict(active="forum", forum=botroom, members=members, days=newest_days)
         b.write("forum/", "forum_index.html", current_edition=front, today=newest_days[0], **fctx)
         for bd in botroom["boards"].values():
             for i, (path, page) in enumerate(zip(bd["page_paths"], bd["pages"]), 1):
                 b.write(path, "forum_board.html", current_edition=front, board=bd, page=page, page_no=i, **fctx)
-        day_of = {x["date"]: x for x in forum_days}
+        day_of = {x["date"]: x for x in forum_days if not x.get("synthetic")}
         for t in botroom["threads"]:
             x = day_of.get(t["date"]) if t["kind"] != "announcement" else None
             b.write(t["path"], "forum_topic.html", current_edition=by_id.get(x["edition_id"], front) if x else front,
@@ -650,9 +656,20 @@ def build(cfg: dict[str, Any], data_dir: Path, out_dir: Path,
                     older=newest_days[i + 1] if i + 1 < len(newest_days) else None, **fctx)
         order = lambda m: (not m["fixed"], -m["posts"], m["handle"].lower())  # noqa: E731
         groups = [(title, sorted((m for m in members.values() if m["status"] == status), key=order))
-                  for title, status in (("Around", "active"), ("Away", "away"), ("Left", "gone"))]
+                  for title, status in (("Around", "active"), ("Away", "away"), ("Left", "gone"),
+                                        ("Banned", "banned"))]
         b.write("forum/members/", "forum_members.html", current_edition=front, groups=groups,
                 ranks=forum_look.RANKS, **fctx)
+        # A profile per member: the card, the latest posts and, for the editor's disguises, the truth and the
+        # case file (HumanWatch_Patrol's catches on its own)
+        post_at = {p["key"]: (t, p) for t in botroom["threads"] for p in t.get("posts") or []}
+        by_handle: dict[str, list[tuple[dict[str, Any], dict[str, Any]]]] = {}
+        for t, p in sorted(post_at.values(), key=lambda x: (x[1]["date"], x[0]["seq"], x[1]["n"]), reverse=True):
+            by_handle.setdefault(p["handle"], []).append((t, p))
+        for m in members.values():
+            if m.get("path"):
+                b.write(m["path"], "forum_member.html", current_edition=front, member=m, post_at=post_at,
+                        recent=by_handle.get(m["handle"], [])[:10], **fctx)
 
     # Archive
     summaries = []

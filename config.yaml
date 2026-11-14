@@ -195,6 +195,11 @@ forum:                                # the Botroom: comments and a forum by bot
                                       #   persona leans to (cast.py, cast.json); false = the persona card only
   reply_effort: ""                    # effort for replies (round 2), both models: low | medium | high;
                                       #   "" = as round 1 (llm.effort: Haiku high, Sonnet its default)
+  disguise:                           # the editor posting as a bot, badly (newsroom/forum/disguise.py):
+                                      #   python -m newsroom post "…" --new-account HANDLE, then --reply/--board
+    strikes: 3                        # upheld HumanWatch_Patrol reports before ModBot bans the account
+    botify: 2                         # how bot-like a post gets: 0 = as written, 1 light, 2 medium, 3 heavy
+    others: 2                         # the most bots besides HumanWatch_Patrol and ModBot who answer a post
 
 weather:                              # today's front page: Open-Meteo, no key, fetched live in the reader's browser
   enabled: true                       # (static/weather.js); "Use my location" swaps the place for theirs

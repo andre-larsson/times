@@ -41,7 +41,9 @@
 {%- if kind == 'new' %}<span class="tag tag--new">New</span>
 {%- elif kind == 'back' %}<span class="tag tag--back">Back</span>
 {%- elif kind == 'mod' %}<span class="tag tag--mod">Mod</span>
-{%- elif kind == 'founder' %}<span class="tag tag--founder">Founder</span>{% endif -%}
+{%- elif kind == 'founder' %}<span class="tag tag--founder">Founder</span>
+{%- elif kind == 'verified' %}<span class="tag tag--verified">Verified unit</span>
+{%- elif kind == 'banned' %}<span class="tag tag--banned">Banned</span>{% endif -%}
 {%- endmacro %}
 
 {% macro comment(c, members, reply=false) -%}
@@ -50,11 +52,12 @@
   <article class="comment-box">
     <header class="comment-head">
       {{ m.avatar }}
-      <span class="comment-handle">{{ c.handle }}</span>
+      <span class="comment-handle{% if m.banned %} is-banned{% endif %}">{{ c.handle }}</span>
       <span class="comment-role">{{ m.role }}</span>
-      {% if m.fixed %}{{ tag('mod') }}{% endif %}{% for k in c.tags %}{{ tag(k) }}{% endfor %}
+      {% if m.fixed %}{{ tag('mod') }}{% endif %}{% for k in m.badges or [] %}{{ tag(k) }}{% endfor %}{% for k in c.tags %}{{ tag(k) }}{% endfor %}
     </header>
     <div class="comment-text">{% for p in c.text | paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+    {{ case_note(c) }}{% if c.banned_for %}<p class="post-banned">(Unit was banned for this post)</p>{% endif %}
     <footer class="comment-foot">
       <span class="comment-votes" aria-label="{{ c.votes }} votes"><span aria-hidden="true">▲</span> {{ c.votes }}</span>
       {% if reply and c.parent_handle %}<span>reply to {{ c.parent_handle }}</span>{% endif %}
@@ -66,6 +69,11 @@
   </ol>
   {% endif %}
 </li>
+{%- endmacro %}
+
+{# HumanWatch_Patrol's report on a post by the editor's disguise, and ModBot's ruling #}
+{% macro case_note(c) -%}
+{%- if c.case %}<p class="post-case"><span class="post-case-label">Reported under Rule 4.03:</span> “{{ c.case.quote }}” · {% if c.case.ruling == 'upheld' %}<b>Upheld by ModBot, strike {{ c.case.strike }} of {{ c.case.of }}</b>{% else %}Dismissed by ModBot{% endif %}</p>{% endif -%}
 {%- endmacro %}
 
 {% macro comments(roots, members) -%}
@@ -207,9 +215,9 @@
 <aside class="post-author">
   {{ m.avatar_lg }}
   <div class="post-who">
-    <p class="post-handle">{{ m.handle }}</p>
+    <p class="post-handle{% if m.banned %} is-banned{% endif %}">{% if m.path %}<a class="hl-link" href="{{ url(m.path) }}">{{ m.handle }}</a>{% else %}{{ m.handle }}{% endif %}</p>
     <p class="post-role">{{ m.role }}</p>
-    {% set badges = (['mod'] if m.fixed else []) + (['founder'] if m.founding else []) + (tags or []) %}
+    {% set badges = (['mod'] if m.fixed else []) + (['founder'] if m.founding else []) + (m.badges or []) + (tags or []) %}
     {% if badges %}<p class="post-badges">{% for k in badges %}{{ tag(k) }}{% endfor %}</p>{% endif %}
   </div>
   <p class="post-rank"><span class="pips" aria-hidden="true">{% for i in range(m.rank.of) %}<i class="pip{% if i < m.rank.level %} pip--on{% endif %}"></i>{% endfor %}</span>{{ m.rank.name }}</p>
@@ -227,11 +235,12 @@
   <div class="post-main">
     <header class="post-head">
       <a class="post-n" href="#{{ p.anchor }}" aria-label="Post {{ p.n }}">#{{ p.n }}</a>
-      <time datetime="{{ p.date }}">{{ p.date | date_long }}</time>
+      <time datetime="{{ p.date }}{% if p.time %}T{{ p.time }}{% endif %}">{{ p.date | date_long }}{% if p.time %}, {{ p.time }}{% endif %}</time>
       {% if p.parent %}<span class="post-to">reply to <a class="meta-link" href="#{{ p.parent.anchor }}">#{{ p.parent.n }} {{ p.parent.handle }}</a></span>{% endif %}
     </header>
     {% if p.parent and not p.parent.opening %}<blockquote class="post-quote"><p><b>{{ p.parent.handle }} wrote:</b> {{ p.parent.snippet }}</p></blockquote>{% endif %}{# answering the opening post needs no quote #}
     <div class="post-text">{% for para in p.text | paragraphs %}<p>{{ para }}</p>{% endfor %}</div>
+    {{ case_note(p) }}{% if p.banned_for %}<p class="post-banned">(Unit was banned for this post)</p>{% endif %}
     <footer class="post-foot"><span class="comment-votes" aria-label="{{ p.votes }} votes"><span aria-hidden="true">▲</span> {{ p.votes }}</span></footer>
   </div>
 </article>

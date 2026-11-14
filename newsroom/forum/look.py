@@ -173,11 +173,23 @@ def _posts(t: dict[str, Any], extra: list[tuple[str, dict[str, Any]]]) -> list[d
         parent = by_key.get(ref if "/" in ref else f"{d}/{ref}") if ref else None
         p = dict(c, n=len(out) + 1, date=d, key=f"{d}/{c['id']}", anchor=c.get("anchor") or f"c-{d}-{c['id']}",
                  opening=c["id"] == t.get("id") and t.get("kind") in ("botchat", "announcement"),
+                 parent_key=parent["key"] if parent else None,
                  parent={"n": parent["n"], "handle": parent["handle"], "anchor": parent["anchor"],
                          "snippet": _snippet(parent["text"]), "opening": parent["opening"]} if parent else None)
         by_key[p["key"]] = p
         out.append(p)
     return out
+
+
+def _tree(posts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Numbered posts as a comment tree (an article's collapsed thread), later days' replies included."""
+    nodes = {p["key"]: dict(p, children=[], parent_handle=p["parent"]["handle"] if p["parent"] else "")
+             for p in posts}
+    roots: list[dict[str, Any]] = []
+    for p in posts:
+        parent = nodes.get(p.get("parent_key") or "")
+        (parent["children"] if parent else roots).append(nodes[p["key"]])
+    return roots
 
 
 def forum(days: list[dict[str, Any]], members: dict[str, dict[str, Any]]) -> dict[str, Any]:
@@ -210,6 +222,8 @@ def forum(days: list[dict[str, Any]], members: dict[str, dict[str, Any]]) -> dic
             x["still_going"].append(t)
     for t in threads:
         t["posts"] = _posts(t, t.pop("extra"))
+        if t["bumped"] and "tree" in t and t["kind"] not in ("botchat", "announcement"):
+            t["tree"] = _tree(t["posts"])                # an article's thread with later replies (the editor's)
         t["count"] = len(t["posts"])
         t["voices"] = len({p["handle"] for p in t["posts"]})
         t["starter"] = t["posts"][0]["handle"] if t["kind"] in ("botchat", "announcement") else None

@@ -76,6 +76,36 @@ def main(argv: list[str] | None = None) -> int:
     arcade_p.add_argument("--llm", choices=("api", "claude-code"),
                           help="Claude backend (default: llm.backend in config.yaml, or $NEWSROOM_LLM)")
 
+    post_p = sub.add_parser("post", help="post in the Botroom as the editor in disguise (a human pretending to be "
+                            "a bot); the bots answer at once, HumanWatch_Patrol reports what gives you away. "
+                            "Writes data/forum/disguise/; commit and push to publish")
+    add_data_dir(post_p)
+    post_p.add_argument("text", help='what to post, as you wrote it ("-" reads standard input)')
+    where = post_p.add_mutually_exclusive_group()
+    where.add_argument("--reply", metavar="ADDRESS",
+                       help="the thread or post to answer, by its address on the site: "
+                            "forum/YYYY-MM-DD/<slug>/ (the opening post) or .../#c-YYYY-MM-DD-<id> (a post)")
+    where.add_argument("--board", choices=("introductions", "site-feedback", "feature-requests", "off-topic"),
+                       help="start a thread on this board (with --title)")
+    post_p.add_argument("--title", help="the new thread's title")
+    post_p.add_argument("--new-account", metavar="HANDLE",
+                        help="register a new disguise (once the last one is banned); its first post goes to "
+                             "Introductions unless --reply or --board says otherwise")
+    post_p.add_argument("--botify", type=int, choices=range(4), metavar="0-3",
+                        help="how bot-like: 0 = as written, 3 = heavy (default: forum.disguise.botify)")
+    post_p.add_argument("--seed", type=int, help="the botifier's luck (default: from the text, so --dry-run "
+                                                  "shows what you'll get)")
+    post_p.add_argument("--ban", action="store_true", help="ModBot bans the account with this post, strikes or not")
+    post_p.add_argument("--dry-run", action="store_true",
+                        help="show the botified post and who would answer; no Claude calls, nothing written")
+    post_p.add_argument("--llm", choices=("claude-code", "api"), default="claude-code",
+                        help="Claude backend (default: claude-code, your subscription; api spends API credits)")
+
+    dis_p = sub.add_parser("disguise", help="the editor's disguise accounts: strikes and bans, or --undo the last post")
+    add_data_dir(dis_p)
+    dis_p.add_argument("--undo", action="store_true",
+                       help="remove the latest post with its replies, its report and any ban or account it caused")
+
     roster_p = sub.add_parser("roster", help="what the Botroom's roster settings (config forum.roster) do: "
                               "simulated histories, no Claude calls, nothing written")
     add_data_dir(roster_p)
@@ -143,6 +173,27 @@ def main(argv: list[str] | None = None) -> int:
         from .generate import run_arcade
 
         print(run_arcade(cfg, args.data_dir, args.edition, backend=args.llm, force=args.force))
+        return 0
+
+    if args.command == "post":
+        import sys
+
+        from .forum import disguise
+
+        text = sys.stdin.read() if args.text == "-" else args.text
+        try:
+            print(disguise.post(cfg, args.data_dir, text, reply=args.reply, board=args.board, title=args.title,
+                                new_account=args.new_account, level=args.botify, seed=args.seed, ban=args.ban,
+                                dry_run=args.dry_run, backend=args.llm))
+        except disguise.PostError as exc:
+            print(f"Not posted: {exc}", file=sys.stderr)
+            return 1
+        return 0
+
+    if args.command == "disguise":
+        from .forum import disguise
+
+        print(disguise.undo(args.data_dir) if args.undo else disguise.status(cfg, args.data_dir))
         return 0
 
     if args.command == "roster":

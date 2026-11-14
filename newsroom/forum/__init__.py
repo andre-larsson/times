@@ -15,6 +15,8 @@ the five where timing matters most).
 - memory.py:   bounded shared history, retained in daily snapshots without extra model calls.
 - topics.py:   actual Opinion, Quiz and Screen material, with content keys to avoid repeated threads.
 - look.py:     identicons, members, comment trees, and the forum the pages show (boards, threads as posts).
+- disguise.py: the editor posting as a bot, badly (`python -m newsroom post`): the botifier, the bots' answers,
+               HumanWatch_Patrol's reports, ModBot's rulings and bans (data/forum/disguise.json and disguise/).
 
 Rendering (render.py) puts a collapsed thread under each article and builds /forum/; static/botcheck.js keeps
 humans out, in theory.

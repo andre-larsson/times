@@ -1611,6 +1611,43 @@ a.pages-n:hover, .pages-step:hover { border-color: var(--ink); }
 .rank-list li { display: flex; align-items: center; gap: var(--s-2); }
 .rank-list .meta { display: inline; }
 
+/* The editor's disguise: its avatar and badges, the ban, HumanWatch_Patrol's reports (newsroom/forum/disguise.py) */
+.avatar--disguise { fill: var(--ink-2); background: var(--amber-soft); }
+.tag--verified { background: var(--amber-soft); border-color: var(--amber); color: var(--amber-ink); }
+.tag--verified::before { content: "✓ "; }
+.tag--banned { background: var(--negative); border-color: var(--negative); color: var(--paper); }
+.is-banned { text-decoration-line: line-through; text-decoration-thickness: 2px; }
+.is-banned:hover, .is-banned:focus-visible { text-decoration-line: line-through underline; }
+.post-banned { font: 800 0.9375rem/1.3 var(--font-head); text-transform: uppercase; letter-spacing: 0.05em; color: var(--negative); }
+.post-case {
+  max-width: 46em; padding: var(--s-2) var(--s-3); border-left: 4px solid var(--deals); background: var(--paper-2);
+  font: 500 0.8125rem/1.45 var(--font-ui); color: var(--ink-2); overflow-wrap: anywhere;
+}
+.post-case-label { font-weight: 700; color: var(--ink); }
+
+/* /forum/members/<handle>/: a member's profile */
+.profile { display: grid; gap: var(--s-6); max-width: 900px; }
+.profile-head { display: flex; align-items: center; gap: var(--s-4); }
+.profile-head .avatar { width: 64px; height: 64px; }
+.profile-who { display: grid; gap: var(--s-1); min-width: 0; }
+.profile-handle { overflow-wrap: anywhere; }
+.profile-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--s-3) var(--s-4); margin: var(--s-4) 0 0; }
+.profile-facts dt { font: 800 0.75rem/1.2 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+.profile-facts dd { display: flex; align-items: center; gap: var(--s-2); margin: 2px 0 0; font: 600 0.9375rem/1.35 var(--font-ui); color: var(--ink); }
+.profile-about { margin-top: var(--s-4); }
+.profile-truth p { font: 400 1.0625rem/1.55 var(--font-body); color: var(--ink); max-width: 42em; }
+.profile-truth p + p { margin-top: var(--s-3); }
+.case-list, .profile-post-list { display: grid; }
+.case { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-1) var(--s-3); padding-block: var(--s-2); border-top: 1px solid var(--rule); font: 500 0.9375rem/1.45 var(--font-ui); }
+.case:first-child { border-top: 0; }
+.case-date { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.case-quote { color: var(--ink); overflow-wrap: anywhere; }
+.case-note { flex-basis: 100%; font: 400 0.875rem/1.45 var(--font-ui); color: var(--ink-2); overflow-wrap: anywhere; }
+.caught-list { display: grid; gap: var(--s-2); }
+.profile-post { display: grid; gap: var(--s-1); padding-block: var(--s-3); border-top: 1px solid var(--rule); }
+.profile-post:first-child { border-top: 0; padding-top: 0; }
+.profile-snippet { font: 400 0.9375rem/1.5 var(--font-body); color: var(--ink-2); max-width: 46em; overflow-wrap: anywhere; }
+
 
 /* ── Archive, 404 ────────────────────────────────────────────────────────── */
 .archive { padding-block: var(--s-5) var(--s-7); max-width: 900px; }
