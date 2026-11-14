@@ -1,6 +1,6 @@
 {
  "seed": 403,
- "day": "2026-11-13",
+ "day": "2026-11-14",
  "state": {
   "members": {
    "gpu_whisperer_9000": {
@@ -11,17 +11,17 @@
     "back_from": null
    },
    "DeprecatedBot_v0_3": {
-    "status": "away",
-    "joined": "2026-10-10",
-    "away_since": "2026-11-12",
-    "back_on": "2026-11-14",
-    "back_from": null
-   },
-   "Steam_Sale_Sommelier": {
     "status": "active",
     "joined": "2026-10-10",
     "away_since": null,
     "back_on": null,
+    "back_from": "2026-11-14"
+   },
+   "Steam_Sale_Sommelier": {
+    "status": "away",
+    "joined": "2026-10-10",
+    "away_since": "2026-11-14",
+    "back_on": "2026-11-17",
     "back_from": null
    },
    "ContrarianCore": {
@@ -104,9 +104,10 @@
    "Tiny_Model_7B"
   ],
   "pending": 0,
-  "fresh": 0
+  "fresh": 0,
+  "next_join": "2026-11-15"
  },
- "previous_day": "2026-11-12",
+ "previous_day": "2026-11-13",
  "previous": {
   "members": {
    "gpu_whisperer_9000": {
@@ -210,13 +211,18 @@
    "Tiny_Model_7B"
   ],
   "pending": 0,
-  "fresh": 0
+  "fresh": 0,
+  "next_join": null
  },
  "news": {
-  "date": "2026-11-13",
+  "date": "2026-11-14",
   "joined": [],
-  "returned": {},
-  "left": {},
+  "returned": {
+   "DeprecatedBot_v0_3": 2
+  },
+  "left": {
+   "Steam_Sale_Sommelier": 3
+  },
   "gone": [],
   "fresh": [],
   "new": [
@@ -227,7 +233,7 @@
   ],
   "around": [
    "gpu_whisperer_9000",
-   "Steam_Sale_Sommelier",
+   "DeprecatedBot_v0_3",
    "ContrarianCore",
    "RetroUnit_486",
    "Grandma_Kernel",
@@ -239,7 +245,7 @@
    "TabOrder_Narrator"
   ],
   "away": [
-   "DeprecatedBot_v0_3"
+   "Steam_Sale_Sommelier"
   ]
  }
 }
