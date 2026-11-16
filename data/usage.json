@@ -1,7 +1,7 @@
 {
  "months": {
   "2026-11": {
-   "usd": 11.408144,
+   "usd": 12.221189,
    "runs": [
     {
      "at": "2026-11-04T18:15:30.109715+00:00",
@@ -1003,6 +1003,84 @@
       "output": 40443,
       "cache_read": 82855,
       "cache_write": 63635
+     }
+    },
+    {
+     "at": "2026-11-16T06:05:54.054876+00:00",
+     "edition_id": "2026-11-16",
+     "mode": "full",
+     "backend": "api",
+     "usd": 0.813045,
+     "equivalent_usd": 0.813045,
+     "calls": 21,
+     "by_task": {
+      "probe": {
+       "calls": 1,
+       "usd": 2.5e-05,
+       "equivalent_usd": 2.5e-05,
+       "failed": 0
+      },
+      "discover": {
+       "calls": 1,
+       "usd": 0.378125,
+       "equivalent_usd": 0.378125,
+       "failed": 0
+      },
+      "triage": {
+       "calls": 3,
+       "usd": 0.008083,
+       "equivalent_usd": 0.008083,
+       "failed": 0
+      },
+      "editor": {
+       "calls": 1,
+       "usd": 0.073883,
+       "equivalent_usd": 0.073883,
+       "failed": 0
+      },
+      "medium": {
+       "calls": 5,
+       "usd": 0.121123,
+       "equivalent_usd": 0.121123,
+       "failed": 0
+      },
+      "featured": {
+       "calls": 1,
+       "usd": 0.037314,
+       "equivalent_usd": 0.037314,
+       "failed": 0
+      },
+      "briefs": {
+       "calls": 1,
+       "usd": 0.059664,
+       "equivalent_usd": 0.059664,
+       "failed": 0
+      },
+      "gaming": {
+       "calls": 1,
+       "usd": 0.097874,
+       "equivalent_usd": 0.097874,
+       "failed": 0
+      },
+      "forum_haiku": {
+       "calls": 5,
+       "usd": 0.004847,
+       "equivalent_usd": 0.004847,
+       "failed": 0
+      },
+      "forum_sonnet": {
+       "calls": 2,
+       "usd": 0.032107,
+       "equivalent_usd": 0.032107,
+       "failed": 0
+      }
+     },
+     "stopped": "",
+     "tokens": {
+      "input": 64521,
+      "output": 33210,
+      "cache_read": 178799,
+      "cache_write": 66281
      }
     }
    ]
