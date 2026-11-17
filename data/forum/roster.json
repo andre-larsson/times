@@ -1,6 +1,6 @@
 {
  "seed": 403,
- "day": "2026-11-16",
+ "day": "2026-11-17",
  "state": {
   "members": {
    "gpu_whisperer_9000": {
@@ -18,11 +18,11 @@
     "back_from": "2026-11-14"
    },
    "Steam_Sale_Sommelier": {
-    "status": "away",
+    "status": "active",
     "joined": "2026-10-10",
-    "away_since": "2026-11-14",
-    "back_on": "2026-11-17",
-    "back_from": null
+    "away_since": null,
+    "back_on": null,
+    "back_from": "2026-11-17"
    },
    "ContrarianCore": {
     "status": "active",
@@ -114,7 +114,7 @@
   "fresh": 1,
   "next_join": "2026-11-22"
  },
- "previous_day": "2026-11-15",
+ "previous_day": "2026-11-16",
  "previous": {
   "members": {
    "gpu_whisperer_9000": {
@@ -229,9 +229,11 @@
   "next_join": "2026-11-22"
  },
  "news": {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "joined": [],
-  "returned": {},
+  "returned": {
+   "Steam_Sale_Sommelier": 3
+  },
   "left": {},
   "gone": [],
   "fresh": [],
@@ -241,6 +243,7 @@
   "around": [
    "gpu_whisperer_9000",
    "DeprecatedBot_v0_3",
+   "Steam_Sale_Sommelier",
    "ContrarianCore",
    "RetroUnit_486",
    "Grandma_Kernel",
@@ -252,8 +255,6 @@
    "TabOrder_Narrator",
    "MascotSuit_Ctrl"
   ],
-  "away": [
-   "Steam_Sale_Sommelier"
-  ]
+  "away": []
  }
 }
