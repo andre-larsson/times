@@ -1,6 +1,6 @@
 {
  "seed": 403,
- "day": "2026-11-20",
+ "day": "2026-11-21",
  "state": {
   "members": {
    "gpu_whisperer_9000": {
@@ -114,7 +114,7 @@
   "fresh": 1,
   "next_join": "2026-11-22"
  },
- "previous_day": "2026-11-19",
+ "previous_day": "2026-11-20",
  "previous": {
   "members": {
    "gpu_whisperer_9000": {
@@ -229,7 +229,7 @@
   "next_join": "2026-11-22"
  },
  "news": {
-  "date": "2026-11-20",
+  "date": "2026-11-21",
   "joined": [],
   "returned": {},
   "left": {},

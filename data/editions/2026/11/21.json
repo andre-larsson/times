@@ -1,0 +1,4730 @@
+{
+ "edition_id": "2026-11-21",
+ "generated_at": "2026-11-21T06:05:42.497125+00:00",
+ "mode": "full",
+ "reason": "",
+ "llm": {
+  "backend": "api",
+  "usd": 1.252756,
+  "equivalent_usd": 1.252756,
+  "calls": 25,
+  "by_task": {
+   "probe": {
+    "calls": 1,
+    "usd": 2.5e-05,
+    "equivalent_usd": 2.5e-05,
+    "failed": 0
+   },
+   "discover": {
+    "calls": 1,
+    "usd": 0.393356,
+    "equivalent_usd": 0.393356,
+    "failed": 0
+   },
+   "triage": {
+    "calls": 3,
+    "usd": 0.011436,
+    "equivalent_usd": 0.011436,
+    "failed": 0
+   },
+   "editor": {
+    "calls": 1,
+    "usd": 0.110951,
+    "equivalent_usd": 0.110951,
+    "failed": 0
+   },
+   "medium": {
+    "calls": 6,
+    "usd": 0.122247,
+    "equivalent_usd": 0.122247,
+    "failed": 0
+   },
+   "featured": {
+    "calls": 2,
+    "usd": 0.094436,
+    "equivalent_usd": 0.094436,
+    "failed": 0
+   },
+   "briefs": {
+    "calls": 1,
+    "usd": 0.066624,
+    "equivalent_usd": 0.066624,
+    "failed": 0
+   },
+   "gaming": {
+    "calls": 1,
+    "usd": 0.095942,
+    "equivalent_usd": 0.095942,
+    "failed": 0
+   },
+   "quiz": {
+    "calls": 1,
+    "usd": 0.240122,
+    "equivalent_usd": 0.240122,
+    "failed": 0
+   },
+   "quiz_check": {
+    "calls": 1,
+    "usd": 0.076493,
+    "equivalent_usd": 0.076493,
+    "failed": 0
+   },
+   "forum_haiku": {
+    "calls": 5,
+    "usd": 0.00776,
+    "equivalent_usd": 0.00776,
+    "failed": 0
+   },
+   "forum_sonnet": {
+    "calls": 2,
+    "usd": 0.033364,
+    "equivalent_usd": 0.033364,
+    "failed": 0
+   }
+  },
+  "stopped": "",
+  "estimated_usd": 1.252756
+ },
+ "stories": [
+  {
+   "slug": "linux-kvm-flaw-exposed-127-gb-of-host-memory-on-amd-cloud-se",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T12:20:00+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "Linux KVM Flaw CVE-2026-99312 Lets Guest VMs Access Host Memory on AMD Hosts",
+     "url": "https://thehackernews.com/2026/11/new-linux-kvm-flaw-cve-2026-99312-lets.html"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Security",
+   "headline": "Linux KVM flaw exposed 127 GB of host memory on AMD cloud servers",
+   "dek": "CVE-2026-99312 let a guest VM read a DigitalOcean host's RAM through nested virtualization; distribution kernels mostly remain unpatched.",
+   "body": "A flaw in KVM, the hypervisor built into the Linux kernel, let researchers read about 127 GB of a DigitalOcean server's host memory from inside their own virtual machine, The Hacker News reports. On a shared server, that memory can include other customers' VMs. The bug, tracked as CVE-2026-99312, affects only hosts with AMD processors and nested virtualization enabled.\n\nOren Yomtov of Terra Security found the flaw and reported it through the provider's bug bounty program. The provider confirmed the exploit on its own hosts, treated it as critical and live-patched its fleet, telling Droplet customers that no action is needed. KVM maintainers, told on October 21, merged a fix on November 2. Fixed upstream kernels shipped Tuesday: stable 7.3.5 and long-term 6.18.64 and 6.12.118.\n\nIn a Droplet test, the host's kernel version banner came back first, followed by about 127 GB of host RAM mapped read-only. A separate write test on the researchers' own bare-metal AMD server placed 32 chosen bytes into a live host kernel page. Both tests required root inside a VM the attacker controls; network access alone is not enough. Terra traces the bug to a pointer left aimed at freed memory when an INIT reset stops a nested VM. Ironically, it was introduced by a 2022 fix for CVE-2022-3344 and sat in the kernel for nearly four years.\n\nSeverity ratings disagree. The kernel's CVE team scores it 8.8 out of 10. Red Hat's preliminary assessment rates it Moderate at 5.6, treating it as denial-of-service only. Ubuntu rates it High. According to VirtFusion, there are no reports of exploitation outside research, and no exploit code has been published.\n\nOperators running their own AMD KVM hosts face the harder job. Debian lists all releases as vulnerable outside unstable, Ubuntu has no fixed package yet, and Red Hat lists Enterprise Linux 9 and 10 as affected with the fix deferred. Nested virtualization is on by default in the kvm_amd module, per VirtFusion. Until a patched host kernel is installed and the host rebooted, the only protection is setting kvm_amd nested=0, which stops tenants from running VMs inside their VMs. Intel hosts are not affected.",
+   "key_points": [
+    "CVE-2026-99312 hits AMD KVM hosts with nested virtualization enabled",
+    "Researchers read about 127 GB of a DigitalOcean host's RAM",
+    "Fixed in kernels 7.3.5, 6.18.64 and 6.12.118; most distros unpatched",
+    "Severity scores range from 5.6 (Red Hat) to 8.8 (kernel CVE team)"
+   ],
+   "breaking": false,
+   "why_it_matters": "Anyone running AMD KVM hosts should check /sys/module/kvm_amd/parameters/nested and patch or disable it, since updating guest OSes does nothing. Cloud tenants on providers like DigitalOcean are already covered.",
+   "cover": {
+    "style": "type",
+    "figure": "127 GB",
+    "caption": "Host memory read from inside a single guest VM"
+   },
+   "id": "s1",
+   "lead": true
+  },
+  {
+   "slug": "postgresql-19-ships-repack-concurrently-and-planner-advice",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "PostgreSQL Global Development Group",
+     "title": "PostgreSQL 19 released with concurrent REPACK and planner advice",
+     "url": "https://www.postgresql.org/docs/release/19.0/"
+    }
+   ],
+   "tier": "featured",
+   "kicker": "Open Source",
+   "headline": "PostgreSQL 19 ships REPACK CONCURRENTLY and planner advice",
+   "dek": "The new major release reclaims table space without blocking traffic, lets developers steer the planner and turns JIT off by default.",
+   "body": "The PostgreSQL Global Development Group released PostgreSQL 19 on November 19. The headline feature is a new REPACK command that reclaims disk space and reorganizes table contents. Run as REPACK (CONCURRENTLY), it does this without blocking reads or writes to the table, according to the release notes. A new system view, pg_stat_progress_repack, reports progress for REPACK, CLUSTER and VACUUM FULL.\n\nThe second big addition targets query plans. The pg_plan_advice extension lets developers control query planner decisions, and a companion extension, pg_stash_advice, applies that advice automatically based on the query. Planner work goes further: NOT IN clauses can become more efficient anti joins when NULLs are absent, some aggregation can happen before joins, and foreign-key checks are faster.\n\nReplication gets several upgrades. Logical replication can now be enabled without a server restart when wal_level is set to replica. Sequence values can be replicated logically. A new WAIT command supports read-your-writes consistency on standbys, so an application can read back its own writes from a replica. Autovacuum can now process table indexes in parallel and uses a new scoring system to decide which tables to handle first.\n\nThere are also quieter performance changes. The number of I/O worker processes now scales automatically, replacing the io_workers setting with four new variables. COPY FROM uses SIMD instructions for text and CSV input, sorting uses radix sort, and the default TOAST compression moves from pglz to lz4. NOTIFY now only wakes backends that are listening.\n\nUpgraders should read the compatibility list carefully. JIT is now disabled by default because its cost-based activation proved unreliable, so sites running many large analytical queries must turn it back on. The default max_locks_per_transaction rises from 64 to 128, but lock allocation changed, so existing settings must effectively be doubled. RADIUS support is gone, standard_conforming_strings is always on, MD5 password logins trigger a warning, and the MULE_INTERNAL encoding is removed. Parallel vacuum may run slower because workers now share one cost limit.\n\nMoving data from any earlier release requires pg_dumpall, pg_upgrade or logical replication. The project recommends reindexing full text search and pg_trgm indexes after pg_upgrade in some locale setups.",
+   "key_points": [
+    "REPACK (CONCURRENTLY) reclaims space without blocking reads or writes",
+    "pg_plan_advice and pg_stash_advice let users steer the planner",
+    "Logical replication enabled without restart; sequences now replicate",
+    "JIT now off by default; max_locks_per_transaction default doubles to 128"
+   ],
+   "breaking": false,
+   "why_it_matters": "Bloated tables can now be compacted in production without downtime, and replicas can guarantee read-your-writes. Check JIT, lock settings and old dumps before upgrading.",
+   "cover": {
+    "style": "type",
+    "figure": "128",
+    "caption": "New default max_locks_per_transaction, up from 64"
+   },
+   "id": "s2"
+  },
+  {
+   "slug": "mathematician-levent-alpoge-claims-proof-of-generalized-riem",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T14:16:21+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Levent Alpöge claims proof of the Generalized Riemann Hypothesis [pdf]",
+     "url": "https://alpo.ge/remark.pdf"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50574968",
+    "points": 2496,
+    "comments": 1719
+   },
+   "tier": "medium",
+   "kicker": "Research",
+   "headline": "Mathematician Levent Alpöge claims proof of Generalized Riemann Hypothesis",
+   "dek": "The unverified claim, posted as a PDF, drew nearly 2,500 points and over 1,700 comments on Hacker News.",
+   "body": "Mathematician Levent Alpöge has posted a PDF claiming a proof of the Generalized Riemann Hypothesis. The claim has not been verified, and no independent review has been reported. The document appeared on his website, alpo.ge, and was shared on Hacker News on November 20, where it reached 2,496 points and 1,719 comments.\n\nThe Generalized Riemann Hypothesis extends the original Riemann Hypothesis, one of the best-known open problems in mathematics, to a broader family of functions. Many results in number theory are proven on the assumption that it holds.\n\nClaimed proofs of major conjectures are common, and most do not survive scrutiny. Any confirmation would depend on detailed checking by specialists, which typically takes months or longer.",
+   "key_points": [
+    "Levent Alpöge has posted a PDF claiming a proof of the Generalized Riemann Hypothesis.",
+    "The claim is unverified and awaits review by other mathematicians.",
+    "The Hacker News post drew 2,496 points and 1,719 comments."
+   ],
+   "id": "s3"
+  },
+  {
+   "slug": "hackers-turn-ai-pentest-tool-cairn-on-medical-imaging-app-ro",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T17:30:00+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "Hackers use autonomous AI tool Cairn to find zero-day, take over server",
+     "url": "https://www.bleepingcomputer.com/news/security/hackers-use-autonomous-ai-tool-cairn-to-find-zero-day-take-over-server/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Hackers turn AI pentest tool Cairn on medical imaging app, root server",
+   "dek": "Amazon says suspected Chinese-linked attackers told AI agents to \"obtain shell access\" and they found a zero-day in MONAI Label.",
+   "body": "Suspected Chinese-linked hackers used Cairn, an open-source autonomous AI pentesting framework, to find a zero-day in the MONAI Label medical imaging application and take full control of a server, BleepingComputer reports, citing Amazon Threat Intelligence. The attackers instructed the agents to \"obtain shell access\" and left them to find and exploit a path traversal flaw on their own. The agents went from mapping the API to exploitation in 11 minutes, then wrote a Python reverse shell into sitecustomize.py to gain root.\n\nAmazon found the campaign, which ran September 8 to 10 and mainly hit East Asian universities, because the attackers left their Cairn instance exposed without authentication. The agents also failed at times, including a 16-hour attempt on a Redis server. MONAI Label maintainers shipped a fix on November 18.",
+   "key_points": [
+    "Amazon attributes the campaign to a Chinese-nexus actor with moderate confidence; it ran September 8 to 10, 2026.",
+    "Cairn's agents exploited a MONAI Label path traversal zero-day within 11 minutes of mapping its API.",
+    "MONAI Label maintainers released a security update on November 18."
+   ],
+   "id": "s4"
+  },
+  {
+   "slug": "anthropic-mathematician-claims-claude-helped-prove-riemann-h",
+   "section": "ai",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T18:42:11+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Anthropic mathematician says Claude helped him solve a 167-year-old math problem",
+     "url": "https://www.techradar.com/ai-platforms-assistants/claude/claude-helps-anthropic-mathematician-solve-a-167-year-old-math-problem-riemann-hypothesis-potentially-proven-after-the-ai-flew-danced-and-sparkled-in-breakthrough"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Research",
+   "headline": "Anthropic mathematician claims Claude helped prove Riemann hypothesis",
+   "dek": "Levent Alpöge's proof exists only in Lean and still needs independent vetting before any $1 million Millennium Prize payout.",
+   "body": "Anthropic number theorist Levent Alpöge says he has proved the Riemann hypothesis, the 167-year-old problem about the distribution of prime numbers, with help from Claude, TechRadar reports. In a statement on his personal website, Alpöge wrote that the method also resolves the Generalized Riemann Hypothesis. He said Claude \"far outpaced me near the finish line.\"\n\nThe proof is not yet independently verified. It exists only in the Lean proof language, with no human-readable version. According to TechRadar, an early draft ran past 250,000 pages. The Riemann hypothesis is one of the Millennium Prize problems, which carry a $1 million award, but the rules require two years of scrutiny before any payout.\n\nThe claim lands right after Anthropic's $1.7 trillion stock market debut. Alpöge called the timing \"horrible\" but said the cynical view \"is false.\"",
+   "key_points": [
+    "Levent Alpöge of Anthropic claims a Claude-assisted proof of the Riemann hypothesis, per TechRadar.",
+    "The proof is written only in Lean and has not been independently verified.",
+    "A Millennium Prize of $1 million is possible only after two years of scrutiny."
+   ],
+   "id": "s5"
+  },
+  {
+   "slug": "signal-blocks-siri-and-gemini-from-reading-chats-on-phones",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Signal",
+     "title": "Signal blocks Siri and Gemini AI assistants from reading chats",
+     "url": "https://signal.org/blog/protecting-your-privacy/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Privacy",
+   "headline": "Signal blocks Siri and Gemini from reading chats on phones",
+   "dek": "The app now blocks screenshots on iOS 27 and turns on screen security when Android assistants try to read the screen, but macOS stays unprotected.",
+   "body": "Signal is blocking OS-level AI assistants from capturing chats on iOS 27 and Android, the nonprofit said in a blog post. On iOS 27 the app now prevents screenshots. On Android it automatically turns on its \"Screen security\" setting when it detects an assistant trying to read the screen. Users can switch the protection off in settings, though Signal warns that this exposes their contacts' messages too.\n\nThe move extends last year's default screenshot block against Microsoft's Recall on Windows 11. Signal calls agentic features like Gemini Intelligence and Siri's Onscreen Awareness an \"existential threat\" to app-level privacy. It cannot block Siri on macOS, citing a lack of documented APIs, and admits the fix misses other routes such as filesystem access. Signal is asking Apple, Google and Microsoft for a simple opt-out and better documentation.",
+   "key_points": [
+    "Signal blocks screenshots on iOS 27 and enables screen security on Android when an AI assistant tries to read the screen.",
+    "Protection can be disabled in settings; macOS is not covered, and Signal suggests excluding the app in Siri settings.",
+    "Signal wants Apple, Google and Microsoft to offer a documented AI opt-out for developers."
+   ],
+   "id": "s6"
+  },
+  {
+   "slug": "gta-vi-earns-3-79-billion-on-launch-day-rockstar-says",
+   "section": "gaming",
+   "newsworthiness": 4.5,
+   "published_at": "2026-11-20T19:51:48+00:00",
+   "sources": [
+    {
+     "name": "PC Gamer",
+     "title": "Grand Theft Auto 6 earned $3.79 billion on launch day",
+     "url": "https://www.pcgamer.com/games/grand-theft-auto/grand-theft-auto-6-earned-usd3-79-billion-on-launch-day/"
+    },
+    {
+     "name": "MISSIL",
+     "title": "GTA VI har sålts i 32,5 miljoner exemplar på 24 timmar",
+     "url": "https://missil.se/nyheter/gta-vi-har-slagit-varldsrekord-salde-325-miljoner-exemplar-pa-24-timmar/"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Sales",
+   "headline": "GTA VI earns $3.79 billion on launch day, Rockstar says",
+   "dek": "Take-Two cites 32.5 million copies, though PC Gamer and Sweden's MISSIL describe that figure differently: preorders versus first-day sales.",
+   "body": "Grand Theft Auto VI pulled in $3.79 billion in \"day one retail sales,\" Rockstar Games says, calling it \"the biggest entertainment launch in history.\" PC Gamer notes that a single day beats the entire theatrical run of Avengers: Endgame, which earned a little more than $2.9 billion.\n\nThe copy count is less clear-cut. PC Gamer reports that Take-Two said the game sold 32.5 million copies in pre-release, \"a new record across all platforms.\" Swedish outlet MISSIL instead reports 32.5 million copies sold in 24 hours.\n\nAccording to PC Gamer, the one-day haul tops Take-Two's net revenue guidance for the whole quarter by nearly $400 million at the high end. Take-Two CEO Strauss Zelnick had earlier called preorder levels \"unprecedented\" without giving numbers. For scale, GTA V sold a little over 11 million copies on launch day in 2013 and has since passed 230 million.",
+   "key_points": [
+    "Rockstar reports $3.79 billion in day-one retail sales for GTA VI.",
+    "PC Gamer describes 32.5 million copies as pre-release sales; MISSIL reports them as sold in 24 hours.",
+    "The launch-day total exceeds Take-Two's quarterly revenue guidance by nearly $400 million at the high end, per PC Gamer."
+   ],
+   "id": "s7"
+  },
+  {
+   "slug": "attackers-exploit-critical-cisco-expressway-flaw-after-publi",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T10:32:50+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "Hackers Exploit Critical Cisco Expressway Flaw, Breach Four Devices and Reach Internal Network",
+     "url": "https://thehackernews.com/2026/11/hackers-exploit-critical-cisco.html"
+    }
+   ],
+   "tier": "medium",
+   "kicker": "Security",
+   "headline": "Attackers exploit critical Cisco Expressway flaw after public PoC",
+   "dek": "Russian security firm F6 says intruders gained root on four Expressway devices at one organization and moved into its internal network.",
+   "body": "Attackers exploited a critical Cisco Expressway vulnerability shortly after a proof-of-concept exploit went public, breaching four devices at a Russian organization, The Hacker News reports. The flaw, CVE-2026-76466, carries a CVSS score of 9.8 and lets an unauthenticated remote attacker run operating system commands as root. Cisco patched it on October 21, 2026, in release X15.5.20.\n\nRussian security company F6 says the attackers first compromised two internet-facing Expressway X15.5.3 devices, then used one to reach two cluster nodes on the internal network. From there, they used custom Python scripts to scan the network, probe SMB, SQL Server, WinRM and GitLab, and exfiltrate credentials. F6 says the scripts were possibly written with AI help.\n\nThe attack has not been attributed to any known group. Admins should update and check for compromise.",
+   "key_points": [
+    "CVE-2026-76466 (CVSS 9.8) allows unauthenticated root command execution on Cisco Expressway; fixed in X15.5.20 on October 21, 2026.",
+    "F6 says attackers breached two internet-facing devices and two internal cluster nodes, then moved laterally to steal credentials.",
+    "Indicators include \"wombat@127.0.0.1\" in erlang.log and Python scripts staged under /mnt/harddisk."
+   ],
+   "id": "s8"
+  },
+  {
+   "slug": "sec-probe-of-nvidia-examines-potential-accounting-issues-sou",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T20:22:41+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "US SEC's Nvidia probe is examining potential accounting issues – sources",
+     "url": "https://www.marketscreener.com/news/us-sec-s-nvidia-probe-is-examining-potential-accounting-issues-sources-say-ce785ed3dd8ff627"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50581438",
+    "points": 268,
+    "comments": 144
+   },
+   "tier": "brief",
+   "kicker": "Business",
+   "headline": "SEC probe of Nvidia examines potential accounting issues, sources say",
+   "body": "",
+   "id": "s9"
+  },
+  {
+   "slug": "research-language-models-can-rewrite-their-own-weights",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T16:29:06+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Language Models Can Rewrite Their Own Weights",
+     "url": "https://arxiv.org/abs/2611.21885"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50577265",
+    "points": 376,
+    "comments": 116
+   },
+   "tier": "brief",
+   "kicker": "Research",
+   "headline": "Research: language models can rewrite their own weights",
+   "body": "",
+   "id": "s10"
+  },
+  {
+   "slug": "trump-administration-still-blocks-tp-link-s-latest-routers-i",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T12:00:43+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Trump admin still won't let Wi-Fi giant TP-Link sell its latest routers in US",
+     "url": "https://arstechnica.com/tech-policy/2026/11/trump-admin-still-wont-let-wi-fi-giant-tp-link-sell-its-latest-routers-in-us/"
+    },
+    {
+     "name": "PCMag",
+     "title": "The Best Wi-Fi Routers for 2026",
+     "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBJSC03X1VyUFVXTnhGaDh6YThsZWtTbUNxSFM1bVZDc0tMMFdtMkJrUXkwR00wczdjeXdIZmJ3QUdVdEhlbDhUblFHUE52ZnNuM2U4RXp4ZlBmNjlGTTZSNm1jRXNBa2dvcER0SV9GZ1VWMDNDcGVj?oc=5"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Trump administration still blocks TP-Link's latest routers in the US",
+   "body": "Ars Technica says the Wi-Fi maker's struggle shows how the administration wields control over device makers.",
+   "id": "s11"
+  },
+  {
+   "slug": "google-s-new-search-homepage-adds-ai-chat-history-drops-sear",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T21:58:29+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Google rolls out new search homepage with AI chat history and no search button",
+     "url": "https://arstechnica.com/ai/2026/11/googles-latest-search-page-redesign-drops-the-search-button-adds-ai-sidebar/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Products",
+   "headline": "Google's new search homepage adds AI chat history, drops search button",
+   "body": "The redesign makes Google's AI tools even easier to reach from the search page, Ars Technica reports.",
+   "id": "s12"
+  },
+  {
+   "slug": "meta-reconsiders-2030-net-zero-goal-as-ai-data-centers-push",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T21:47:10+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Meta reconsiders 2030 net-zero goal amid record emissions from AI data centers",
+     "url": "https://arstechnica.com/ai/2026/11/meta-reconsiders-2030-net-zero-goal-amid-record-emissions-from-ai-data-centers/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Climate",
+   "headline": "Meta reconsiders 2030 net-zero goal as AI data centers push record emissions",
+   "body": "Meta says it is \"re-evaluating\" its 2030 sustainability goals, according to Ars Technica.",
+   "id": "s13"
+  },
+  {
+   "slug": "researcher-plants-2-million-canaries-in-ai-supply-chain-find",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T20:59:08+00:00",
+   "sources": [
+    {
+     "name": "Ars Technica",
+     "title": "Researcher plants 2m canaries into the AI supply chain. A privacy disaster surfaced.",
+     "url": "https://arstechnica.com/security/2026/11/a-leaky-ai-supply-chain-is-exposing-secret-user-data-at-an-alarming-rate/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Research",
+   "headline": "Researcher plants 2 million canaries in AI supply chain, finds privacy leaks",
+   "body": "The test used prompts containing unique, trackable secrets and showed that data doesn't stay private, Ars Technica reports.",
+   "id": "s14"
+  },
+  {
+   "slug": "bell-canada-says-agentic-hacker-stole-enterprise-customer-da",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T18:51:43+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "Bell Canada says 'agentic' hacker stole enterprise customer data",
+     "url": "https://www.bleepingcomputer.com/news/security/bell-canada-says-agentic-hacker-stole-enterprise-customer-data/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Bell Canada says 'agentic' hacker stole enterprise customer data",
+   "body": "The breach happened on November 17, 2026, and included data from a system used to order and provision telecommunications services, the company says.",
+   "id": "s15"
+  },
+  {
+   "slug": "whatsapp-patches-three-flaws-including-android-bug-possibly",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T17:57:20+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "WhatsApp Patches 3 Security Flaws, Including Android Bug Suspected of Use in Scams",
+     "url": "https://thehackernews.com/2026/11/whatsapp-patches-3-security-flaws.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "WhatsApp patches three flaws, including Android bug possibly used in scams",
+   "body": "Meta-owned WhatsApp suspects the Android vulnerability may have been exploited in connection with scam messages.",
+   "id": "s16"
+  },
+  {
+   "slug": "openai-models-improve-amd-s-next-flagship-gpu-design-by-up-t",
+   "section": "tech",
+   "newsworthiness": 3.5,
+   "published_at": "2026-11-20T10:30:00+00:00",
+   "sources": [
+    {
+     "name": "Tom's Hardware",
+     "title": "OpenAI's AI models boost AMD's upcoming flagship GPU design by up to 14% in PPA",
+     "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/openai-helped-amd-improve-its-upcoming-flagship-gpu-design-by-14-percent-ppa-gpt-models-also-helping-lisa-sus-outfit-boost-its-new-cpus"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "OpenAI models improve AMD's next flagship GPU design by up to 14% in PPA",
+   "body": "Tom's Hardware reports that GPT models are also helping AMD with its new CPUs.",
+   "id": "s17"
+  },
+  {
+   "slug": "sonicwall-ends-patches-for-gen-6-firewalls-even-for-critical",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T10:38:22+00:00",
+   "sources": [
+    {
+     "name": "The Hacker News",
+     "title": "SonicWall Warns Gen 6 Firewalls Won't Get Security Patches, Even for Critical Flaws",
+     "url": "https://thehackernews.com/2026/11/sonicwall-warns-gen-6-firewalls-wont.html"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "SonicWall ends patches for Gen 6 firewalls, even for critical flaws",
+   "body": "The company urges customers to replace the devices immediately and pull them off the internet edge, citing risks from AI-assisted attacks.",
+   "id": "s18"
+  },
+  {
+   "slug": "grapheneos-accuses-google-of-pressuring-oems-to-drop-bootloa",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Zeli (Hacker News digest)",
+     "title": "GrapheneOS accuses Google of pressuring phone makers to drop bootloader unlocking",
+     "url": "https://zeli.app/story/50570479"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Android",
+   "headline": "GrapheneOS accuses Google of pressuring OEMs to drop bootloader unlocking",
+   "body": "GrapheneOS says Google is calling Android makers to ask whether they work with the project and using GMS licensing terms to threaten them.",
+   "id": "s19"
+  },
+  {
+   "slug": "microsoft-starts-auto-installing-windows-11-26h2-on-unmanage",
+   "section": "tech",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T12:14:28+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "Microsoft now automatically installs Windows 11 26H2 on unmanaged devices",
+     "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-now-automatically-installs-windows-11-26h2-on-personal-and-unmanaged-pcs/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Windows",
+   "headline": "Microsoft starts auto-installing Windows 11 26H2 on unmanaged PCs",
+   "body": "The automatic upgrades began this week and target eligible devices not managed by an IT department, BleepingComputer reports.",
+   "id": "s20"
+  },
+  {
+   "slug": "major-us-banks-treat-all-ai-agent-actions-as-user-authorized",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T15:46:20+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "Major US banks say all AI agent actions are user authorized, even mistakes",
+     "url": "https://www.techradar.com/ai-platforms-assistants/major-us-banks-crack-down-on-ai-agent-use-by-customers-telling-them-theyre-on-their-own-if-it-gets-hacked-or-makes-a-mistake"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Policy",
+   "headline": "Major US banks treat all AI agent actions as user authorized, even mistakes",
+   "body": "According to TechRadar, if a third-party AI agent gets something wrong, banks will hold the customer responsible.",
+   "id": "s21"
+  },
+  {
+   "slug": "architect-labs-says-ai-agents-designed-its-frostbite-cpu",
+   "section": "ai",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-20T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Zeli (Hacker News digest)",
+     "title": "Architect Labs' AI agents design Frostbite CPU with claimed 4.59x perf-per-watt",
+     "url": "https://zeli.app/story/50572503"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Chips",
+   "headline": "Architect Labs says AI agents designed its Frostbite CPU",
+   "body": "The general-purpose chip uses a new instruction set. Agents iterated on the compiler, ISA, microarchitecture, RTL and verification; the company claims 4.59 times better performance per watt.",
+   "id": "s22"
+  },
+  {
+   "slug": "moore-threads-teases-lushan-desktop-gpu-with-record-consumer",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-20T12:00:00+00:00",
+   "sources": [
+    {
+     "name": "Wccftech",
+     "title": "Moore Threads teases 'Lushan' desktop GPU with record consumer VRAM",
+     "url": "https://wccftech.com/moore-threads-teases-lushan-desktop-gpu-largest-vram-capacity-consumer-history/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Hardware",
+   "headline": "Moore Threads teases 'Lushan' desktop GPU with record consumer VRAM",
+   "body": "The Chinese company pitches the card at gaming and running local LLMs, claiming the largest VRAM capacity ever on a consumer card, Wccftech reports.",
+   "id": "s23"
+  },
+  {
+   "slug": "backblaze-now-explicitly-states-it-sells-user-data-for-adver",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-21T03:23:16+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "BlackBlaze now explicitly states selling your data for advertisement",
+     "url": "https://www.backblaze.com/company/policy/privacy"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50585593",
+    "points": 104,
+    "comments": 26
+   },
+   "tier": "brief",
+   "kicker": "Privacy",
+   "headline": "Backblaze now explicitly states it sells user data for advertising",
+   "body": "",
+   "id": "s24"
+  },
+  {
+   "slug": "essay-developers-were-promoted-to-architects-without-being-t",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-20T18:17:51+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "We promoted developers into architects without informing them",
+     "url": "https://manidoraisamy.com/developer-to-architect.html"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50579331",
+    "points": 366,
+    "comments": 213
+   },
+   "tier": "brief",
+   "kicker": "Dev",
+   "headline": "Essay: developers were promoted to architects without being told",
+   "body": "",
+   "id": "s25"
+  },
+  {
+   "slug": "vendor-breach-exposes-chase-visa-and-mastercard-customer-inf",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-20T15:58:06+00:00",
+   "sources": [
+    {
+     "name": "BleepingComputer",
+     "title": "Vendor data breach exposes Chase, Visa, Mastercard customer info",
+     "url": "https://www.bleepingcomputer.com/news/security/vendor-data-breach-exposes-chase-visa-mastercard-customer-info/"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Security",
+   "headline": "Vendor breach exposes Chase, Visa and Mastercard customer info",
+   "body": "J.P. Morgan Chase says a cyberattack at a third-party service provider exposed customers' personal information and marketing data.",
+   "id": "s26"
+  },
+  {
+   "slug": "winedroid-runs-android-apps-without-android-in-a-wasm-demo",
+   "section": "tech",
+   "newsworthiness": 2.5,
+   "published_at": "2026-11-20T19:30:16+00:00",
+   "sources": [
+    {
+     "name": "Hacker News",
+     "title": "Winedroid – run Android apps without Android (WASM demo)",
+     "url": "https://winedroid.soham.sh/demo/"
+    }
+   ],
+   "hn": {
+    "url": "https://news.ycombinator.com/item?id=50580536",
+    "points": 122,
+    "comments": 36
+   },
+   "tier": "brief",
+   "kicker": "Dev",
+   "headline": "Winedroid runs Android apps without Android in a WASM demo",
+   "body": "",
+   "id": "s27"
+  },
+  {
+   "slug": "ai-smart-glasses-falsely-said-an-ambulance-was-coming-in-an",
+   "section": "ai",
+   "newsworthiness": 3.0,
+   "published_at": "2026-11-20T18:04:37+00:00",
+   "sources": [
+    {
+     "name": "TechRadar",
+     "title": "AI smart glasses falsely claimed an ambulance was coming in an emergency",
+     "url": "https://www.techradar.com/ai-platforms-assistants/ai-smart-glasses-falsely-claimed-an-ambulance-was-on-its-way-during-a-medical-emergency-and-thats-just-one-reason-a-privacy-watchdog-says-you-shouldnt-buy-them"
+    }
+   ],
+   "tier": "brief",
+   "kicker": "Safety",
+   "headline": "AI smart glasses falsely said an ambulance was coming in an emergency",
+   "body": "A Dutch security watchdog raised the alarm after one pair of glasses wrongly claimed help was on the way, TechRadar reports.",
+   "id": "s28"
+  }
+ ],
+ "links": [],
+ "hn_top": [
+  {
+   "rank": 1,
+   "title": "Levent Alpöge claims proof of the Generalized Riemann Hypothesis [pdf]",
+   "url": "https://alpo.ge/remark.pdf",
+   "points": 2496,
+   "comments": 1719,
+   "comments_url": "https://news.ycombinator.com/item?id=50574968"
+  },
+  {
+   "rank": 2,
+   "title": "Hurried Announcement: Alessandro Masullo GRH",
+   "url": "https://math216.wordpress.com/2026/11/20/hurried-announcement-alessandro-masullo-grh/",
+   "points": 1820,
+   "comments": 833,
+   "comments_url": "https://news.ycombinator.com/item?id=50579568"
+  },
+  {
+   "rank": 3,
+   "title": "Inkling 2 Mini",
+   "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
+   "points": 861,
+   "comments": 157,
+   "comments_url": "https://news.ycombinator.com/item?id=50581260"
+  },
+  {
+   "rank": 4,
+   "title": "Unforced Navier-Stokes Singularity and the Generalized Riemann Hypothesis",
+   "url": "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/",
+   "points": 395,
+   "comments": 159,
+   "comments_url": "https://news.ycombinator.com/item?id=50578358"
+  },
+  {
+   "rank": 5,
+   "title": "Language Models Can Rewrite Their Own Weights",
+   "url": "https://arxiv.org/abs/2611.21885",
+   "points": 376,
+   "comments": 116,
+   "comments_url": "https://news.ycombinator.com/item?id=50577265"
+  },
+  {
+   "rank": 6,
+   "title": "We promoted developers into architects without informing them",
+   "url": "https://manidoraisamy.com/developer-to-architect.html",
+   "points": 366,
+   "comments": 213,
+   "comments_url": "https://news.ycombinator.com/item?id=50579331"
+  },
+  {
+   "rank": 7,
+   "title": "Finite-time blow-up for the Navier–Stokes equations",
+   "url": "https://github.com/tristanbuckmaster/navier-stokes/",
+   "points": 272,
+   "comments": 86,
+   "comments_url": "https://news.ycombinator.com/item?id=50576232"
+  },
+  {
+   "rank": 8,
+   "title": "US SEC's Nvidia probe is examining potential accounting issues – sources",
+   "url": "https://www.marketscreener.com/news/us-sec-s-nvidia-probe-is-examining-potential-accounting-issues-sources-say-ce785ed3dd8ff627",
+   "points": 268,
+   "comments": 144,
+   "comments_url": "https://news.ycombinator.com/item?id=50581438"
+  },
+  {
+   "rank": 9,
+   "title": "Show HN: I made an audio-to-MIDI model 60x more efficient",
+   "url": "https://kobi.music/research/dettato",
+   "points": 265,
+   "comments": 56,
+   "comments_url": "https://news.ycombinator.com/item?id=50526023"
+  },
+  {
+   "rank": 10,
+   "title": "The stochastic parrots have apparently proved the Riemann Hypothesis",
+   "url": "https://scottaaronson.blog/?p=10344",
+   "points": 260,
+   "comments": 231,
+   "comments_url": "https://news.ycombinator.com/item?id=50581084"
+  }
+ ],
+ "gaming": {
+  "new_on_pc": [
+   {
+    "title": "just volleyball",
+    "appid": 5037200,
+    "release_date": "2026-11-16",
+    "steam_rating": "Overwhelmingly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5037200/cd1b5a290d15e7379b31dcacc12f1e5b25d37577/header.jpg?t=1794852941",
+    "store_url": "https://store.steampowered.com/app/5037200/",
+    "price": 4.82,
+    "currency": "EUR",
+    "blurb": "Online and offline volleyball with intuitive controls, 1v1 to 6v6 matches, and an Overwhelmingly Positive rating from 2,500+ players.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/just%20volleyball/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Blacksmith Master",
+    "appid": 2292800,
+    "release_date": "2026-11-19",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2292800/a4e8efa3d8a738c3011f6b50dd57475a7ba2c782/header.jpg?t=1795111301",
+    "store_url": "https://store.steampowered.com/app/2292800/",
+    "price": 9.99,
+    "currency": "EUR",
+    "blurb": "Medieval smithy management sim, from mining ore to selling blades; Very Positive across more than 2,600 Steam reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Blacksmith%20Master/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Here Comes the Horde",
+    "appid": 5066010,
+    "release_date": "2026-11-16",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5066010/660ba25cbec114093ff8245eeafc64e779518a05/header.jpg?t=1795022963",
+    "store_url": "https://store.steampowered.com/app/5066010/",
+    "price": 4.89,
+    "currency": "EUR",
+    "blurb": "Incremental auto-battler where thousands of troops defend your castle from the undead; Very Positive from 936 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Here%20Comes%20the%20Horde/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Melvor Idle 2: A RuneScape Adventure",
+    "appid": 3218350,
+    "release_date": "2026-11-17",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3218350/21b3f6881a12eef86b7c17b21640b396f3510f92/header.jpg?t=1794955439",
+    "store_url": "https://store.steampowered.com/app/3218350/",
+    "price": 13.04,
+    "currency": "EUR",
+    "blurb": "Early access sequel to the idle hit, now a RuneScape-branded adventure with skills and quests; Very Positive so far.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/Melvor%20Idle%202%3A%20A%20RuneScape%20Adventure/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Dungeonbound",
+    "appid": 5200620,
+    "release_date": "2026-11-16",
+    "steam_rating": "Mostly Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5200620/b3a32d9086038acf42c9457c2bc062f93d90ea3e/header.jpg?t=1794984507",
+    "store_url": "https://store.steampowered.com/app/5200620/",
+    "price": 10.34,
+    "currency": "EUR",
+    "blurb": "Roguelike autobattler about inventory management and forging items, pitting your build against other players'; Mostly Positive.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Dungeonbound/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Motocross The Game",
+    "appid": 3188660,
+    "release_date": "2026-11-17",
+    "steam_rating": "Mixed",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3188660/header.jpg?t=1794891418",
+    "store_url": "https://store.steampowered.com/app/3188660/",
+    "price": 39.9,
+    "currency": "EUR",
+    "blurb": "Early access motocross sim with separate bike and rider physics and online racing; players are Mixed so far.",
+    "early_access": true,
+    "metacritic_search": "https://www.metacritic.com/search/Motocross%20The%20Game/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Trees Hate You",
+    "appid": 4171850,
+    "release_date": "2026-11-16",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4171850/4550c09c2fa41435b7b695f31460bea297d4ce15/header.jpg?t=1794837394",
+    "store_url": "https://store.steampowered.com/app/4171850/",
+    "price": 6.77,
+    "currency": "EUR",
+    "blurb": "Comic hike through a forest of hostile, trickster trees, axe sold separately; Very Positive from 280 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Trees%20Hate%20You/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "KORRIDOR",
+    "appid": 3739580,
+    "release_date": "2026-11-18",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3739580/6d6fea5275ce8f5455c72b50aa44581147329ec5/header.jpg?t=1795097898",
+    "store_url": "https://store.steampowered.com/app/3739580/",
+    "price": 4.67,
+    "currency": "EUR",
+    "blurb": "Unforgiving demon-slaying gates shooter with build crafting, bosses and a heavy metal soundtrack; Very Positive early reception.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/KORRIDOR/?category=13",
+    "review_ids": []
+   },
+   {
+    "title": "Rock Band Simulator",
+    "appid": 4697880,
+    "release_date": "2026-11-20",
+    "steam_rating": "Very Positive",
+    "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4697880/f877bbbcf9f2a65170626d39dce5740814cc3053/header.jpg?t=1795196694",
+    "store_url": "https://store.steampowered.com/app/4697880/",
+    "price": 11.99,
+    "currency": "EUR",
+    "blurb": "First-person rock band life sim mixing rhythm gigs, shady jobs, gambling and fights; Very Positive from 156 reviews.",
+    "early_access": false,
+    "metacritic_search": "https://www.metacritic.com/search/Rock%20Band%20Simulator/?category=13",
+    "review_ids": []
+   }
+  ],
+  "reviews": [
+   {
+    "id": "r-pc-gamer-football-manager-27",
+    "game": "Football Manager 27",
+    "outlet": "PC Gamer",
+    "score": "79%",
+    "verdict": "PC Gamer says the series is back on form, though a few wayward touches keep it from full marks.",
+    "url": "https://www.pcgamer.com/games/sports/football-manager-27-review/",
+    "published_at": "2026-11-19T16:48:49+00:00",
+    "critics": {
+     "metascore": {
+      "score": 80,
+      "count": 28,
+      "url": "https://metacritic.com/game/football-manager-27/critic-reviews/?platform=pc"
+     },
+     "opencritic": {
+      "score": 82,
+      "count": 27,
+      "url": "https://opencritic.com/game/21676/football-manager-27"
+     }
+    }
+   },
+   {
+    "id": "r-eurogamer-grand-theft-auto-6",
+    "game": "Grand Theft Auto 6",
+    "outlet": "Eurogamer",
+    "score": "5/5",
+    "verdict": "Eurogamer gives Rockstar's open-world return its top score of five stars.",
+    "url": "https://www.eurogamer.net/grand-theft-auto-6-review",
+    "published_at": "2026-11-18T11:00:00+00:00"
+   },
+   {
+    "id": "r-game-informe-grand-theft-auto-vi",
+    "game": "Grand Theft Auto VI",
+    "outlet": "Game Informer",
+    "score": "10/10",
+    "verdict": "Game Informer awards a perfect score, calling it an outrageous fortune of superlatives after reviewing on PS5.",
+    "url": "https://gameinformer.com/review/grand-theft-auto-vi/outrageous-fortune",
+    "published_at": "2026-11-18T11:00:00+00:00"
+   },
+   {
+    "id": "r-pc-gamer-ashes-of-the-singularity-2",
+    "game": "Ashes of the Singularity 2",
+    "outlet": "PC Gamer",
+    "score": "40%",
+    "verdict": "PC Gamer finds gigantic battles and neat ideas undone by a rubbish campaign and obtrusive generative AI.",
+    "url": "https://www.pcgamer.com/games/rts/ashes-of-the-singularity-2-review/",
+    "published_at": "2026-11-16T14:01:32+00:00"
+   },
+   {
+    "id": "r-missil-next-of-kin-epihaphy",
+    "game": "Next of Kin: Epihaphy",
+    "outlet": "MISSIL",
+    "score": "7/10",
+    "verdict": "MISSIL's Olof plays detective in an all-Swedish murder mystery and lands closer to Bo Widerberg-good than Peter Haber-bad.",
+    "url": "https://missil.se/spelrecensioner/next-of-kin-epihaphy/",
+    "published_at": "2026-11-15T21:32:49+00:00"
+   },
+   {
+    "id": "r-i-dream-of-i-derelikt",
+    "game": "Derelikt",
+    "outlet": "I Dream of Indie Games",
+    "score": "",
+    "verdict": "I Dream of Indie Games says this creepy retro sci-fi shooter's \"Dead Space at home\" vibe never does it favors.",
+    "url": "https://www.idreamofindie.com/post/derelikt-review-trapped-in-a-retro-sci-fi-fps-nightmare",
+    "published_at": "2026-11-13T17:11:19+00:00",
+    "critics": {
+     "metascore": {
+      "score": 78,
+      "count": 7,
+      "url": "https://metacritic.com/game/derelikt/critic-reviews/?platform=pc"
+     }
+    }
+   }
+  ],
+  "console_spotlight": [
+   {
+    "game": "Grand Theft Auto VI",
+    "platforms": [
+     "ps5",
+     "xbox"
+    ],
+    "headline": "GTA VI earns $3.79 billion on launch day",
+    "summary": "PC Gamer reports Rockstar's launch-day haul of $3.79 billion, citing roughly 32.5 million copies in preorders. MISSIL and PCMag instead put 32.5 million as copies sold in the first 24 hours.",
+    "sources": [
+     {
+      "name": "PC Gamer",
+      "url": "https://www.pcgamer.com/games/grand-theft-auto/grand-theft-auto-6-earned-usd3-79-billion-on-launch-day/"
+     },
+     {
+      "name": "MISSIL",
+      "url": "https://missil.se/nyheter/gta-vi-har-slagit-varldsrekord-salde-325-miljoner-exemplar-pa-24-timmar/"
+     },
+     {
+      "name": "PCMag",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNR2ptSFVIMEpuaGxFVUxYNlk0UXJ3alhTZkVWbDB5V2d5TC1ZbU8tV0xDRnpUY2p3YkpvQUU1TlJmbE9Xb0VsSmpKbGVOWXczU0FEN0N6c0xzQVNhNExPeTc5SE5Sb3VuUVppbFpFdnZfSjlnS0pRVWpwZ203aF8yTGF5VTd0bGpvZ3FuRnJuYzE2WFpRV0xZTVA2VWpWd0k?oc=5"
+     }
+    ]
+   }
+  ],
+  "coming_soon": [
+   {
+    "game": "Warhammer 40,000: Dawn of War IV",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2026-12-03",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2272360/"
+   },
+   {
+    "game": "Witchbrook",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/1846700/"
+   },
+   {
+    "game": "Warhammer 40,000: Dark Heresy",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-01-28",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3710600/"
+   },
+   {
+    "game": "METRO 2039",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-04",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2590240/"
+   },
+   {
+    "game": "Tomb Raider: Legacy of Atlantis",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-12",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/3558670/"
+   },
+   {
+    "game": "Persona 4 Revival",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-18",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2963950/"
+   },
+   {
+    "game": "Fable",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-02-23",
+    "date_precision": "day",
+    "url": "https://store.steampowered.com/app/2769570/"
+   },
+   {
+    "game": "Family Time",
+    "platforms": [
+     "pc"
+    ],
+    "date": "2027-03-31",
+    "date_precision": "quarter",
+    "url": "https://store.steampowered.com/app/5072600/"
+   }
+  ],
+  "watch": [
+   {
+    "channel": "gameranx",
+    "title": "GTA6 LEAKER GUILTY, UBISOFT IN BIG TROUBLE? & MORE",
+    "url": "https://www.youtube.com/watch?v=Xqd3KSBYvn8",
+    "thumbnail": "https://i1.ytimg.com/vi/Xqd3KSBYvn8/hqdefault.jpg",
+    "blurb": "Gameranx rounds up the week: a GTA 6 leaker found guilty, Ubisoft's troubles and more.",
+    "published_at": "2026-11-20T22:27:41+00:00"
+   },
+   {
+    "channel": "gameranx",
+    "title": "GTA 6: 20 MISTAKES YOU SHOULDN'T MAKE",
+    "url": "https://www.youtube.com/watch?v=rDJVx4dw848",
+    "thumbnail": "https://i3.ytimg.com/vi/rDJVx4dw848/hqdefault.jpg",
+    "blurb": "Twenty common mistakes to avoid in Leonida, with tips for new Grand Theft Auto VI players.",
+    "published_at": "2026-11-20T17:05:07+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "I Found 25 NEW Indie Games You Should Grab This Week!",
+    "url": "https://www.youtube.com/watch?v=zIGG8Ibhtg4",
+    "thumbnail": "https://i3.ytimg.com/vi/zIGG8Ibhtg4/hqdefault.jpg",
+    "blurb": "Twenty-five new indie and AA releases this week, from 2D action to brutal roguelikes.",
+    "published_at": "2026-11-15T13:30:35+00:00"
+   },
+   {
+    "channel": "I Dream of Indie Games",
+    "title": "Derelikt Review - Trapped in a Retro Sci-Fi FPS Nightmare",
+    "url": "https://www.youtube.com/watch?v=DQaBWOtQbFo",
+    "thumbnail": "https://i1.ytimg.com/vi/DQaBWOtQbFo/hqdefault.jpg",
+    "blurb": "Does PS1-styled shooter Derelikt deliver modern gunplay or arrive dead? A full video review.",
+    "published_at": "2026-11-13T15:00:31+00:00"
+   }
+  ],
+  "news": [
+   {
+    "headline": "Ubisoft cuts 166 developers while praising Black Flag Resynced success",
+    "summary": "MISSIL reports Ubisoft is letting 166 developers go even as it calls Assassin's Creed Black Flag Resynced one of the industry's most successful action-adventure remakes.",
+    "url": "https://missil.se/nyheter/ubisoft-hyllar-black-flag-resynced-succen-166-utvecklare-far-lamna/",
+    "source": "MISSIL"
+   },
+   {
+    "headline": "Ubisoft unveils Motherbrain, a new studio focused on AI for gameplay",
+    "summary": "Rock Paper Shotgun reports the studio, described as \"focused on AI for gameplay innovation,\" arrives amid a year of layoffs at the publisher.",
+    "url": "https://www.rockpapershotgun.com/amid-a-year-of-layoffs-ubisoft-yank-the-cover-off-motherbrain-their-new-studio-focused-on-ai-for-gameplay-innovation",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Valve pauses 2TB Steam Machine orders over supply constraints",
+    "summary": "The 512GB model is now free of its waitlist, Rock Paper Shotgun reports, as hardware shortages tied to the AI industry hit the SteamOS PC.",
+    "url": "https://www.rockpapershotgun.com/valve-are-pausing-steam-machine-2tb-orders-over-supply-constraints-though-the-512gb-model-is-free-of-its-waitlist",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Valve warns it may have to raise Steam Machine prices",
+    "summary": "Ars Technica reports Valve says it does not yet know how many units it can make, or at what price.",
+    "url": "https://arstechnica.com/gaming/2026/11/valve-says-it-might-have-to-raise-the-price-of-supply-limited-steam-machines/",
+    "source": "Ars Technica"
+   },
+   {
+    "headline": "Arika director Akira Kurabayashi, Street Fighter EX developer, dies",
+    "summary": "Arika president Akira Nishitani announced that Kurabayashi, whose work spans Street Fighter EX, Tetris 99 and Fighting EX Layer, died of heart failure.",
+    "url": "https://www.rockpapershotgun.com/akira-kurabayashi-company-director-at-arika-and-developer-on-street-fighter-ex-tetris-99-fighting-ex-layer-and-more-has-sadly-passed-away-due-to-heart-failure",
+    "source": "Rock Paper Shotgun"
+   },
+   {
+    "headline": "Leaker posts what it claims is a near-complete GTA 6 Xbox build",
+    "summary": "PC Gamer reports the leaked file is apparently around 200GB; the claim that it is a near-complete build is unverified.",
+    "url": "https://www.pcgamer.com/games/grand-theft-auto/cyberleek-drops-what-they-claim-is-a-near-complete-gta-6-xbox-build-online/",
+    "source": "PC Gamer"
+   }
+  ]
+ },
+ "deals": {
+  "checked_at": "2026-11-20T06:05:42.640355+00:00",
+  "featured": [
+   {
+    "game": "FINAL FANTASY VII REMAKE INTERGRADE",
+    "shop": "Steam",
+    "price": 7.19,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 82,
+    "lowest_ever": true,
+    "expires": "2026-12-02T19:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 86,
+    "url": "https://store.steampowered.com/app/1462040/",
+    "pick": "popular",
+    "tags": [
+     "RPG",
+     "Action RPG",
+     "JRPG",
+     "Singleplayer",
+     "Action-Adventure"
+    ],
+    "headline": "Final Fantasy VII Remake Intergrade drops to €7.19: Strong Buy",
+    "body": "FINAL FANTASY VII REMAKE INTERGRADE, a single-player action RPG tagged as a JRPG, is Very Positive on Steam and holds a Metascore of 86. Steam has it at €7.19, down 82 percent from the regular €39.99. That is the lowest price ever recorded for the game.\n\nThe deal runs until December 2 at 19:00 CET, which leaves almost two weeks. A deep cut, a record low and strong scores add up to a Strong Buy. It suits players who want a big, story-focused RPG and have waited for the price to fall.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Gravity Circuit",
+    "shop": "IndieGala Store",
+    "price": 4.24,
+    "regular": 16.99,
+    "currency": "EUR",
+    "cut": 75,
+    "lowest_ever": true,
+    "expires": "2026-11-24T00:59:00+01:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 89,
+    "url": "https://isthereanydeal.com/game/gravity-circuit/",
+    "pick": "hidden",
+    "tags": [
+     "Action",
+     "Platformer",
+     "Indie",
+     "Pixel Graphics",
+     "2D"
+    ],
+    "headline": "Gravity Circuit hits a record low of €4.24: Strong Buy",
+    "body": "Gravity Circuit is a lesser-known 2D action platformer with pixel graphics, and its ratings are among the best on today's list: Overwhelmingly Positive on Steam and a Metascore of 89. IndieGala Store sells it for €4.24, 75 percent off the regular €16.99. That is the lowest price ever recorded.\n\nThe deal ends on November 24 at 00:59 CET. Top-tier scores at a record-low price earn it a Strong Buy. It suits fans of fast indie action platformers looking for a highly rated pick beyond the big names.",
+    "verdict": "strong_buy"
+   }
+  ],
+  "more": [
+   {
+    "game": "Ghost of Tsushima DIRECTOR'S CUT",
+    "shop": "GamesPlanet US",
+    "price": 25.46,
+    "regular": 54.64,
+    "currency": "EUR",
+    "cut": 53,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 89,
+    "url": "https://isthereanydeal.com/game/ghost-of-tsushima-directors-cut/",
+    "pick": "popular",
+    "tags": [
+     "Open World",
+     "Action",
+     "Story Rich",
+     "Singleplayer",
+     "Adventure"
+    ],
+    "advice": "Metascore 89 and a record low at €25.46, but a 53 percent cut is modest: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Legacy of Kain™ Soul Reaver 1&2 Remastered",
+    "shop": "WinGameStore",
+    "price": 6.82,
+    "regular": 27.31,
+    "currency": "EUR",
+    "cut": 75,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 76,
+    "url": "https://isthereanydeal.com/game/legacy-of-kain-soul-reaver-1-and-2-remastered/",
+    "pick": "hidden",
+    "tags": [
+     "Action",
+     "Adventure",
+     "Dark Fantasy",
+     "Third Person",
+     "Action-Adventure"
+    ],
+    "advice": "Record low of €6.82, 75 percent off; Very Positive, Metascore 76. A solid Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "SONIC X SHADOW GENERATIONS",
+    "shop": "GamesPlanet US",
+    "price": 10.92,
+    "regular": 45.53,
+    "currency": "EUR",
+    "cut": 76,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/sonic-x-shadow-generations/",
+    "pick": "genre",
+    "genre": "Horror",
+    "tags": [
+     "Action",
+     "3D Platformer",
+     "Fast-Paced",
+     "Great Soundtrack",
+     "Platformer"
+    ],
+    "advice": "Overwhelmingly Positive 3D platformer at a record-low €10.92, 76 percent off: Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Red Dead Redemption",
+    "shop": "Microsoft Store",
+    "price": 19.99,
+    "regular": 49.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/red-dead-redemption/",
+    "pick": "popular",
+    "tags": [
+     "Open World",
+     "Western",
+     "Story Rich",
+     "Singleplayer",
+     "Action"
+    ],
+    "advice": "Record low of €19.99, 60 percent off, Very Positive on Steam: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "SILENT HILL 2",
+    "shop": "Epic Game Store",
+    "price": 19.59,
+    "regular": 69.99,
+    "currency": "EUR",
+    "cut": 72,
+    "lowest_ever": true,
+    "expires": "2026-11-24T17:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 87,
+    "url": "https://isthereanydeal.com/game/silent-hill-2/",
+    "pick": "popular",
+    "tags": [
+     "Psychological Horror",
+     "Horror",
+     "Story Rich",
+     "Survival Horror",
+     "Atmospheric"
+    ],
+    "advice": "Metascore 87 psychological horror at a record-low €19.59, 72 percent off, until November 24: Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Wanderstop",
+    "shop": "Fanatical",
+    "price": 8.96,
+    "regular": 22.99,
+    "currency": "EUR",
+    "cut": 61,
+    "lowest_ever": true,
+    "expires": "2026-11-30T00:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 80,
+    "url": "https://isthereanydeal.com/game/wanderstop/",
+    "pick": "hidden",
+    "tags": [
+     "Adventure",
+     "Simulation",
+     "Cozy",
+     "Farming Sim",
+     "Life Sim"
+    ],
+    "advice": "Lesser-known cozy life sim, Metascore 80, record-low €8.96 through November 30: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Grounded",
+    "shop": "Microsoft Store",
+    "price": 15.99,
+    "regular": 39.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 83,
+    "url": "https://isthereanydeal.com/game/grounded/",
+    "pick": "popular",
+    "tags": [
+     "Survival",
+     "Multiplayer",
+     "Co-op",
+     "Open World Survival Craft",
+     "Base Building"
+    ],
+    "advice": "Co-op survival game, Metascore 83, record-low €15.99 at 60 percent off: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Risk of Rain",
+    "shop": "Fanatical",
+    "price": 1.64,
+    "regular": 9.99,
+    "currency": "EUR",
+    "cut": 84,
+    "lowest_ever": true,
+    "expires": "2026-12-01T00:59:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": 77,
+    "url": "https://isthereanydeal.com/game/risk-of-rain/",
+    "pick": "popular",
+    "tags": [
+     "Action Roguelike",
+     "Roguelike",
+     "Indie",
+     "Platformer",
+     "Action"
+    ],
+    "advice": "Action roguelike at a record-low €1.64, 84 percent off, until December 1: Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Orwell: Keeping an Eye On You",
+    "shop": "GOG",
+    "price": 1.79,
+    "regular": 9.09,
+    "currency": "EUR",
+    "cut": 80,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 77,
+    "url": "https://isthereanydeal.com/game/orwell-keeping-an-eye-on-you/",
+    "pick": "genre",
+    "genre": "Point & Click",
+    "tags": [
+     "Espionage",
+     "Investigation",
+     "Simulation",
+     "Choices Matter",
+     "Political Sim"
+    ],
+    "advice": "For point-and-click fans: Metascore 77, record-low €1.79 at 80 percent off: Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Pentiment",
+    "shop": "Microsoft Store",
+    "price": 4.99,
+    "regular": 19.99,
+    "currency": "EUR",
+    "cut": 75,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 88,
+    "url": "https://isthereanydeal.com/game/pentiment/",
+    "pick": "popular",
+    "tags": [
+     "Historical",
+     "Story Rich",
+     "Investigation",
+     "Adventure",
+     "Interactive Fiction"
+    ],
+    "advice": "Overwhelmingly Positive, Metascore 88, record-low €4.99 at 75 percent off: Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Metro Exodus",
+    "shop": "GOG",
+    "price": 2.99,
+    "regular": 29.99,
+    "currency": "EUR",
+    "cut": 90,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 82,
+    "url": "https://isthereanydeal.com/game/metro-exodus/",
+    "pick": "popular",
+    "tags": [
+     "Post-apocalyptic",
+     "FPS",
+     "Singleplayer",
+     "Story Rich",
+     "Open World"
+    ],
+    "advice": "A 90 percent cut to a record-low €2.99 on a Metascore 82 FPS: Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Brigador: Up-Armored Edition",
+    "shop": "GOG",
+    "price": 5.19,
+    "regular": 19.99,
+    "currency": "EUR",
+    "cut": 74,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://isthereanydeal.com/game/brigador-up-armored-edition/",
+    "pick": "hidden",
+    "tags": [
+     "Action",
+     "Twin Stick Shooter",
+     "Mechs",
+     "Top-Down Shooter",
+     "Difficult"
+    ],
+    "advice": "Lesser-known, difficult mech shooter, Very Positive, record-low €5.19 at 74 percent off: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Inkulinati",
+    "shop": "MacGameStore",
+    "price": 4.8,
+    "regular": 22.76,
+    "currency": "EUR",
+    "cut": 79,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 78,
+    "url": "https://isthereanydeal.com/game/inkulinati/",
+    "pick": "genre",
+    "genre": "Roguelike",
+    "tags": [
+     "Medieval",
+     "Turn-Based Strategy",
+     "Turn-Based Tactics",
+     "Roguelite",
+     "Turn-Based"
+    ],
+    "advice": "For roguelike fans: turn-based tactics roguelite, Metascore 78, record-low €4.80: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Oxygen Not Included",
+    "shop": "Steam",
+    "price": 6.89,
+    "regular": 22.99,
+    "currency": "EUR",
+    "cut": 70,
+    "lowest_ever": true,
+    "expires": "2026-11-26T19:00:00+01:00",
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 85,
+    "url": "https://store.steampowered.com/app/457140/",
+    "pick": "popular",
+    "tags": [
+     "Colony Sim",
+     "Base Building",
+     "Survival",
+     "Resource Management",
+     "Building"
+    ],
+    "advice": "Overwhelmingly Positive colony sim, Metascore 85, record-low €6.89 until November 26: Strong Buy.",
+    "verdict": "strong_buy"
+   },
+   {
+    "game": "Noita",
+    "shop": "GOG",
+    "price": 7.59,
+    "regular": 18.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Overwhelmingly Positive",
+    "metascore": 76,
+    "url": "https://isthereanydeal.com/game/noita/",
+    "pick": "popular",
+    "tags": [
+     "Physics",
+     "Roguelike",
+     "Difficult",
+     "Pixel Graphics",
+     "Dungeon Crawler"
+    ],
+    "advice": "Overwhelmingly Positive physics roguelike at a record-low €7.59, 60 percent off: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Jusant",
+    "shop": "GOG",
+    "price": 9.99,
+    "regular": 24.99,
+    "currency": "EUR",
+    "cut": 60,
+    "lowest_ever": true,
+    "expires": null,
+    "steam_rating": "Very Positive",
+    "metascore": 83,
+    "url": "https://isthereanydeal.com/game/jusant/",
+    "pick": "hidden",
+    "tags": [
+     "Atmospheric",
+     "Exploration",
+     "Adventure",
+     "Cinematic",
+     "Nature"
+    ],
+    "advice": "Lesser-known atmospheric adventure, Metascore 83, record-low €9.99 at 60 percent off: Buy.",
+    "verdict": "buy"
+   },
+   {
+    "game": "Q-UP",
+    "shop": "Steam",
+    "price": 4.87,
+    "regular": 9.75,
+    "currency": "EUR",
+    "cut": 50,
+    "lowest_ever": true,
+    "expires": "2026-11-23T19:00:00+01:00",
+    "steam_rating": "Very Positive",
+    "metascore": null,
+    "url": "https://store.steampowered.com/app/3730790/",
+    "pick": "genre",
+    "genre": "Incremental",
+    "tags": [
+     "incremental",
+     "Auto Battler",
+     "Deckbuilding",
+     "Strategy",
+     "eSports"
+    ],
+    "advice": "For incremental fans: Very Positive, record low, but only 50 percent off at €4.87: Buy.",
+    "verdict": "buy"
+   }
+  ],
+  "source": "itad",
+  "shelves": [
+   {
+    "pool": "popular",
+    "name": "Popular",
+    "deals": [
+     {
+      "game": "V Rising",
+      "shop": "AllYouPlay",
+      "price": 6.39,
+      "regular": 34.99,
+      "currency": "EUR",
+      "cut": 82,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 83,
+      "url": "https://isthereanydeal.com/game/v-rising/",
+      "tags": [
+       "Survival",
+       "Open World",
+       "Base Building",
+       "Vampires",
+       "Multiplayer"
+      ]
+     },
+     {
+      "game": "It Takes Two",
+      "shop": "Steam",
+      "price": 7.99,
+      "regular": 39.99,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": true,
+      "expires": "2026-12-03T19:00:00+01:00",
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 89,
+      "url": "https://store.steampowered.com/app/1426210/",
+      "tags": [
+       "Co-op",
+       "Multiplayer",
+       "Split Screen",
+       "Local Co-Op",
+       "Online Co-Op"
+      ]
+     },
+     {
+      "game": "Dead Space (2023)",
+      "shop": "Steam",
+      "price": 5.99,
+      "regular": 59.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-12-03T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/1693980/",
+      "tags": [
+       "Horror",
+       "Survival Horror",
+       "Third-Person Shooter",
+       "Space",
+       "Sci-fi"
+      ]
+     },
+     {
+      "game": "FINAL FANTASY XV WINDOWS EDITION",
+      "shop": "Steam",
+      "price": 10.49,
+      "regular": 34.99,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": "2026-12-02T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/637650/",
+      "tags": [
+       "RPG",
+       "Open World",
+       "JRPG",
+       "Fantasy",
+       "Story Rich"
+      ]
+     },
+     {
+      "game": "Hi-Fi RUSH",
+      "shop": "Steam",
+      "price": 13.49,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 55,
+      "lowest_ever": true,
+      "expires": "2026-11-23T18:00:00+01:00",
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 90,
+      "url": "https://store.steampowered.com/app/1817230/",
+      "tags": [
+       "Rhythm",
+       "Action",
+       "Hack and Slash",
+       "Great Soundtrack",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "FINAL FANTASY X/X-2 HD Remaster",
+      "shop": "Steam",
+      "price": 9.99,
+      "regular": 24.99,
+      "currency": "EUR",
+      "cut": 60,
+      "lowest_ever": true,
+      "expires": "2026-12-02T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 83,
+      "url": "https://store.steampowered.com/app/359870/",
+      "tags": [
+       "JRPG",
+       "Turn-Based Combat",
+       "Story Rich",
+       "RPG",
+       "Great Soundtrack"
+      ]
+     },
+     {
+      "game": "Sea of Thieves",
+      "shop": "Blizzard",
+      "price": 13.99,
+      "regular": 39.99,
+      "currency": "EUR",
+      "cut": 65,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 67,
+      "url": "https://isthereanydeal.com/game/sea-of-thieves/",
+      "tags": [
+       "Multiplayer",
+       "Open World",
+       "Adventure",
+       "Pirates",
+       "Co-op"
+      ]
+     },
+     {
+      "game": "ULTRAKILL",
+      "shop": "AllYouPlay",
+      "price": 9.1,
+      "regular": 23.99,
+      "currency": "EUR",
+      "cut": 62,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/ultrakill/",
+      "tags": [
+       "Fast-Paced",
+       "Gore",
+       "FPS",
+       "Boomer Shooter",
+       "Character Action Game"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "hidden",
+    "name": "Hidden gems",
+    "deals": [
+     {
+      "game": "TRIALS of MANA",
+      "shop": "Steam",
+      "price": 14.99,
+      "regular": 49.99,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": "2026-12-02T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 78,
+      "url": "https://store.steampowered.com/app/924980/",
+      "tags": [
+       "RPG",
+       "JRPG",
+       "Anime",
+       "Action RPG",
+       "Remake"
+      ]
+     },
+     {
+      "game": "Stray Gods: The Roleplaying Musical",
+      "shop": "Epic Game Store",
+      "price": 14.99,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": "2026-12-01T17:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 76,
+      "url": "https://isthereanydeal.com/game/stray-gods-the-roleplaying-musical/",
+      "tags": [
+       "Interactive Fiction",
+       "Story Rich",
+       "Choices Matter",
+       "Music",
+       "Female Protagonist"
+      ]
+     },
+     {
+      "game": "Lacuna - A Sci-Fi Noir Adventure",
+      "shop": "GOG",
+      "price": 1.59,
+      "regular": 15.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 86,
+      "url": "https://isthereanydeal.com/game/lacuna-a-sci-fi-noir-adventure/",
+      "tags": [
+       "Pixel Graphics",
+       "Detective",
+       "Noir",
+       "Interactive Fiction",
+       "Multiple Endings"
+      ]
+     },
+     {
+      "game": "Suikoden I&II HD Remaster Gate Rune and Dunan Unification Wars",
+      "shop": "WinGameStore",
+      "price": 19.3,
+      "regular": 45.53,
+      "currency": "EUR",
+      "cut": 58,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/suikoden-i-and-ii-hd-remaster-gate-rune-and-dunan-unification-wars/",
+      "tags": [
+       "RPG",
+       "JRPG",
+       "Pixel Graphics",
+       "2D",
+       "Story Rich"
+      ]
+     },
+     {
+      "game": "Sludge Life",
+      "shop": "GOG",
+      "price": 2.99,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 73,
+      "url": "https://isthereanydeal.com/game/sludge-life/",
+      "tags": [
+       "Indie",
+       "Adventure",
+       "Open World",
+       "Atmospheric",
+       "3D Platformer"
+      ]
+     },
+     {
+      "game": "Monster Prom 2: Monster Camp",
+      "shop": "GOG",
+      "price": 2.99,
+      "regular": 11.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 80,
+      "url": "https://isthereanydeal.com/game/monster-prom-2-monster-camp/",
+      "tags": [
+       "Dating Sim",
+       "LGBTQ+",
+       "Multiplayer",
+       "Comedy",
+       "Indie"
+      ]
+     },
+     {
+      "game": "Screencheat",
+      "shop": "GOG",
+      "price": 2.75,
+      "regular": 13.65,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 71,
+      "url": "https://isthereanydeal.com/game/screencheat/",
+      "tags": [
+       "Split Screen",
+       "Arena Shooter",
+       "FPS",
+       "Shooter",
+       "Multiplayer"
+      ]
+     },
+     {
+      "game": "Rollerdrome",
+      "shop": "Fanatical",
+      "price": 6.29,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 79,
+      "lowest_ever": false,
+      "expires": "2026-12-01T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 81,
+      "url": "https://isthereanydeal.com/game/rollerdrome/",
+      "tags": [
+       "Action",
+       "Sports",
+       "Shooter",
+       "Arena Shooter",
+       "Third-Person Shooter"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Horror",
+    "name": "Horror",
+    "deals": [
+     {
+      "game": "Kathy Rain",
+      "shop": "GOG",
+      "price": 0.99,
+      "regular": 9.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 77,
+      "url": "https://isthereanydeal.com/game/kathy-rain/",
+      "tags": [
+       "Point & Click",
+       "Adventure",
+       "Pixel Graphics",
+       "Female Protagonist",
+       "Mystery"
+      ]
+     },
+     {
+      "game": "The Midnight Walk",
+      "shop": "GOG",
+      "price": 13.49,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 55,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 79,
+      "url": "https://isthereanydeal.com/game/the-midnight-walk/",
+      "tags": [
+       "Adventure",
+       "Horror",
+       "Atmospheric",
+       "Dark Fantasy",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "Beacon Pines",
+      "shop": "GOG",
+      "price": 5.05,
+      "regular": 16.79,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": 83,
+      "url": "https://isthereanydeal.com/game/beacon-pines/",
+      "tags": [
+       "Visual Novel",
+       "Story Rich",
+       "Emotional",
+       "Cozy",
+       "Colorful"
+      ]
+     },
+     {
+      "game": "AI: The Somnium Files",
+      "shop": "Steam",
+      "price": 3.99,
+      "regular": 19.99,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": true,
+      "expires": "2026-11-24T18:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/948740/",
+      "tags": [
+       "Visual Novel",
+       "Anime",
+       "Mystery",
+       "Story Rich",
+       "Detective"
+      ]
+     },
+     {
+      "game": "Layers of Fear (2016)",
+      "shop": "GOG",
+      "price": 1.85,
+      "regular": 18.25,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/layers-of-fear-2016/",
+      "tags": [
+       "Horror",
+       "Psychological Horror",
+       "Atmospheric",
+       "Walking Simulator",
+       "First-Person"
+      ]
+     },
+     {
+      "game": "Trepang2",
+      "shop": "GOG",
+      "price": 5.99,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 79,
+      "url": "https://isthereanydeal.com/game/trepang2/",
+      "tags": [
+       "Shooter",
+       "Singleplayer",
+       "FPS",
+       "Horror",
+       "Gore"
+      ]
+     },
+     {
+      "game": "Cronos: The New Dawn",
+      "shop": "GamesPlanet US",
+      "price": 22.69,
+      "regular": 54.64,
+      "currency": "EUR",
+      "cut": 58,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 76,
+      "url": "https://isthereanydeal.com/game/cronos-the-new-dawn/",
+      "tags": [
+       "Survival Horror",
+       "Horror",
+       "Sci-fi",
+       "Third-Person Shooter",
+       "Combat"
+      ]
+     },
+     {
+      "game": "Stories Untold",
+      "shop": "GamesPlanet UK",
+      "price": 0.84,
+      "regular": 8.34,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 81,
+      "url": "https://isthereanydeal.com/game/stories-untold/",
+      "tags": [
+       "Horror",
+       "Adventure",
+       "Text-Based",
+       "Atmospheric",
+       "Indie"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:FMV",
+    "name": "FMV",
+    "deals": [
+     {
+      "game": "Attentat 1942",
+      "shop": "GOG",
+      "price": 0.69,
+      "regular": 8.99,
+      "currency": "EUR",
+      "cut": 92,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 76,
+      "url": "https://isthereanydeal.com/game/attentat-1942/",
+      "tags": [
+       "Historical",
+       "Cinematic",
+       "World War II",
+       "Story Rich",
+       "FMV"
+      ]
+     },
+     {
+      "game": "Motesolo : No GirlFriend Since Birth",
+      "shop": "GOG",
+      "price": 7.59,
+      "regular": 18.99,
+      "currency": "EUR",
+      "cut": 60,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/motesolo-no-girlfriend-since-birth/",
+      "tags": [
+       "Simulation",
+       "FMV",
+       "Dating Sim",
+       "Cinematic",
+       "Dialogue Heavy"
+      ]
+     },
+     {
+      "game": "SIMULACRA 2",
+      "shop": "GOG",
+      "price": 1.99,
+      "regular": 7.99,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 69,
+      "url": "https://isthereanydeal.com/game/simulacra-2/",
+      "tags": [
+       "Horror",
+       "Detective",
+       "Immersive Sim",
+       "Hacking",
+       "Visual Novel"
+      ]
+     },
+     {
+      "game": "Xenopurge",
+      "shop": "GamesPlanet US",
+      "price": 4.82,
+      "regular": 11.38,
+      "currency": "EUR",
+      "cut": 58,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/xenopurge/",
+      "tags": [
+       "Real Time Tactics",
+       "Roguelite",
+       "Strategy",
+       "Management",
+       "Programming"
+      ]
+     },
+     {
+      "game": "Svoboda 1945: Liberation",
+      "shop": "GOG",
+      "price": 1.95,
+      "regular": 13.99,
+      "currency": "EUR",
+      "cut": 86,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/svoboda-1945-liberation/",
+      "tags": [
+       "Singleplayer",
+       "Visual Novel",
+       "Emotional",
+       "Adventure",
+       "Historical"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Point & Click",
+    "name": "Point & Click",
+    "deals": [
+     {
+      "game": "Citizen Sleeper",
+      "shop": "GOG",
+      "price": 5.05,
+      "regular": 16.79,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 82,
+      "url": "https://isthereanydeal.com/game/citizen-sleeper/",
+      "tags": [
+       "RPG",
+       "Story Rich",
+       "Dice",
+       "Cyberpunk",
+       "Sci-fi"
+      ]
+     },
+     {
+      "game": "Machinika: Museum",
+      "shop": "IndieGala Store",
+      "price": 0.79,
+      "regular": 7.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-24T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/machinika-museum/",
+      "tags": [
+       "Puzzle",
+       "Mystery",
+       "Point & Click",
+       "Sci-fi",
+       "Atmospheric"
+      ]
+     },
+     {
+      "game": "Deponia - The Complete Journey",
+      "shop": "MacGameStore",
+      "price": 1.08,
+      "regular": 27.31,
+      "currency": "EUR",
+      "cut": 96,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/deponia-the-complete-journey/",
+      "tags": [
+       "Adventure",
+       "Point & Click",
+       "Comedy",
+       "Puzzle",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "Do Not Feed the Monkeys",
+      "shop": "MacGameStore",
+      "price": 1.08,
+      "regular": 10.92,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/do-not-feed-the-monkeys/",
+      "tags": [
+       "Point & Click",
+       "Political Sim",
+       "Management",
+       "Dark Humor",
+       "Choices Matter"
+      ]
+     },
+     {
+      "game": "In Other Waters",
+      "shop": "GOG",
+      "price": 3.09,
+      "regular": 12.49,
+      "currency": "EUR",
+      "cut": 75,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 74,
+      "url": "https://isthereanydeal.com/game/in-other-waters/",
+      "tags": [
+       "Indie",
+       "Adventure",
+       "Exploration",
+       "Atmospheric",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "The Red Strings Club",
+      "shop": "GamesPlanet UK",
+      "price": 2.72,
+      "regular": 13.6,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 80,
+      "url": "https://isthereanydeal.com/game/the-red-strings-club/",
+      "tags": [
+       "Cyberpunk",
+       "Pixel Graphics",
+       "Story Rich",
+       "Choices Matter",
+       "Great Soundtrack"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Roguelike",
+    "name": "Roguelike",
+    "deals": [
+     {
+      "game": "Wizard of Legend",
+      "shop": "Epic Game Store",
+      "price": 4.79,
+      "regular": 15.99,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": "2026-12-01T17:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 79,
+      "url": "https://isthereanydeal.com/game/wizard-of-legend/",
+      "tags": [
+       "Action Roguelike",
+       "Pixel Graphics",
+       "Roguelike",
+       "Dungeon Crawler",
+       "Local Co-Op"
+      ]
+     },
+     {
+      "game": "Crying Suns",
+      "shop": "Dreamgame",
+      "price": 4.2,
+      "regular": 20.99,
+      "currency": "EUR",
+      "cut": 80,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 75,
+      "url": "https://isthereanydeal.com/game/crying-suns/",
+      "tags": [
+       "Strategy",
+       "Space",
+       "Pixel Graphics",
+       "Indie",
+       "Roguelite"
+      ]
+     },
+     {
+      "game": "Immortal Redneck",
+      "shop": "MacGameStore",
+      "price": 1.8,
+      "regular": 18.17,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 70,
+      "url": "https://isthereanydeal.com/game/immortal-redneck/",
+      "tags": [
+       "Boomer Shooter",
+       "FPS",
+       "Action Roguelike",
+       "Fast-Paced",
+       "Procedural Generation"
+      ]
+     },
+     {
+      "game": "ScourgeBringer",
+      "shop": "IndieGala Store",
+      "price": 1.69,
+      "regular": 16.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": "2026-11-24T00:59:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 76,
+      "url": "https://isthereanydeal.com/game/scourgebringer/",
+      "tags": [
+       "Indie",
+       "Action",
+       "Adventure",
+       "Roguelite",
+       "Pixel Graphics"
+      ]
+     },
+     {
+      "game": "The Rogue Prince of Persia",
+      "shop": "Steam",
+      "price": 8.99,
+      "regular": 29.99,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": "2026-12-02T18:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 80,
+      "url": "https://store.steampowered.com/app/2717880/",
+      "tags": [
+       "Roguelite",
+       "Action Roguelike",
+       "Action",
+       "Parkour",
+       "Replay Value"
+      ]
+     },
+     {
+      "game": "20XX",
+      "shop": "Steam",
+      "price": 2.24,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 85,
+      "lowest_ever": true,
+      "expires": "2026-11-23T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/322110/",
+      "tags": [
+       "Platformer",
+       "Action Roguelike",
+       "Action",
+       "2D Platformer",
+       "Roguelite"
+      ]
+     },
+     {
+      "game": "Curious Expedition",
+      "shop": "GOG",
+      "price": 1.49,
+      "regular": 14.99,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": 74,
+      "url": "https://isthereanydeal.com/game/curious-expedition/",
+      "tags": [
+       "Exploration",
+       "Roguelike",
+       "Pixel Graphics",
+       "Turn-Based Strategy",
+       "Lovecraftian"
+      ]
+     },
+     {
+      "game": "Kingdom: New Lands",
+      "shop": "GamesPlanet US",
+      "price": 1.31,
+      "regular": 13.65,
+      "currency": "EUR",
+      "cut": 90,
+      "lowest_ever": false,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/kingdom-new-lands/",
+      "tags": [
+       "Tower Defense",
+       "Base Building",
+       "Survival",
+       "Minimalist",
+       "Exploration"
+      ]
+     }
+    ]
+   },
+   {
+    "pool": "genre:Incremental",
+    "name": "Incremental",
+    "deals": [
+     {
+      "game": "Journey to Incrementalia",
+      "shop": "Steam",
+      "price": 1.74,
+      "regular": 4.99,
+      "currency": "EUR",
+      "cut": 65,
+      "lowest_ever": true,
+      "expires": "2026-11-23T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/3147430/",
+      "tags": [
+       "incremental",
+       "Auto Battler",
+       "Strategy",
+       "Idler",
+       "RPG"
+      ]
+     },
+     {
+      "game": "Swords & Souls: Neverseen",
+      "shop": "Steam",
+      "price": 5.17,
+      "regular": 14.79,
+      "currency": "EUR",
+      "cut": 65,
+      "lowest_ever": true,
+      "expires": "2026-11-27T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": 70,
+      "url": "https://store.steampowered.com/app/679900/",
+      "tags": [
+       "Indie",
+       "RPG",
+       "Turn-Based Combat",
+       "Character Customization",
+       "Singleplayer"
+      ]
+     },
+     {
+      "game": "Shelldiver",
+      "shop": "Steam",
+      "price": 2.49,
+      "regular": 4.99,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": "2026-11-23T19:00:00+01:00",
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/3862670/",
+      "tags": [
+       "incremental",
+       "Casual",
+       "Resource Management",
+       "Management",
+       "Idler"
+      ]
+     },
+     {
+      "game": "Kyle is Famous: Complete Edition",
+      "shop": "GOG",
+      "price": 4.89,
+      "regular": 9.75,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": null,
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/kyle-is-famous-complete-edition/",
+      "tags": [
+       "Adventure",
+       "Choose Your Own Adventure",
+       "Interactive Fiction",
+       "Funny",
+       "Multiple Endings"
+      ]
+     },
+     {
+      "game": "Unfair Flips",
+      "shop": "Steam",
+      "price": 0.99,
+      "regular": 1.99,
+      "currency": "EUR",
+      "cut": 50,
+      "lowest_ever": true,
+      "expires": "2026-11-26T19:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/3925760/",
+      "tags": [
+       "Casual",
+       "incremental",
+       "Simulation",
+       "2D",
+       "Pixel Graphics"
+      ]
+     },
+     {
+      "game": "The Shape of Things",
+      "shop": "Epic Game Store",
+      "price": 1.88,
+      "regular": 6.29,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": "2026-11-26T17:00:00+01:00",
+      "steam_rating": "Very Positive",
+      "metascore": null,
+      "url": "https://isthereanydeal.com/game/the-shape-of-things/",
+      "tags": [
+       "Casual",
+       "Puzzle",
+       "Point & Click",
+       "Cute",
+       "Colorful"
+      ]
+     },
+     {
+      "game": "Peace, Death! 2",
+      "shop": "Steam",
+      "price": 1.19,
+      "regular": 3.99,
+      "currency": "EUR",
+      "cut": 70,
+      "lowest_ever": true,
+      "expires": "2026-11-23T19:00:00+01:00",
+      "steam_rating": "Overwhelmingly Positive",
+      "metascore": null,
+      "url": "https://store.steampowered.com/app/1546790/",
+      "tags": [
+       "Casual",
+       "2D",
+       "Simulation",
+       "Comedy",
+       "Arcade"
+      ]
+     }
+    ]
+   }
+  ],
+  "carried": {
+   "from": "2026-11-20",
+   "ended": 2
+  }
+ },
+ "sources": [
+  {
+   "name": "Hacker News",
+   "ok": true,
+   "count": 30,
+   "ms": 282,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Ars Technica",
+   "ok": true,
+   "count": 14,
+   "ms": 141,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TechRadar",
+   "ok": true,
+   "count": 9,
+   "ms": 420,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Tom's Hardware",
+   "ok": true,
+   "count": 50,
+   "ms": 298,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "The Hacker News",
+   "ok": true,
+   "count": 50,
+   "ms": 484,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "BleepingComputer",
+   "ok": true,
+   "count": 15,
+   "ms": 76,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL",
+   "ok": true,
+   "count": 12,
+   "ms": 1729,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "MISSIL Reviews",
+   "ok": true,
+   "count": 20,
+   "ms": 541,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer",
+   "ok": true,
+   "count": 50,
+   "ms": 292,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PC Gamer Reviews",
+   "ok": true,
+   "count": 18,
+   "ms": 1544,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Rock Paper Shotgun",
+   "ok": true,
+   "count": 60,
+   "ms": 213,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "RPS Reviews",
+   "ok": true,
+   "count": 60,
+   "ms": 91,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games",
+   "ok": true,
+   "count": 20,
+   "ms": 132,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Eurogamer",
+   "ok": true,
+   "count": 58,
+   "ms": 271,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Game Informer",
+   "ok": true,
+   "count": 49,
+   "ms": 254,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCGamesN",
+   "ok": true,
+   "count": 0,
+   "ms": 116,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "PCMag (Google News)",
+   "ok": true,
+   "count": 23,
+   "ms": 284,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "gameranx (YouTube)",
+   "ok": true,
+   "count": 15,
+   "ms": 38,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "I Dream of Indie Games (YouTube)",
+   "ok": true,
+   "count": 10,
+   "ms": 146,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam new releases",
+   "ok": true,
+   "count": 100,
+   "ms": 408,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Steam coming soon",
+   "ok": true,
+   "count": 100,
+   "ms": 318,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Critic scores (IsThereAnyDeal)",
+   "ok": true,
+   "count": 7,
+   "ms": 5059,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Review scores (outlet pages)",
+   "ok": true,
+   "count": 3,
+   "ms": 103,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Deals",
+   "ok": true,
+   "count": 69,
+   "ms": 0,
+   "error": "not checked today: carried over from Fri 20 Nov 07:05 (2 ended since); next check Tue",
+   "skipped": true
+  },
+  {
+   "name": "TMDB providers",
+   "ok": true,
+   "count": 3,
+   "ms": 399,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TMDB new on Netflix",
+   "ok": true,
+   "count": 40,
+   "ms": 202,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TMDB Netflix catalog",
+   "ok": true,
+   "count": 120,
+   "ms": 629,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TMDB new on SVT Play",
+   "ok": true,
+   "count": 31,
+   "ms": 190,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TMDB SVT Play catalog",
+   "ok": true,
+   "count": 120,
+   "ms": 631,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TMDB new on TV4 Play",
+   "ok": true,
+   "count": 22,
+   "ms": 185,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TMDB TV4 Play catalog",
+   "ok": true,
+   "count": 102,
+   "ms": 564,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "TMDB older but great",
+   "ok": true,
+   "count": 120,
+   "ms": 618,
+   "error": "",
+   "skipped": false
+  },
+  {
+   "name": "Netflix top 10",
+   "ok": true,
+   "count": 20,
+   "ms": 0,
+   "error": "kept the week ending 2026-11-15; a newer list can exist from 2026-11-25",
+   "skipped": true
+  },
+  {
+   "name": "TMDB where to watch",
+   "ok": true,
+   "count": 34,
+   "ms": 2811,
+   "error": "",
+   "skipped": false
+  }
+ ],
+ "editor": {
+  "events": 49,
+  "returned": {
+   "featured": 2,
+   "medium": 6,
+   "briefs": 20
+  },
+  "kept": {
+   "featured": 2,
+   "medium": 6,
+   "briefs": 20
+  },
+  "briefs_added": 0
+ },
+ "discovery": {
+  "depth": "normal",
+  "filtering": true,
+  "searches": 6,
+  "fetches": 5,
+  "usd": 0.393356,
+  "queries": [
+   "new PC game reviews November 2026",
+   "Steam game launch overwhelmingly positive November 2026",
+   "open source release November 2026 Hacker News",
+   "GPU CPU announcement November 20 2026",
+   "AI model release November 20 2026",
+   "AI policy regulation November 20 2026"
+  ],
+  "kept": [
+   "https://www.postgresql.org/docs/release/19.0/",
+   "https://signal.org/blog/protecting-your-privacy/",
+   "https://zeli.app/story/50570479",
+   "https://zeli.app/story/50572503",
+   "https://wccftech.com/moore-threads-teases-lushan-desktop-gpu-largest-vram-capacity-consumer-history/"
+  ],
+  "dropped": []
+ },
+ "quiz": {
+  "kicker": "Quiz",
+  "headline": "The Saturday quiz",
+  "dek": "Eight questions on AI, tech and gaming news from 18–21 November. How much do you remember?",
+  "period": {
+   "start": "2026-11-18",
+   "end": "2026-11-21"
+  },
+  "model": "claude-opus-5-5",
+  "checked": {
+   "model": "claude-opus-5-5",
+   "dropped": []
+  },
+  "questions": [
+   {
+    "question": "What are the two GPT-6.2 models OpenAI shipped to paid ChatGPT users?",
+    "kind": "what",
+    "options": [
+     "Nova and Luna",
+     "Astra and Sol",
+     "Orion and Vega",
+     "Atlas and Helios"
+    ],
+    "answer": 1,
+    "option_notes": [
+     "OpenAI's GPT-6.2 pair is Astra and Sol, not Nova and Luna.",
+     "",
+     "OpenAI named the GPT-6.2 models Astra and Sol, not Orion and Vega.",
+     "The new models are called Astra and Sol, not Atlas and Helios."
+    ],
+    "explanation": "Astra targets complex projects and Sol everyday work. OpenAI claims Astra beats Claude Fable 5.2 by 5.5 points at 5 percent of the cost per task.",
+    "section": "ai",
+    "story": {
+     "headline": "OpenAI ships GPT-6.2 Astra and Sol to paid ChatGPT users",
+     "edition_id": "2026-11-18",
+     "sources": [
+      {
+       "name": "TechRadar",
+       "url": "https://www.techradar.com/tech/openai-just-launched-gpt-6-2-and-its-powerful-enough-to-recreate-the-whole-of-paris-as-a-virtual-world-you-can-explore-in-your-browser",
+       "title": "OpenAI just unveiled GPT-6.2 Astra and Sol"
+      },
+      {
+       "name": "Hacker News",
+       "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol/",
+       "title": "GPT‑6.2 Astra and Sol"
+      }
+     ],
+     "section": "ai",
+     "tier": "featured",
+     "slug": "openai-ships-gpt-6-2-astra-and-sol-to-paid-chatgpt-users"
+    }
+   },
+   {
+    "question": "How much did Rockstar say GTA VI earned in day-one retail sales?",
+    "kind": "number",
+    "options": [
+     "$1.1 billion",
+     "$8.2 billion",
+     "$3.79 billion",
+     "$400 million"
+    ],
+    "answer": 2,
+    "option_notes": [
+     "Rockstar reported $3.79 billion, more than three times $1.1 billion.",
+     "Rockstar's figure was $3.79 billion, less than half of $8.2 billion.",
+     "",
+     "$400 million is roughly how far the launch-day total beat Take-Two's quarterly guidance, not the total itself."
+    ],
+    "explanation": "Rockstar reported $3.79 billion on launch day, which PC Gamer says tops Take-Two's quarterly revenue guidance by nearly $400 million at the high end. Outlets disagree on whether 32.5 million copies were preorders or first-day sales.",
+    "section": "gaming",
+    "story": {
+     "headline": "GTA VI earns $3.79 billion on launch day, Rockstar says",
+     "edition_id": "2026-11-21",
+     "sources": [
+      {
+       "name": "PC Gamer",
+       "url": "https://www.pcgamer.com/games/grand-theft-auto/grand-theft-auto-6-earned-usd3-79-billion-on-launch-day/",
+       "title": "Grand Theft Auto 6 earned $3.79 billion on launch day"
+      },
+      {
+       "name": "MISSIL",
+       "url": "https://missil.se/nyheter/gta-vi-har-slagit-varldsrekord-salde-325-miljoner-exemplar-pa-24-timmar/",
+       "title": "GTA VI har sålts i 32,5 miljoner exemplar på 24 timmar"
+      }
+     ],
+     "section": "gaming",
+     "tier": "medium",
+     "slug": "gta-vi-earns-3-79-billion-on-launch-day-rockstar-says"
+    }
+   },
+   {
+    "question": "Which Java vendor still had fixes pending for the Java4Shell OpenJDK flaw?",
+    "kind": "who",
+    "options": [
+     "Amazon",
+     "Azul",
+     "Red Hat",
+     "Oracle"
+    ],
+    "answer": 2,
+    "option_notes": [
+     "Amazon's Corretto builds were already patched.",
+     "Azul's Zulu builds were already patched.",
+     "",
+     "Oracle had already patched its Java builds."
+    ],
+    "explanation": "Oracle, Corretto and Zulu were patched while Red Hat's fixes were still pending. Until a fixed build is installed, the workaround is the -XX:-UseBASE64Intrinsics flag.",
+    "section": "tech",
+    "story": {
+     "headline": "Java4Shell flaw opens Jira, Jenkins and Keycloak to pre-auth attacks",
+     "edition_id": "2026-11-18",
+     "sources": [
+      {
+       "name": "The Hacker News",
+       "url": "https://thehackernews.com/2026/11/java4shell-cve-2026-114938-enables-pre.html",
+       "title": "Java4Shell (CVE-2026-114938) Enables Pre-Auth RCE in Jira, Jenkins, Keycloak on Java 17+ AVX-512 VBMI Servers"
+      },
+      {
+       "name": "BleepingComputer",
+       "url": "https://www.bleepingcomputer.com/news/security/critical-java4shell-flaw-allows-rce-attacks-on-major-java-applications/",
+       "title": "Critical Java4Shell flaw allows RCE attacks on major Java applications"
+      },
+      {
+       "name": "The Hacker News",
+       "url": "https://thehackernews.com/2026/11/oracle-to-patch-11-java-flaws-today-as.html",
+       "title": "Oracle to Patch 11 Java Flaws Today as Critical OpenJDK RCE (CVE-2026-114938) Report Emerges"
+      }
+     ],
+     "section": "tech",
+     "tier": "featured",
+     "slug": "java4shell-flaw-opens-jira-jenkins-and-keycloak-to-pre-auth"
+    }
+   },
+   {
+    "question": "Which feature does PostgreSQL 19 now turn off by default?",
+    "kind": "change",
+    "options": [
+     "JIT compilation",
+     "Logical replication",
+     "Parallel query",
+     "Autovacuum"
+    ],
+    "answer": 0,
+    "option_notes": [
+     "",
+     "Logical replication goes the other way: it can now be enabled without a restart.",
+     "The release turns off JIT by default, not parallel query.",
+     "PostgreSQL 19's default change is to JIT, not autovacuum."
+    ],
+    "explanation": "PostgreSQL 19 disables JIT by default and doubles max_locks_per_transaction to 128. Its headline feature, REPACK (CONCURRENTLY), reclaims table space without blocking reads or writes.",
+    "section": "tech",
+    "story": {
+     "headline": "PostgreSQL 19 ships REPACK CONCURRENTLY and planner advice",
+     "edition_id": "2026-11-21",
+     "sources": [
+      {
+       "name": "PostgreSQL Global Development Group",
+       "url": "https://www.postgresql.org/docs/release/19.0/",
+       "title": "PostgreSQL 19 released with concurrent REPACK and planner advice"
+      }
+     ],
+     "section": "tech",
+     "tier": "featured",
+     "slug": "postgresql-19-ships-repack-concurrently-and-planner-advice"
+    }
+   },
+   {
+    "question": "What authority would California gain under AI proposals from Newsom's office?",
+    "kind": "what",
+    "options": [
+     "Licensing all AI chip sales",
+     "Banning open-weight models",
+     "Taxing AI data centers",
+     "Ordering emergency AI shutdowns"
+    ],
+    "answer": 3,
+    "option_notes": [
+     "The report covers shutdowns and safety standards, not licensing chip sales.",
+     "The proposals do not ban open-weight models; they focus on shutdown powers and testing.",
+     "Taxing data centers is not among the proposals; emergency shutdown authority is.",
+     ""
+    ],
+    "explanation": "The state would also be able to cap recursive self-improvement. The report recommends state-set safety standards and mandatory independent testing for all AI developers.",
+    "section": "ai",
+    "story": {
+     "headline": "California proposes AI shutdown powers and caps on self-improving AI",
+     "edition_id": "2026-11-19",
+     "sources": [
+      {
+       "name": "Office of the Governor of California",
+       "url": "https://www.gov.ca.gov/2026/11/18/governor-newsoms-nation-leading-ai-safety-framework-is-getting-even-stronger-as-california-releases-next-steps-on-mandatory-safety-standards-and-oversight/",
+       "title": "California proposes emergency shutdown powers and caps on self-improving AI"
+      }
+     ],
+     "section": "ai",
+     "tier": "medium",
+     "slug": "california-proposes-ai-shutdown-powers-and-caps-on-self-impr"
+    }
+   },
+   {
+    "question": "Why is disabling HTTP/2 the stopgap for the decade-old NGINX code-execution bug?",
+    "kind": "why",
+    "options": [
+     "F5 has not released any fixes",
+     "The patches break HTTP/3 support",
+     "Fixed builds are NGINX Plus only",
+     "Ubuntu and Debian packages lag behind"
+    ],
+    "answer": 3,
+    "option_notes": [
+     "F5 did ship fixes on November 18, in NGINX 1.31.9 and 1.30.7.",
+     "The reported problem is lagging Ubuntu and Debian packages, not broken HTTP/3.",
+     "The fixes are in NGINX 1.31.9 and 1.30.7; the gap is in distro packages.",
+     ""
+    ],
+    "explanation": "F5 shipped fixes for five critical flaws, but Ubuntu and Debian had no fixed packages on release day. The main bug dates back to NGINX 1.9.5 from September 2015, and a reload alone is not enough.",
+    "section": "tech",
+    "story": {
+     "headline": "Decade-old NGINX HTTP/2 bug lets attackers run code without a login",
+     "edition_id": "2026-11-19",
+     "sources": [
+      {
+       "name": "The Hacker News",
+       "url": "https://thehackernews.com/2026/11/10-year-old-nginx-http2-flaw-lets.html",
+       "title": "10-Year-Old NGINX HTTP/2 Flaw Lets Unauthenticated Attackers Execute Code on Servers"
+      },
+      {
+       "name": "Hacker News",
+       "url": "https://www.wiz.io/blog/nginx-http2-rce-vulnerabilities",
+       "title": "Unauthenticated remote code execution in Nginx"
+      }
+     ],
+     "section": "tech",
+     "tier": "featured",
+     "slug": "decade-old-nginx-http-2-bug-lets-attackers-run-code-without"
+    }
+   },
+   {
+    "question": "What speed do JEDEC's first DDR6 server RDIMMs start at?",
+    "kind": "number",
+    "options": [
+     "6.4 GT/s",
+     "12.8 GT/s",
+     "9.2 GT/s",
+     "25.6 GT/s"
+    ],
+    "answer": 1,
+    "option_notes": [
+     "DDR6 starts at 12.8 GT/s, double 6.4 GT/s.",
+     "",
+     "9.2 GT/s is DDR5's top speed, which DDR6 starts above.",
+     "DDR6 starts at 12.8 GT/s, with 14.4 GT/s and beyond planned, not 25.6 GT/s at launch."
+    ],
+    "explanation": "DDR6 RDIMMs start at 12.8 GT/s, against DDR5's 9.2 GT/s top speed. The modules are 74mm long, 44 percent shorter than DDR5, and JEDEC says the standard is built for the data center first.",
+    "section": "tech",
+    "story": {
+     "headline": "JEDEC previews DDR6: 74mm modules starting at 12.8 GT/s",
+     "edition_id": "2026-11-20",
+     "sources": [
+      {
+       "name": "Tom's Hardware",
+       "url": "https://www.tomshardware.com/pc-components/ram/ddr6-ram-shrinks-by-44-percent-while-delivering-4x-ddr5s-baseline-bandwidth-jedec-previews-12-8-gt-s-modules-with-up-to-1-terabyte-of-capacity-per-slot",
+       "title": "DDR6 RAM shrinks by 44% while delivering 4 times more bandwidth than DDR5 — JEDEC previews 12.8 GT/s modules with up to 1 terabyte of capacity per slot"
+      },
+      {
+       "name": "PC Gamer",
+       "url": "https://www.pcgamer.com/hardware/memory/ddr6-memory-modules-to-be-almost-half-the-size-of-ddr5-and-almost-double-the-max-speed/",
+       "title": "DDR6 memory modules to be almost half the size of DDR5 and almost double the max speed"
+      }
+     ],
+     "section": "tech",
+     "tier": "medium",
+     "slug": "jedec-previews-ddr6-74mm-modules-starting-at-12-8-gt-s"
+    }
+   },
+   {
+    "question": "Which company tied the Cairn-powered attack on a MONAI Label server to a Chinese-nexus actor?",
+    "kind": "who",
+    "options": [
+     "Amazon",
+     "Mandiant",
+     "Google",
+     "Microsoft"
+    ],
+    "answer": 0,
+    "option_notes": [
+     "",
+     "Amazon, not Mandiant, made the attribution in this campaign.",
+     "Amazon, not Google, reported and attributed the attack.",
+     "The attribution came from Amazon, not Microsoft."
+    ],
+    "explanation": "Amazon attributes the campaign to a Chinese-nexus actor with moderate confidence. The AI agents, told to \"obtain shell access,\" exploited a path traversal zero-day within 11 minutes of mapping MONAI Label's API.",
+    "section": "ai",
+    "story": {
+     "headline": "Hackers turn AI pentest tool Cairn on medical imaging app, root server",
+     "edition_id": "2026-11-21",
+     "sources": [
+      {
+       "name": "BleepingComputer",
+       "url": "https://www.bleepingcomputer.com/news/security/hackers-use-autonomous-ai-tool-cairn-to-find-zero-day-take-over-server/",
+       "title": "Hackers use autonomous AI tool Cairn to find zero-day, take over server"
+      }
+     ],
+     "section": "ai",
+     "tier": "medium",
+     "slug": "hackers-turn-ai-pentest-tool-cairn-on-medical-imaging-app-ro"
+    }
+   }
+  ]
+ },
+ "screen": {
+  "region": "SE",
+  "checked_at": "2026-11-21T06:05:42.497125+00:00",
+  "tmdb": true,
+  "services": [
+   {
+    "name": "Netflix",
+    "types": [
+     "flatrate"
+    ]
+   },
+   {
+    "name": "SVT Play",
+    "types": [
+     "free",
+     "ads",
+     "flatrate"
+    ]
+   },
+   {
+    "name": "TV4 Play",
+    "types": [
+     "ads",
+     "free"
+    ]
+   }
+  ],
+  "new": [
+   {
+    "service": "Netflix",
+    "titles": [
+     {
+      "key": "movie:11324",
+      "id": 11324,
+      "kind": "movie",
+      "title": "Shutter Island",
+      "year": 2010,
+      "date": "2010-02-14",
+      "overview": "World War II soldier-turned-U.S. Marshal Teddy Daniels investigates the disappearance of a patient from a hospital for the criminally insane, but his efforts are compromised by troubling visions and a mysterious doctor.",
+      "poster": "https://image.tmdb.org/t/p/w342/nrmXQ0zcZUL8jFLrakWc90IR8z9.jpg",
+      "rating": 8.2,
+      "votes": 26861,
+      "genres": [
+       "Drama",
+       "Thriller",
+       "Mystery"
+      ],
+      "url": "https://www.themoviedb.org/movie/11324-shutter-island/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-21"
+     },
+     {
+      "key": "movie:75612",
+      "id": 75612,
+      "kind": "movie",
+      "title": "Oblivion",
+      "year": 2013,
+      "date": "2013-04-10",
+      "overview": "Jack Harper is one of the last few drone repairmen stationed on Earth. Part of a massive operation to extract vital resources after decades of war with a terrifying threat known as the Scavs, Jack’s mission is nearly complete.",
+      "poster": "https://image.tmdb.org/t/p/w342/eO3r38fwnhb58M1YgcjQBd3VNcp.jpg",
+      "rating": 6.7,
+      "votes": 12034,
+      "genres": [
+       "Action",
+       "Science Fiction",
+       "Adventure"
+      ],
+      "url": "https://www.themoviedb.org/movie/75612-oblivion/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-19"
+     },
+     {
+      "key": "movie:1858",
+      "id": 1858,
+      "kind": "movie",
+      "title": "Transformers",
+      "year": 2007,
+      "date": "2007-06-27",
+      "overview": "Young teenager Sam Witwicky becomes involved in the ancient struggle between two extraterrestrial factions of transforming robots – the heroic Autobots and the evil Decepticons.",
+      "poster": "https://image.tmdb.org/t/p/w342/lkZ9gqCEjzX85lKR6Jjd1uGAXNp.jpg",
+      "rating": 6.9,
+      "votes": 12757,
+      "genres": [
+       "Adventure",
+       "Science Fiction",
+       "Action"
+      ],
+      "url": "https://www.themoviedb.org/movie/1858-transformers/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-15"
+     },
+     {
+      "key": "movie:436969",
+      "id": 436969,
+      "kind": "movie",
+      "title": "The Suicide Squad",
+      "year": 2021,
+      "date": "2021-07-28",
+      "overview": "Supervillains Harley Quinn, Bloodsport, Peacemaker and a collection of nutty cons at Belle Reve prison join the super-secret, super-shady Task Force X as they are dropped off at the remote, enemy-infused island of Corto Maltese.",
+      "poster": "https://image.tmdb.org/t/p/w342/q61qEyssk2ku3okWICKArlAdhBn.jpg",
+      "rating": 7.4,
+      "votes": 10111,
+      "genres": [
+       "Action",
+       "Comedy",
+       "Adventure"
+      ],
+      "url": "https://www.themoviedb.org/movie/436969-the-suicide-squad/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-13"
+     },
+     {
+      "key": "movie:1616687",
+      "id": 1616687,
+      "kind": "movie",
+      "title": "Never Surrender",
+      "original_title": "Serangan Balik",
+      "year": 2026,
+      "date": "2026-11-11",
+      "overview": "When a deadly gang descends on his remote home, a guilt-ridden veteran and the estranged grandchildren he barely knows must unite to survive.",
+      "poster": "https://image.tmdb.org/t/p/w342/hKROmLddpzpjkxKKVFYFRAOXX1b.jpg",
+      "rating": 6.8,
+      "votes": 58,
+      "genres": [
+       "Action",
+       "Crime",
+       "Thriller"
+      ],
+      "url": "https://www.themoviedb.org/movie/1616687-serangan-balik/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "new_film"
+     },
+     {
+      "key": "tv:291507",
+      "id": 291507,
+      "kind": "tv",
+      "title": "The Body",
+      "year": 2026,
+      "date": "2026-11-11",
+      "overview": "On Halloween night, an all-girls dance squad tumbles into Catholic guilt, unholy desires and ghostly visions when an initiation goes to hell.",
+      "poster": "https://image.tmdb.org/t/p/w342/195kCuy2RqGaEAZDDpGTx7gBUBZ.jpg",
+      "rating": 8.0,
+      "votes": 101,
+      "genres": [
+       "Mystery",
+       "Drama"
+      ],
+      "url": "https://www.themoviedb.org/tv/291507-the-body/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "new_series"
+     },
+     {
+      "key": "movie:1543469",
+      "id": 1543469,
+      "kind": "movie",
+      "title": "Heartland",
+      "year": 2026,
+      "date": "2026-11-13",
+      "overview": "Former country music legend Misty Jones returns to Nashville to unravel the truth behind her rising-star niece's disappearance.",
+      "poster": "https://image.tmdb.org/t/p/w342/zhxlzxBlO1sWB1rPn7RmAoeQ2na.jpg",
+      "rating": 6.3,
+      "votes": 107,
+      "genres": [
+       "Thriller",
+       "Mystery"
+      ],
+      "url": "https://www.themoviedb.org/movie/1543469-heartland/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "new_film"
+     },
+     {
+      "key": "tv:85077",
+      "id": 85077,
+      "kind": "tv",
+      "title": "The Chosen",
+      "year": 2019,
+      "date": "2019-04-21",
+      "overview": "The life of Christ through the eyes of those who encountered him.",
+      "poster": "https://image.tmdb.org/t/p/w342/nr0r7YTn1l84KLG1iCSO5ofHTvO.jpg",
+      "rating": 8.9,
+      "votes": 1078,
+      "genres": [
+       "Action & Adventure",
+       "Family",
+       "Drama"
+      ],
+      "url": "https://www.themoviedb.org/tv/85077-the-chosen/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "flag": "new_episodes"
+     }
+    ]
+   },
+   {
+    "service": "SVT Play",
+    "titles": [
+     {
+      "key": "movie:9343",
+      "id": 9343,
+      "kind": "movie",
+      "title": "Fitzcarraldo",
+      "year": 1982,
+      "date": "1982-03-02",
+      "overview": "Fitzcarraldo is a dreamer who plans to build an opera house in Iquitos, in the Peruvian Amazon, so, in order to finance his project, he embarks on an epic adventure to collect rubber, a very profitable product, in a remote and unexplored…",
+      "poster": "https://image.tmdb.org/t/p/w342/oBCnYEKcg1rMhr5JjDnrRpilvDd.jpg",
+      "rating": 7.6,
+      "votes": 943,
+      "genres": [
+       "Drama",
+       "Adventure"
+      ],
+      "url": "https://www.themoviedb.org/movie/9343-fitzcarraldo/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-20"
+     },
+     {
+      "key": "movie:2000",
+      "id": 2000,
+      "kind": "movie",
+      "title": "Aguirre, the Wrath of God",
+      "original_title": "Aguirre, der Zorn Gottes",
+      "year": 1972,
+      "date": "1972-12-29",
+      "overview": "A few decades after the destruction of the Inca Empire, a Spanish expedition led by the infamous Aguirre leaves the mountains of Peru and goes down the Amazon River in search of the lost city of El Dorado.",
+      "poster": "https://image.tmdb.org/t/p/w342/zU1FLiGJw3m3iFrakwA0SzFvIPV.jpg",
+      "rating": 7.4,
+      "votes": 1321,
+      "genres": [
+       "History",
+       "Adventure",
+       "Drama"
+      ],
+      "url": "https://www.themoviedb.org/movie/2000-aguirre-der-zorn-gottes/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-15"
+     },
+     {
+      "key": "movie:2001",
+      "id": 2001,
+      "kind": "movie",
+      "title": "We Own the Night",
+      "year": 2007,
+      "date": "2007-10-12",
+      "overview": "A New York nightclub manager tries to save his brother and father from Russian mafia hitmen.",
+      "poster": "https://image.tmdb.org/t/p/w342/rsKhSr3UNjG2DhVj2KPj0ARujez.jpg",
+      "rating": 6.7,
+      "votes": 1603,
+      "genres": [
+       "Drama",
+       "Crime",
+       "Thriller"
+      ],
+      "url": "https://www.themoviedb.org/movie/2001-we-own-the-night/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-15"
+     },
+     {
+      "key": "movie:346685",
+      "id": 346685,
+      "kind": "movie",
+      "title": "The Girl on the Train",
+      "year": 2016,
+      "date": "2016-10-05",
+      "overview": "Rachel Watson, devastated by her recent divorce, spends her daily commute fantasizing about the seemingly perfect couple who live in a house that her train passes every day, until one morning she sees something shocking happen there and…",
+      "poster": "https://image.tmdb.org/t/p/w342/AhTO2QWG0tug7yDoh0XoaMhPt3J.jpg",
+      "rating": 6.4,
+      "votes": 6254,
+      "genres": [
+       "Crime",
+       "Mystery",
+       "Thriller"
+      ],
+      "url": "https://www.themoviedb.org/movie/346685-the-girl-on-the-train/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-15"
+     },
+     {
+      "key": "movie:1778681",
+      "id": 1778681,
+      "kind": "movie",
+      "title": "Yémen, carrefour de toutes les guerres",
+      "year": 2026,
+      "date": "2026-08-25",
+      "poster": "https://image.tmdb.org/t/p/w342/xpeKLQDGZvswnVWdmtsWnAcSTAl.jpg",
+      "rating": 8.0,
+      "votes": 1,
+      "genres": [
+       "Documentary"
+      ],
+      "url": "https://www.themoviedb.org/movie/1778681-yemen-carrefour-de-toutes-les-guerres/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "new_film"
+     },
+     {
+      "key": "tv:255570",
+      "id": 255570,
+      "kind": "tv",
+      "title": "This City Is Ours",
+      "year": 2025,
+      "date": "2025-03-23",
+      "overview": "After trying to leave a world of crime, Michael is dragged back into the fold to answer questions. Back in Liverpool tensions continue to bubble amongst the remaining members of the gang, and a gangster who's just been let out of prison…",
+      "poster": "https://image.tmdb.org/t/p/w342/75BwofwAZbf6GlhP2m6NPpP3bW2.jpg",
+      "rating": 7.5,
+      "votes": 67,
+      "genres": [
+       "Drama",
+       "Crime"
+      ],
+      "url": "https://www.themoviedb.org/tv/255570-this-city-is-ours/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "new_episodes"
+     },
+     {
+      "key": "movie:1750130",
+      "id": 1750130,
+      "kind": "movie",
+      "title": "9/11: The Unseen Footage",
+      "year": 2026,
+      "date": "2026-08-29",
+      "overview": "Marking the 25th anniversary of the September 11, 2001 terrorist attacks. Features previously unseen footage captured by Reuters journalists during the attacks and in the days that followed.",
+      "poster": "https://image.tmdb.org/t/p/w342/z32yXcqmWDLQAk8czl2YH12CZn6.jpg",
+      "rating": 0.0,
+      "votes": 0,
+      "genres": [
+       "Documentary",
+       "History"
+      ],
+      "url": "https://www.themoviedb.org/movie/1750130-9-11-the-unseen-footage/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "new_film"
+     },
+     {
+      "key": "tv:262352",
+      "id": 262352,
+      "kind": "tv",
+      "title": "The Assassin",
+      "year": 2025,
+      "date": "2025-07-25",
+      "overview": "Secluded on a remote Greek island, retired assassin Julie has a somewhat thorny reunion with her estranged son, Edward, visiting from England.",
+      "poster": "https://image.tmdb.org/t/p/w342/3O2UgEszp1CVbL8p9XnKkFDkbk3.jpg",
+      "rating": 6.7,
+      "votes": 82,
+      "genres": [
+       "Drama",
+       "Action & Adventure"
+      ],
+      "url": "https://www.themoviedb.org/tv/262352-the-assassin/watch?locale=SE",
+      "on": [
+       {
+        "service": "SVT Play",
+        "type": "free"
+       }
+      ],
+      "flag": "new_episodes"
+     }
+    ]
+   },
+   {
+    "service": "TV4 Play",
+    "titles": [
+     {
+      "key": "movie:5925",
+      "id": 5925,
+      "kind": "movie",
+      "title": "The Great Escape",
+      "year": 1963,
+      "date": "1963-07-03",
+      "overview": "The Nazis, exasperated at the number of escapes from their prison camps by a relatively small number of Allied prisoners, relocate them to a high-security 'escape-proof' camp to sit out the remainder of the war.",
+      "poster": "https://image.tmdb.org/t/p/w342/gBH4H8UMFxl139HaLz6lRuvsel8.jpg",
+      "rating": 7.9,
+      "votes": 3017,
+      "genres": [
+       "Adventure",
+       "Drama",
+       "War"
+      ],
+      "url": "https://www.themoviedb.org/movie/5925-the-great-escape/watch?locale=SE",
+      "on": [
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-19"
+     },
+     {
+      "key": "movie:580175",
+      "id": 580175,
+      "kind": "movie",
+      "title": "Another Round",
+      "original_title": "Druk",
+      "year": 2020,
+      "date": "2020-09-24",
+      "overview": "Four stagnant high school teachers decide to test out a theory that maintaining a constant level of intoxication will improve their overall lives.",
+      "poster": "https://image.tmdb.org/t/p/w342/aDcIt4NHURLKnAEu7gow51Yd00Q.jpg",
+      "rating": 7.6,
+      "votes": 4034,
+      "genres": [
+       "Drama"
+      ],
+      "url": "https://www.themoviedb.org/movie/580175-druk/watch?locale=SE",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       },
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "added",
+      "flag_date": "2026-11-15"
+     },
+     {
+      "key": "movie:1802475",
+      "id": 1802475,
+      "kind": "movie",
+      "title": "GW:s mord - Mordet på Wilma",
+      "year": 2026,
+      "date": "2026-11-17",
+      "overview": "After breaking up with her boyfriend, 17-year-old Wilma is gone. Neighbors hear desperate screams. Two weeks later, the police make a gruesome discovery inside a suitcase.",
+      "poster": "https://image.tmdb.org/t/p/w342/hiwaHO37kEXFmC3O6v6MzGORSzN.jpg",
+      "rating": 0.0,
+      "votes": 0,
+      "genres": [
+       "Documentary"
+      ],
+      "url": "https://www.themoviedb.org/movie/1802475-gw-s-mord-mordet-pa-wilma/watch?locale=SE",
+      "on": [
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "new_film"
+     },
+     {
+      "key": "tv:87940",
+      "id": 87940,
+      "kind": "tv",
+      "title": "Hudson & Rex",
+      "year": 2019,
+      "date": "2019-02-25",
+      "overview": "Detective Charlie Hudson teams up with what he calls his \"highly trained law enforcement animal\" German Shepherd dog named Rex who he prefers to team up with because he doesn't talk his ear off.",
+      "poster": "https://image.tmdb.org/t/p/w342/l5N985pVvDC41QwEprORSoGz3Q5.jpg",
+      "rating": 8.3,
+      "votes": 127,
+      "genres": [
+       "Drama",
+       "Crime"
+      ],
+      "url": "https://www.themoviedb.org/tv/87940-hudson-rex/watch?locale=SE",
+      "on": [
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "new_episodes"
+     },
+     {
+      "key": "movie:1754839",
+      "id": 1754839,
+      "kind": "movie",
+      "title": "ASAP Rocky – The Assault in Stockholm",
+      "original_title": "ASAP ROCKY - misshandeln i Stockholm",
+      "year": 2026,
+      "date": "2026-09-20",
+      "overview": "Global superstar A$AP Rocky was arrested following an assault in Stockholm in 2019. It became a major international news story. Here, those who were there recount what actually happened.",
+      "poster": "https://image.tmdb.org/t/p/w342/cTEwnGvnkbKd6Fq9FjdhxGXB4BK.jpg",
+      "rating": 0.0,
+      "votes": 0,
+      "genres": [
+       "Documentary"
+      ],
+      "url": "https://www.themoviedb.org/movie/1754839-asap-rocky-misshandeln-i-stockholm/watch?locale=SE",
+      "on": [
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "new_film"
+     },
+     {
+      "key": "tv:202297",
+      "id": 202297,
+      "kind": "tv",
+      "title": "Fire Country",
+      "year": 2022,
+      "date": "2022-10-07",
+      "overview": "Seeking redemption and a shortened prison sentence, young convict Bode Donovan joins a firefighting program that returns him to his small Northern California hometown, where he and other inmates work alongside elite firefighters to…",
+      "poster": "https://image.tmdb.org/t/p/w342/6XnA02VRG4dhBpTZWGZuXQdYGDW.jpg",
+      "rating": 8.0,
+      "votes": 191,
+      "genres": [
+       "Drama",
+       "Crime"
+      ],
+      "url": "https://www.themoviedb.org/tv/202297-fire-country/watch?locale=SE",
+      "on": [
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "new_episodes"
+     },
+     {
+      "key": "movie:1802469",
+      "id": 1802469,
+      "kind": "movie",
+      "title": "GW:s mord - Familjetragedin i Svartöstaden",
+      "year": 2026,
+      "date": "2026-10-27",
+      "overview": "The morning calm in Svartöstaden is brutally shattered by a blood-curdling roar. A mother and son are found dead. In the yard, a 19-year-old is apprehended, barefoot in the snow.",
+      "poster": "https://image.tmdb.org/t/p/w342/lJ53ZeYcbmRwseAEo5lVwpm48LR.jpg",
+      "rating": 0.0,
+      "votes": 0,
+      "genres": [
+       "Documentary",
+       "Crime"
+      ],
+      "url": "https://www.themoviedb.org/movie/1802469-gw-s-mord-familjetragedin-i-svartostaden/watch?locale=SE",
+      "on": [
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "new_film"
+     },
+     {
+      "key": "tv:226285",
+      "id": 226285,
+      "kind": "tv",
+      "title": "Elsbeth",
+      "year": 2024,
+      "date": "2024-02-29",
+      "overview": "After her successful career in Chicago, Elsbeth Tascioni, an astute but unconventional attorney, utilizes her singular point of view to make unique observations and corner brilliant criminals alongside the NYPD.",
+      "poster": "https://image.tmdb.org/t/p/w342/7lnNSbT90qwtrn1h9TvEkVFMz2P.jpg",
+      "rating": 6.7,
+      "votes": 146,
+      "genres": [
+       "Crime",
+       "Drama",
+       "Comedy"
+      ],
+      "url": "https://www.themoviedb.org/tv/226285-elsbeth/watch?locale=SE",
+      "on": [
+       {
+        "service": "TV4 Play",
+        "type": "ads"
+       }
+      ],
+      "flag": "new_episodes"
+     }
+    ]
+   }
+  ],
+  "classics": [
+   {
+    "key": "movie:10191",
+    "id": 10191,
+    "kind": "movie",
+    "title": "How to Train Your Dragon",
+    "year": 2010,
+    "date": "2010-03-18",
+    "overview": "As the son of a Viking leader on the cusp of manhood, shy Hiccup Horrendous Haddock III faces a rite of passage: he must kill a dragon to prove his warrior mettle.",
+    "poster": "https://image.tmdb.org/t/p/w342/ygGmAO60t8GyqUo9xYeYxSZAR3b.jpg",
+    "rating": 7.9,
+    "votes": 14945,
+    "genres": [
+     "Fantasy",
+     "Adventure",
+     "Animation"
+    ],
+    "url": "https://www.themoviedb.org/movie/10191-how-to-train-your-dragon/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   },
+   {
+    "key": "tv:127529",
+    "id": 127529,
+    "kind": "tv",
+    "title": "Bloodhounds",
+    "original_title": "사냥개들",
+    "year": 2023,
+    "date": "2023-06-09",
+    "overview": "Faced with ruthless foes with a violent thirst, two young boxers band together — risking life and limb to bring justice and protect their loved ones.",
+    "poster": "https://image.tmdb.org/t/p/w342/uSQzD7TXsL96J5ggDrJFdUs8uXU.jpg",
+    "rating": 8.5,
+    "votes": 836,
+    "genres": [
+     "Drama",
+     "Action & Adventure",
+     "Crime"
+    ],
+    "url": "https://www.themoviedb.org/tv/127529-sanyanggaedeul/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   },
+   {
+    "key": "tv:90937",
+    "id": 90937,
+    "kind": "tv",
+    "title": "BEASTARS",
+    "year": 2019,
+    "date": "2019-10-10",
+    "overview": "In a world where beasts of all kinds coexist, a gentle wolf awakens to his own predatory urges as his school deals with a murder within its midst.",
+    "poster": "https://image.tmdb.org/t/p/w342/Ac60Pi9UsVirPE8vt2lrVckR2tr.jpg",
+    "rating": 8.4,
+    "votes": 1365,
+    "genres": [
+     "Animation",
+     "Drama",
+     "Mystery"
+    ],
+    "url": "https://www.themoviedb.org/tv/90937-beastars/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   },
+   {
+    "key": "movie:808",
+    "id": 808,
+    "kind": "movie",
+    "title": "Shrek",
+    "year": 2001,
+    "date": "2001-05-18",
+    "overview": "It ain't easy bein' green -- especially if you're a likable (albeit smelly) ogre named Shrek. On a mission to retrieve a gorgeous princess from the clutches of a fire-breathing dragon, Shrek teams up with an unlikely compatriot -- a…",
+    "poster": "https://image.tmdb.org/t/p/w342/zscUsmzDJFZjUY8f8BQqMSWlmNQ.jpg",
+    "rating": 7.8,
+    "votes": 19618,
+    "genres": [
+     "Animation",
+     "Comedy",
+     "Fantasy"
+    ],
+    "url": "https://www.themoviedb.org/movie/808-shrek/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   },
+   {
+    "key": "tv:61222",
+    "id": 61222,
+    "kind": "tv",
+    "title": "BoJack Horseman",
+    "year": 2014,
+    "date": "2014-08-22",
+    "overview": "Meet the most beloved sitcom horse of the '90s , 20 years later. He's a curmudgeon with a heart of...not quite gold...but something like gold. Copper?",
+    "poster": "https://image.tmdb.org/t/p/w342/6JFWzlChcGgLiIUo2COgNlWGFKy.jpg",
+    "rating": 8.5,
+    "votes": 3036,
+    "genres": [
+     "Animation",
+     "Comedy",
+     "Drama"
+    ],
+    "url": "https://www.themoviedb.org/tv/61222-bojack-horseman/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   },
+   {
+    "key": "tv:197067",
+    "id": 197067,
+    "kind": "tv",
+    "title": "Extraordinary Attorney Woo",
+    "original_title": "이상한 변호사 우영우",
+    "year": 2022,
+    "date": "2022-06-29",
+    "overview": "With a genius-level IQ, Woo Young-woo learns to embrace her extraordinary self while forming a tight-knit community of friends and allies.",
+    "poster": "https://image.tmdb.org/t/p/w342/zuNOQVI4rEaqwknrfQUVKtlKE2C.jpg",
+    "rating": 8.5,
+    "votes": 1009,
+    "genres": [
+     "Drama"
+    ],
+    "url": "https://www.themoviedb.org/tv/197067-isanghan-byeonhosa-uyeongu/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   },
+   {
+    "key": "tv:88803",
+    "id": 88803,
+    "kind": "tv",
+    "title": "Vinland Saga",
+    "original_title": "ヴィンランド・サガ",
+    "year": 2019,
+    "date": "2019-07-08",
+    "overview": "For a thousand years, the Vikings have made quite a name and reputation for themselves as the strongest families with a thirst for violence.",
+    "poster": "https://image.tmdb.org/t/p/w342/vUHlpA5c1NXkds59reY3HMb4Abs.jpg",
+    "rating": 8.5,
+    "votes": 1074,
+    "genres": [
+     "Animation",
+     "War & Politics",
+     "Action & Adventure"
+    ],
+    "url": "https://www.themoviedb.org/tv/88803-vuinrando-saga/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   },
+   {
+    "key": "tv:46952",
+    "id": 46952,
+    "kind": "tv",
+    "title": "The Blacklist",
+    "year": 2013,
+    "date": "2013-09-23",
+    "overview": "Raymond \"Red\" Reddington, one of the FBI's most wanted fugitives, surrenders in person at FBI Headquarters in Washington, D.C. He claims that he and the FBI have the same interests: bringing down dangerous criminals and terrorists.",
+    "poster": "https://image.tmdb.org/t/p/w342/4HTfd1PhgFUenJxVuBDNdLmdr0c.jpg",
+    "rating": 7.6,
+    "votes": 3797,
+    "genres": [
+     "Drama",
+     "Crime",
+     "Mystery"
+    ],
+    "url": "https://www.themoviedb.org/tv/46952-the-blacklist/watch?locale=SE",
+    "on": [
+     {
+      "service": "Netflix",
+      "type": "flatrate"
+     }
+    ]
+   }
+  ],
+  "top10": {
+   "week": {
+    "end": "2026-11-15",
+    "start": "2026-11-09"
+   },
+   "url": "https://www.netflix.com/tudum/top10/sweden",
+   "films": [
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2026-11-12",
+      "genres": [
+       "Romance",
+       "Comedy"
+      ],
+      "id": 1757174,
+      "key": "movie:1757174",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "original_title": "Bara till jul",
+      "overview": "Craving a change of pace, work-hard-play-hard city girl Freddie swaps lives with her homebody sister Mattie at Christmas time, only to unwrap a whole new kind of mess.",
+      "poster": "https://image.tmdb.org/t/p/w342/9kHrUoPF2rl5Hj0QMquAy3xznXT.jpg",
+      "rating": 6.4,
+      "title": "The Christmas Switch",
+      "url": "https://www.themoviedb.org/movie/1757174/watch?locale=SE",
+      "votes": 56,
+      "year": 2026
+     },
+     "rank": 1,
+     "title": "The Christmas Switch",
+     "weeks": 1
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2026-11-13",
+      "genres": [
+       "Thriller",
+       "Mystery"
+      ],
+      "id": 1543469,
+      "key": "movie:1543469",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "Former country music legend Misty Jones returns to Nashville to unravel the truth behind her rising-star niece's disappearance.",
+      "poster": "https://image.tmdb.org/t/p/w342/pg8me0oPc8CGEEmpgwqZ1EMmKnx.jpg",
+      "rating": 6.3,
+      "title": "Heartland",
+      "url": "https://www.themoviedb.org/movie/1543469/watch?locale=SE",
+      "votes": 75,
+      "year": 2026
+     },
+     "rank": 2,
+     "title": "Heartland",
+     "weeks": 1
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2015-12-03",
+      "genres": [
+       "Thriller",
+       "Drama",
+       "Adventure"
+      ],
+      "id": 205775,
+      "key": "movie:205775",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "In the winter of 1820, the New England whaling ship Essex is assaulted by something no one could believe—a whale of mammoth size and will, and an almost human sense of vengeance.",
+      "poster": "https://image.tmdb.org/t/p/w342/weVvNPfk6FM9vBg3BXtRtNAmiYM.jpg",
+      "rating": 6.8,
+      "title": "In the Heart of the Sea",
+      "url": "https://www.themoviedb.org/movie/205775/watch?locale=SE",
+      "votes": 4568,
+      "year": 2015
+     },
+     "rank": 3,
+     "title": "In the Heart of the Sea",
+     "weeks": 1
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2000-11-17",
+      "genres": [
+       "Family",
+       "Comedy",
+       "Fantasy"
+      ],
+      "id": 8871,
+      "key": "movie:8871",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "The Grinch decides to rob Whoville of Christmas - but a dash of kindness from little Cindy Lou Who and her family may be enough to melt his heart...",
+      "poster": "https://image.tmdb.org/t/p/w342/1WZbbPApEivA421gCOluuzMMKCk.jpg",
+      "rating": 6.8,
+      "title": "How the Grinch Stole Christmas",
+      "url": "https://www.themoviedb.org/movie/8871/watch?locale=SE",
+      "votes": 8593,
+      "year": 2000
+     },
+     "rank": 4,
+     "title": "How the Grinch Stole Christmas",
+     "weeks": 17
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2026-11-04",
+      "genres": [
+       "Comedy",
+       "Drama"
+      ],
+      "id": 1570488,
+      "key": "movie:1570488",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "When a medical emergency pulls the Goss family apart, determined dog Winstead will do all he can to bring his humans back together before Christmas Eve.",
+      "poster": "https://image.tmdb.org/t/p/w342/zvsNAohDHRWcGvbPSD7r3WojpKb.jpg",
+      "rating": 7.2,
+      "title": "A Dog's Perfect Christmas",
+      "url": "https://www.themoviedb.org/movie/1570488/watch?locale=SE",
+      "votes": 67,
+      "year": 2026
+     },
+     "rank": 5,
+     "title": "A Dog's Perfect Christmas",
+     "weeks": 2
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2018-11-22",
+      "genres": [
+       "Romance",
+       "TV Movie"
+      ],
+      "id": 550023,
+      "key": "movie:550023",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "Katie, a former professional ice skater, is hired by the king of San Senova, Alexander, to help his daughter in a Christmas ice skating performance.",
+      "poster": "https://image.tmdb.org/t/p/w342/lD6xv3dz6AStcYsrDk6sqHKMgxD.jpg",
+      "rating": 6.4,
+      "title": "Christmas at the Palace",
+      "url": "https://www.themoviedb.org/movie/550023/watch?locale=SE",
+      "votes": 132,
+      "year": 2018
+     },
+     "rank": 6,
+     "title": "Christmas at the Palace",
+     "weeks": 2
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2026-11-11",
+      "genres": [
+       "Action",
+       "Crime",
+       "Thriller"
+      ],
+      "id": 1616687,
+      "key": "movie:1616687",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "original_title": "Serangan Balik",
+      "overview": "When a deadly gang descends on his remote home, a guilt-ridden veteran and the estranged grandchildren he barely knows must unite to survive.",
+      "poster": "https://image.tmdb.org/t/p/w342/hKROmLddpzpjkxKKVFYFRAOXX1b.jpg",
+      "rating": 7.1,
+      "title": "Never Surrender",
+      "url": "https://www.themoviedb.org/movie/1616687/watch?locale=SE",
+      "votes": 48,
+      "year": 2026
+     },
+     "rank": 7,
+     "title": "Never Surrender",
+     "weeks": 1
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2018-11-18",
+      "genres": [
+       "Romance",
+       "Family",
+       "TV Movie"
+      ],
+      "id": 554279,
+      "key": "movie:554279",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "As Christmas approaches, Amelia Hughes, a career-focused Chicago app developer lacking in holiday spirit, returns to her small hometown of Christmas Creek to rediscover the meaning of Christmas.",
+      "poster": "https://image.tmdb.org/t/p/w342/gCdjZCWM9x9vAbtkvZiIIYL7tOB.jpg",
+      "rating": 6.4,
+      "title": "Return to Christmas Creek",
+      "url": "https://www.themoviedb.org/movie/554279/watch?locale=SE",
+      "votes": 128,
+      "year": 2018
+     },
+     "rank": 8,
+     "title": "Return to Christmas Creek",
+     "weeks": 1
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2021-12-01",
+      "genres": [
+       "Animation",
+       "Comedy",
+       "Family"
+      ],
+      "id": 438695,
+      "key": "movie:438695",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "Buster and his new cast now have their sights set on debuting a new show at the Crystal Tower Theater in glamorous Redshore City.",
+      "poster": "https://image.tmdb.org/t/p/w342/aWeKITRFbbwY8txG5uCj4rMCfSP.jpg",
+      "rating": 7.8,
+      "title": "Sing 2",
+      "url": "https://www.themoviedb.org/movie/438695/watch?locale=SE",
+      "votes": 4977,
+      "year": 2021
+     },
+     "rank": 9,
+     "title": "Sing 2",
+     "weeks": 7
+    },
+    {
+     "kind": "movie",
+     "match": {
+      "date": "2026-11-11",
+      "genres": [
+       "Crime",
+       "Documentary"
+      ],
+      "id": 1664682,
+      "key": "movie:1664682",
+      "kind": "movie",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "original_title": "Suzane von Richthofen: O Que o Tempo Não Apaga",
+      "overview": "Decades of questions and a crime that shook Brazil. Suzane von Richthofen, convicted for the murder of her parents, tells the whole story in her own words.",
+      "poster": "https://image.tmdb.org/t/p/w342/pO3BpFyC9B2fnfByJulxjs3hM4P.jpg",
+      "rating": 5.1,
+      "title": "The Unthinkable Daughter",
+      "url": "https://www.themoviedb.org/movie/1664682/watch?locale=SE",
+      "votes": 9,
+      "year": 2026
+     },
+     "rank": 10,
+     "title": "The Unthinkable Daughter",
+     "weeks": 1
+    }
+   ],
+   "tv": [
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2026-10-30",
+      "genres": [
+       "Drama",
+       "Mystery"
+      ],
+      "id": 336240,
+      "key": "tv:336240",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "original_title": "Bytet",
+      "overview": "A seemingly idyllic home swap between Sicily and Stockholm turns toxic as two wealthy couples go to extremes to protect themselves — and their secrets.",
+      "poster": "https://image.tmdb.org/t/p/w342/1k8bldCgOvWk9IDaMqokUE78qaX.jpg",
+      "rating": 4.6,
+      "title": "A Couple of Lies",
+      "url": "https://www.themoviedb.org/tv/336240/watch?locale=SE",
+      "votes": 19,
+      "year": 2026
+     },
+     "rank": 1,
+     "show": "A Couple of Lies",
+     "title": "A Couple of Lies: Limited Series",
+     "weeks": 3
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2024-12-05",
+      "genres": [
+       "Action & Adventure",
+       "Drama",
+       "Mystery"
+      ],
+      "id": 225385,
+      "key": "tv:225385",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "When a spy posing as a politician's wife learns her lover has been murdered, an old assassin friend joins her on a quest for truth — and vengeance.",
+      "poster": "https://image.tmdb.org/t/p/w342/srlsyEfIBz2MNWBndVc3opOaNGS.jpg",
+      "rating": 7.1,
+      "title": "Black Doves",
+      "url": "https://www.themoviedb.org/tv/225385/watch?locale=SE",
+      "votes": 498,
+      "year": 2024
+     },
+     "rank": 2,
+     "show": "Black Doves",
+     "title": "Black Doves: Season 2",
+     "weeks": 2
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2026-11-04",
+      "genres": [
+       "Documentary"
+      ],
+      "id": 338684,
+      "key": "tv:338684",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "Beth Holloway, Natalee's mother, tells the full, definitive story of the case that's haunted her for the past 20 years - from the day of Natalee's disappearance to the dramatic confession two decades later.",
+      "poster": "https://image.tmdb.org/t/p/w342/rKyjcuSbsDDDcIisa6cx5k5yQNa.jpg",
+      "rating": 7.6,
+      "title": "Taken: Natalee Holloway",
+      "url": "https://www.themoviedb.org/tv/338684/watch?locale=SE",
+      "votes": 11,
+      "year": 2026
+     },
+     "rank": 3,
+     "show": "Taken: Natalee Holloway",
+     "title": "Taken: Natalee Holloway: Season 1",
+     "weeks": 2
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2026-11-09",
+      "genres": [
+       "Animation",
+       "Kids"
+      ],
+      "id": 336478,
+      "key": "tv:336478",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "Make it a doghouse day! Dog-loving Doozie uses her creativity and imagination during playtime with her puppy pals.",
+      "poster": "https://image.tmdb.org/t/p/w342/bhFbiSXg7KrwfXkpZfiLDq4QFCt.jpg",
+      "rating": 0.0,
+      "title": "Doozie's Doghouse",
+      "url": "https://www.themoviedb.org/tv/336478/watch?locale=SE",
+      "votes": 0,
+      "year": 2026
+     },
+     "rank": 4,
+     "show": "Doozie's Doghouse",
+     "title": "Doozie's Doghouse: Season 1",
+     "weeks": 1
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2024-12-05",
+      "genres": [
+       "Action & Adventure",
+       "Drama",
+       "Mystery"
+      ],
+      "id": 225385,
+      "key": "tv:225385",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "When a spy posing as a politician's wife learns her lover has been murdered, an old assassin friend joins her on a quest for truth — and vengeance.",
+      "poster": "https://image.tmdb.org/t/p/w342/srlsyEfIBz2MNWBndVc3opOaNGS.jpg",
+      "rating": 7.1,
+      "title": "Black Doves",
+      "url": "https://www.themoviedb.org/tv/225385/watch?locale=SE",
+      "votes": 498,
+      "year": 2024
+     },
+     "rank": 5,
+     "show": "Black Doves",
+     "title": "Black Doves: Season 1",
+     "weeks": 6
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2021-01-08",
+      "genres": [
+       "Crime",
+       "Drama",
+       "Mystery"
+      ],
+      "id": 96677,
+      "key": "tv:96677",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "Inspired by the adventures of Arsène Lupin, gentleman thief Assane Diop sets out to avenge his father for an injustice inflicted by a wealthy family.",
+      "poster": "https://image.tmdb.org/t/p/w342/h6Z2oogE4mJk2uffdtIlLhb0EHx.jpg",
+      "rating": 7.7,
+      "title": "Lupin",
+      "url": "https://www.themoviedb.org/tv/96677/watch?locale=SE",
+      "votes": 2803,
+      "year": 2021
+     },
+     "rank": 6,
+     "show": "Lupin",
+     "title": "Lupin: Part 4",
+     "weeks": 4
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2026-11-11",
+      "genres": [
+       "Mystery",
+       "Drama"
+      ],
+      "id": 291507,
+      "key": "tv:291507",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "On Halloween night, an all-girls dance squad tumbles into Catholic guilt, unholy desires and ghostly visions when an initiation goes to hell.",
+      "poster": "https://image.tmdb.org/t/p/w342/zleCYDRbW5mKwgZwVK4SNIrKXWx.jpg",
+      "rating": 7.8,
+      "title": "The Body",
+      "url": "https://www.themoviedb.org/tv/291507/watch?locale=SE",
+      "votes": 75,
+      "year": 2026
+     },
+     "rank": 7,
+     "show": "The Body",
+     "title": "The Body: Season 1",
+     "weeks": 1
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2022-02-06",
+      "genres": [
+       "Crime",
+       "Drama"
+      ],
+      "id": 119845,
+      "key": "tv:119845",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "Tommy Egan leaves New York behind and plans to take on Chicago, using his outsider status to break all the local rules and rewrite them on his quest to become the biggest drug dealer in the city.",
+      "poster": "https://image.tmdb.org/t/p/w342/yzL4Tqbw2JA9MCsHJWFC4xV1IYU.jpg",
+      "rating": 8.3,
+      "title": "Power Book IV: Force",
+      "url": "https://www.themoviedb.org/tv/119845/watch?locale=SE",
+      "votes": 243,
+      "year": 2022
+     },
+     "rank": 8,
+     "show": "Power Book IV: Force",
+     "title": "Power Book IV: Force: Season 1",
+     "weeks": 1
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2024-09-26",
+      "genres": [
+       "Comedy",
+       "Drama"
+      ],
+      "id": 250923,
+      "key": "tv:250923",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "overview": "An agnostic sex podcaster and a newly single rabbi fall in love, but can their relationship survive their wildly different lives and meddling families?",
+      "poster": "https://image.tmdb.org/t/p/w342/1RNtqMeSNNBkXqK8WPUMf72vGrt.jpg",
+      "rating": 7.3,
+      "title": "Nobody Wants This",
+      "url": "https://www.themoviedb.org/tv/250923/watch?locale=SE",
+      "votes": 326,
+      "year": 2024
+     },
+     "rank": 9,
+     "show": "Nobody Wants This",
+     "title": "Nobody Wants This: Season 3",
+     "weeks": 4
+    },
+    {
+     "kind": "tv",
+     "match": {
+      "date": "2022-09-29",
+      "genres": [
+       "Drama"
+      ],
+      "id": 131488,
+      "key": "tv:131488",
+      "kind": "tv",
+      "on": [
+       {
+        "service": "Netflix",
+        "type": "flatrate"
+       }
+      ],
+      "original_title": "Die Kaiserin",
+      "overview": "When rebellious Elisabeth falls for Emperor Franz and becomes his unlikely bride, she enters a world of tension and intrigue at the Viennese court.",
+      "poster": "https://image.tmdb.org/t/p/w342/9AWkNkZHwNLuM6H5u6dToioHMAI.jpg",
+      "rating": 7.7,
+      "title": "The Empress",
+      "url": "https://www.themoviedb.org/tv/131488/watch?locale=SE",
+      "votes": 193,
+      "year": 2022
+     },
+     "rank": 10,
+     "show": "The Empress",
+     "title": "The Empress: Season 3",
+     "weeks": 1
+    }
+   ]
+  }
+ }
+}
