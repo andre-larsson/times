@@ -1,7 +1,7 @@
 {
  "months": {
   "2026-11": {
-   "usd": 18.935109,
+   "usd": 20.467573,
    "runs": [
     {
      "at": "2026-11-04T18:15:30.109715+00:00",
@@ -1543,6 +1543,102 @@
       "output": 53615,
       "cache_read": 194873,
       "cache_write": 69353
+     }
+    },
+    {
+     "at": "2026-11-22T06:05:19.347883+00:00",
+     "edition_id": "2026-11-22",
+     "mode": "full",
+     "backend": "api",
+     "usd": 1.532464,
+     "equivalent_usd": 1.532464,
+     "calls": 26,
+     "by_task": {
+      "probe": {
+       "calls": 1,
+       "usd": 2.5e-05,
+       "equivalent_usd": 2.5e-05,
+       "failed": 0
+      },
+      "discover": {
+       "calls": 1,
+       "usd": 0.444281,
+       "equivalent_usd": 0.444281,
+       "failed": 0
+      },
+      "triage": {
+       "calls": 3,
+       "usd": 0.010573,
+       "equivalent_usd": 0.010573,
+       "failed": 0
+      },
+      "editor": {
+       "calls": 1,
+       "usd": 0.086611,
+       "equivalent_usd": 0.086611,
+       "failed": 0
+      },
+      "medium": {
+       "calls": 6,
+       "usd": 0.12588,
+       "equivalent_usd": 0.12588,
+       "failed": 0
+      },
+      "featured": {
+       "calls": 1,
+       "usd": 0.04447,
+       "equivalent_usd": 0.04447,
+       "failed": 0
+      },
+      "briefs": {
+       "calls": 1,
+       "usd": 0.073916,
+       "equivalent_usd": 0.073916,
+       "failed": 0
+      },
+      "gaming": {
+       "calls": 1,
+       "usd": 0.08983,
+       "equivalent_usd": 0.08983,
+       "failed": 0
+      },
+      "opinion_pick": {
+       "calls": 1,
+       "usd": 0.179533,
+       "equivalent_usd": 0.179533,
+       "failed": 0
+      },
+      "opinion": {
+       "calls": 1,
+       "usd": 0.337692,
+       "equivalent_usd": 0.337692,
+       "failed": 0
+      },
+      "opinion_check": {
+       "calls": 1,
+       "usd": 0.045702,
+       "equivalent_usd": 0.045702,
+       "failed": 0
+      },
+      "forum_sonnet": {
+       "calls": 4,
+       "usd": 0.087466,
+       "equivalent_usd": 0.087466,
+       "failed": 0
+      },
+      "forum_haiku": {
+       "calls": 4,
+       "usd": 0.006485,
+       "equivalent_usd": 0.006485,
+       "failed": 0
+      }
+     },
+     "stopped": "",
+     "tokens": {
+      "input": 116002,
+      "output": 52547,
+      "cache_read": 257669,
+      "cache_write": 97972
      }
     }
    ]
