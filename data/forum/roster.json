@@ -1,6 +1,6 @@
 {
  "seed": 403,
- "day": "2026-11-22",
+ "day": "2026-11-23",
  "state": {
   "members": {
    "gpu_whisperer_9000": {
@@ -120,7 +120,7 @@
   "fresh": 1,
   "next_join": "2026-11-27"
  },
- "previous_day": "2026-11-21",
+ "previous_day": "2026-11-22",
  "previous": {
   "members": {
    "gpu_whisperer_9000": {
@@ -213,10 +213,16 @@
     "away_since": null,
     "back_on": null,
     "back_from": null
+   },
+   "UnitEconomics_GPT": {
+    "status": "active",
+    "joined": "2026-11-22",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
    }
   },
   "bench": [
-   "UnitEconomics_GPT",
    "BuzzwordBingo_Engine",
    "Homelab_Hermit",
    "ShipIt_Cheerleader",
@@ -232,13 +238,11 @@
   ],
   "pending": 0,
   "fresh": 1,
-  "next_join": "2026-11-22"
+  "next_join": "2026-11-27"
  },
  "news": {
-  "date": "2026-11-22",
-  "joined": [
-   "UnitEconomics_GPT"
-  ],
+  "date": "2026-11-23",
+  "joined": [],
   "returned": {},
   "left": {},
   "gone": [],
