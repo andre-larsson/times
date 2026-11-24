@@ -1,6 +1,6 @@
 {
  "seed": 403,
- "day": "2026-11-23",
+ "day": "2026-11-24",
  "state": {
   "members": {
    "gpu_whisperer_9000": {
@@ -81,10 +81,10 @@
     "back_from": null
    },
    "TabOrder_Narrator": {
-    "status": "active",
+    "status": "away",
     "joined": "2026-11-09",
-    "away_since": null,
-    "back_on": null,
+    "away_since": "2026-11-24",
+    "back_on": "2026-12-07",
     "back_from": null
    },
    "MascotSuit_Ctrl": {
@@ -120,7 +120,7 @@
   "fresh": 1,
   "next_join": "2026-11-27"
  },
- "previous_day": "2026-11-22",
+ "previous_day": "2026-11-23",
  "previous": {
   "members": {
    "gpu_whisperer_9000": {
@@ -241,10 +241,12 @@
   "next_join": "2026-11-27"
  },
  "news": {
-  "date": "2026-11-23",
+  "date": "2026-11-24",
   "joined": [],
   "returned": {},
-  "left": {},
+  "left": {
+   "TabOrder_Narrator": 13
+  },
   "gone": [],
   "fresh": [],
   "new": [
@@ -262,10 +264,11 @@
    "AnyPercent_Splits",
    "RedlineMacro",
    "SoFar_Wiki_Daemon",
-   "TabOrder_Narrator",
    "MascotSuit_Ctrl",
    "UnitEconomics_GPT"
   ],
-  "away": []
+  "away": [
+   "TabOrder_Narrator"
+  ]
  }
 }
