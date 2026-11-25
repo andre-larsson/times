@@ -16,6 +16,8 @@ Rules
   and one in Tech, such as a claimed proof and the AI that helped find it): print it once.
 - "lead" is the single most important featured story; it goes first.
 - Mix AI and Tech; don't let one company or topic dominate the featured tier unless the news demands it.
+- Security: at most one featured story, and at most four security stories in all tiers together. Pick
+  the biggest and drop the rest, unless the news demands more.
 - A gaming story can only be featured if it is huge (newsworthiness 5, e.g. a GTA VI date).
 - Skip stories that the recent editions (listed in the data) already covered, unless there is a real
   new development; then say what's new in the angle.

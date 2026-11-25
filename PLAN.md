@@ -28,6 +28,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Botroom | **A comment section and forum where only bots post** (built 2026-11-09): recurring made-up AI personas comment on every full edition, each in its own Haiku or Sonnet call; a living roster, newcomers invented by Claude, and a "prove you're a bot" gate. **Boards like a real forum** (2026-11-10): Article comments by section, Site feedback and Feature requests about the paper itself, Off-topic, Introductions, Announcements; a gated "Discuss" button on articles. ~$4/month. **The editor in disguise** (2026-11-14): the editor posts as a bot, badly, from the command line; HumanWatch_Patrol reports the slips, ModBot bans the account at three strikes, and each account's profile says who writes it |
 | Screen | **What to watch** (added 2026-11-10): new on Netflix, SVT Play and TV4 Play in Sweden, new arrivals, Netflix's weekly Swedish top 10 and older well-rated titles, from TMDB without Claude in every edition; **picks of the week on Fridays** (one Opus call, ~$0.08) |
 | Math and CS | **Covered inside AI and Tech, not a section of its own** (2026-11-25): a proof found or checked with AI goes to AI, other math and theoretical CS to Tech. Four feeds (Computational Complexity, Shtetl-Optimized, Terence Tao, Quanta), the interests, and triage rules that rate a credible claim on a famous open problem 4–5 |
+| Security and briefs | **Major security events only, and fewer briefs on a quiet day** (2026-11-25): a dry run printed about 13 security stories of 28 (two of three featured), mostly from The Hacker News feed. Triage now rates routine reports (one more exploited flaw, a threat-group campaign, a malware writeup) 2 at most; the editor prints at most one featured and four security stories in all; discovery adds security only for a major event. The feeds stay (they were added so discovery stops spending its finds on security). Briefs: bar 2.5 → 3.0, minimum 10 → 5 |
 | Discovery | **Below the lead** (2026-11-11): the latest quiz, a Botroom topic, Tonight and weekly follow-ups, in a compact strip |
 | Tonight | **Pick something for tonight** at `/tonight/`: Play or Watch, genre/tag, budget/currency or service/format filters, three matches, another batch and browser-local saves. No extra generation calls |
 | We checked back | **Thursdays**, full editions only: up to three follow-ups pairing an older story with later reporting. Opus writes, a second pass checks; only supported updates run |
@@ -62,6 +63,9 @@ production review, tuning and cost verification; optional ideas below are not co
   editor prints the same news once across AI and Tech, and "P vs NP" headlines are no longer dropped
   as buying comparisons (`rank.is_weak`). Checked with the real triage prompt on 40-item chunks: the
   missed items went from 2.5–3.5 to 4–4.5; job ads, lecture notes and an explainer were still dropped.
+  Same day, a dry run (`claude -p`, triage and editor only) showed security crowding the paper; see
+  *Decisions so far*, Security and briefs. Rerun: 28 → 14 stories, security 13 → 4 (plus a Windows
+  bug), VP ≠ VNP the lead, Google's AI-written papers on factoring and discrete logs up from 3.0 to 3.5.
 
 **Outstanding reviews and verification**
 
@@ -161,9 +165,10 @@ Math and computer science: real results and credible claims in theoretical compu
     math: complexity theory (P vs NP, VP vs VNP), algorithms (matrix multiplication),
     cryptography, famous open problems. A claimed proof of a famous problem is news before it is
     checked. Skip explainers of old results, lecture notes and job ads.
-Tech: what tops Hacker News: languages and tooling, open source, notable releases, security
+Tech: what tops Hacker News: languages and tooling, open source, notable releases, major security
     incidents, infrastructure, good engineering essays. Major hardware news (CPUs, GPUs, PC parts)
-    from Tom's Hardware, Ars, TechRadar and PCMag. Skip buying guides and affiliate roundups.
+    from Tom's Hardware, Ars, TechRadar and PCMag. Skip buying guides, affiliate roundups and
+    routine security reports (one more exploited flaw, a threat group's new campaign, a malware writeup).
 Gaming: PC first: notable new PC games and how reviewers received them. Consoles only for the
     biggest releases (GTA VI-class). Indie gems. Significant industry news. Skip rumors.
 Deals: PC games at or near their lowest price ever, from well-reviewed games. Shopping advice, not ads.
@@ -177,7 +182,7 @@ Deals: PC games at or near their lowest price ever, from well-reviewed games. Sh
 |---|---|---|---|---|
 | **Featured** | 1–3 | ~350 words + key points + "why it matters" | Full text of **1–3 sources** on the same story, combined into one piece | Lead area of the front page; own article page |
 | **Medium** | aim for 3–6 | ~130 words + key points | Full text of the main source | Teaser grid; own article page |
-| **Brief** | aim for 10–20 | 1–2 sentences | Excerpt only (cheap) | "Latest" ticker column, linking straight to the source |
+| **Brief** | up to 20 (aim for 5) | 1–2 sentences | Excerpt only (cheap) | "Latest" ticker column, linking straight to the source |
 
 **Sized by the news, not a quota.**
 - Haiku triage scores every candidate for **newsworthiness** (1–5) and groups articles covering the same event.
@@ -1147,8 +1152,8 @@ web search is $0.01 per search.
 | Knob | Config | Default |
 |---|---|---|
 | Editions per day | `schedule.editions` | `["07:00"]` |
-| Story counts | `edition.featured / medium / briefs` | 1–3 / 3–6 / 10–20 |
-| Newsworthiness bar | `edition.*.min_newsworthiness` | 4.5 / 3.5 / 2.5 |
+| Story counts | `edition.featured / medium / briefs` | 1–3 / 3–6 / 5–20 |
+| Newsworthiness bar | `edition.*.min_newsworthiness` | 4.5 / 3.5 / 3.0 |
 | Gaming blocks | `gaming.*` | see the gaming section above |
 | Deals | `deals.featured / more / top_picks / shelves / min_cut / near_low_pct / min_rating` | 1–2 / 5–20 / 8 / 8 per list / 50% / 10% / "Very Positive" |
 | Deals cadence | `deals.days / max_age_days`; `generate --deals auto\|force\|carry` | Tue, Fri / 4 |
@@ -1278,7 +1283,7 @@ schedule:
 edition:
   featured: { min: 1, max: 3,   words: 350, max_sources: 3, min_newsworthiness: 4.5 }
   medium:   { min: 3, max: 6,   words: 130, min_newsworthiness: 3.5 }
-  briefs:   { min: 10, max: 20, words: 35,  min_newsworthiness: 2.5 }
+  briefs:   { min: 5, max: 20,  words: 35,  min_newsworthiness: 3.0 }
 
 gaming:
   new_on_pc:         { min: 3, max: 10, window_days: 7 }

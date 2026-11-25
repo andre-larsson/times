@@ -25,7 +25,7 @@ sections:
 edition:
   featured: { min: 1, max: 3,   words: 350, max_sources: 3, min_newsworthiness: 4.5 }
   medium:   { min: 3, max: 6,   words: 130, min_newsworthiness: 3.5 }
-  briefs:   { min: 10, max: 20, words: 35,  min_newsworthiness: 2.5 }
+  briefs:   { min: 5, max: 20,  words: 35,  min_newsworthiness: 3.0 }
   # min is a soft target: the editor goes below it rather than print weak stories (featured always ≥ 1)
 
 gaming:
@@ -254,9 +254,10 @@ interests: |
       math: complexity theory (P vs NP, VP vs VNP), algorithms (matrix multiplication),
       cryptography, famous open problems. A claimed proof of a famous problem is news before it is
       checked. Skip explainers of old results, lecture notes and job ads.
-  Tech: what tops Hacker News: languages and tooling, open source, notable releases, security
+  Tech: what tops Hacker News: languages and tooling, open source, notable releases, major security
       incidents, infrastructure, good engineering essays. Major hardware news (CPUs, GPUs, PC parts).
-      Skip buying guides and affiliate roundups.
+      Skip buying guides, affiliate roundups and routine security reports (one more exploited flaw,
+      a threat group's new campaign, a malware writeup).
   Gaming: PC first: notable new PC games and how reviewers received them. Consoles only for the
       biggest releases (GTA VI-class). Indie gems. Significant industry news. Skip rumors.
   Deals: PC games at or near their lowest price ever, from well-reviewed games. Shopping advice, not ads.

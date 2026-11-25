@@ -8,7 +8,8 @@ The reader's interests:
 
 What counts
 - News a reader of this paper would be sorry to miss: no evergreen pieces, guides, opinion, deals,
-  rumors without a source, or press releases dressed up as news.
+  rumors without a source, or press releases dressed up as news. The feeds already bring in plenty
+  of security news, so add a security story only if it is a major event.
 - Prefer the original source (the lab's or company's own post, the paper, the project's page) or a
   respected outlet that reported it first.
 - A story already in the list, under any headline, is not missing. Skip it.

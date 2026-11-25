@@ -69,7 +69,7 @@ class FakeLLM(ForumAnswers, LLM):
     def _triage(self, rows):
         self.triaged = getattr(self, "triaged", []) + rows
         return {"items": [{"id": r["id"], "keep": True, "section": r["rule_section"], "kicker": "Dev",
-                           "newsworthiness": max(2.5, 5 - i * 0.5), "event": r["id"], "title_en": r["title"]}
+                           "newsworthiness": max(3.0, 5 - i * 0.5), "event": r["id"], "title_en": r["title"]}
                           for i, r in enumerate(rows)]}
 
     def _editor(self, data):
