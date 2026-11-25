@@ -241,7 +241,8 @@ def test_discovery_in_full_editions(tmp_path, offline):
     assert d["depth"] == "normal" and d["filtering"] and d["searches"] == 6 and d["kept"] == [DISCOVERED["url"]]
     assert d["dropped"] == [{"url": "https://example.com/invented",
                              "reason": "no search, fetched page or link on one has this address"}]
-    assert any(t["title"] == DISCOVERED["title"] and t["source"] == "Example Labs" for t in made[-1].triaged)
+    assert any(t["title"] == DISCOVERED["title"] and t["source"] == "Example Labs"
+               and t["link"] == "example.org/sandbox" for t in made[-1].triaged)    # whose page: triage reads it
     assert ed["llm"]["by_task"]["discover"]["calls"] == 1
     assert "Headlines the paper's feeds brought in" in made[-1].web_user
 

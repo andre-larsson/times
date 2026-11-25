@@ -22,7 +22,7 @@ from .http import Client
 from .llm import LLM, LLMError
 from .seen import is_seen
 from .sources import Harvest
-from .text import canonical_url, excerpt, similarity, slugify, words
+from .text import canonical_url, excerpt, short_link, similarity, slugify, words
 
 PICKS = {"popular": "popular", "hidden": "hidden_gem", "genre": "genre"}   # why a deal is in the list (deals.md)
 
@@ -88,7 +88,8 @@ def build(cfg: dict[str, Any], harvest: Harvest, edition_id: str, mode: str, llm
 
     # 2. triage (Haiku), in parallel chunks
     rows = [{
-        "id": cid, "source": c.item.source, "title": c.item.title, "excerpt": excerpt(c.item.excerpt, 200),
+        "id": cid, "source": c.item.source, "link": short_link(c.item.url), "title": c.item.title,
+        "excerpt": excerpt(c.item.excerpt, 200),
         "language": c.item.language, "age_hours": _age_hours(c.item, now),
         "hn_points": (c.hn or {}).get("points"), "also_covered_by": sorted({a.source for a in c.also}),
         "rule_section": c.section,
@@ -261,7 +262,8 @@ def _events(kept: dict[str, dict[str, Any]], by_id: dict[str, rank.Candidate], n
         e["prompt"] = {
             "event": key, "section": e["section"], "newsworthiness": e["newsworthiness"],
             "candidates": [{
-                "id": cid, "source": by_id[cid].item.source, "title": kept[cid].get("title_en") or by_id[cid].item.title,
+                "id": cid, "source": by_id[cid].item.source, "link": short_link(by_id[cid].item.url),
+                "title": kept[cid].get("title_en") or by_id[cid].item.title,
                 "kicker": kept[cid].get("kicker"), "excerpt": excerpt(by_id[cid].item.excerpt, 240),
                 "age_hours": _age_hours(by_id[cid].item, now), "hn_points": (by_id[cid].hn or {}).get("points"),
                 "also_covered_by": sorted({a.source for a in by_id[cid].also}),

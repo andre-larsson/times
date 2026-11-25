@@ -43,6 +43,10 @@ WEAK = re.compile(
     r"|\bcodes\b|\b(i|we) tried\b|\bquiz\b|\b\d+ (fixes|tips|tricks|ways|things|reasons|settings)\b",
     re.I,
 )
+# "P vs NP" is a famous open problem, not a buying comparison: removed before WEAK is tested. Case-sensitive,
+# so "p vs np" in ordinary words doesn't count, and only class names, so "RTX 5090 vs RX 9090" stays weak.
+_CLASS = r"(?:VNP|VP|NP|P|BPP|BQP|PSPACE|NEXP|EXP|PH|NC|AC0|TC0)"
+COMPLEXITY_VS = re.compile(rf"\b{_CLASS}\s+(?:vs\.?|versus)\s+{_CLASS}\b")
 HARDWARE_PATH = re.compile(r"/hardware/|/pc-components/|/gpus?/|/cpus?/", re.I)
 GAMING_PATH = re.compile(r"/gaming/|/video-games/", re.I)      # game coverage on tech sites
 PRODUCT_REVIEW = re.compile(r"\breview\b|\bhands-on\b|\btested\b", re.I)
@@ -93,6 +97,10 @@ def is_junk(title: str) -> bool:
     return bool(JUNK.search(title))
 
 
+def is_weak(title: str) -> bool:
+    return bool(WEAK.search(COMPLEXITY_VS.sub("", title)))
+
+
 def hn_item(story: dict[str, Any]) -> Item:
     """A front-page HN story as a candidate (for stories no feed carried)."""
     created = dt.datetime.fromisoformat(story["created_at"].replace("Z", "+00:00")) if story.get("created_at") else None
@@ -125,7 +133,7 @@ def build_candidates(items: list[Item], hn: list[dict[str, Any]], now: dt.dateti
         sec = section_for(it)
         if not sec:
             continue
-        c = Candidate(item=it, section=sec, words=words(it.title), weak=bool(WEAK.search(it.title)),
+        c = Candidate(item=it, section=sec, words=words(it.title), weak=is_weak(it.title),
                       product_review=sec == "tech" and bool(PRODUCT_REVIEW.search(it.title)))
         story = hn_by_url.get(key)
         if story:

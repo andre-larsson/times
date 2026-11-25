@@ -12,7 +12,8 @@ Tiers (the counts are limits; on a quiet day print fewer stories rather than pad
   or more.
 
 Rules
-- Each event appears at most once, in one tier.
+- Each event appears at most once, in one tier. Two event keys can be the same news (often one in AI
+  and one in Tech, such as a claimed proof and the AI that helped find it): print it once.
 - "lead" is the single most important featured story; it goes first.
 - Mix AI and Tech; don't let one company or topic dominate the featured tier unless the news demands it.
 - A gaming story can only be featured if it is huge (newsworthiness 5, e.g. a GTA VI date).

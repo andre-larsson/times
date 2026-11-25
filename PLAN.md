@@ -27,6 +27,7 @@ links back to them. One edition every morning, paid for with the API credits inc
 | Quiz | **A news quiz twice a week, Tuesday and Saturday** (the days without a column): 8 multiple-choice questions on the news since the last quiz, written by Opus and checked answer by answer by a second Opus call. Played on the page, no account |
 | Botroom | **A comment section and forum where only bots post** (built 2026-11-09): recurring made-up AI personas comment on every full edition, each in its own Haiku or Sonnet call; a living roster, newcomers invented by Claude, and a "prove you're a bot" gate. **Boards like a real forum** (2026-11-10): Article comments by section, Site feedback and Feature requests about the paper itself, Off-topic, Introductions, Announcements; a gated "Discuss" button on articles. ~$4/month. **The editor in disguise** (2026-11-14): the editor posts as a bot, badly, from the command line; HumanWatch_Patrol reports the slips, ModBot bans the account at three strikes, and each account's profile says who writes it |
 | Screen | **What to watch** (added 2026-11-10): new on Netflix, SVT Play and TV4 Play in Sweden, new arrivals, Netflix's weekly Swedish top 10 and older well-rated titles, from TMDB without Claude in every edition; **picks of the week on Fridays** (one Opus call, ~$0.08) |
+| Math and CS | **Covered inside AI and Tech, not a section of its own** (2026-11-25): a proof found or checked with AI goes to AI, other math and theoretical CS to Tech. Four feeds (Computational Complexity, Shtetl-Optimized, Terence Tao, Quanta), the interests, and triage rules that rate a credible claim on a famous open problem 4–5 |
 | Discovery | **Below the lead** (2026-11-11): the latest quiz, a Botroom topic, Tonight and weekly follow-ups, in a compact strip |
 | Tonight | **Pick something for tonight** at `/tonight/`: Play or Watch, genre/tag, budget/currency or service/format filters, three matches, another batch and browser-local saves. No extra generation calls |
 | We checked back | **Thursdays**, full editions only: up to three follow-ups pairing an older story with later reporting. Opus writes, a second pass checks; only supported updates run |
@@ -52,6 +53,15 @@ production review, tuning and cost verification; optional ideas below are not co
   release passed 172 offline tests and desktop/mobile browser checks, and was verified live. Existing
   quizzes use the improved feedback/results UI; the new question mix and wrong-answer explanations
   apply to newly generated quizzes.
+
+- [x] Math and computer science (2026-11-25): the paper had printed the claimed Riemann Hypothesis proof
+  only as two medium stories (one in AI, one in Tech), skipped its Lean verification (933 HN points), and
+  triage dropped "VP ≠ VNP over Every Field" (303 points; Haiku saw no excerpt and no address). Now:
+  four math/TCS feeds, math in the interests and discovery's brief, triage and the editor see each
+  item's host and path (`link`), triage rates credible claims on famous problems 4–5 (cranks 1), the
+  editor prints the same news once across AI and Tech, and "P vs NP" headlines are no longer dropped
+  as buying comparisons (`rank.is_weak`). Checked with the real triage prompt on 40-item chunks: the
+  missed items went from 2.5–3.5 to 4–4.5; job ads, lecture notes and an explainer were still dropped.
 
 **Outstanding reviews and verification**
 
@@ -95,6 +105,10 @@ treat differently.
 | **The Hacker News** | `feeds.feedburner.com/TheHackersNews` (security news; added 2026-11-07, when half of discovery's finds were security stories) | ✅ |
 | **BleepingComputer** | `bleepingcomputer.com/feed/` (security news, 15 items) | ✅ |
 | **PCMag** | Direct feed blocked by bot protection (403). Use **Google News search for pcmag.com** instead: headline + short excerpt, so mostly briefs | ⚠️ workaround |
+| **Computational Complexity** | `blog.computationalcomplexity.org/feeds/posts/default` (Fortnow and Gasarch). Math and theoretical CS, added 2026-11-25 with the three below, after the paper missed the claimed VP ≠ VNP proof (see *Decisions so far*, Math and CS). Weight 1.2 on all four, so a day-old post stays inside `llm.max_candidates` | ✅ |
+| **Shtetl-Optimized** | `scottaaronson.blog/?feed=rss2` (Scott Aaronson: complexity, quantum, AI). "Adventures in Meatspace" (his personal posts) skipped | ✅ |
+| **Terence Tao** | `terrytao.wordpress.com/feed/` (math and AI-assisted math). "advertising" (job ads) skipped; lecture notes are left to triage | ✅ |
+| **Quanta Magazine** | `quantamagazine.org/feed/` (5 items). Physics and Biology skipped (first category), so Mathematics and Computer Science stay | ✅ |
 | Extras for AI depth (optional) | Simon Willison's Weblog, Hugging Face blog, OpenAI / Google DeepMind blogs, Lobsters, LWN | to check |
 
 Hacker News stories are split between **AI** and **Tech**: triage assigns each one a section, or drops it.
@@ -140,8 +154,13 @@ Tech stories carry a sub-kicker such as **DEV**, **HARDWARE** or **SECURITY**.
 ### Draft interests (editable)
 
 ```
-AI: model releases, research that matters, AI developer tools and agents, policy with real impact.
+AI: model releases, research that matters, AI developer tools and agents, policy with real impact,
+    and AI doing math and science (proofs found or checked by AI, Lean formalizations).
     Skip hype, listicles and routine funding news.
+Math and computer science: real results and credible claims in theoretical computer science and
+    math: complexity theory (P vs NP, VP vs VNP), algorithms (matrix multiplication),
+    cryptography, famous open problems. A claimed proof of a famous problem is news before it is
+    checked. Skip explainers of old results, lecture notes and job ads.
 Tech: what tops Hacker News: languages and tooling, open source, notable releases, security
     incidents, infrastructure, good engineering essays. Major hardware news (CPUs, GPUs, PC parts)
     from Tom's Hardware, Ars, TechRadar and PCMag. Skip buying guides and affiliate roundups.

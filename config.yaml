@@ -247,8 +247,13 @@ screen:                               # Screen: what to watch on my services (ne
     front_days: 7                     # how long the latest picks stay on the front page
 
 interests: |
-  AI: model releases, research that matters, AI developer tools and agents, policy with real impact.
+  AI: model releases, research that matters, AI developer tools and agents, policy with real impact,
+      and AI doing math and science (proofs found or checked by AI, Lean formalizations).
       Skip hype, listicles and routine funding news.
+  Math and computer science: real results and credible claims in theoretical computer science and
+      math: complexity theory (P vs NP, VP vs VNP), algorithms (matrix multiplication),
+      cryptography, famous open problems. A claimed proof of a famous problem is news before it is
+      checked. Skip explainers of old results, lecture notes and job ads.
   Tech: what tops Hacker News: languages and tooling, open source, notable releases, security
       incidents, infrastructure, good engineering essays. Major hardware news (CPUs, GPUs, PC parts).
       Skip buying guides and affiliate roundups.
@@ -273,6 +278,16 @@ sources:
         skip_paths: [/deals/, /best-picks/] }
     - { name: The Hacker News, url: "https://feeds.feedburner.com/TheHackersNews", sections: [tech, ai], weight: 0.9 }
     - { name: BleepingComputer, url: "https://www.bleepingcomputer.com/feed/", sections: [tech, ai], weight: 0.9 }
+    # math and theoretical CS: a few posts a week each; triage drops the job ads, notes and explainers. Weight
+    #   1.2 keeps a day-old post inside llm.max_candidates (179 candidates on 2026-11-25, one post at #108)
+    - { name: Computational Complexity, url: "https://blog.computationalcomplexity.org/feeds/posts/default",
+        sections: [tech, ai], weight: 1.2 }                          # Fortnow and Gasarch
+    - { name: Shtetl-Optimized, url: "https://scottaaronson.blog/?feed=rss2", sections: [tech, ai], weight: 1.2,
+        skip_categories: [Adventures in Meatspace] }                 # Scott Aaronson; that category is his life
+    - { name: Terence Tao,   url: "https://terrytao.wordpress.com/feed/", sections: [tech, ai], weight: 1.2,
+        skip_categories: [advertising] }                             # "advertising" = job ads
+    - { name: Quanta Magazine, url: "https://www.quantamagazine.org/feed/", sections: [tech, ai], weight: 1.2,
+        skip_categories: [Physics, Biology] }                        # keeps Mathematics and Computer Science
     - { name: MISSIL,        url: "https://www.missil.se/feed/", sections: [gaming], language: sv,
         reviews_url: "/spelrecensioner/", title_is_game: true, multi_platform: true,
         skip_categories: [FILMNYHET, Petters blogg], skip_paths: [/retro/] }   # MISSIL Retro: old games

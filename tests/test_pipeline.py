@@ -15,7 +15,7 @@ from newsroom.config import load_config
 from newsroom.render import build
 from newsroom.sources import Harvest, Item, SourceStatus, feeds
 from newsroom.sources.itad import steam_label, store_url
-from newsroom.text import canonical_url, excerpt, first_sentence
+from newsroom.text import canonical_url, excerpt, first_sentence, short_link
 
 FIX = Path(__file__).parent / "fixtures" / "sources"
 UTC = dt.timezone.utc
@@ -70,6 +70,9 @@ def test_text_helpers():
     assert excerpt("<p>One.</p> <p>" + "word " * 80 + "</p>", 60).endswith(("…", "."))
     assert first_sentence("Ten small games worth a look. Subscribe: https://x") == "Ten small games worth a look."
     assert first_sentence("Watch now at https://example.com/x. More text here.") == ""
+    assert short_link("https://www.Example.com/labs/formal-math/tree/main/?key=secret#x") == \
+        "example.com/labs/formal-math/tree/main"                  # host and path only: never a query string
+    assert short_link("https://example.com/" + "p" * 200, limit=40).endswith("…")
 
 
 # ── feeds ────────────────────────────────────────────────────────────────────
@@ -123,6 +126,12 @@ def test_sections_and_junk():
                  "The best laptop deals this week", "Corsair has slashed $180 off its SSD"):
         assert rank.is_junk(junk), junk
     assert not rank.is_junk("Arcwave cuts GPU prices across the range")
+    # a famous open problem is not a buying comparison
+    for news in ("Lumen Labs model claims proof that VP vs VNP is settled", "A new bound on P vs. NP",
+                 "Researchers separate BPP versus BQP for a new task"):
+        assert not rank.is_weak(news), news
+    for weak in ("Arcwave X9 vs Lumen Z3: which GPU wins?", "P vs NP explained: the best guide for 2026"):
+        assert rank.is_weak(weak), weak
 
 
 def test_clustering_and_hn_boost():

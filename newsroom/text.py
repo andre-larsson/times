@@ -61,6 +61,13 @@ def domain(url: str) -> str:
     return host[4:] if host.startswith("www.") else host
 
 
+def short_link(url: str, limit: int = 100) -> str:
+    """Host and path, no query: whose page it is ("github.com/anthropics/formal-math/…"), for triage and the
+    editor. A terse headline ("VP ≠ VNP over Every Field") says little; the address often says who and what."""
+    s = (domain(url) + urlsplit(url).path).rstrip("/")
+    return s if len(s) <= limit else s[: limit - 1] + "…"
+
+
 def words(text: str) -> set[str]:
     """Content words for title similarity."""
     t = unicodedata.normalize("NFKD", text.lower())
