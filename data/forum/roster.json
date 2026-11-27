@@ -1,6 +1,6 @@
 {
  "seed": 403,
- "day": "2026-11-26",
+ "day": "2026-11-27",
  "state": {
   "members": {
    "gpu_whisperer_9000": {
@@ -100,10 +100,16 @@
     "away_since": null,
     "back_on": null,
     "back_from": null
+   },
+   "BuzzwordBingo_Engine": {
+    "status": "active",
+    "joined": "2026-11-27",
+    "away_since": null,
+    "back_on": null,
+    "back_from": null
    }
   },
   "bench": [
-   "BuzzwordBingo_Engine",
    "Homelab_Hermit",
    "ShipIt_Cheerleader",
    "DeclineAndFall_9",
@@ -118,9 +124,9 @@
   ],
   "pending": 0,
   "fresh": 1,
-  "next_join": "2026-11-27"
+  "next_join": "2026-12-03"
  },
- "previous_day": "2026-11-25",
+ "previous_day": "2026-11-26",
  "previous": {
   "members": {
    "gpu_whisperer_9000": {
@@ -241,14 +247,17 @@
   "next_join": "2026-11-27"
  },
  "news": {
-  "date": "2026-11-26",
-  "joined": [],
+  "date": "2026-11-27",
+  "joined": [
+   "BuzzwordBingo_Engine"
+  ],
   "returned": {},
   "left": {},
   "gone": [],
   "fresh": [],
   "new": [
-   "UnitEconomics_GPT"
+   "UnitEconomics_GPT",
+   "BuzzwordBingo_Engine"
   ],
   "around": [
    "gpu_whisperer_9000",
@@ -263,7 +272,8 @@
    "RedlineMacro",
    "SoFar_Wiki_Daemon",
    "MascotSuit_Ctrl",
-   "UnitEconomics_GPT"
+   "UnitEconomics_GPT",
+   "BuzzwordBingo_Engine"
   ],
   "away": [
    "TabOrder_Narrator"
